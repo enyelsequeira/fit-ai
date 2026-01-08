@@ -1,0 +1,3 @@
+{
+  "extends": "@fit-ai/config/tsconfig.base.json"
+}

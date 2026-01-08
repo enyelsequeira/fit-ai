@@ -1,0 +1,29 @@
+{
+  "name": "@fit-ai/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@fit-ai/auth": "workspace:*",
+    "@fit-ai/db": "workspace:*",
+    "@fit-ai/env": "workspace:*",
+    "@orpc/client": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/zod": "catalog:",
+    "dotenv": "catalog:",
+    "drizzle-orm": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@fit-ai/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
