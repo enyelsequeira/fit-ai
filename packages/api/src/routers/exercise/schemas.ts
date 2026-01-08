@@ -71,6 +71,7 @@ export type NameAvailabilityResult = z.infer<typeof nameAvailabilityResultSchema
 
 /**
  * List exercises input schema with filtering and pagination
+ * Note: limit and offset use z.coerce.number() to handle string inputs from query params
  */
 export const listExercisesSchema = z.object({
   category: exerciseCategorySchema.optional().describe("Filter by category"),
@@ -78,10 +79,16 @@ export const listExercisesSchema = z.object({
   muscleGroup: z.string().optional().describe("Filter by muscle group"),
   equipment: z.string().optional().describe("Filter by equipment"),
   search: z.string().optional().describe("Search by name"),
-  includeUserExercises: z.boolean().default(true).describe("Include user-created exercises"),
-  onlyUserExercises: z.boolean().default(false).describe("Only return user-created exercises"),
-  limit: z.number().min(1).max(100).default(50).describe("Maximum number of results"),
-  offset: z.number().min(0).default(0).describe("Number of results to skip"),
+  includeUserExercises: z
+    .union([z.boolean(), z.string().transform((v) => v === "true")])
+    .default(true)
+    .describe("Include user-created exercises"),
+  onlyUserExercises: z
+    .union([z.boolean(), z.string().transform((v) => v === "true")])
+    .default(false)
+    .describe("Only return user-created exercises"),
+  limit: z.coerce.number().min(1).max(100).default(50).describe("Maximum number of results"),
+  offset: z.coerce.number().min(0).default(0).describe("Number of results to skip"),
 });
 
 export type ListExercisesInput = z.infer<typeof listExercisesSchema>;

@@ -83,10 +83,43 @@ describe("Exercise Schemas", () => {
       expect(result.success).toBe(true);
     });
 
+    it("should coerce string limit and offset to numbers", () => {
+      const result = listExercisesSchema.parse({
+        limit: "24",
+        offset: "48",
+      });
+      expect(result.limit).toBe(24);
+      expect(result.offset).toBe(48);
+    });
+
+    it("should coerce string booleans for includeUserExercises and onlyUserExercises", () => {
+      const result = listExercisesSchema.parse({
+        includeUserExercises: "true",
+        onlyUserExercises: "false",
+      });
+      expect(result.includeUserExercises).toBe(true);
+      expect(result.onlyUserExercises).toBe(false);
+
+      const result2 = listExercisesSchema.parse({
+        includeUserExercises: "false",
+        onlyUserExercises: "true",
+      });
+      expect(result2.includeUserExercises).toBe(false);
+      expect(result2.onlyUserExercises).toBe(true);
+    });
+
     it("should reject invalid pagination", () => {
       expect(listExercisesSchema.safeParse({ limit: 0 }).success).toBe(false);
+      expect(listExercisesSchema.safeParse({ limit: "0" }).success).toBe(false);
       expect(listExercisesSchema.safeParse({ limit: 101 }).success).toBe(false);
+      expect(listExercisesSchema.safeParse({ limit: "101" }).success).toBe(false);
       expect(listExercisesSchema.safeParse({ offset: -1 }).success).toBe(false);
+      expect(listExercisesSchema.safeParse({ offset: "-1" }).success).toBe(false);
+    });
+
+    it("should reject non-numeric strings for limit and offset", () => {
+      expect(listExercisesSchema.safeParse({ limit: "abc" }).success).toBe(false);
+      expect(listExercisesSchema.safeParse({ offset: "xyz" }).success).toBe(false);
     });
   });
 
