@@ -108,6 +108,22 @@ describe("Exercise Schemas", () => {
       expect(result2.onlyUserExercises).toBe(true);
     });
 
+    it("should treat empty strings as undefined and use defaults", () => {
+      const result = listExercisesSchema.parse({
+        includeUserExercises: "",
+        onlyUserExercises: "",
+        muscleGroup: "",
+        equipment: "",
+        search: "",
+      });
+      // Empty strings should fall back to defaults
+      expect(result.includeUserExercises).toBe(true); // default is true
+      expect(result.onlyUserExercises).toBe(false); // default is false
+      expect(result.muscleGroup).toBeUndefined();
+      expect(result.equipment).toBeUndefined();
+      expect(result.search).toBeUndefined();
+    });
+
     it("should reject invalid pagination", () => {
       expect(listExercisesSchema.safeParse({ limit: 0 }).success).toBe(false);
       expect(listExercisesSchema.safeParse({ limit: "0" }).success).toBe(false);

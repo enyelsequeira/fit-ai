@@ -70,23 +70,44 @@ export type NameAvailabilityResult = z.infer<typeof nameAvailabilityResultSchema
 // ============================================================================
 
 /**
+ * Helper to parse boolean from string, handling empty strings as undefined
+ */
+const booleanFromString = (defaultValue: boolean) =>
+  z
+    .union([
+      z.boolean(),
+      z
+        .string()
+        .transform((v) => {
+          if (v === "" || v === undefined) return undefined;
+          return v === "true";
+        })
+        .pipe(z.boolean().optional()),
+    ])
+    .transform((v) => v ?? defaultValue)
+    .default(defaultValue);
+
+/**
+ * Helper to parse optional string, treating empty string as undefined
+ */
+const optionalString = z
+  .string()
+  .optional()
+  .transform((v) => (v === "" ? undefined : v));
+
+/**
  * List exercises input schema with filtering and pagination
  * Note: limit and offset use z.coerce.number() to handle string inputs from query params
+ * Empty strings are treated as undefined to allow defaults to take effect
  */
 export const listExercisesSchema = z.object({
   category: exerciseCategorySchema.optional().describe("Filter by category"),
   exerciseType: exerciseTypeSchema.optional().describe("Filter by exercise type"),
-  muscleGroup: z.string().optional().describe("Filter by muscle group"),
-  equipment: z.string().optional().describe("Filter by equipment"),
-  search: z.string().optional().describe("Search by name"),
-  includeUserExercises: z
-    .union([z.boolean(), z.string().transform((v) => v === "true")])
-    .default(true)
-    .describe("Include user-created exercises"),
-  onlyUserExercises: z
-    .union([z.boolean(), z.string().transform((v) => v === "true")])
-    .default(false)
-    .describe("Only return user-created exercises"),
+  muscleGroup: optionalString.describe("Filter by muscle group"),
+  equipment: optionalString.describe("Filter by equipment"),
+  search: optionalString.describe("Search by name"),
+  includeUserExercises: booleanFromString(true).describe("Include user-created exercises"),
+  onlyUserExercises: booleanFromString(false).describe("Only return user-created exercises"),
   limit: z.coerce.number().min(1).max(100).default(50).describe("Maximum number of results"),
   offset: z.coerce.number().min(0).default(0).describe("Number of results to skip"),
 });
