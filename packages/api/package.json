@@ -9,7 +9,11 @@
       "default": "./src/*.ts"
     }
   },
-  "scripts": {},
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
   "dependencies": {
     "@fit-ai/auth": "workspace:*",
     "@fit-ai/db": "workspace:*",
@@ -20,6 +24,7 @@
     "@orpc/zod": "catalog:",
     "dotenv": "catalog:",
     "drizzle-orm": "catalog:",
+    "hono": "^4.11.3",
     "zod": "catalog:"
   },
   "devDependencies": {

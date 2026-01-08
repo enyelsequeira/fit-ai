@@ -48,3 +48,14 @@ coverage
 .cache
 tmp
 temp
+
+# Agent/AI files
+.agent/
+cookies.txt
+PROMPT.md
+
+# Temporary SQL files
+*.sql
+
+# Wrangler local state
+.wrangler

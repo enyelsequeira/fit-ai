@@ -85,6 +85,8 @@ export const verification = sqliteTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
+// Note: Additional user relations (workouts, exercises, etc.) are defined in their respective schema files
+// to avoid circular dependencies. Drizzle merges all relations for the same table automatically.
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),

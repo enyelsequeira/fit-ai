@@ -1,0 +1,25 @@
+name = "fit-ai-server"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Development environment (default)
+[vars]
+CORS_ORIGIN = "http://localhost:3001"
+BETTER_AUTH_URL = "http://localhost:3000"
+
+# Production environment
+[env.production.vars]
+CORS_ORIGIN = "https://fit-ai.pages.dev"
+BETTER_AUTH_URL = "https://fit-ai-server.enyelsequeira.workers.dev"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "fit-ai-database-enyelsequeira"
+database_id = "f809e092-f7c3-4c8b-8d79-d187a63404b7"
+
+[env.production]
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "fit-ai-database-enyelsequeira"
+database_id = "f809e092-f7c3-4c8b-8d79-d187a63404b7"
