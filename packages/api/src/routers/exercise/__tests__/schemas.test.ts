@@ -115,6 +115,8 @@ describe("Exercise Schemas", () => {
         muscleGroup: "",
         equipment: "",
         search: "",
+        category: "",
+        exerciseType: "",
       });
       // Empty strings should fall back to defaults
       expect(result.includeUserExercises).toBe(true); // default is true
@@ -122,6 +124,8 @@ describe("Exercise Schemas", () => {
       expect(result.muscleGroup).toBeUndefined();
       expect(result.equipment).toBeUndefined();
       expect(result.search).toBeUndefined();
+      expect(result.category).toBeUndefined();
+      expect(result.exerciseType).toBeUndefined();
     });
 
     it("should reject invalid pagination", () => {

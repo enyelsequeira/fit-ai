@@ -96,13 +96,19 @@ const optionalString = z
   .transform((v) => (v === "" ? undefined : v));
 
 /**
+ * Helper to wrap an enum schema to treat empty string as undefined
+ */
+const optionalEnum = <T extends z.ZodTypeAny>(schema: T) =>
+  z.preprocess((val) => (val === "" ? undefined : val), schema.optional());
+
+/**
  * List exercises input schema with filtering and pagination
  * Note: limit and offset use z.coerce.number() to handle string inputs from query params
  * Empty strings are treated as undefined to allow defaults to take effect
  */
 export const listExercisesSchema = z.object({
-  category: exerciseCategorySchema.optional().describe("Filter by category"),
-  exerciseType: exerciseTypeSchema.optional().describe("Filter by exercise type"),
+  category: optionalEnum(exerciseCategorySchema).describe("Filter by category"),
+  exerciseType: optionalEnum(exerciseTypeSchema).describe("Filter by exercise type"),
   muscleGroup: optionalString.describe("Filter by muscle group"),
   equipment: optionalString.describe("Filter by equipment"),
   search: optionalString.describe("Search by name"),
