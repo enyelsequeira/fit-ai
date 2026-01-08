@@ -157,13 +157,24 @@ export const exerciseMechanicSchema = z.enum(["compound", "isolation"]).nullable
 
 /**
  * Select schema - for validating data returned from the database
+ * Note: JSON fields may return null from the database even with defaults,
+ * so we transform them to empty arrays
  */
 export const selectExerciseSchema = createSelectSchema(exercise, {
   category: exerciseCategorySchema,
   exerciseType: exerciseTypeSchema,
-  muscleGroups: z.array(z.string()),
-  images: z.array(z.string()),
-  instructions: z.array(z.string()),
+  muscleGroups: z
+    .array(z.string())
+    .nullable()
+    .transform((v) => v ?? []),
+  images: z
+    .array(z.string())
+    .nullable()
+    .transform((v) => v ?? []),
+  instructions: z
+    .array(z.string())
+    .nullable()
+    .transform((v) => v ?? []),
   externalSource: exerciseSourceSchema,
   level: exerciseLevelSchema,
   force: exerciseForceSchema,

@@ -5,23 +5,6 @@ import type {
   WorkoutMood as WorkoutMoodType,
 } from "@fit-ai/db/schema/workout";
 
-import type {
-  AddExerciseInput,
-  AddSetInput,
-  CompleteSetInput,
-  CompleteWorkoutInput,
-  CreateWorkoutInput,
-  DeleteSetInput,
-  DeleteWorkoutInput,
-  GetWorkoutByIdInput,
-  ListWorkoutsInput,
-  RemoveExerciseInput,
-  ReorderExercisesInput,
-  UpdateSetInput,
-  UpdateWorkoutExerciseInput,
-  UpdateWorkoutInput,
-} from "./schemas";
-
 import { db } from "@fit-ai/db";
 import { exercise } from "@fit-ai/db/schema/exercise";
 import { exerciseSet, workout, workoutExercise } from "@fit-ai/db/schema/workout";
@@ -38,29 +21,22 @@ import {
   notOwner,
 } from "../../errors";
 
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
+import type {
+  AddExerciseRouteHandler,
+  AddSetRouteHandler,
+  CompleteRouteHandler,
+  CompleteSetRouteHandler,
+  CreateRouteHandler,
+  DeleteRouteHandler,
+  DeleteSetRouteHandler,
+  GetByIdRouteHandler,
+  ListRouteHandler,
+  RemoveExerciseRouteHandler,
+  ReorderExercisesRouteHandler,
+  UpdateExerciseRouteHandler,
+  UpdateRouteHandler,
+  UpdateSetRouteHandler,
+} from "./contracts";
 
 // ============================================================================
 // Helper Functions
@@ -139,7 +115,7 @@ async function getNextSetNumber(workoutExerciseId: number): Promise<number> {
 // Workout Session Handlers
 // ============================================================================
 
-export async function listWorkoutsHandler(input: ListWorkoutsInput, context: AuthenticatedContext) {
+export const listWorkoutsHandler: ListRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const conditions: ReturnType<typeof eq>[] = [eq(workout.userId, userId)];
 
@@ -179,12 +155,9 @@ export async function listWorkoutsHandler(input: ListWorkoutsInput, context: Aut
     limit: input.limit,
     offset: input.offset,
   };
-}
+};
 
-export async function getWorkoutByIdHandler(
-  input: GetWorkoutByIdInput,
-  context: AuthenticatedContext,
-) {
+export const getWorkoutByIdHandler: GetByIdRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const w = await getWorkoutWithOwnershipCheck(input.workoutId, userId);
 
@@ -237,12 +210,9 @@ export async function getWorkoutByIdHandler(
     ...w,
     workoutExercises,
   };
-}
+};
 
-export async function createWorkoutHandler(
-  input: CreateWorkoutInput,
-  context: AuthenticatedContext,
-) {
+export const createWorkoutHandler: CreateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   let templateData: {
@@ -401,12 +371,9 @@ export async function createWorkoutHandler(
     ...newWorkout,
     workoutExercises,
   };
-}
+};
 
-export async function updateWorkoutHandler(
-  input: UpdateWorkoutInput,
-  context: AuthenticatedContext,
-) {
+export const updateWorkoutHandler: UpdateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getWorkoutWithOwnershipCheck(input.workoutId, userId);
 
@@ -430,24 +397,18 @@ export async function updateWorkoutHandler(
   }
 
   return updated;
-}
+};
 
-export async function deleteWorkoutHandler(
-  input: DeleteWorkoutInput,
-  context: AuthenticatedContext,
-) {
+export const deleteWorkoutHandler: DeleteRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getWorkoutWithOwnershipCheck(input.workoutId, userId);
 
   await db.delete(workout).where(eq(workout.id, input.workoutId));
 
   return { success: true };
-}
+};
 
-export async function completeWorkoutHandler(
-  input: CompleteWorkoutInput,
-  context: AuthenticatedContext,
-) {
+export const completeWorkoutHandler: CompleteRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const w = await getWorkoutWithOwnershipCheck(input.workoutId, userId);
 
@@ -479,13 +440,13 @@ export async function completeWorkoutHandler(
   }
 
   return updated;
-}
+};
 
 // ============================================================================
 // Workout Exercise Handlers
 // ============================================================================
 
-export async function addExerciseHandler(input: AddExerciseInput, context: AuthenticatedContext) {
+export const addExerciseHandler: AddExerciseRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getWorkoutWithOwnershipCheck(input.workoutId, userId);
 
@@ -548,12 +509,12 @@ export async function addExerciseHandler(input: AddExerciseInput, context: Authe
     },
     sets: [],
   };
-}
+};
 
-export async function updateWorkoutExerciseHandler(
-  input: UpdateWorkoutExerciseInput,
-  context: AuthenticatedContext,
-) {
+export const updateWorkoutExerciseHandler: UpdateExerciseRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
   await getWorkoutWithOwnershipCheck(input.workoutId, userId);
   await getWorkoutExerciseWithCheck(input.workoutExerciseId, input.workoutId);
@@ -600,12 +561,9 @@ export async function updateWorkoutExerciseHandler(
     exercise: exerciseResult[0],
     sets,
   };
-}
+};
 
-export async function removeExerciseHandler(
-  input: RemoveExerciseInput,
-  context: AuthenticatedContext,
-) {
+export const removeExerciseHandler: RemoveExerciseRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getWorkoutWithOwnershipCheck(input.workoutId, userId);
   await getWorkoutExerciseWithCheck(input.workoutExerciseId, input.workoutId);
@@ -613,12 +571,9 @@ export async function removeExerciseHandler(
   await db.delete(workoutExercise).where(eq(workoutExercise.id, input.workoutExerciseId));
 
   return { success: true };
-}
+};
 
-export async function reorderExercisesHandler(
-  input: ReorderExercisesInput,
-  context: AuthenticatedContext,
-) {
+export const reorderExercisesHandler: ReorderExercisesRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getWorkoutWithOwnershipCheck(input.workoutId, userId);
 
@@ -635,13 +590,13 @@ export async function reorderExercisesHandler(
   }
 
   return { success: true };
-}
+};
 
 // ============================================================================
 // Set Handlers
 // ============================================================================
 
-export async function addSetHandler(input: AddSetInput, context: AuthenticatedContext) {
+export const addSetHandler: AddSetRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getWorkoutWithOwnershipCheck(input.workoutId, userId);
   await getWorkoutExerciseWithCheck(input.workoutExerciseId, input.workoutId);
@@ -676,9 +631,9 @@ export async function addSetHandler(input: AddSetInput, context: AuthenticatedCo
   }
 
   return newSet;
-}
+};
 
-export async function updateSetHandler(input: UpdateSetInput, context: AuthenticatedContext) {
+export const updateSetHandler: UpdateSetRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getWorkoutWithOwnershipCheck(input.workoutId, userId);
   await getSetWithCheck(input.setId, input.workoutId);
@@ -716,9 +671,9 @@ export async function updateSetHandler(input: UpdateSetInput, context: Authentic
   }
 
   return updated;
-}
+};
 
-export async function deleteSetHandler(input: DeleteSetInput, context: AuthenticatedContext) {
+export const deleteSetHandler: DeleteSetRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getWorkoutWithOwnershipCheck(input.workoutId, userId);
   await getSetWithCheck(input.setId, input.workoutId);
@@ -726,9 +681,9 @@ export async function deleteSetHandler(input: DeleteSetInput, context: Authentic
   await db.delete(exerciseSet).where(eq(exerciseSet.id, input.setId));
 
   return { success: true };
-}
+};
 
-export async function completeSetHandler(input: CompleteSetInput, context: AuthenticatedContext) {
+export const completeSetHandler: CompleteSetRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getWorkoutWithOwnershipCheck(input.workoutId, userId);
   const { set } = await getSetWithCheck(input.setId, input.workoutId);
@@ -762,4 +717,4 @@ export async function completeSetHandler(input: CompleteSetInput, context: Authe
   }
 
   return updated;
-}
+};

@@ -8,37 +8,15 @@ import { and, desc, eq, gte, isNotNull, sql } from "drizzle-orm";
 import { notFound, notOwner } from "../../errors";
 
 import type {
-  ExerciseIdInput,
-  MuscleVolumeInput,
-  ProgressionInput,
-  RecentWorkoutsInput,
-  WorkoutHistoryInput,
-  WorkoutIdInput,
-} from "./schemas";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
+  GetBestPerformanceRouteHandler,
+  GetLastPerformanceRouteHandler,
+  GetMuscleVolumeRouteHandler,
+  GetProgressionRouteHandler,
+  GetRecentWorkoutsRouteHandler,
+  GetSummaryRouteHandler,
+  GetWorkoutDetailsRouteHandler,
+  GetWorkoutHistoryRouteHandler,
+} from "./contracts";
 
 // ============================================================================
 // Helper Functions
@@ -157,10 +135,10 @@ async function getExercisePerformanceData(exerciseId: number, userId: string) {
 // Exercise History Handlers
 // ============================================================================
 
-export async function getLastPerformanceHandler(
-  input: ExerciseIdInput,
-  context: AuthenticatedContext,
-) {
+export const getLastPerformanceHandler: GetLastPerformanceRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
   const ex = await verifyExerciseAccess(input.exerciseId, userId);
 
@@ -210,12 +188,12 @@ export async function getLastPerformanceHandler(
     totalVolume: calculateVolume(sets),
     topSet: findTopSet(sets),
   };
-}
+};
 
-export async function getBestPerformanceHandler(
-  input: ExerciseIdInput,
-  context: AuthenticatedContext,
-) {
+export const getBestPerformanceHandler: GetBestPerformanceRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
   const ex = await verifyExerciseAccess(input.exerciseId, userId);
 
@@ -290,12 +268,9 @@ export async function getBestPerformanceHandler(
     maxVolume,
     estimated1RM: best1RM,
   };
-}
+};
 
-export async function getProgressionHandler(
-  input: ProgressionInput,
-  context: AuthenticatedContext,
-) {
+export const getProgressionHandler: GetProgressionRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const ex = await verifyExerciseAccess(input.exerciseId, userId);
 
@@ -385,12 +360,12 @@ export async function getProgressionHandler(
     exerciseName: ex.name,
     dataPoints,
   };
-}
+};
 
-export async function getRecentWorkoutsHandler(
-  input: RecentWorkoutsInput,
-  context: AuthenticatedContext,
-) {
+export const getRecentWorkoutsHandler: GetRecentWorkoutsRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
   const ex = await verifyExerciseAccess(input.exerciseId, userId);
 
@@ -467,16 +442,16 @@ export async function getRecentWorkoutsHandler(
     exerciseName: ex.name,
     workouts,
   };
-}
+};
 
 // ============================================================================
 // Workout History Handlers
 // ============================================================================
 
-export async function getWorkoutHistoryHandler(
-  input: WorkoutHistoryInput,
-  context: AuthenticatedContext,
-) {
+export const getWorkoutHistoryHandler: GetWorkoutHistoryRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const conditions: ReturnType<typeof eq>[] = [
@@ -582,12 +557,12 @@ export async function getWorkoutHistoryHandler(
     limit: input.limit,
     offset: input.offset,
   };
-}
+};
 
-export async function getWorkoutDetailsHandler(
-  input: WorkoutIdInput,
-  context: AuthenticatedContext,
-) {
+export const getWorkoutDetailsHandler: GetWorkoutDetailsRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const workoutResult = await db
@@ -708,13 +683,13 @@ export async function getWorkoutDetailsHandler(
     totalVolume,
     totalSets,
   };
-}
+};
 
 // ============================================================================
 // Summary Handlers
 // ============================================================================
 
-export async function getSummaryHandler(context: AuthenticatedContext) {
+export const getSummaryHandler: GetSummaryRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
 
   const completedWorkouts = await db
@@ -909,12 +884,9 @@ export async function getSummaryHandler(context: AuthenticatedContext) {
       workoutsThisMonth,
     },
   };
-}
+};
 
-export async function getMuscleVolumeHandler(
-  input: MuscleVolumeInput,
-  context: AuthenticatedContext,
-) {
+export const getMuscleVolumeHandler: GetMuscleVolumeRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const now = new Date();
@@ -982,4 +954,4 @@ export async function getMuscleVolumeHandler(
     muscleGroups,
     totalVolume: Math.round(totalVolume),
   };
-}
+};

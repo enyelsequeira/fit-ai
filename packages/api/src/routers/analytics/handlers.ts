@@ -11,39 +11,18 @@ import { and, desc, eq, gte, isNotNull, lte, sql } from "drizzle-orm";
 import { notFound } from "../../errors";
 
 import type {
-  ComparisonInput,
-  ExerciseStatsInput,
-  FrequencyInput,
-  GenerateSummaryInput,
-  StrengthTrendsInput,
-  SummaryHistoryInput,
-  VolumeByMuscleInput,
-  VolumeTrendsInput,
-} from "./schemas";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
+  GenerateSummaryRouteHandler,
+  GetComparisonRouteHandler,
+  GetConsistencyRouteHandler,
+  GetExerciseStatsRouteHandler,
+  GetFrequencyRouteHandler,
+  GetMonthlySummaryRouteHandler,
+  GetStrengthTrendsRouteHandler,
+  GetSummaryHistoryRouteHandler,
+  GetVolumeByMuscleRouteHandler,
+  GetVolumeTrendsRouteHandler,
+  GetWeeklySummaryRouteHandler,
+} from "./contracts";
 
 // ============================================================================
 // Constants
@@ -129,7 +108,7 @@ function getDaysBetween(start: Date, end: Date): number {
 // Handlers
 // ============================================================================
 
-export async function getWeeklySummaryHandler(context: AuthenticatedContext) {
+export const getWeeklySummaryHandler: GetWeeklySummaryRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
   const weekStart = getWeekStart();
 
@@ -146,9 +125,9 @@ export async function getWeeklySummaryHandler(context: AuthenticatedContext) {
     .limit(1);
 
   return result[0] ?? null;
-}
+};
 
-export async function getMonthlySummaryHandler(context: AuthenticatedContext) {
+export const getMonthlySummaryHandler: GetMonthlySummaryRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
   const monthStart = getMonthStart();
 
@@ -165,12 +144,12 @@ export async function getMonthlySummaryHandler(context: AuthenticatedContext) {
     .limit(1);
 
   return result[0] ?? null;
-}
+};
 
-export async function getSummaryHistoryHandler(
-  input: SummaryHistoryInput,
-  context: AuthenticatedContext,
-) {
+export const getSummaryHistoryHandler: GetSummaryHistoryRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
   const conditions: ReturnType<typeof eq>[] = [eq(trainingSummary.userId, userId)];
 
@@ -199,12 +178,9 @@ export async function getSummaryHistoryHandler(
     limit: input.limit,
     offset: input.offset,
   };
-}
+};
 
-export async function getVolumeTrendsHandler(
-  input: VolumeTrendsInput,
-  context: AuthenticatedContext,
-) {
+export const getVolumeTrendsHandler: GetVolumeTrendsRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const endDate = new Date();
   const startDate = new Date();
@@ -233,12 +209,12 @@ export async function getVolumeTrendsHandler(
     period: input.period,
     dataPoints,
   };
-}
+};
 
-export async function getVolumeByMuscleHandler(
-  input: VolumeByMuscleInput,
-  context: AuthenticatedContext,
-) {
+export const getVolumeByMuscleHandler: GetVolumeByMuscleRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   let startDate: Date;
@@ -316,12 +292,12 @@ export async function getVolumeByMuscleHandler(
     totalVolume: Math.round(totalVolume),
     muscleGroups,
   };
-}
+};
 
-export async function getStrengthTrendsHandler(
-  input: StrengthTrendsInput,
-  context: AuthenticatedContext,
-) {
+export const getStrengthTrendsHandler: GetStrengthTrendsRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const exerciseResult = await db
@@ -405,9 +381,9 @@ export async function getStrengthTrendsHandler(
     dataPoints,
     percentageChange: Math.round(percentageChange * 10) / 10,
   };
-}
+};
 
-export async function getFrequencyHandler(input: FrequencyInput, context: AuthenticatedContext) {
+export const getFrequencyHandler: GetFrequencyRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const endDate = new Date();
@@ -487,9 +463,9 @@ export async function getFrequencyHandler(input: FrequencyInput, context: Authen
     mostActiveDay,
     leastActiveDay,
   };
-}
+};
 
-export async function getConsistencyHandler(context: AuthenticatedContext) {
+export const getConsistencyHandler: GetConsistencyRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
 
   const workouts = await db
@@ -581,12 +557,9 @@ export async function getConsistencyHandler(context: AuthenticatedContext) {
     mostActiveDay,
     completionRate: completionRate !== null ? Math.round(completionRate * 100) / 100 : null,
   };
-}
+};
 
-export async function getExerciseStatsHandler(
-  input: ExerciseStatsInput,
-  context: AuthenticatedContext,
-) {
+export const getExerciseStatsHandler: GetExerciseStatsRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const exerciseResult = await db
@@ -697,9 +670,9 @@ export async function getExerciseStatsHandler(
     recentProgress,
     lastPerformed,
   };
-}
+};
 
-export async function getComparisonHandler(input: ComparisonInput, context: AuthenticatedContext) {
+export const getComparisonHandler: GetComparisonRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   async function calculatePeriodSummary(
@@ -824,12 +797,9 @@ export async function getComparisonHandler(input: ComparisonInput, context: Auth
       avgDurationChange: Math.round(avgDurationChange * 10) / 10,
     },
   };
-}
+};
 
-export async function generateSummaryHandler(
-  input: GenerateSummaryInput,
-  context: AuthenticatedContext,
-) {
+export const generateSummaryHandler: GenerateSummaryRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const periodEnd =
@@ -992,4 +962,4 @@ export async function generateSummaryHandler(
     throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to create summary" });
   }
   return created;
-}
+};

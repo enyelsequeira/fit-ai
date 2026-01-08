@@ -1,60 +1,22 @@
-import type { DeleteAccountInput, UpdateProfileInput } from "./schemas";
-
 import { db } from "@fit-ai/db";
 import { user } from "@fit-ai/db/schema/auth";
 import { eq } from "drizzle-orm";
 
 import { badRequest, notFound } from "../../errors";
 
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string;
-      emailVerified: boolean;
-      image?: string | null;
-      createdAt: Date;
-      updatedAt: Date;
-    };
-    session: {
-      id: string;
-      userId: string;
-      expiresAt: Date;
-      createdAt: Date;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string;
-      emailVerified: boolean;
-      image?: string | null;
-      createdAt: Date;
-      updatedAt: Date;
-    };
-    session: {
-      id: string;
-      userId: string;
-      expiresAt: Date;
-      createdAt: Date;
-    };
-  };
-}
+import type {
+  CheckAuthRouteHandler,
+  DeleteAccountRouteHandler,
+  GetProfileRouteHandler,
+  GetSessionRouteHandler,
+  UpdateProfileRouteHandler,
+} from "./contracts";
 
 // ============================================================================
 // Get Session Handler
 // ============================================================================
 
-export function getSessionHandler(context: HandlerContext) {
+export const getSessionHandler: GetSessionRouteHandler = async ({ context }) => {
   if (!context.session) {
     return null;
   }
@@ -76,13 +38,13 @@ export function getSessionHandler(context: HandlerContext) {
       createdAt: context.session.session.createdAt,
     },
   };
-}
+};
 
 // ============================================================================
 // Get Profile Handler
 // ============================================================================
 
-export function getProfileHandler(context: AuthenticatedContext) {
+export const getProfileHandler: GetProfileRouteHandler = async ({ context }) => {
   return {
     id: context.session.user.id,
     name: context.session.user.name,
@@ -92,16 +54,13 @@ export function getProfileHandler(context: AuthenticatedContext) {
     createdAt: context.session.user.createdAt,
     updatedAt: context.session.user.updatedAt,
   };
-}
+};
 
 // ============================================================================
 // Update Profile Handler
 // ============================================================================
 
-export async function updateProfileHandler(
-  input: UpdateProfileInput,
-  context: AuthenticatedContext,
-) {
+export const updateProfileHandler: UpdateProfileRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Build update object with only provided fields
@@ -143,16 +102,13 @@ export async function updateProfileHandler(
     createdAt: updatedUser.createdAt,
     updatedAt: updatedUser.updatedAt,
   };
-}
+};
 
 // ============================================================================
 // Delete Account Handler
 // ============================================================================
 
-export async function deleteAccountHandler(
-  input: DeleteAccountInput,
-  context: AuthenticatedContext,
-) {
+export const deleteAccountHandler: DeleteAccountRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const userEmail = context.session.user.email;
 
@@ -168,15 +124,15 @@ export async function deleteAccountHandler(
     success: true,
     message: "Account deleted successfully",
   };
-}
+};
 
 // ============================================================================
 // Check Auth Handler
 // ============================================================================
 
-export function checkAuthHandler(context: HandlerContext) {
+export const checkAuthHandler: CheckAuthRouteHandler = async ({ context }) => {
   return {
     authenticated: !!context.session,
     userId: context.session?.user.id ?? null,
   };
-}
+};

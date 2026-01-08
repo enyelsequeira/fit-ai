@@ -7,37 +7,14 @@ import { and, desc, eq, gte, lte, sql } from "drizzle-orm";
 import { badRequest, notFound, notOwner } from "../../errors";
 
 import type {
-  CreateBodyMeasurementInput,
-  DeleteBodyMeasurementInput,
-  GetByIdInput,
-  GetTrendsInput,
-  ListBodyMeasurementsInput,
-  UpdateBodyMeasurementInput,
-} from "./schemas";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
+  CreateRouteHandler,
+  DeleteRouteHandler,
+  GetByIdRouteHandler,
+  GetLatestRouteHandler,
+  GetTrendsRouteHandler,
+  ListRouteHandler,
+  UpdateRouteHandler,
+} from "./contracts";
 
 // ============================================================================
 // Helper Functions
@@ -93,10 +70,7 @@ function getStartDateFromPeriod(period: string, endDate: Date): Date {
 // Handlers
 // ============================================================================
 
-export async function listBodyMeasurementsHandler(
-  input: ListBodyMeasurementsInput,
-  context: AuthenticatedContext,
-) {
+export const listBodyMeasurementsHandler: ListRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const conditions: ReturnType<typeof eq>[] = [eq(bodyMeasurement.userId, userId)];
 
@@ -128,14 +102,14 @@ export async function listBodyMeasurementsHandler(
     limit: input.limit,
     offset: input.offset,
   };
-}
+};
 
-export async function getByIdHandler(input: GetByIdInput, context: AuthenticatedContext) {
+export const getByIdHandler: GetByIdRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   return verifyMeasurementOwnership(input.id, userId);
-}
+};
 
-export async function getLatestHandler(context: AuthenticatedContext) {
+export const getLatestHandler: GetLatestRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
 
   const result = await db
@@ -146,9 +120,9 @@ export async function getLatestHandler(context: AuthenticatedContext) {
     .limit(1);
 
   return result[0] ?? null;
-}
+};
 
-export async function getTrendsHandler(input: GetTrendsInput, context: AuthenticatedContext) {
+export const getTrendsHandler: GetTrendsRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const endDate = input.endDate ?? new Date();
@@ -201,12 +175,9 @@ export async function getTrendsHandler(input: GetTrendsInput, context: Authentic
     endDate: measurements[measurements.length - 1]?.measuredAt ?? null,
     measurementCount: measurements.length,
   };
-}
+};
 
-export async function createBodyMeasurementHandler(
-  input: CreateBodyMeasurementInput,
-  context: AuthenticatedContext,
-) {
+export const createBodyMeasurementHandler: CreateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const result = await db
@@ -234,12 +205,9 @@ export async function createBodyMeasurementHandler(
     .returning();
 
   return result[0];
-}
+};
 
-export async function updateBodyMeasurementHandler(
-  input: UpdateBodyMeasurementInput,
-  context: AuthenticatedContext,
-) {
+export const updateBodyMeasurementHandler: UpdateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyMeasurementOwnership(input.id, userId);
@@ -276,12 +244,9 @@ export async function updateBodyMeasurementHandler(
     .returning();
 
   return result[0];
-}
+};
 
-export async function deleteBodyMeasurementHandler(
-  input: DeleteBodyMeasurementInput,
-  context: AuthenticatedContext,
-) {
+export const deleteBodyMeasurementHandler: DeleteRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyMeasurementOwnership(input.id, userId);
@@ -289,4 +254,4 @@ export async function deleteBodyMeasurementHandler(
   await db.delete(bodyMeasurement).where(eq(bodyMeasurement.id, input.id));
 
   return { success: true };
-}
+};

@@ -1,21 +1,3 @@
-import type {
-  AddExerciseInput,
-  CreateFolderInput,
-  CreateTemplateInput,
-  DeleteFolderInput,
-  DeleteTemplateInput,
-  DuplicateTemplateInput,
-  GetTemplateByIdInput,
-  ListTemplatesInput,
-  RemoveExerciseInput,
-  ReorderExercisesInput,
-  ReorderFoldersInput,
-  StartWorkoutInput,
-  UpdateExerciseInput,
-  UpdateFolderInput,
-  UpdateTemplateInput,
-} from "./schemas";
-
 import { db } from "@fit-ai/db";
 import { exercise } from "@fit-ai/db/schema/exercise";
 import { exerciseSet, workout, workoutExercise } from "@fit-ai/db/schema/workout";
@@ -29,29 +11,24 @@ import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 
 import { badRequest, notFound, notOwner } from "../../errors";
 
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
+import type {
+  AddExerciseRouteHandler,
+  CreateFolderRouteHandler,
+  CreateTemplateRouteHandler,
+  DeleteFolderRouteHandler,
+  DeleteTemplateRouteHandler,
+  DuplicateTemplateRouteHandler,
+  GetTemplateByIdRouteHandler,
+  ListFoldersRouteHandler,
+  ListTemplatesRouteHandler,
+  RemoveExerciseRouteHandler,
+  ReorderExercisesRouteHandler,
+  ReorderFoldersRouteHandler,
+  StartWorkoutRouteHandler,
+  UpdateExerciseRouteHandler,
+  UpdateFolderRouteHandler,
+  UpdateTemplateRouteHandler,
+} from "./contracts";
 
 // ============================================================================
 // Helper Functions
@@ -127,7 +104,7 @@ async function verifyFolderOwnership(
 // Folder Handlers
 // ============================================================================
 
-export async function listFoldersHandler(context: AuthenticatedContext) {
+export const listFoldersHandler: ListFoldersRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
 
   const folders = await db
@@ -137,9 +114,9 @@ export async function listFoldersHandler(context: AuthenticatedContext) {
     .orderBy(asc(templateFolder.order));
 
   return folders;
-}
+};
 
-export async function createFolderHandler(input: CreateFolderInput, context: AuthenticatedContext) {
+export const createFolderHandler: CreateFolderRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const maxOrderResult = await db
@@ -159,9 +136,9 @@ export async function createFolderHandler(input: CreateFolderInput, context: Aut
     .returning();
 
   return result[0];
-}
+};
 
-export async function updateFolderHandler(input: UpdateFolderInput, context: AuthenticatedContext) {
+export const updateFolderHandler: UpdateFolderRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyFolderOwnership(input.id, userId);
@@ -176,9 +153,9 @@ export async function updateFolderHandler(input: UpdateFolderInput, context: Aut
     .returning();
 
   return result[0];
-}
+};
 
-export async function deleteFolderHandler(input: DeleteFolderInput, context: AuthenticatedContext) {
+export const deleteFolderHandler: DeleteFolderRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyFolderOwnership(input.id, userId);
@@ -186,12 +163,9 @@ export async function deleteFolderHandler(input: DeleteFolderInput, context: Aut
   await db.delete(templateFolder).where(eq(templateFolder.id, input.id));
 
   return { success: true };
-}
+};
 
-export async function reorderFoldersHandler(
-  input: ReorderFoldersInput,
-  context: AuthenticatedContext,
-) {
+export const reorderFoldersHandler: ReorderFoldersRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const folders = await db
@@ -211,16 +185,13 @@ export async function reorderFoldersHandler(
   }
 
   return { success: true };
-}
+};
 
 // ============================================================================
 // Template Handlers
 // ============================================================================
 
-export async function listTemplatesHandler(
-  input: ListTemplatesInput,
-  context: AuthenticatedContext,
-) {
+export const listTemplatesHandler: ListTemplatesRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   let ownershipCondition;
@@ -251,12 +222,9 @@ export async function listTemplatesHandler(
     .offset(input.offset);
 
   return templates;
-}
+};
 
-export async function getTemplateByIdHandler(
-  input: GetTemplateByIdInput,
-  context: AuthenticatedContext,
-) {
+export const getTemplateByIdHandler: GetTemplateByIdRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const template = await verifyTemplateAccess(input.id, userId);
@@ -294,12 +262,9 @@ export async function getTemplateByIdHandler(
       exercise: e.exercise ?? undefined,
     })),
   };
-}
+};
 
-export async function createTemplateHandler(
-  input: CreateTemplateInput,
-  context: AuthenticatedContext,
-) {
+export const createTemplateHandler: CreateTemplateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   if (input.folderId) {
@@ -319,12 +284,9 @@ export async function createTemplateHandler(
     .returning();
 
   return result[0];
-}
+};
 
-export async function updateTemplateHandler(
-  input: UpdateTemplateInput,
-  context: AuthenticatedContext,
-) {
+export const updateTemplateHandler: UpdateTemplateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyTemplateOwnership(input.id, userId);
@@ -348,12 +310,9 @@ export async function updateTemplateHandler(
     .returning();
 
   return result[0];
-}
+};
 
-export async function deleteTemplateHandler(
-  input: DeleteTemplateInput,
-  context: AuthenticatedContext,
-) {
+export const deleteTemplateHandler: DeleteTemplateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyTemplateOwnership(input.id, userId);
@@ -361,12 +320,12 @@ export async function deleteTemplateHandler(
   await db.delete(workoutTemplate).where(eq(workoutTemplate.id, input.id));
 
   return { success: true };
-}
+};
 
-export async function duplicateTemplateHandler(
-  input: DuplicateTemplateInput,
-  context: AuthenticatedContext,
-) {
+export const duplicateTemplateHandler: DuplicateTemplateRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const template = await verifyTemplateOwnership(input.id, userId);
@@ -441,9 +400,9 @@ export async function duplicateTemplateHandler(
       exercise: e.exercise ?? undefined,
     })),
   };
-}
+};
 
-export async function startWorkoutHandler(input: StartWorkoutInput, context: AuthenticatedContext) {
+export const startWorkoutHandler: StartWorkoutRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const template = await verifyTemplateAccess(input.id, userId);
@@ -503,13 +462,13 @@ export async function startWorkoutHandler(input: StartWorkoutInput, context: Aut
     .where(eq(workoutTemplate.id, template.id));
 
   return newWorkout;
-}
+};
 
 // ============================================================================
 // Template Exercise Handlers
 // ============================================================================
 
-export async function addExerciseHandler(input: AddExerciseInput, context: AuthenticatedContext) {
+export const addExerciseHandler: AddExerciseRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyTemplateOwnership(input.id, userId);
@@ -554,12 +513,9 @@ export async function addExerciseHandler(input: AddExerciseInput, context: Authe
   }
 
   return templateExercise;
-}
+};
 
-export async function updateExerciseHandler(
-  input: UpdateExerciseInput,
-  context: AuthenticatedContext,
-) {
+export const updateExerciseHandler: UpdateExerciseRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyTemplateOwnership(input.templateId, userId);
@@ -595,12 +551,9 @@ export async function updateExerciseHandler(
     .returning();
 
   return result[0];
-}
+};
 
-export async function removeExerciseHandler(
-  input: RemoveExerciseInput,
-  context: AuthenticatedContext,
-) {
+export const removeExerciseHandler: RemoveExerciseRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyTemplateOwnership(input.templateId, userId);
@@ -623,12 +576,9 @@ export async function removeExerciseHandler(
   await db.delete(workoutTemplateExercise).where(eq(workoutTemplateExercise.id, input.exerciseId));
 
   return { success: true };
-}
+};
 
-export async function reorderExercisesHandler(
-  input: ReorderExercisesInput,
-  context: AuthenticatedContext,
-) {
+export const reorderExercisesHandler: ReorderExercisesRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyTemplateOwnership(input.id, userId);
@@ -658,4 +608,4 @@ export async function reorderExercisesHandler(
   }
 
   return { success: true };
-}
+};

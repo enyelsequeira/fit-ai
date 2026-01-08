@@ -4,41 +4,27 @@ import { goal, goalProgress } from "@fit-ai/db/schema/goals";
 import { and, desc, eq, inArray } from "drizzle-orm";
 
 import { badRequest, notFound, notOwner } from "../../errors";
+
 import type {
-  AbandonGoalInput,
-  CompleteGoalInput,
-  CreateBodyMeasurementGoalInput,
-  CreateCustomGoalInput,
-  CreateStrengthGoalInput,
-  CreateWeightGoalInput,
-  CreateWorkoutFrequencyGoalInput,
-  DeleteGoalInput,
-  GetGoalByIdInput,
-  GetGoalProgressHistoryInput,
-  GoalOutput,
-  GoalWithExercise,
-  GoalWithProgress,
-  GoalsSummary,
-  ListGoalsFilterInput,
-  PauseGoalInput,
-  ResumeGoalInput,
-  UpdateGoalInput,
-  UpdateGoalProgressInput,
-} from "./schemas";
+  AbandonGoalRouteHandler,
+  CompleteGoalRouteHandler,
+  CreateBodyMeasurementGoalRouteHandler,
+  CreateCustomGoalRouteHandler,
+  CreateStrengthGoalRouteHandler,
+  CreateWeightGoalRouteHandler,
+  CreateWorkoutFrequencyGoalRouteHandler,
+  DeleteGoalRouteHandler,
+  GetGoalByIdRouteHandler,
+  GetGoalProgressHistoryRouteHandler,
+  GetGoalsSummaryRouteHandler,
+  ListGoalsRouteHandler,
+  PauseGoalRouteHandler,
+  ResumeGoalRouteHandler,
+  UpdateGoalProgressRouteHandler,
+  UpdateGoalRouteHandler,
+} from "./contracts";
 
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
+import type { GoalWithExercise, GoalWithProgress } from "./schemas";
 
 // ============================================================================
 // Helper Functions
@@ -134,10 +120,7 @@ async function getExerciseDetails(exerciseId: number | null) {
 /**
  * Create a weight goal
  */
-export async function createWeightGoalHandler(
-  input: CreateWeightGoalInput,
-  context: AuthenticatedContext,
-): Promise<GoalOutput> {
+export const createWeightGoalHandler: CreateWeightGoalRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const result = await db
@@ -158,15 +141,15 @@ export async function createWeightGoalHandler(
     .returning();
 
   return result[0]!;
-}
+};
 
 /**
  * Create a strength goal
  */
-export async function createStrengthGoalHandler(
-  input: CreateStrengthGoalInput,
-  context: AuthenticatedContext,
-): Promise<GoalOutput> {
+export const createStrengthGoalHandler: CreateStrengthGoalRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   // Verify exercise exists
@@ -202,15 +185,15 @@ export async function createStrengthGoalHandler(
     .returning();
 
   return result[0]!;
-}
+};
 
 /**
  * Create a body measurement goal
  */
-export async function createBodyMeasurementGoalHandler(
-  input: CreateBodyMeasurementGoalInput,
-  context: AuthenticatedContext,
-): Promise<GoalOutput> {
+export const createBodyMeasurementGoalHandler: CreateBodyMeasurementGoalRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const result = await db
@@ -232,15 +215,15 @@ export async function createBodyMeasurementGoalHandler(
     .returning();
 
   return result[0]!;
-}
+};
 
 /**
  * Create a workout frequency goal
  */
-export async function createWorkoutFrequencyGoalHandler(
-  input: CreateWorkoutFrequencyGoalInput,
-  context: AuthenticatedContext,
-): Promise<GoalOutput> {
+export const createWorkoutFrequencyGoalHandler: CreateWorkoutFrequencyGoalRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const result = await db
@@ -259,15 +242,12 @@ export async function createWorkoutFrequencyGoalHandler(
     .returning();
 
   return result[0]!;
-}
+};
 
 /**
  * Create a custom goal
  */
-export async function createCustomGoalHandler(
-  input: CreateCustomGoalInput,
-  context: AuthenticatedContext,
-): Promise<GoalOutput> {
+export const createCustomGoalHandler: CreateCustomGoalRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const result = await db
@@ -289,15 +269,15 @@ export async function createCustomGoalHandler(
     .returning();
 
   return result[0]!;
-}
+};
 
 /**
  * Get a goal by ID with exercise details
  */
-export async function getGoalByIdHandler(
-  input: GetGoalByIdInput,
-  context: AuthenticatedContext,
-): Promise<GoalWithProgress> {
+export const getGoalByIdHandler: GetGoalByIdRouteHandler = async ({
+  input,
+  context,
+}): Promise<GoalWithProgress> => {
   const userId = context.session.user.id;
   const existingGoal = await getGoalWithOwnershipCheck(input.id, userId);
 
@@ -317,15 +297,15 @@ export async function getGoalByIdHandler(
     exercise: exerciseDetails,
     progressHistory,
   };
-}
+};
 
 /**
  * List goals with filtering
  */
-export async function listGoalsHandler(
-  input: ListGoalsFilterInput,
-  context: AuthenticatedContext,
-): Promise<GoalWithExercise[]> {
+export const listGoalsHandler: ListGoalsRouteHandler = async ({
+  input,
+  context,
+}): Promise<GoalWithExercise[]> => {
   const userId = context.session.user.id;
   const limit = input.limit ?? 50;
   const offset = input.offset ?? 0;
@@ -376,12 +356,12 @@ export async function listGoalsHandler(
     ...g,
     exercise: g.exerciseId ? (exerciseMap.get(g.exerciseId) ?? null) : null,
   }));
-}
+};
 
 /**
  * Get goals summary for dashboard
  */
-export async function getGoalsSummaryHandler(context: AuthenticatedContext): Promise<GoalsSummary> {
+export const getGoalsSummaryHandler: GetGoalsSummaryRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
   const now = new Date();
   const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -455,15 +435,12 @@ export async function getGoalsSummaryHandler(context: AuthenticatedContext): Pro
       exercise: g.exerciseId ? (exerciseMap.get(g.exerciseId) ?? null) : null,
     })),
   };
-}
+};
 
 /**
  * Update a goal
  */
-export async function updateGoalHandler(
-  input: UpdateGoalInput,
-  context: AuthenticatedContext,
-): Promise<GoalOutput> {
+export const updateGoalHandler: UpdateGoalRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const existingGoal = await getGoalWithOwnershipCheck(input.id, userId);
 
@@ -569,15 +546,15 @@ export async function updateGoalHandler(
   const result = await db.update(goal).set(updateData).where(eq(goal.id, input.id)).returning();
 
   return result[0]!;
-}
+};
 
 /**
  * Update goal progress (logs progress history)
  */
-export async function updateGoalProgressHandler(
-  input: UpdateGoalProgressInput,
-  context: AuthenticatedContext,
-): Promise<GoalWithProgress> {
+export const updateGoalProgressHandler: UpdateGoalProgressRouteHandler = async ({
+  input,
+  context,
+}): Promise<GoalWithProgress> => {
   const userId = context.session.user.id;
   const existingGoal = await getGoalWithOwnershipCheck(input.goalId, userId);
 
@@ -683,15 +660,12 @@ export async function updateGoalProgressHandler(
     exercise: exerciseDetails,
     progressHistory,
   };
-}
+};
 
 /**
  * Complete a goal
  */
-export async function completeGoalHandler(
-  input: CompleteGoalInput,
-  context: AuthenticatedContext,
-): Promise<GoalOutput> {
+export const completeGoalHandler: CompleteGoalRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getGoalWithOwnershipCheck(input.id, userId);
 
@@ -706,15 +680,12 @@ export async function completeGoalHandler(
     .returning();
 
   return result[0]!;
-}
+};
 
 /**
  * Abandon a goal
  */
-export async function abandonGoalHandler(
-  input: AbandonGoalInput,
-  context: AuthenticatedContext,
-): Promise<GoalOutput> {
+export const abandonGoalHandler: AbandonGoalRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getGoalWithOwnershipCheck(input.id, userId);
 
@@ -736,15 +707,12 @@ export async function abandonGoalHandler(
   const result = await db.update(goal).set(updateData).where(eq(goal.id, input.id)).returning();
 
   return result[0]!;
-}
+};
 
 /**
  * Pause a goal
  */
-export async function pauseGoalHandler(
-  input: PauseGoalInput,
-  context: AuthenticatedContext,
-): Promise<GoalOutput> {
+export const pauseGoalHandler: PauseGoalRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const existingGoal = await getGoalWithOwnershipCheck(input.id, userId);
 
@@ -759,15 +727,12 @@ export async function pauseGoalHandler(
     .returning();
 
   return result[0]!;
-}
+};
 
 /**
  * Resume a goal
  */
-export async function resumeGoalHandler(
-  input: ResumeGoalInput,
-  context: AuthenticatedContext,
-): Promise<GoalOutput> {
+export const resumeGoalHandler: ResumeGoalRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const existingGoal = await getGoalWithOwnershipCheck(input.id, userId);
 
@@ -782,15 +747,12 @@ export async function resumeGoalHandler(
     .returning();
 
   return result[0]!;
-}
+};
 
 /**
  * Delete a goal
  */
-export async function deleteGoalHandler(
-  input: DeleteGoalInput,
-  context: AuthenticatedContext,
-): Promise<{ success: boolean }> {
+export const deleteGoalHandler: DeleteGoalRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getGoalWithOwnershipCheck(input.id, userId);
 
@@ -801,15 +763,15 @@ export async function deleteGoalHandler(
   await db.delete(goal).where(eq(goal.id, input.id));
 
   return { success: true };
-}
+};
 
 /**
  * Get goal progress history
  */
-export async function getGoalProgressHistoryHandler(
-  input: GetGoalProgressHistoryInput,
-  context: AuthenticatedContext,
-) {
+export const getGoalProgressHistoryHandler: GetGoalProgressHistoryRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
   await getGoalWithOwnershipCheck(input.goalId, userId);
 
@@ -825,4 +787,4 @@ export async function getGoalProgressHistoryHandler(
     .offset(offset);
 
   return history;
-}
+};

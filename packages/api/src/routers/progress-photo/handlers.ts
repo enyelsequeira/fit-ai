@@ -6,41 +6,17 @@ import { and, between, desc, eq, sql } from "drizzle-orm";
 import { notFound, notOwner } from "../../errors";
 
 import type {
-  ComparePhotosInput,
-  CreatePhotoInput,
-  DeletePhotoInput,
-  GetByIdInput,
-  LinkMeasurementInput,
-  ListPhotosInput,
-  PhotoWithMeasurement,
-  TimelineInput,
-  UnlinkMeasurementInput,
-  UpdatePhotoInput,
-} from "./schemas";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
+  CompareRouteHandler,
+  CreateRouteHandler,
+  DeleteRouteHandler,
+  GetByIdRouteHandler,
+  LinkMeasurementRouteHandler,
+  ListRouteHandler,
+  TimelineRouteHandler,
+  UnlinkMeasurementRouteHandler,
+  UpdateRouteHandler,
+} from "./contracts";
+import type { PhotoWithMeasurement } from "./schemas";
 
 // ============================================================================
 // Helper Functions
@@ -132,7 +108,7 @@ async function getPhotoWithMeasurement(
 // List Photos Handler
 // ============================================================================
 
-export async function listPhotosHandler(input: ListPhotosInput, context: AuthenticatedContext) {
+export const listPhotosHandler: ListRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const conditions = [eq(progressPhoto.userId, userId)];
@@ -158,22 +134,22 @@ export async function listPhotosHandler(input: ListPhotosInput, context: Authent
     .offset(input.offset);
 
   return photos;
-}
+};
 
 // ============================================================================
 // Get By ID Handler
 // ============================================================================
 
-export async function getByIdHandler(input: GetByIdInput, context: AuthenticatedContext) {
+export const getByIdHandler: GetByIdRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   return getPhotoWithMeasurement(input.id, userId);
-}
+};
 
 // ============================================================================
 // Create Photo Handler
 // ============================================================================
 
-export async function createPhotoHandler(input: CreatePhotoInput, context: AuthenticatedContext) {
+export const createPhotoHandler: CreateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Verify measurement ownership if linking
@@ -196,13 +172,13 @@ export async function createPhotoHandler(input: CreatePhotoInput, context: Authe
     .returning();
 
   return result[0];
-}
+};
 
 // ============================================================================
 // Update Photo Handler
 // ============================================================================
 
-export async function updatePhotoHandler(input: UpdatePhotoInput, context: AuthenticatedContext) {
+export const updatePhotoHandler: UpdateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyPhotoOwnership(input.id, userId);
@@ -220,13 +196,13 @@ export async function updatePhotoHandler(input: UpdatePhotoInput, context: Authe
     .returning();
 
   return result[0];
-}
+};
 
 // ============================================================================
 // Delete Photo Handler
 // ============================================================================
 
-export async function deletePhotoHandler(input: DeletePhotoInput, context: AuthenticatedContext) {
+export const deletePhotoHandler: DeleteRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   await verifyPhotoOwnership(input.id, userId);
@@ -234,16 +210,13 @@ export async function deletePhotoHandler(input: DeletePhotoInput, context: Authe
   await db.delete(progressPhoto).where(eq(progressPhoto.id, input.id));
 
   return { success: true };
-}
+};
 
 // ============================================================================
 // Link Measurement Handler
 // ============================================================================
 
-export async function linkMeasurementHandler(
-  input: LinkMeasurementInput,
-  context: AuthenticatedContext,
-) {
+export const linkMeasurementHandler: LinkMeasurementRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Verify both photo and measurement belong to the user
@@ -257,16 +230,16 @@ export async function linkMeasurementHandler(
     .where(eq(progressPhoto.id, input.id));
 
   return getPhotoWithMeasurement(input.id, userId);
-}
+};
 
 // ============================================================================
 // Unlink Measurement Handler
 // ============================================================================
 
-export async function unlinkMeasurementHandler(
-  input: UnlinkMeasurementInput,
-  context: AuthenticatedContext,
-) {
+export const unlinkMeasurementHandler: UnlinkMeasurementRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   await verifyPhotoOwnership(input.id, userId);
@@ -278,16 +251,13 @@ export async function unlinkMeasurementHandler(
     .returning();
 
   return result[0];
-}
+};
 
 // ============================================================================
 // Compare Photos Handler
 // ============================================================================
 
-export async function comparePhotosHandler(
-  input: ComparePhotosInput,
-  context: AuthenticatedContext,
-) {
+export const comparePhotosHandler: CompareRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Get both photos with their measurements
@@ -305,13 +275,13 @@ export async function comparePhotosHandler(
     photo2,
     daysBetween,
   };
-}
+};
 
 // ============================================================================
 // Timeline Handler
 // ============================================================================
 
-export async function timelineHandler(input: TimelineInput, context: AuthenticatedContext) {
+export const timelineHandler: TimelineRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Get all photos ordered by date
@@ -347,4 +317,4 @@ export async function timelineHandler(input: TimelineInput, context: Authenticat
     groups,
     totalCount: photos.length,
   };
-}
+};

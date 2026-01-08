@@ -8,43 +8,19 @@ import { and, eq, or, sql } from "drizzle-orm";
 import { cannotModifyDefault, duplicate, notFound, notOwner, resourceInUse } from "../../errors";
 
 import type {
-  CheckNameAvailabilityInput,
-  CreateExerciseInput,
-  DeleteExerciseInput,
-  GetExerciseByIdInput,
-  ListExercisesInput,
-  UpdateExerciseInput,
-} from "./schemas";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
+  CheckNameAvailabilityRouteHandler,
+  CreateRouteHandler,
+  DeleteRouteHandler,
+  GetByIdRouteHandler,
+  ListRouteHandler,
+  UpdateRouteHandler,
+} from "./contracts";
 
 // ============================================================================
 // List Exercises Handler
 // ============================================================================
 
-export async function listExercisesHandler(input: ListExercisesInput, context: HandlerContext) {
+export const listExercisesHandler: ListRouteHandler = async ({ input, context }) => {
   const conditions: ReturnType<typeof eq>[] = [];
 
   // Category filter
@@ -134,13 +110,13 @@ export async function listExercisesHandler(input: ListExercisesInput, context: H
     limit: input.limit,
     offset: input.offset,
   };
-}
+};
 
 // ============================================================================
 // Get Exercise By ID Handler
 // ============================================================================
 
-export async function getExerciseByIdHandler(input: GetExerciseByIdInput, context: HandlerContext) {
+export const getExerciseByIdHandler: GetByIdRouteHandler = async ({ input, context }) => {
   const result = await db.select().from(exercise).where(eq(exercise.id, input.id)).limit(1);
 
   const ex = result[0];
@@ -155,21 +131,22 @@ export async function getExerciseByIdHandler(input: GetExerciseByIdInput, contex
   }
 
   return ex;
-}
+};
 
 // ============================================================================
 // Create Exercise Handler
 // ============================================================================
 
-export async function createExerciseHandler(
-  input: CreateExerciseInput,
-  context: AuthenticatedContext,
-) {
+export const createExerciseHandler: CreateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Check for duplicate exercise name (case-insensitive)
   const existingExercise = await db
-    .select({ id: exercise.id, name: exercise.name, isDefault: exercise.isDefault })
+    .select({
+      id: exercise.id,
+      name: exercise.name,
+      isDefault: exercise.isDefault,
+    })
     .from(exercise)
     .where(
       and(
@@ -199,16 +176,13 @@ export async function createExerciseHandler(
     .returning();
 
   return result[0];
-}
+};
 
 // ============================================================================
 // Update Exercise Handler
 // ============================================================================
 
-export async function updateExerciseHandler(
-  input: UpdateExerciseInput,
-  context: AuthenticatedContext,
-) {
+export const updateExerciseHandler: UpdateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // First, verify the exercise exists and user owns it
@@ -232,7 +206,11 @@ export async function updateExerciseHandler(
   // Check for duplicate name if name is being changed
   if (input.name !== undefined && input.name.trim().toLowerCase() !== ex.name.toLowerCase()) {
     const existingExercise = await db
-      .select({ id: exercise.id, name: exercise.name, isDefault: exercise.isDefault })
+      .select({
+        id: exercise.id,
+        name: exercise.name,
+        isDefault: exercise.isDefault,
+      })
       .from(exercise)
       .where(
         and(
@@ -265,16 +243,13 @@ export async function updateExerciseHandler(
     .returning();
 
   return result[0];
-}
+};
 
 // ============================================================================
 // Delete Exercise Handler
 // ============================================================================
 
-export async function deleteExerciseHandler(
-  input: DeleteExerciseInput,
-  context: AuthenticatedContext,
-) {
+export const deleteExerciseHandler: DeleteRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Verify the exercise exists and user owns it
@@ -308,26 +283,26 @@ export async function deleteExerciseHandler(
   await db.delete(exercise).where(eq(exercise.id, input.id));
 
   return { success: true };
-}
+};
 
 // ============================================================================
 // Get Equipment List Handler
 // ============================================================================
 
-export async function getEquipmentListHandler() {
+export const getEquipmentListHandler = async () => {
   const results = await db
     .selectDistinct({ equipment: exercise.equipment })
     .from(exercise)
     .where(and(eq(exercise.isDefault, true), sql`${exercise.equipment} IS NOT NULL`));
 
   return results.map((r) => r.equipment).filter(Boolean) as string[];
-}
+};
 
 // ============================================================================
 // Get Muscle Groups Handler
 // ============================================================================
 
-export async function getMuscleGroupsHandler() {
+export const getMuscleGroupsHandler = async () => {
   const results = await db
     .select({ muscleGroups: exercise.muscleGroups })
     .from(exercise)
@@ -342,20 +317,24 @@ export async function getMuscleGroupsHandler() {
   }
 
   return [...allMuscleGroups].sort();
-}
+};
 
 // ============================================================================
 // Check Name Availability Handler
 // ============================================================================
 
-export async function checkNameAvailabilityHandler(
-  input: CheckNameAvailabilityInput,
-  context: AuthenticatedContext,
-) {
+export const checkNameAvailabilityHandler: CheckNameAvailabilityRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const existingExercise = await db
-    .select({ id: exercise.id, name: exercise.name, isDefault: exercise.isDefault })
+    .select({
+      id: exercise.id,
+      name: exercise.name,
+      isDefault: exercise.isDefault,
+    })
     .from(exercise)
     .where(
       and(
@@ -380,4 +359,4 @@ export async function checkNameAvailabilityHandler(
   }
 
   return { available: true };
-}
+};

@@ -19,37 +19,15 @@ import { and, desc, eq, gte, or, sql } from "drizzle-orm";
 import { APP_ERROR_CODES, badRequest, businessRuleViolation, notFound } from "../../errors";
 
 import type {
-  FeedbackInput,
-  GeneratedHistoryInput,
-  GenerateWorkoutInput,
-  SubstituteExerciseInput,
-  SuggestNextWorkoutInput,
-  UpdatePreferencesInput,
-} from "./schemas";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
+  GenerateWorkoutRouteHandler,
+  GetGeneratedHistoryRouteHandler,
+  GetPreferencesRouteHandler,
+  PatchPreferencesRouteHandler,
+  SubmitFeedbackRouteHandler,
+  SubstituteExerciseRouteHandler,
+  SuggestNextWorkoutRouteHandler,
+  UpdatePreferencesRouteHandler,
+} from "./contracts";
 
 // ============================================================================
 // Helper Functions
@@ -210,7 +188,7 @@ function generateCooldown(workoutType: WorkoutType): string {
 // Handlers
 // ============================================================================
 
-export async function getPreferencesHandler(context: AuthenticatedContext) {
+export const getPreferencesHandler: GetPreferencesRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
 
   const result = await db
@@ -220,12 +198,12 @@ export async function getPreferencesHandler(context: AuthenticatedContext) {
     .limit(1);
 
   return result[0] ?? null;
-}
+};
 
-export async function updatePreferencesHandler(
-  input: UpdatePreferencesInput,
-  context: AuthenticatedContext,
-) {
+export const updatePreferencesHandler: UpdatePreferencesRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const existing = await db
@@ -287,12 +265,9 @@ export async function updatePreferencesHandler(
     throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to create preferences" });
   }
   return created;
-}
+};
 
-export async function patchPreferencesHandler(
-  input: UpdatePreferencesInput,
-  context: AuthenticatedContext,
-) {
+export const patchPreferencesHandler: PatchPreferencesRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const existing = await db
@@ -349,12 +324,9 @@ export async function patchPreferencesHandler(
     throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to update preferences" });
   }
   return updated;
-}
+};
 
-export async function generateWorkoutHandler(
-  input: GenerateWorkoutInput,
-  context: AuthenticatedContext,
-) {
+export const generateWorkoutHandler: GenerateWorkoutRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const prefsResult = await db
@@ -511,12 +483,12 @@ export async function generateWorkoutHandler(
   }
 
   return saved;
-}
+};
 
-export async function suggestNextWorkoutHandler(
-  input: SuggestNextWorkoutInput,
-  context: AuthenticatedContext,
-) {
+export const suggestNextWorkoutHandler: SuggestNextWorkoutRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const prefsResult = await db
@@ -655,12 +627,12 @@ export async function suggestNextWorkoutHandler(
     muscleRecoveryStatus,
     generatedWorkout,
   };
-}
+};
 
-export async function substituteExerciseHandler(
-  input: SubstituteExerciseInput,
-  context: AuthenticatedContext,
-) {
+export const substituteExerciseHandler: SubstituteExerciseRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const originalResult = await db
@@ -757,12 +729,12 @@ export async function substituteExerciseHandler(
     .slice(0, 5);
 
   return { alternatives };
-}
+};
 
-export async function getGeneratedHistoryHandler(
-  input: GeneratedHistoryInput,
-  context: AuthenticatedContext,
-) {
+export const getGeneratedHistoryHandler: GetGeneratedHistoryRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
 
   const countResult = await db
@@ -786,9 +758,9 @@ export async function getGeneratedHistoryHandler(
     limit: input.limit,
     offset: input.offset,
   };
-}
+};
 
-export async function submitFeedbackHandler(input: FeedbackInput, context: AuthenticatedContext) {
+export const submitFeedbackHandler: SubmitFeedbackRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const existing = await db
@@ -823,4 +795,4 @@ export async function submitFeedbackHandler(input: FeedbackInput, context: Authe
   }
 
   return updated;
-}
+};

@@ -10,39 +10,16 @@ import { and, desc, eq, gte, sql } from "drizzle-orm";
 import { badRequest, notFound, notOwner } from "../../errors";
 
 import type {
-  CalculatePRsInput,
-  CreatePersonalRecordInput,
-  DeletePersonalRecordInput,
-  GetByExerciseInput,
-  GetByIdInput,
-  GetRecentPersonalRecordsInput,
-  ListPersonalRecordsInput,
-  UpdatePersonalRecordInput,
-} from "./schemas";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
+  CalculateRouteHandler,
+  CreateRouteHandler,
+  DeleteRouteHandler,
+  GetByExerciseRouteHandler,
+  GetByIdRouteHandler,
+  GetRecentRouteHandler,
+  GetSummaryRouteHandler,
+  ListRouteHandler,
+  UpdateRouteHandler,
+} from "./contracts";
 
 // ============================================================================
 // Helper Functions
@@ -144,10 +121,7 @@ function beatsExistingPR(
 // List Personal Records Handler
 // ============================================================================
 
-export async function listPersonalRecordsHandler(
-  input: ListPersonalRecordsInput,
-  context: AuthenticatedContext,
-) {
+export const listPersonalRecordsHandler: ListRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const conditions: ReturnType<typeof eq>[] = [eq(personalRecord.userId, userId)];
 
@@ -196,16 +170,16 @@ export async function listPersonalRecordsHandler(
     limit: input.limit,
     offset: input.offset,
   };
-}
+};
 
 // ============================================================================
 // Get Recent Personal Records Handler
 // ============================================================================
 
-export async function getRecentPersonalRecordsHandler(
-  input: GetRecentPersonalRecordsInput,
-  context: AuthenticatedContext,
-) {
+export const getRecentPersonalRecordsHandler: GetRecentRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - input.days);
@@ -230,16 +204,13 @@ export async function getRecentPersonalRecordsHandler(
     ...r.record,
     exercise: r.exercise,
   }));
-}
+};
 
 // ============================================================================
 // Get By Exercise Handler
 // ============================================================================
 
-export async function getByExerciseHandler(
-  input: GetByExerciseInput,
-  context: AuthenticatedContext,
-) {
+export const getByExerciseHandler: GetByExerciseRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Verify exercise exists
@@ -261,13 +232,13 @@ export async function getByExerciseHandler(
     .orderBy(desc(personalRecord.achievedAt));
 
   return records;
-}
+};
 
 // ============================================================================
 // Get Summary Handler
 // ============================================================================
 
-export async function getSummaryHandler(context: AuthenticatedContext) {
+export const getSummaryHandler: GetSummaryRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
 
   // Get total count
@@ -330,16 +301,13 @@ export async function getSummaryHandler(context: AuthenticatedContext) {
     })),
     exercisesWithRecords,
   };
-}
+};
 
 // ============================================================================
 // Create Personal Record Handler
 // ============================================================================
 
-export async function createPersonalRecordHandler(
-  input: CreatePersonalRecordInput,
-  context: AuthenticatedContext,
-) {
+export const createPersonalRecordHandler: CreateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Verify exercise exists
@@ -418,13 +386,13 @@ export async function createPersonalRecordHandler(
   }
 
   return newRecord;
-}
+};
 
 // ============================================================================
 // Get By ID Handler
 // ============================================================================
 
-export async function getByIdHandler(input: GetByIdInput, context: AuthenticatedContext) {
+export const getByIdHandler: GetByIdRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const pr = await getPRWithOwnershipCheck(input.id, userId);
 
@@ -444,16 +412,13 @@ export async function getByIdHandler(input: GetByIdInput, context: Authenticated
     ...pr,
     exercise: exerciseResult[0],
   };
-}
+};
 
 // ============================================================================
 // Update Personal Record Handler
 // ============================================================================
 
-export async function updatePersonalRecordHandler(
-  input: UpdatePersonalRecordInput,
-  context: AuthenticatedContext,
-) {
+export const updatePersonalRecordHandler: UpdateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getPRWithOwnershipCheck(input.id, userId);
 
@@ -480,29 +445,26 @@ export async function updatePersonalRecordHandler(
   }
 
   return updated;
-}
+};
 
 // ============================================================================
 // Delete Personal Record Handler
 // ============================================================================
 
-export async function deletePersonalRecordHandler(
-  input: DeletePersonalRecordInput,
-  context: AuthenticatedContext,
-) {
+export const deletePersonalRecordHandler: DeleteRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   await getPRWithOwnershipCheck(input.id, userId);
 
   await db.delete(personalRecord).where(eq(personalRecord.id, input.id));
 
   return { success: true };
-}
+};
 
 // ============================================================================
 // Calculate PRs Handler
 // ============================================================================
 
-export async function calculatePRsHandler(input: CalculatePRsInput, context: AuthenticatedContext) {
+export const calculatePRsHandler: CalculateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Verify workout exists and user owns it
@@ -779,4 +741,4 @@ export async function calculatePRsHandler(input: CalculatePRsInput, context: Aut
     newRecords,
     totalChecked,
   };
-}
+};

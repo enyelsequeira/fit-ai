@@ -8,37 +8,17 @@ import { and, desc, eq, gte, lte, sql } from "drizzle-orm";
 import { notFound } from "../../errors";
 
 import type {
-  CheckInHistoryInput,
-  CheckInInput,
-  DeleteCheckInInput,
-  GetCheckInByDateInput,
-  TrendsInput,
-} from "./schemas";
+  CreateCheckInRouteHandler,
+  DeleteCheckInRouteHandler,
+  GetCheckInByDateRouteHandler,
+  GetCheckInHistoryRouteHandler,
+  GetReadinessRouteHandler,
+  GetRecoveryStatusRouteHandler,
+  GetTodayCheckInRouteHandler,
+  GetTrendsRouteHandler,
+  RefreshRecoveryRouteHandler,
+} from "./contracts";
 import { MUSCLE_GROUPS } from "./schemas";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-export interface HandlerContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  } | null;
-}
-
-export interface AuthenticatedContext {
-  session: {
-    user: {
-      id: string;
-      email: string;
-      name: string | null;
-    };
-  };
-}
 
 // ============================================================================
 // Helper Functions
@@ -107,7 +87,7 @@ function getReadinessRecommendation(
 // Create Check-In Handler
 // ============================================================================
 
-export async function createCheckInHandler(input: CheckInInput, context: AuthenticatedContext) {
+export const createCheckInHandler: CreateCheckInRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const date = input.date ?? getTodayDateString();
 
@@ -176,13 +156,13 @@ export async function createCheckInHandler(input: CheckInInput, context: Authent
   }
 
   return created;
-}
+};
 
 // ============================================================================
 // Get Today Check-In Handler
 // ============================================================================
 
-export async function getTodayCheckInHandler(context: AuthenticatedContext) {
+export const getTodayCheckInHandler: GetTodayCheckInRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
   const today = getTodayDateString();
 
@@ -193,16 +173,13 @@ export async function getTodayCheckInHandler(context: AuthenticatedContext) {
     .limit(1);
 
   return result[0] ?? null;
-}
+};
 
 // ============================================================================
 // Get Check-In By Date Handler
 // ============================================================================
 
-export async function getCheckInByDateHandler(
-  input: GetCheckInByDateInput,
-  context: AuthenticatedContext,
-) {
+export const getCheckInByDateHandler: GetCheckInByDateRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   const result = await db
@@ -212,16 +189,16 @@ export async function getCheckInByDateHandler(
     .limit(1);
 
   return result[0] ?? null;
-}
+};
 
 // ============================================================================
 // Get Check-In History Handler
 // ============================================================================
 
-export async function getCheckInHistoryHandler(
-  input: CheckInHistoryInput,
-  context: AuthenticatedContext,
-) {
+export const getCheckInHistoryHandler: GetCheckInHistoryRouteHandler = async ({
+  input,
+  context,
+}) => {
   const userId = context.session.user.id;
   const conditions: ReturnType<typeof eq>[] = [eq(dailyCheckIn.userId, userId)];
 
@@ -256,13 +233,13 @@ export async function getCheckInHistoryHandler(
     limit: input.limit,
     offset: input.offset,
   };
-}
+};
 
 // ============================================================================
 // Get Trends Handler
 // ============================================================================
 
-export async function getTrendsHandler(input: TrendsInput, context: AuthenticatedContext) {
+export const getTrendsHandler: GetTrendsRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Calculate date range
@@ -311,16 +288,13 @@ export async function getTrendsHandler(input: TrendsInput, context: Authenticate
     averages,
     moodDistribution,
   };
-}
+};
 
 // ============================================================================
 // Delete Check-In Handler
 // ============================================================================
 
-export async function deleteCheckInHandler(
-  input: DeleteCheckInInput,
-  context: AuthenticatedContext,
-) {
+export const deleteCheckInHandler: DeleteCheckInRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
   // Verify check-in exists
@@ -339,13 +313,13 @@ export async function deleteCheckInHandler(
     .where(and(eq(dailyCheckIn.userId, userId), eq(dailyCheckIn.date, input.date)));
 
   return { success: true };
-}
+};
 
 // ============================================================================
 // Get Recovery Status Handler
 // ============================================================================
 
-export async function getRecoveryStatusHandler(context: AuthenticatedContext) {
+export const getRecoveryStatusHandler: GetRecoveryStatusRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
 
   // Get all muscle recovery records
@@ -386,13 +360,13 @@ export async function getRecoveryStatusHandler(context: AuthenticatedContext) {
     overallRecovery,
     updatedAt: new Date(),
   };
-}
+};
 
 // ============================================================================
 // Get Readiness Handler
 // ============================================================================
 
-export async function getReadinessHandler(context: AuthenticatedContext) {
+export const getReadinessHandler: GetReadinessRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
   const today = getTodayDateString();
 
@@ -485,13 +459,13 @@ export async function getReadinessHandler(context: AuthenticatedContext) {
     todayCheckIn,
     lastCheckInDate: checkIn?.date ?? null,
   };
-}
+};
 
 // ============================================================================
 // Refresh Recovery Handler
 // ============================================================================
 
-export async function refreshRecoveryHandler(context: AuthenticatedContext) {
+export const refreshRecoveryHandler: RefreshRecoveryRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
 
   // For now, we'll create/update baseline recovery records for all muscle groups
@@ -535,4 +509,4 @@ export async function refreshRecoveryHandler(context: AuthenticatedContext) {
     updatedMuscleGroups: updatedCount,
     message: `Successfully refreshed recovery data for ${updatedCount} muscle groups`,
   };
-}
+};

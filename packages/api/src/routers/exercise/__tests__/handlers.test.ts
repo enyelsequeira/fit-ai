@@ -66,7 +66,7 @@ vi.mock("drizzle-orm", async (importOriginal) => {
 });
 
 // Import after mocks
-import type { AuthenticatedContext } from "../handlers";
+import type { ProtectedContext } from "../../../index";
 
 // Mock data
 const mockDefaultExercise = {
@@ -168,7 +168,7 @@ describe("Exercise Handlers", () => {
     });
 
     it("should verify exercise visibility rules", () => {
-      const context = createAuthenticatedContext({ id: "test-user-id" }) as AuthenticatedContext;
+      const context = createAuthenticatedContext({ id: "test-user-id" }) as ProtectedContext;
       const userId = context.session.user.id;
 
       // Default exercises are visible to everyone
