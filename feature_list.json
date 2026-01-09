@@ -1,0 +1,1943 @@
+[
+  {
+    "id": "auth-001",
+    "category": "api",
+    "priority": "high",
+    "description": "User sign-up with email creates new account and session",
+    "steps": [
+      "Step 1: POST /api/auth/sign-up/email with valid email and password",
+      "Step 2: Verify response contains user object with id and email",
+      "Step 3: Verify session cookie is set in response",
+      "Step 4: Verify user is created in database"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-002",
+    "category": "api",
+    "priority": "high",
+    "description": "User sign-up fails with invalid email format",
+    "steps": [
+      "Step 1: POST /api/auth/sign-up/email with invalid email 'notanemail'",
+      "Step 2: Verify response returns 400 Bad Request",
+      "Step 3: Verify error message indicates invalid email"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-003",
+    "category": "api",
+    "priority": "high",
+    "description": "User sign-up fails with duplicate email",
+    "steps": [
+      "Step 1: Create a user with email 'test@example.com'",
+      "Step 2: POST /api/auth/sign-up/email with same email",
+      "Step 3: Verify response returns appropriate error",
+      "Step 4: Verify error message indicates email already exists"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-004",
+    "category": "api",
+    "priority": "high",
+    "description": "User sign-in with valid credentials returns session",
+    "steps": [
+      "Step 1: Create a test user account",
+      "Step 2: POST /api/auth/sign-in/email with correct email and password",
+      "Step 3: Verify response contains user object",
+      "Step 4: Verify session cookie is set"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-005",
+    "category": "api",
+    "priority": "high",
+    "description": "User sign-in fails with wrong password",
+    "steps": [
+      "Step 1: Create a test user account",
+      "Step 2: POST /api/auth/sign-in/email with correct email but wrong password",
+      "Step 3: Verify response returns unauthorized error",
+      "Step 4: Verify no session cookie is set"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-006",
+    "category": "api",
+    "priority": "high",
+    "description": "User sign-in fails with non-existent email",
+    "steps": [
+      "Step 1: POST /api/auth/sign-in/email with non-existent email",
+      "Step 2: Verify response returns appropriate error",
+      "Step 3: Verify no session cookie is set"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-007",
+    "category": "api",
+    "priority": "high",
+    "description": "User sign-out invalidates session",
+    "steps": [
+      "Step 1: Sign in as a test user",
+      "Step 2: POST /api/auth/sign-out with session cookie",
+      "Step 3: Verify response indicates successful sign-out",
+      "Step 4: Verify subsequent requests with old session fail"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-008",
+    "category": "api",
+    "priority": "high",
+    "description": "GET /api/auth/session returns current session for authenticated user",
+    "steps": [
+      "Step 1: Sign in as a test user",
+      "Step 2: GET /api/auth/session with session cookie",
+      "Step 3: Verify response contains session data with user info"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-009",
+    "category": "api",
+    "priority": "high",
+    "description": "GET /api/auth/session returns null for unauthenticated user",
+    "steps": [
+      "Step 1: GET /api/auth/session without session cookie",
+      "Step 2: Verify response indicates no active session"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-010",
+    "category": "api",
+    "priority": "high",
+    "description": "Protected endpoints reject unauthenticated requests",
+    "steps": [
+      "Step 1: Call a protected endpoint without session cookie",
+      "Step 2: Verify response returns 401 Unauthorized",
+      "Step 3: Verify error message indicates authentication required"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-011",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Sign-up form displays and validates input",
+    "steps": [
+      "Step 1: Navigate to /signup or registration page",
+      "Step 2: Verify email input field is present",
+      "Step 3: Verify password input field is present",
+      "Step 4: Enter invalid email and verify validation error displays",
+      "Step 5: Enter valid credentials and submit form",
+      "Step 6: Verify redirect to dashboard or confirmation page"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-012",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Sign-in form displays and handles authentication",
+    "steps": [
+      "Step 1: Navigate to /login page",
+      "Step 2: Verify email input field is present",
+      "Step 3: Verify password input field is present",
+      "Step 4: Enter invalid credentials and verify error message",
+      "Step 5: Enter valid credentials and submit",
+      "Step 6: Verify redirect to dashboard"
+    ],
+    "passes": false
+  },
+  {
+    "id": "auth-013",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Protected routes redirect unauthenticated users to login",
+    "steps": [
+      "Step 1: Clear any existing session",
+      "Step 2: Navigate to a protected route (e.g., /dashboard)",
+      "Step 3: Verify redirect to login page",
+      "Step 4: Sign in with valid credentials",
+      "Step 5: Verify redirect back to original protected route"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-001",
+    "category": "api",
+    "priority": "high",
+    "description": "List exercises returns paginated results",
+    "steps": [
+      "Step 1: GET /rpc/exercise/list with page=1, limit=20",
+      "Step 2: Verify response contains exercises array",
+      "Step 3: Verify response includes pagination metadata (total, page, limit)",
+      "Step 4: Verify exercises array length is at most 20"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-002",
+    "category": "api",
+    "priority": "high",
+    "description": "List exercises filters by category",
+    "steps": [
+      "Step 1: GET /rpc/exercise/list with category='chest'",
+      "Step 2: Verify all returned exercises have category 'chest'",
+      "Step 3: Repeat with category='back'",
+      "Step 4: Verify all returned exercises have category 'back'"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-003",
+    "category": "api",
+    "priority": "high",
+    "description": "List exercises filters by exercise type",
+    "steps": [
+      "Step 1: GET /rpc/exercise/list with exerciseType='strength'",
+      "Step 2: Verify all returned exercises have exerciseType 'strength'",
+      "Step 3: Repeat with exerciseType='cardio'",
+      "Step 4: Verify results only include cardio exercises"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-004",
+    "category": "api",
+    "priority": "high",
+    "description": "List exercises filters by equipment",
+    "steps": [
+      "Step 1: GET /rpc/exercise/list with equipment='barbell'",
+      "Step 2: Verify all returned exercises include 'barbell' equipment",
+      "Step 3: Repeat with equipment='bodyweight'",
+      "Step 4: Verify results match equipment filter"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-005",
+    "category": "api",
+    "priority": "high",
+    "description": "List exercises searches by name",
+    "steps": [
+      "Step 1: GET /rpc/exercise/list with search='bench press'",
+      "Step 2: Verify returned exercises contain 'bench press' in name",
+      "Step 3: Verify search is case-insensitive"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-006",
+    "category": "api",
+    "priority": "high",
+    "description": "Get exercise by ID returns full details",
+    "steps": [
+      "Step 1: Get a valid exercise ID from the list endpoint",
+      "Step 2: GET /rpc/exercise/getById with the ID",
+      "Step 3: Verify response contains all exercise fields",
+      "Step 4: Verify name, description, category, muscleGroups, equipment are present",
+      "Step 5: Verify instructions and images arrays are present"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-007",
+    "category": "api",
+    "priority": "high",
+    "description": "Get exercise by invalid ID returns 404",
+    "steps": [
+      "Step 1: GET /rpc/exercise/getById with non-existent ID 99999",
+      "Step 2: Verify response returns 404 Not Found",
+      "Step 3: Verify error message indicates exercise not found"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-008",
+    "category": "api",
+    "priority": "high",
+    "description": "Create custom exercise (authenticated user)",
+    "steps": [
+      "Step 1: Sign in as a test user",
+      "Step 2: POST /rpc/exercise/create with valid exercise data",
+      "Step 3: Verify response contains created exercise with ID",
+      "Step 4: Verify isDefault is false",
+      "Step 5: Verify createdByUserId matches authenticated user"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-009",
+    "category": "api",
+    "priority": "high",
+    "description": "Create custom exercise fails without authentication",
+    "steps": [
+      "Step 1: POST /rpc/exercise/create without session cookie",
+      "Step 2: Verify response returns 401 Unauthorized"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-010",
+    "category": "api",
+    "priority": "high",
+    "description": "Update custom exercise updates all fields",
+    "steps": [
+      "Step 1: Sign in and create a custom exercise",
+      "Step 2: PATCH /rpc/exercise/update with new name and description",
+      "Step 3: Verify response contains updated exercise",
+      "Step 4: GET the exercise and verify changes persisted"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-011",
+    "category": "api",
+    "priority": "high",
+    "description": "Update exercise fails for default exercises",
+    "steps": [
+      "Step 1: Get a default exercise ID (isDefault=true)",
+      "Step 2: Sign in as any user",
+      "Step 3: PATCH /rpc/exercise/update on the default exercise",
+      "Step 4: Verify response returns 403 Forbidden"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-012",
+    "category": "api",
+    "priority": "high",
+    "description": "Update exercise fails for other user's custom exercises",
+    "steps": [
+      "Step 1: Sign in as User A and create custom exercise",
+      "Step 2: Sign in as User B",
+      "Step 3: PATCH /rpc/exercise/update on User A's exercise",
+      "Step 4: Verify response returns 403 Forbidden"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-013",
+    "category": "api",
+    "priority": "high",
+    "description": "Delete custom exercise removes from database",
+    "steps": [
+      "Step 1: Sign in and create a custom exercise",
+      "Step 2: DELETE /rpc/exercise/delete with the exercise ID",
+      "Step 3: Verify response indicates success",
+      "Step 4: GET the exercise and verify 404 Not Found"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-014",
+    "category": "api",
+    "priority": "high",
+    "description": "Delete exercise fails for default exercises",
+    "steps": [
+      "Step 1: Get a default exercise ID",
+      "Step 2: Sign in as any user",
+      "Step 3: DELETE /rpc/exercise/delete on default exercise",
+      "Step 4: Verify response returns 403 Forbidden"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-015",
+    "category": "api",
+    "priority": "medium",
+    "description": "Get equipment list returns all equipment types",
+    "steps": [
+      "Step 1: GET /rpc/exercise/getEquipmentList",
+      "Step 2: Verify response contains array of equipment types",
+      "Step 3: Verify common equipment included (barbell, dumbbell, cable, machine, bodyweight)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-016",
+    "category": "api",
+    "priority": "medium",
+    "description": "Get muscle groups returns all muscle groups",
+    "steps": [
+      "Step 1: GET /rpc/exercise/getMuscleGroups",
+      "Step 2: Verify response contains array of muscle groups",
+      "Step 3: Verify main groups included (chest, back, shoulders, arms, legs, core)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-017",
+    "category": "api",
+    "priority": "medium",
+    "description": "Check name availability returns correct status",
+    "steps": [
+      "Step 1: GET /rpc/exercise/checkNameAvailability with unique name",
+      "Step 2: Verify response indicates name is available",
+      "Step 3: Create exercise with that name",
+      "Step 4: Check availability again",
+      "Step 5: Verify response indicates name is taken"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-018",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Exercise library page displays exercises with pagination",
+    "steps": [
+      "Step 1: Navigate to /exercises page",
+      "Step 2: Verify exercise cards are displayed",
+      "Step 3: Verify pagination controls are visible",
+      "Step 4: Click next page",
+      "Step 5: Verify new set of exercises loads",
+      "Step 6: Verify page indicator updates"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-019",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Exercise library filters by category",
+    "steps": [
+      "Step 1: Navigate to /exercises page",
+      "Step 2: Select 'Chest' category filter",
+      "Step 3: Verify displayed exercises are chest exercises",
+      "Step 4: Change filter to 'Back'",
+      "Step 5: Verify displayed exercises update to back exercises"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-020",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Exercise library search filters results",
+    "steps": [
+      "Step 1: Navigate to /exercises page",
+      "Step 2: Enter 'squat' in search box",
+      "Step 3: Verify displayed exercises contain 'squat' in name",
+      "Step 4: Clear search",
+      "Step 5: Verify all exercises display again"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-021",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Exercise detail page shows full information",
+    "steps": [
+      "Step 1: Navigate to /exercises page",
+      "Step 2: Click on an exercise card",
+      "Step 3: Verify redirect to /exercises/:id",
+      "Step 4: Verify exercise name displays",
+      "Step 5: Verify description displays",
+      "Step 6: Verify muscle groups display",
+      "Step 7: Verify equipment displays",
+      "Step 8: Verify instructions display",
+      "Step 9: Verify images display (if available)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "exercise-022",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Create custom exercise form works for authenticated users",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: Navigate to create exercise page or modal",
+      "Step 3: Fill in exercise name",
+      "Step 4: Select category",
+      "Step 5: Add description",
+      "Step 6: Select muscle groups",
+      "Step 7: Submit form",
+      "Step 8: Verify success message",
+      "Step 9: Verify exercise appears in library"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-001",
+    "category": "api",
+    "priority": "high",
+    "description": "Create new workout starts session for authenticated user",
+    "steps": [
+      "Step 1: Sign in as test user",
+      "Step 2: POST /rpc/workout/create with workout name",
+      "Step 3: Verify response contains workout with ID",
+      "Step 4: Verify startedAt is set",
+      "Step 5: Verify completedAt is null",
+      "Step 6: Verify userId matches authenticated user"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-002",
+    "category": "api",
+    "priority": "high",
+    "description": "Create workout fails without authentication",
+    "steps": [
+      "Step 1: POST /rpc/workout/create without session",
+      "Step 2: Verify response returns 401 Unauthorized"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-003",
+    "category": "api",
+    "priority": "high",
+    "description": "Add exercise to workout creates workout_exercise record",
+    "steps": [
+      "Step 1: Sign in and create a workout",
+      "Step 2: POST /rpc/workout/addExercise with workoutId and exerciseId",
+      "Step 3: Verify response contains workout_exercise with ID",
+      "Step 4: Verify order field is set",
+      "Step 5: Add another exercise",
+      "Step 6: Verify second exercise has higher order"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-004",
+    "category": "api",
+    "priority": "high",
+    "description": "Add set to exercise creates workout_set record",
+    "steps": [
+      "Step 1: Sign in and create workout with an exercise",
+      "Step 2: POST /rpc/workout/addSet with workoutExerciseId, weight, reps",
+      "Step 3: Verify response contains set with ID",
+      "Step 4: Verify setNumber is 1",
+      "Step 5: Add another set",
+      "Step 6: Verify setNumber is 2"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-005",
+    "category": "api",
+    "priority": "high",
+    "description": "Add set with all fields (weight, reps, RPE, RIR, setType)",
+    "steps": [
+      "Step 1: Sign in and create workout with exercise",
+      "Step 2: POST /rpc/workout/addSet with weight=100, reps=10, rpe=8, rir=2, setType='normal'",
+      "Step 3: Verify all fields are saved correctly",
+      "Step 4: Add warmup set with setType='warmup'",
+      "Step 5: Verify setType is 'warmup'"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-006",
+    "category": "api",
+    "priority": "high",
+    "description": "Complete workout sets completedAt timestamp",
+    "steps": [
+      "Step 1: Sign in and create workout with exercises and sets",
+      "Step 2: POST /rpc/workout/complete with workoutId",
+      "Step 3: Verify response indicates success",
+      "Step 4: GET the workout",
+      "Step 5: Verify completedAt is set"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-007",
+    "category": "api",
+    "priority": "high",
+    "description": "Get workout by ID returns full details with exercises and sets",
+    "steps": [
+      "Step 1: Sign in and create complete workout with exercises and sets",
+      "Step 2: GET /rpc/workout/getById with workout ID",
+      "Step 3: Verify response contains workout object",
+      "Step 4: Verify exercises array is present with exercise details",
+      "Step 5: Verify each exercise has sets array",
+      "Step 6: Verify set details include weight, reps, setType"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-008",
+    "category": "api",
+    "priority": "high",
+    "description": "List workouts returns user's workouts paginated",
+    "steps": [
+      "Step 1: Sign in and create 5 workouts",
+      "Step 2: GET /rpc/workout/list with page=1, limit=3",
+      "Step 3: Verify response contains 3 workouts",
+      "Step 4: Verify pagination metadata shows total=5",
+      "Step 5: GET page=2",
+      "Step 6: Verify response contains remaining 2 workouts"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-009",
+    "category": "api",
+    "priority": "high",
+    "description": "List workouts only returns authenticated user's workouts",
+    "steps": [
+      "Step 1: Sign in as User A and create workouts",
+      "Step 2: Sign in as User B and create workouts",
+      "Step 3: GET /rpc/workout/list as User B",
+      "Step 4: Verify only User B's workouts are returned",
+      "Step 5: Verify User A's workouts are not in response"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-010",
+    "category": "api",
+    "priority": "high",
+    "description": "Update workout modifies name and notes",
+    "steps": [
+      "Step 1: Sign in and create a workout",
+      "Step 2: PATCH /rpc/workout/update with new name and notes",
+      "Step 3: Verify response contains updated workout",
+      "Step 4: GET workout and verify changes persisted"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-011",
+    "category": "api",
+    "priority": "high",
+    "description": "Delete workout removes workout and associated data",
+    "steps": [
+      "Step 1: Sign in and create workout with exercises and sets",
+      "Step 2: DELETE /rpc/workout/delete with workout ID",
+      "Step 3: Verify response indicates success",
+      "Step 4: GET workout returns 404",
+      "Step 5: Verify associated workout_exercises are deleted",
+      "Step 6: Verify associated workout_sets are deleted"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-012",
+    "category": "api",
+    "priority": "high",
+    "description": "Delete workout fails for other user's workouts",
+    "steps": [
+      "Step 1: Sign in as User A and create workout",
+      "Step 2: Sign in as User B",
+      "Step 3: DELETE /rpc/workout/delete on User A's workout",
+      "Step 4: Verify response returns 403 Forbidden"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-013",
+    "category": "api",
+    "priority": "medium",
+    "description": "Add workout rating updates rating field",
+    "steps": [
+      "Step 1: Sign in and create completed workout",
+      "Step 2: PATCH /rpc/workout/update with rating=5",
+      "Step 3: Verify rating is saved",
+      "Step 4: GET workout and verify rating is 5"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-014",
+    "category": "api",
+    "priority": "medium",
+    "description": "Superset grouping associates exercises correctly",
+    "steps": [
+      "Step 1: Sign in and create workout",
+      "Step 2: Add first exercise with supersetGroup='A'",
+      "Step 3: Add second exercise with supersetGroup='A'",
+      "Step 4: GET workout",
+      "Step 5: Verify both exercises have same supersetGroup"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-015",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Start new workout creates active session",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: Navigate to workouts page",
+      "Step 3: Click 'Start Workout' button",
+      "Step 4: Enter workout name",
+      "Step 5: Verify active workout UI displays",
+      "Step 6: Verify workout timer starts"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-016",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Add exercise to active workout via exercise search",
+    "steps": [
+      "Step 1: Start a new workout",
+      "Step 2: Click 'Add Exercise' button",
+      "Step 3: Search for 'bench press'",
+      "Step 4: Select an exercise from results",
+      "Step 5: Verify exercise appears in workout",
+      "Step 6: Verify set logging interface appears"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-017",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Log set with weight and reps",
+    "steps": [
+      "Step 1: Start workout and add exercise",
+      "Step 2: Enter weight value",
+      "Step 3: Enter reps value",
+      "Step 4: Click 'Add Set' or complete button",
+      "Step 5: Verify set displays in exercise card",
+      "Step 6: Verify set number increments for next set"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-018",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Log set with RPE/RIR tracking",
+    "steps": [
+      "Step 1: Start workout and add exercise",
+      "Step 2: Enter weight and reps",
+      "Step 3: Set RPE to 8",
+      "Step 4: Complete set",
+      "Step 5: Verify RPE displays on set",
+      "Step 6: Log another set with RIR=2",
+      "Step 7: Verify RIR displays correctly"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-019",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Complete workout saves all data",
+    "steps": [
+      "Step 1: Start workout",
+      "Step 2: Add 2 exercises with multiple sets each",
+      "Step 3: Click 'Complete Workout' button",
+      "Step 4: Verify completion confirmation",
+      "Step 5: Navigate to workout history",
+      "Step 6: Verify completed workout appears",
+      "Step 7: View workout details",
+      "Step 8: Verify all exercises and sets saved"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-020",
+    "category": "frontend",
+    "priority": "high",
+    "description": "View workout history with list of past workouts",
+    "steps": [
+      "Step 1: Sign in with account that has workout history",
+      "Step 2: Navigate to /workouts or workout history page",
+      "Step 3: Verify list of workouts displays",
+      "Step 4: Verify each workout shows name, date, exercise count",
+      "Step 5: Click on a workout",
+      "Step 6: Verify full workout details display"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-021",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Edit past workout modifies saved data",
+    "steps": [
+      "Step 1: Navigate to workout history",
+      "Step 2: Select a completed workout",
+      "Step 3: Click 'Edit' button",
+      "Step 4: Modify a set's weight value",
+      "Step 5: Save changes",
+      "Step 6: Verify updated value displays",
+      "Step 7: Refresh page and verify persistence"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-022",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Delete workout from history",
+    "steps": [
+      "Step 1: Navigate to workout history",
+      "Step 2: Select a workout to delete",
+      "Step 3: Click delete button",
+      "Step 4: Confirm deletion",
+      "Step 5: Verify workout removed from list"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-023",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Set type selection (warmup, dropset, failure)",
+    "steps": [
+      "Step 1: Start workout and add exercise",
+      "Step 2: Select 'Warmup' set type",
+      "Step 3: Log set",
+      "Step 4: Verify warmup indicator displays",
+      "Step 5: Select 'Dropset' for next set",
+      "Step 6: Log set and verify dropset indicator"
+    ],
+    "passes": false
+  },
+  {
+    "id": "workout-024",
+    "category": "integration",
+    "priority": "high",
+    "description": "Full workout flow from start to completion",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: Start new workout",
+      "Step 3: Add 3 exercises",
+      "Step 4: Log 4 sets for first exercise with increasing weights",
+      "Step 5: Log 3 sets for second exercise with RPE tracking",
+      "Step 6: Log 3 sets for third exercise with different set types",
+      "Step 7: Add notes to workout",
+      "Step 8: Complete workout",
+      "Step 9: Rate workout 5 stars",
+      "Step 10: Verify workout saved in history with all data",
+      "Step 11: View detailed workout summary",
+      "Step 12: Verify total volume calculated correctly"
+    ],
+    "passes": false
+  },
+  {
+    "id": "template-001",
+    "category": "api",
+    "priority": "high",
+    "description": "Create workout template saves structure",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: POST /rpc/template/create with name and exercise list",
+      "Step 3: Verify response contains template with ID",
+      "Step 4: Verify exercises are associated with template"
+    ],
+    "passes": false
+  },
+  {
+    "id": "template-002",
+    "category": "api",
+    "priority": "high",
+    "description": "List templates returns user's templates",
+    "steps": [
+      "Step 1: Sign in and create multiple templates",
+      "Step 2: GET /rpc/template/list",
+      "Step 3: Verify response contains all user's templates",
+      "Step 4: Verify other users' templates not included"
+    ],
+    "passes": false
+  },
+  {
+    "id": "template-003",
+    "category": "api",
+    "priority": "high",
+    "description": "Get template by ID returns full structure",
+    "steps": [
+      "Step 1: Sign in and create template with exercises",
+      "Step 2: GET /rpc/template/getById",
+      "Step 3: Verify response contains template details",
+      "Step 4: Verify exercises array with exercise details"
+    ],
+    "passes": false
+  },
+  {
+    "id": "template-004",
+    "category": "api",
+    "priority": "high",
+    "description": "Start workout from template creates workout with exercises",
+    "steps": [
+      "Step 1: Sign in and create template with 3 exercises",
+      "Step 2: POST /rpc/template/startWorkout with templateId",
+      "Step 3: Verify new workout created",
+      "Step 4: Verify workout has all 3 exercises from template",
+      "Step 5: Verify workout.templateId references the template"
+    ],
+    "passes": false
+  },
+  {
+    "id": "template-005",
+    "category": "api",
+    "priority": "high",
+    "description": "Update template modifies name and exercises",
+    "steps": [
+      "Step 1: Sign in and create template",
+      "Step 2: PATCH /rpc/template/update with new name",
+      "Step 3: Verify response contains updated template",
+      "Step 4: Add exercise to template",
+      "Step 5: Verify exercise added successfully"
+    ],
+    "passes": false
+  },
+  {
+    "id": "template-006",
+    "category": "api",
+    "priority": "high",
+    "description": "Delete template removes template",
+    "steps": [
+      "Step 1: Sign in and create template",
+      "Step 2: DELETE /rpc/template/delete with template ID",
+      "Step 3: Verify response indicates success",
+      "Step 4: GET template returns 404"
+    ],
+    "passes": false
+  },
+  {
+    "id": "template-007",
+    "category": "frontend",
+    "priority": "high",
+    "description": "View template list shows all user templates",
+    "steps": [
+      "Step 1: Sign in with templates",
+      "Step 2: Navigate to templates page",
+      "Step 3: Verify template cards display",
+      "Step 4: Verify each template shows name and exercise count"
+    ],
+    "passes": false
+  },
+  {
+    "id": "template-008",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Create template from completed workout",
+    "steps": [
+      "Step 1: Complete a workout",
+      "Step 2: Click 'Save as Template' option",
+      "Step 3: Enter template name",
+      "Step 4: Confirm creation",
+      "Step 5: Verify template appears in templates list",
+      "Step 6: Verify template has same exercises as workout"
+    ],
+    "passes": false
+  },
+  {
+    "id": "template-009",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Start workout from template quick action",
+    "steps": [
+      "Step 1: Navigate to templates",
+      "Step 2: Click 'Start Workout' on a template",
+      "Step 3: Verify workout starts with template exercises",
+      "Step 4: Verify exercises are pre-populated",
+      "Step 5: Log sets and complete workout"
+    ],
+    "passes": false
+  },
+  {
+    "id": "template-010",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Edit template modifies exercises",
+    "steps": [
+      "Step 1: Navigate to templates",
+      "Step 2: Click on template to view details",
+      "Step 3: Click 'Edit' button",
+      "Step 4: Remove an exercise",
+      "Step 5: Add a new exercise",
+      "Step 6: Save changes",
+      "Step 7: Verify template updated"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-001",
+    "category": "api",
+    "priority": "high",
+    "description": "Create weight goal with target value",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: POST /rpc/goals/create with goalType='weight', targetValue=75, unit='kg'",
+      "Step 3: Verify response contains goal with ID",
+      "Step 4: Verify status is 'active'",
+      "Step 5: Verify currentValue is initial value"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-002",
+    "category": "api",
+    "priority": "high",
+    "description": "Create strength goal for specific exercise",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: POST /rpc/goals/create with goalType='strength', exercise reference, targetValue=100",
+      "Step 3: Verify goal created with correct type",
+      "Step 4: Verify exercise association stored"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-003",
+    "category": "api",
+    "priority": "high",
+    "description": "Create body measurement goal",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: POST /rpc/goals/create with goalType='body_measurement'",
+      "Step 3: Specify measurement type (e.g., waist)",
+      "Step 4: Verify goal created successfully"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-004",
+    "category": "api",
+    "priority": "high",
+    "description": "Create workout frequency goal",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: POST /rpc/goals/create with goalType='workout_frequency', targetValue=4 (workouts per week)",
+      "Step 3: Verify goal created",
+      "Step 4: Verify appropriate tracking fields"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-005",
+    "category": "api",
+    "priority": "high",
+    "description": "Create custom goal with flexible parameters",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: POST /rpc/goals/create with goalType='custom', name='Run 5K'",
+      "Step 3: Verify goal created with custom name",
+      "Step 4: Verify targetValue can be set freely"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-006",
+    "category": "api",
+    "priority": "high",
+    "description": "Update goal progress creates progress entry",
+    "steps": [
+      "Step 1: Sign in and create a goal",
+      "Step 2: POST /rpc/goals/updateProgress with goalId and new value",
+      "Step 3: Verify progress entry created",
+      "Step 4: Verify goal's currentValue updated"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-007",
+    "category": "api",
+    "priority": "high",
+    "description": "Get goal progress history returns all entries",
+    "steps": [
+      "Step 1: Sign in and create goal",
+      "Step 2: Log progress 3 times on different dates",
+      "Step 3: GET /rpc/goals/getProgress with goalId",
+      "Step 4: Verify response contains 3 progress entries",
+      "Step 5: Verify entries ordered by date"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-008",
+    "category": "api",
+    "priority": "high",
+    "description": "List goals returns all user goals with status filter",
+    "steps": [
+      "Step 1: Sign in and create multiple goals",
+      "Step 2: Complete one goal, pause another",
+      "Step 3: GET /rpc/goals/list with status='active'",
+      "Step 4: Verify only active goals returned",
+      "Step 5: GET /rpc/goals/list with status='completed'",
+      "Step 6: Verify only completed goals returned"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-009",
+    "category": "api",
+    "priority": "high",
+    "description": "Update goal status transitions correctly",
+    "steps": [
+      "Step 1: Sign in and create active goal",
+      "Step 2: PATCH /rpc/goals/update with status='paused'",
+      "Step 3: Verify status changed to 'paused'",
+      "Step 4: Update status to 'active'",
+      "Step 5: Verify status is 'active'",
+      "Step 6: Update to 'completed'",
+      "Step 7: Verify status is 'completed'"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-010",
+    "category": "api",
+    "priority": "high",
+    "description": "Delete goal removes goal and progress history",
+    "steps": [
+      "Step 1: Sign in and create goal with progress entries",
+      "Step 2: DELETE /rpc/goals/delete with goalId",
+      "Step 3: Verify goal deleted",
+      "Step 4: Verify progress entries deleted"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-011",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Goals dashboard displays active goals with progress",
+    "steps": [
+      "Step 1: Sign in with active goals",
+      "Step 2: Navigate to goals page",
+      "Step 3: Verify active goals display",
+      "Step 4: Verify progress percentage shows for each goal",
+      "Step 5: Verify target and current values display"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-012",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Create goal form with type selection",
+    "steps": [
+      "Step 1: Navigate to goals page",
+      "Step 2: Click 'Create Goal' button",
+      "Step 3: Select goal type 'Weight'",
+      "Step 4: Fill in target value",
+      "Step 5: Set target date",
+      "Step 6: Submit form",
+      "Step 7: Verify goal appears in list"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-013",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Log goal progress from goal detail view",
+    "steps": [
+      "Step 1: Navigate to goal detail page",
+      "Step 2: Click 'Log Progress' button",
+      "Step 3: Enter current value",
+      "Step 4: Add optional notes",
+      "Step 5: Submit",
+      "Step 6: Verify progress chart updates",
+      "Step 7: Verify percentage progress updates"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-014",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Goal progress chart shows history over time",
+    "steps": [
+      "Step 1: Create goal with multiple progress entries",
+      "Step 2: Navigate to goal detail",
+      "Step 3: Verify progress chart displays",
+      "Step 4: Verify data points match logged progress",
+      "Step 5: Verify target line shows on chart"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-015",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Mark goal as completed updates status",
+    "steps": [
+      "Step 1: Navigate to goal that has reached target",
+      "Step 2: Click 'Mark Complete' button",
+      "Step 3: Confirm completion",
+      "Step 4: Verify goal moves to completed section",
+      "Step 5: Verify completion celebration/message"
+    ],
+    "passes": false
+  },
+  {
+    "id": "goals-016",
+    "category": "integration",
+    "priority": "high",
+    "description": "Complete goal lifecycle from creation to completion",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: Create weight loss goal: current 80kg, target 75kg",
+      "Step 3: Log initial progress at 80kg",
+      "Step 4: Log progress over time: 79kg, 78kg, 77kg, 76kg",
+      "Step 5: View progress chart showing trend",
+      "Step 6: Log final progress at 75kg",
+      "Step 7: Verify goal automatically or manually marked complete",
+      "Step 8: View goal in completed goals list",
+      "Step 9: Verify all progress history preserved",
+      "Step 10: Verify statistics show goal completion"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-001",
+    "category": "api",
+    "priority": "high",
+    "description": "Create body measurement entry",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: POST /rpc/bodyMeasurement/create with measurementType='weight', value=75, unit='kg'",
+      "Step 3: Verify response contains measurement with ID",
+      "Step 4: Verify measuredAt timestamp set"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-002",
+    "category": "api",
+    "priority": "high",
+    "description": "List body measurements with type filter",
+    "steps": [
+      "Step 1: Sign in and create measurements of different types",
+      "Step 2: GET /rpc/bodyMeasurement/list with measurementType='weight'",
+      "Step 3: Verify only weight measurements returned",
+      "Step 4: Verify sorted by date descending"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-003",
+    "category": "api",
+    "priority": "medium",
+    "description": "Delete body measurement removes entry",
+    "steps": [
+      "Step 1: Sign in and create measurement",
+      "Step 2: DELETE /rpc/bodyMeasurement/delete with ID",
+      "Step 3: Verify measurement deleted"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-004",
+    "category": "api",
+    "priority": "high",
+    "description": "Create progress photo entry",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: POST /rpc/progressPhoto/create with imageUrl, category='front'",
+      "Step 3: Verify response contains photo entry",
+      "Step 4: Verify takenAt timestamp"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-005",
+    "category": "api",
+    "priority": "high",
+    "description": "List progress photos with category filter",
+    "steps": [
+      "Step 1: Sign in and create photos in different categories",
+      "Step 2: GET /rpc/progressPhoto/list with category='front'",
+      "Step 3: Verify only front photos returned",
+      "Step 4: Verify sorted by date"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-006",
+    "category": "api",
+    "priority": "high",
+    "description": "List personal records returns PRs grouped by exercise",
+    "steps": [
+      "Step 1: Sign in and complete workouts that set PRs",
+      "Step 2: GET /rpc/personalRecord/list",
+      "Step 3: Verify PRs returned with exercise info",
+      "Step 4: Verify record type and value"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-007",
+    "category": "api",
+    "priority": "high",
+    "description": "Get PRs for specific exercise",
+    "steps": [
+      "Step 1: Complete multiple workouts with same exercise at increasing weights",
+      "Step 2: GET /rpc/personalRecord/getByExercise with exerciseId",
+      "Step 3: Verify all PRs for that exercise returned",
+      "Step 4: Verify includes weight PR, rep PR, volume PR"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-008",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Log body measurement from progress page",
+    "steps": [
+      "Step 1: Navigate to progress page",
+      "Step 2: Select measurement type",
+      "Step 3: Enter value",
+      "Step 4: Submit",
+      "Step 5: Verify measurement appears in list",
+      "Step 6: Verify chart updates"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-009",
+    "category": "frontend",
+    "priority": "high",
+    "description": "View measurement history chart",
+    "steps": [
+      "Step 1: Navigate to progress page",
+      "Step 2: Select 'Weight' measurement type",
+      "Step 3: Verify chart displays weight over time",
+      "Step 4: Switch to 'Body Fat'",
+      "Step 5: Verify chart updates to show body fat"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-010",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Upload progress photo",
+    "steps": [
+      "Step 1: Navigate to progress photos",
+      "Step 2: Click upload button",
+      "Step 3: Select photo file",
+      "Step 4: Select category (front/side/back)",
+      "Step 5: Submit upload",
+      "Step 6: Verify photo appears in gallery"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-011",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Compare progress photos side by side",
+    "steps": [
+      "Step 1: Navigate to progress photos",
+      "Step 2: Select 'Compare' mode",
+      "Step 3: Select two photos from different dates",
+      "Step 4: Verify side-by-side comparison view",
+      "Step 5: Verify dates shown for each photo"
+    ],
+    "passes": false
+  },
+  {
+    "id": "progress-012",
+    "category": "frontend",
+    "priority": "high",
+    "description": "View personal records dashboard",
+    "steps": [
+      "Step 1: Navigate to PRs section",
+      "Step 2: Verify list of exercises with PRs",
+      "Step 3: Verify each shows current PR value",
+      "Step 4: Click on exercise",
+      "Step 5: Verify PR history displays"
+    ],
+    "passes": false
+  },
+  {
+    "id": "recovery-001",
+    "category": "api",
+    "priority": "high",
+    "description": "Create daily recovery check-in",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: POST /rpc/recovery/create with sleepQuality=7, stressLevel=4, sorenessLevel=5, energyLevel=6",
+      "Step 3: Verify response contains check-in with ID",
+      "Step 4: Verify recoveryScore calculated (0-100)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "recovery-002",
+    "category": "api",
+    "priority": "high",
+    "description": "Get latest recovery check-in",
+    "steps": [
+      "Step 1: Sign in and create multiple check-ins on different days",
+      "Step 2: GET /rpc/recovery/getLatest",
+      "Step 3: Verify most recent check-in returned"
+    ],
+    "passes": false
+  },
+  {
+    "id": "recovery-003",
+    "category": "api",
+    "priority": "high",
+    "description": "List recovery check-ins with date range",
+    "steps": [
+      "Step 1: Sign in with check-in history",
+      "Step 2: GET /rpc/recovery/list with date range",
+      "Step 3: Verify check-ins within range returned",
+      "Step 4: Verify sorted by date"
+    ],
+    "passes": false
+  },
+  {
+    "id": "recovery-004",
+    "category": "api",
+    "priority": "high",
+    "description": "Get recovery trends over time",
+    "steps": [
+      "Step 1: Sign in with 7+ days of check-ins",
+      "Step 2: GET /rpc/recovery/getTrends",
+      "Step 3: Verify average scores returned",
+      "Step 4: Verify trend direction indicated"
+    ],
+    "passes": false
+  },
+  {
+    "id": "recovery-005",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Daily check-in form captures all metrics",
+    "steps": [
+      "Step 1: Navigate to recovery page",
+      "Step 2: Click 'Log Check-in' if not done today",
+      "Step 3: Rate sleep quality (1-10 slider)",
+      "Step 4: Rate stress level (1-10 slider)",
+      "Step 5: Rate soreness level (1-10 slider)",
+      "Step 6: Rate energy level (1-10 slider)",
+      "Step 7: Add optional notes",
+      "Step 8: Submit check-in",
+      "Step 9: Verify recovery score displays"
+    ],
+    "passes": false
+  },
+  {
+    "id": "recovery-006",
+    "category": "frontend",
+    "priority": "high",
+    "description": "View recovery score and trends dashboard",
+    "steps": [
+      "Step 1: Navigate to recovery page",
+      "Step 2: Verify current recovery score prominent",
+      "Step 3: Verify trend chart shows history",
+      "Step 4: Verify individual metrics breakdown visible"
+    ],
+    "passes": false
+  },
+  {
+    "id": "recovery-007",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Recovery recommendations based on score",
+    "steps": [
+      "Step 1: Log check-in with low recovery score",
+      "Step 2: Verify recovery recommendations display",
+      "Step 3: Verify suggestions appropriate (rest, light workout, etc.)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "analytics-001",
+    "category": "api",
+    "priority": "high",
+    "description": "Get training summary statistics",
+    "steps": [
+      "Step 1: Sign in with workout history",
+      "Step 2: GET /rpc/analytics/summary",
+      "Step 3: Verify total workouts count",
+      "Step 4: Verify total volume",
+      "Step 5: Verify average workout duration"
+    ],
+    "passes": false
+  },
+  {
+    "id": "analytics-002",
+    "category": "api",
+    "priority": "high",
+    "description": "Get volume over time for period",
+    "steps": [
+      "Step 1: Sign in with workout history",
+      "Step 2: GET /rpc/analytics/volume with period='week'",
+      "Step 3: Verify volume data for each day",
+      "Step 4: GET with period='month'",
+      "Step 5: Verify volume data aggregated correctly"
+    ],
+    "passes": false
+  },
+  {
+    "id": "analytics-003",
+    "category": "api",
+    "priority": "high",
+    "description": "Get workout frequency analysis",
+    "steps": [
+      "Step 1: Sign in with workout history",
+      "Step 2: GET /rpc/analytics/frequency",
+      "Step 3: Verify workouts per week calculated",
+      "Step 4: Verify most common workout days"
+    ],
+    "passes": false
+  },
+  {
+    "id": "analytics-004",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Dashboard displays key statistics",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: Navigate to dashboard",
+      "Step 3: Verify workout count this week displays",
+      "Step 4: Verify total volume displays",
+      "Step 5: Verify streak/consistency metric shows"
+    ],
+    "passes": false
+  },
+  {
+    "id": "analytics-005",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Analytics page shows detailed charts",
+    "steps": [
+      "Step 1: Navigate to analytics page",
+      "Step 2: Verify volume chart displays",
+      "Step 3: Verify frequency chart displays",
+      "Step 4: Change time period filter",
+      "Step 5: Verify charts update"
+    ],
+    "passes": false
+  },
+  {
+    "id": "settings-001",
+    "category": "api",
+    "priority": "high",
+    "description": "Get user settings returns defaults for new user",
+    "steps": [
+      "Step 1: Sign in as new user",
+      "Step 2: GET /rpc/settings/get",
+      "Step 3: Verify response contains default settings",
+      "Step 4: Verify weightUnit defaults to 'kg'",
+      "Step 5: Verify theme defaults to 'system'"
+    ],
+    "passes": false
+  },
+  {
+    "id": "settings-002",
+    "category": "api",
+    "priority": "high",
+    "description": "Update settings persists preferences",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: PATCH /rpc/settings/update with weightUnit='lbs'",
+      "Step 3: Verify response contains updated settings",
+      "Step 4: GET settings again",
+      "Step 5: Verify weightUnit is 'lbs'"
+    ],
+    "passes": false
+  },
+  {
+    "id": "settings-003",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Settings page allows preference changes",
+    "steps": [
+      "Step 1: Navigate to settings page",
+      "Step 2: Change weight unit to 'lbs'",
+      "Step 3: Change theme to 'dark'",
+      "Step 4: Save changes",
+      "Step 5: Verify success message",
+      "Step 6: Refresh page",
+      "Step 7: Verify settings persisted"
+    ],
+    "passes": false
+  },
+  {
+    "id": "settings-004",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Theme preference applies across application",
+    "steps": [
+      "Step 1: Set theme to 'dark' in settings",
+      "Step 2: Navigate to different pages",
+      "Step 3: Verify dark theme applied everywhere",
+      "Step 4: Change to 'light' theme",
+      "Step 5: Verify light theme applied"
+    ],
+    "passes": false
+  },
+  {
+    "id": "settings-005",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Unit preferences affect displayed values",
+    "steps": [
+      "Step 1: Set weight unit to 'kg'",
+      "Step 2: View workout with weight data",
+      "Step 3: Verify weights shown in kg",
+      "Step 4: Change to 'lbs' in settings",
+      "Step 5: Verify weights converted and shown in lbs"
+    ],
+    "passes": false
+  },
+  {
+    "id": "ai-001",
+    "category": "api",
+    "priority": "medium",
+    "description": "Generate workout returns exercise list",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: POST /rpc/ai/generateWorkout with parameters (muscle groups, duration, etc.)",
+      "Step 3: Verify response contains workout structure",
+      "Step 4: Verify exercises match requested muscle groups"
+    ],
+    "passes": false
+  },
+  {
+    "id": "ai-002",
+    "category": "api",
+    "priority": "medium",
+    "description": "Analyze workout provides feedback",
+    "steps": [
+      "Step 1: Sign in with completed workouts",
+      "Step 2: POST /rpc/ai/analyzeWorkout with workoutId",
+      "Step 3: Verify response contains analysis",
+      "Step 4: Verify suggestions provided"
+    ],
+    "passes": false
+  },
+  {
+    "id": "ai-003",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "AI workout generator interface",
+    "steps": [
+      "Step 1: Navigate to AI section",
+      "Step 2: Select target muscle groups",
+      "Step 3: Set workout duration preference",
+      "Step 4: Click generate",
+      "Step 5: Verify loading state",
+      "Step 6: Verify generated workout displays",
+      "Step 7: Option to start generated workout"
+    ],
+    "passes": false
+  },
+  {
+    "id": "ui-001",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Responsive layout on mobile viewport",
+    "steps": [
+      "Step 1: Set viewport to mobile size (375px width)",
+      "Step 2: Navigate through main pages",
+      "Step 3: Verify navigation is accessible (hamburger menu or bottom nav)",
+      "Step 4: Verify content fits without horizontal scroll",
+      "Step 5: Verify touch targets are appropriately sized"
+    ],
+    "passes": false
+  },
+  {
+    "id": "ui-002",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Responsive layout on tablet viewport",
+    "steps": [
+      "Step 1: Set viewport to tablet size (768px width)",
+      "Step 2: Navigate through main pages",
+      "Step 3: Verify layout adapts appropriately",
+      "Step 4: Verify all functionality accessible"
+    ],
+    "passes": false
+  },
+  {
+    "id": "ui-003",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Main navigation works correctly",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: Verify navigation menu present",
+      "Step 3: Click Dashboard link",
+      "Step 4: Verify navigation to dashboard",
+      "Step 5: Click Workouts link",
+      "Step 6: Verify navigation to workouts",
+      "Step 7: Test all main nav items"
+    ],
+    "passes": false
+  },
+  {
+    "id": "ui-004",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Loading states display correctly",
+    "steps": [
+      "Step 1: Navigate to page with data loading",
+      "Step 2: Verify loading indicator displays",
+      "Step 3: Verify loading indicator disappears when data loads",
+      "Step 4: Verify content renders correctly after loading"
+    ],
+    "passes": false
+  },
+  {
+    "id": "ui-005",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Error states display helpful messages",
+    "steps": [
+      "Step 1: Trigger an error state (e.g., network failure, 404)",
+      "Step 2: Verify error message displays",
+      "Step 3: Verify message is user-friendly",
+      "Step 4: Verify retry option if applicable"
+    ],
+    "passes": false
+  },
+  {
+    "id": "ui-006",
+    "category": "frontend",
+    "priority": "high",
+    "description": "Form validation shows inline errors",
+    "steps": [
+      "Step 1: Navigate to a form page",
+      "Step 2: Submit form with invalid data",
+      "Step 3: Verify inline error messages display",
+      "Step 4: Verify errors clear when corrected",
+      "Step 5: Verify form submits successfully with valid data"
+    ],
+    "passes": false
+  },
+  {
+    "id": "ui-007",
+    "category": "frontend",
+    "priority": "medium",
+    "description": "Toast notifications appear for actions",
+    "steps": [
+      "Step 1: Perform an action that should show notification",
+      "Step 2: Verify toast notification appears",
+      "Step 3: Verify notification auto-dismisses or can be closed",
+      "Step 4: Test error notification styling"
+    ],
+    "passes": false
+  },
+  {
+    "id": "database-001",
+    "category": "database",
+    "priority": "high",
+    "description": "Exercise table schema is correct",
+    "steps": [
+      "Step 1: Check exercise table exists",
+      "Step 2: Verify columns: id, name, description, category, muscleGroups",
+      "Step 3: Verify columns: equipment, exerciseType, difficulty, instructions",
+      "Step 4: Verify columns: images, isDefault, createdByUserId, timestamps"
+    ],
+    "passes": false
+  },
+  {
+    "id": "database-002",
+    "category": "database",
+    "priority": "high",
+    "description": "Workout tables schema is correct",
+    "steps": [
+      "Step 1: Check workout table exists with correct columns",
+      "Step 2: Check workout_exercise table with foreign keys",
+      "Step 3: Check workout_set table with all set fields",
+      "Step 4: Verify cascade delete behavior"
+    ],
+    "passes": false
+  },
+  {
+    "id": "database-003",
+    "category": "database",
+    "priority": "high",
+    "description": "Goals tables schema is correct",
+    "steps": [
+      "Step 1: Check goal table with all goal types support",
+      "Step 2: Check goal_progress table with foreign key to goal",
+      "Step 3: Verify progress entries cascade delete with goal"
+    ],
+    "passes": false
+  },
+  {
+    "id": "database-004",
+    "category": "database",
+    "priority": "high",
+    "description": "Recovery table schema is correct",
+    "steps": [
+      "Step 1: Check recovery_checkin table exists",
+      "Step 2: Verify columns for all metrics (sleep, stress, soreness, energy)",
+      "Step 3: Verify recoveryScore column",
+      "Step 4: Verify unique constraint on user per day"
+    ],
+    "passes": false
+  },
+  {
+    "id": "database-005",
+    "category": "database",
+    "priority": "high",
+    "description": "Exercise seed data loads correctly",
+    "steps": [
+      "Step 1: Run seed command",
+      "Step 2: Verify 873+ exercises loaded",
+      "Step 3: Verify exercises have images",
+      "Step 4: Verify all categories represented"
+    ],
+    "passes": false
+  },
+  {
+    "id": "testing-001",
+    "category": "testing",
+    "priority": "high",
+    "description": "Exercise router unit tests pass",
+    "steps": [
+      "Step 1: Run pnpm -F @fit-ai/api test",
+      "Step 2: Verify exercise router tests pass",
+      "Step 3: Verify coverage for list, getById, create, update, delete"
+    ],
+    "passes": false
+  },
+  {
+    "id": "testing-002",
+    "category": "testing",
+    "priority": "high",
+    "description": "Workout router unit tests pass",
+    "steps": [
+      "Step 1: Run pnpm -F @fit-ai/api test",
+      "Step 2: Verify workout router tests pass",
+      "Step 3: Verify coverage for CRUD operations",
+      "Step 4: Verify coverage for addExercise, addSet"
+    ],
+    "passes": false
+  },
+  {
+    "id": "testing-003",
+    "category": "testing",
+    "priority": "high",
+    "description": "Goals router unit tests pass",
+    "steps": [
+      "Step 1: Run pnpm -F @fit-ai/api test",
+      "Step 2: Verify goals router tests pass",
+      "Step 3: Verify coverage for all goal types"
+    ],
+    "passes": false
+  },
+  {
+    "id": "testing-004",
+    "category": "testing",
+    "priority": "high",
+    "description": "All tests pass with no errors",
+    "steps": [
+      "Step 1: Run pnpm test",
+      "Step 2: Verify all test suites pass",
+      "Step 3: Verify no test warnings"
+    ],
+    "passes": false
+  },
+  {
+    "id": "testing-005",
+    "category": "testing",
+    "priority": "high",
+    "description": "TypeScript type checking passes",
+    "steps": [
+      "Step 1: Run pnpm check-types",
+      "Step 2: Verify no type errors",
+      "Step 3: Verify strict mode requirements met"
+    ],
+    "passes": false
+  },
+  {
+    "id": "testing-006",
+    "category": "testing",
+    "priority": "high",
+    "description": "Linting passes with no errors",
+    "steps": [
+      "Step 1: Run pnpm check",
+      "Step 2: Verify no linting errors",
+      "Step 3: Verify formatting correct"
+    ],
+    "passes": false
+  },
+  {
+    "id": "integration-001",
+    "category": "integration",
+    "priority": "high",
+    "description": "Full user onboarding flow",
+    "steps": [
+      "Step 1: Navigate to application as new user",
+      "Step 2: Click sign up",
+      "Step 3: Complete registration form",
+      "Step 4: Verify redirect to dashboard",
+      "Step 5: Complete initial setup (if any)",
+      "Step 6: Verify can access all main features",
+      "Step 7: Verify can log first workout",
+      "Step 8: Verify can set first goal"
+    ],
+    "passes": false
+  },
+  {
+    "id": "integration-002",
+    "category": "integration",
+    "priority": "high",
+    "description": "Workout logging with PR detection",
+    "steps": [
+      "Step 1: Sign in with workout history",
+      "Step 2: Start new workout",
+      "Step 3: Add exercise previously done",
+      "Step 4: Log set with higher weight than previous PR",
+      "Step 5: Verify PR notification/indicator",
+      "Step 6: Complete workout",
+      "Step 7: Verify new PR appears in records"
+    ],
+    "passes": false
+  },
+  {
+    "id": "integration-003",
+    "category": "integration",
+    "priority": "high",
+    "description": "Template workflow end to end",
+    "steps": [
+      "Step 1: Complete a workout with 4 exercises",
+      "Step 2: Save workout as template",
+      "Step 3: Navigate to templates",
+      "Step 4: Start workout from saved template",
+      "Step 5: Verify all exercises pre-populated",
+      "Step 6: Log sets for each exercise",
+      "Step 7: Complete workout",
+      "Step 8: Verify workout saved with templateId reference"
+    ],
+    "passes": false
+  },
+  {
+    "id": "integration-004",
+    "category": "integration",
+    "priority": "high",
+    "description": "Recovery-informed workout suggestion",
+    "steps": [
+      "Step 1: Sign in",
+      "Step 2: Log recovery check-in with low score",
+      "Step 3: Navigate to start workout",
+      "Step 4: Verify recovery warning or suggestion displays",
+      "Step 5: Log another day with high recovery score",
+      "Step 6: Verify different/positive message"
+    ],
+    "passes": false
+  },
+  {
+    "id": "integration-005",
+    "category": "integration",
+    "priority": "high",
+    "description": "Goal progress from workout data",
+    "steps": [
+      "Step 1: Create strength goal for bench press (target: 100kg)",
+      "Step 2: Complete workout with bench press at 90kg",
+      "Step 3: Verify goal progress updated",
+      "Step 4: Complete another workout with 95kg",
+      "Step 5: Verify progress percentage increases",
+      "Step 6: Complete workout with 100kg",
+      "Step 7: Verify goal marked complete or near complete"
+    ],
+    "passes": false
+  }
+]
