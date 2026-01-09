@@ -9,7 +9,7 @@ import {
 } from "recharts";
 
 import { EmptyState } from "@/components/ui/empty-state";
-import { ScaleIcon } from "lucide-react";
+import { IconScale } from "@tabler/icons-react";
 
 interface WeightDataPoint {
   date: string;
@@ -26,7 +26,7 @@ export function WeightChart({ data, goalWeight, height = 256 }: WeightChartProps
   if (data.length === 0) {
     return (
       <EmptyState
-        icon={ScaleIcon}
+        icon={IconScale}
         title="No weight data"
         description="Track your first measurement to see progress"
       />

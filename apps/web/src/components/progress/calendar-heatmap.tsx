@@ -1,5 +1,6 @@
-import { format, subDays, subWeeks } from "date-fns";
 import { useMemo } from "react";
+
+import dayjs from "dayjs";
 
 import { cn } from "@/lib/utils";
 
@@ -12,18 +13,20 @@ interface CalendarHeatmapProps {
 
 export function CalendarHeatmap({ workoutDates, weeks = 12 }: CalendarHeatmapProps) {
   const heatmapData = useMemo(() => {
-    const dateSet = new Set(workoutDates.map((d) => format(new Date(d), "yyyy-MM-dd")));
+    const dateSet = new Set(workoutDates.map((d) => dayjs(d).format("YYYY-MM-DD")));
 
     const weeksData: { date: Date; hasWorkout: boolean }[][] = [];
     const today = new Date();
 
     for (let weekOffset = weeks - 1; weekOffset >= 0; weekOffset--) {
       const week: { date: Date; hasWorkout: boolean }[] = [];
-      const weekStart = subWeeks(today, weekOffset);
+      const weekStart = dayjs(today).subtract(weekOffset, "week").toDate();
 
       for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
-        const date = subDays(weekStart, weekStart.getDay() - dayOffset);
-        const dateKey = format(date, "yyyy-MM-dd");
+        const date = dayjs(weekStart)
+          .subtract(weekStart.getDay() - dayOffset, "day")
+          .toDate();
+        const dateKey = dayjs(date).format("YYYY-MM-DD");
         week.push({
           date,
           hasWorkout: dateSet.has(dateKey),
@@ -56,7 +59,7 @@ export function CalendarHeatmap({ workoutDates, weeks = 12 }: CalendarHeatmapPro
                     day.hasWorkout ? "bg-primary" : "bg-muted",
                     day.date > new Date() && "opacity-30",
                   )}
-                  title={`${format(day.date, "MMM d, yyyy")}${day.hasWorkout ? " - Workout" : ""}`}
+                  title={`${dayjs(day.date).format("MMM D, YYYY")}${day.hasWorkout ? " - Workout" : ""}`}
                 />
               ))}
             </div>

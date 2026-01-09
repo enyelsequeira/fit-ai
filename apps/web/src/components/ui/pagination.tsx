@@ -1,127 +1,99 @@
-import type { VariantProps } from "class-variance-authority";
-import type { Button as ButtonPrimitive } from "@base-ui/react/button";
-import type { ComponentProps } from "react";
+import type { PaginationProps as MantinePaginationProps } from "@mantine/core";
 
-import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
+import { ActionIcon, Group, Pagination as MantinePagination, Text } from "@mantine/core";
+import { IconChevronLeft, IconChevronRight, IconDots } from "@tabler/icons-react";
+import { forwardRef } from "react";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "./button";
 
-function Pagination({ className, ...props }: ComponentProps<"nav">) {
-  return (
-    <nav
-      role="navigation"
-      aria-label="pagination"
-      data-slot="pagination"
-      className={cn("mx-auto flex w-full justify-center", className)}
-      {...props}
-    />
-  );
+interface PaginationProps extends MantinePaginationProps {}
+
+function Pagination({ ...props }: PaginationProps) {
+  return <MantinePagination {...props} />;
 }
 
-function PaginationContent({ className, ...props }: ComponentProps<"ul">) {
-  return (
-    <ul
-      data-slot="pagination-content"
-      className={cn("flex items-center gap-1", className)}
-      {...props}
-    />
-  );
+function PaginationContent({ children }: { children: React.ReactNode }) {
+  return <Group gap="xs">{children}</Group>;
 }
 
-function PaginationItem({ ...props }: ComponentProps<"li">) {
-  return <li data-slot="pagination-item" {...props} />;
+function PaginationItem({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }
 
-type PaginationButtonProps = ButtonPrimitive.Props &
-  VariantProps<typeof buttonVariants> & {
-    isActive?: boolean;
-  };
-
-function PaginationButton({ className, isActive, ...props }: PaginationButtonProps) {
-  return (
-    <Button
-      variant={isActive ? "outline" : "ghost"}
-      size="icon"
-      className={cn(isActive && "border-primary", className)}
-      {...props}
-    />
-  );
-}
-
-interface PaginationLinkProps extends ComponentProps<"a"> {
+interface PaginationButtonProps {
   isActive?: boolean;
+  onClick?: () => void;
+  children?: React.ReactNode;
 }
 
-function PaginationLink({ className, isActive, ...props }: PaginationLinkProps) {
+function PaginationButton({ isActive, onClick, children }: PaginationButtonProps) {
   return (
-    <a
-      aria-current={isActive ? "page" : undefined}
-      data-slot="pagination-link"
-      data-active={isActive}
-      className={cn(
-        buttonVariants({ variant: isActive ? "outline" : "ghost", size: "icon" }),
-        isActive && "border-primary",
-        className,
-      )}
-      {...props}
-    />
-  );
-}
-
-type PaginationPreviousProps = ButtonPrimitive.Props &
-  VariantProps<typeof buttonVariants> & {
-    disabled?: boolean;
-  };
-
-function PaginationPrevious({ className, disabled, ...props }: PaginationPreviousProps) {
-  return (
-    <Button
-      aria-label="Go to previous page"
-      size="default"
-      variant="ghost"
-      disabled={disabled}
-      className={cn("gap-1 pl-2", className)}
-      {...props}
-    >
-      <ChevronLeftIcon className="size-4" />
-      <span className="hidden sm:block">Previous</span>
+    <Button variant={isActive ? "outline" : "ghost"} size="icon" onClick={onClick}>
+      {children}
     </Button>
   );
 }
 
-type PaginationNextProps = ButtonPrimitive.Props &
-  VariantProps<typeof buttonVariants> & {
-    disabled?: boolean;
-  };
+interface PaginationLinkProps {
+  isActive?: boolean;
+  href?: string;
+  onClick?: () => void;
+  children?: React.ReactNode;
+}
 
-function PaginationNext({ className, disabled, ...props }: PaginationNextProps) {
+function PaginationLink({ isActive, onClick, children }: PaginationLinkProps) {
   return (
-    <Button
-      aria-label="Go to next page"
-      size="default"
-      variant="ghost"
-      disabled={disabled}
-      className={cn("gap-1 pr-2", className)}
-      {...props}
-    >
-      <span className="hidden sm:block">Next</span>
-      <ChevronRightIcon className="size-4" />
+    <Button variant={isActive ? "outline" : "ghost"} size="icon" onClick={onClick}>
+      {children}
     </Button>
   );
 }
 
-function PaginationEllipsis({ className, ...props }: ComponentProps<"span">) {
+interface PaginationPreviousProps {
+  disabled?: boolean;
+  onClick?: () => void;
+}
+
+function PaginationPrevious({ disabled, onClick }: PaginationPreviousProps) {
   return (
-    <span
-      aria-hidden
-      data-slot="pagination-ellipsis"
-      className={cn("flex size-8 items-center justify-center", className)}
-      {...props}
+    <Button
+      variant="ghost"
+      disabled={disabled}
+      onClick={onClick}
+      leftSection={<IconChevronLeft size={16} />}
     >
-      <MoreHorizontalIcon className="size-4" />
-      <span className="sr-only">More pages</span>
-    </span>
+      <Text size="sm" visibleFrom="sm">
+        Previous
+      </Text>
+    </Button>
+  );
+}
+
+interface PaginationNextProps {
+  disabled?: boolean;
+  onClick?: () => void;
+}
+
+function PaginationNext({ disabled, onClick }: PaginationNextProps) {
+  return (
+    <Button
+      variant="ghost"
+      disabled={disabled}
+      onClick={onClick}
+      rightSection={<IconChevronRight size={16} />}
+    >
+      <Text size="sm" visibleFrom="sm">
+        Next
+      </Text>
+    </Button>
+  );
+}
+
+function PaginationEllipsis() {
+  return (
+    <ActionIcon variant="transparent" size="sm" disabled>
+      <IconDots size={16} />
+    </ActionIcon>
   );
 }
 

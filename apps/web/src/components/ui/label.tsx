@@ -1,20 +1,20 @@
-"use client";
+import type { TextProps } from "@mantine/core";
 
-import * as React from "react";
+import { Text } from "@mantine/core";
+import { forwardRef } from "react";
 
-import { cn } from "@/lib/utils";
-
-function Label({ className, ...props }: React.ComponentProps<"label">) {
-  return (
-    <label
-      data-slot="label"
-      className={cn(
-        "gap-2 text-xs leading-none group-data-[disabled=true]:opacity-50 peer-disabled:opacity-50 flex items-center select-none group-data-[disabled=true]:pointer-events-none peer-disabled:cursor-not-allowed",
-        className,
-      )}
-      {...props}
-    />
-  );
+interface LabelProps extends Omit<TextProps, "component"> {
+  htmlFor?: string;
 }
+
+const Label = forwardRef<HTMLLabelElement, LabelProps>(({ children, ...props }, ref) => {
+  return (
+    <Text ref={ref} component="label" size="xs" fw={500} {...props}>
+      {children}
+    </Text>
+  );
+});
+
+Label.displayName = "Label";
 
 export { Label };

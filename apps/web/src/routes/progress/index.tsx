@@ -4,14 +4,14 @@ import type { AppRouter } from "@fit-ai/api/routers/index";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import {
-  ActivityIcon,
-  BarChart3Icon,
-  CameraIcon,
-  ScaleIcon,
-  TrendingUpIcon,
-  TrophyIcon,
-  ZapIcon,
-} from "lucide-react";
+  IconActivity,
+  IconChartBar,
+  IconCamera,
+  IconScale,
+  IconTrendingUp,
+  IconTrophy,
+  IconBolt,
+} from "@tabler/icons-react";
 import {
   Bar,
   BarChart,
@@ -115,32 +115,32 @@ function OverviewTab() {
       {/* Key Metrics Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <MetricCard
-          icon={ScaleIcon}
+          icon={IconScale}
           label="Current Weight"
           value={formatWeight(currentWeight)}
           change={formatChange(weightChange)}
           changeType={weightChange && weightChange < 0 ? "positive" : "neutral"}
         />
         <MetricCard
-          icon={ActivityIcon}
+          icon={IconActivity}
           label="Body Fat"
           value={bodyFat ? `${bodyFat.toFixed(1)}%` : "—"}
           change={null}
         />
         <MetricCard
-          icon={BarChart3Icon}
+          icon={IconChartBar}
           label="Total Workouts"
           value={totalWorkouts.toString()}
           change={null}
         />
         <MetricCard
-          icon={TrophyIcon}
+          icon={IconTrophy}
           label="PRs Achieved"
           value={totalPRs.toString()}
           change={null}
         />
         <MetricCard
-          icon={ZapIcon}
+          icon={IconBolt}
           label="Current Streak"
           value={`${currentStreak} days`}
           change={null}
@@ -153,7 +153,7 @@ function OverviewTab() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <TrendingUpIcon className="size-4" />
+              <IconTrendingUp className="size-4" />
               Weight Trend (Last 3 Months)
             </CardTitle>
           </CardHeader>
@@ -195,7 +195,7 @@ function OverviewTab() {
               </div>
             ) : (
               <EmptyState
-                icon={ScaleIcon}
+                icon={IconScale}
                 title="No weight data"
                 description="Track your first measurement to see progress"
               />
@@ -207,7 +207,7 @@ function OverviewTab() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <BarChart3Icon className="size-4" />
+              <IconChartBar className="size-4" />
               Volume Trend (Last 8 Weeks)
             </CardTitle>
           </CardHeader>
@@ -237,7 +237,7 @@ function OverviewTab() {
               </div>
             ) : (
               <EmptyState
-                icon={BarChart3Icon}
+                icon={IconChartBar}
                 title="No volume data"
                 description="Complete workouts to track your volume"
               />
@@ -250,7 +250,7 @@ function OverviewTab() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <TrophyIcon className="size-4" />
+            <IconTrophy className="size-4" />
             Recent Achievements
           </CardTitle>
         </CardHeader>
@@ -264,7 +264,7 @@ function OverviewTab() {
                 >
                   <div className="flex items-center gap-3">
                     <div className="bg-primary/10 text-primary flex size-8 items-center justify-center rounded-full">
-                      <TrophyIcon className="size-4" />
+                      <IconTrophy className="size-4" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">{pr.exerciseName}</p>
@@ -285,7 +285,7 @@ function OverviewTab() {
             </div>
           ) : (
             <EmptyState
-              icon={TrophyIcon}
+              icon={IconTrophy}
               title="No PRs yet"
               description="Complete workouts to start setting records"
             />
@@ -396,23 +396,23 @@ function ProgressPage() {
       <Tabs defaultValue="overview">
         <TabsList className="mb-6 w-full justify-start overflow-x-auto">
           <TabsTrigger value="overview" className="gap-1.5">
-            <TrendingUpIcon className="size-3.5" />
+            <IconTrendingUp className="size-3.5" />
             Overview
           </TabsTrigger>
           <TabsTrigger value="body" className="gap-1.5">
-            <ScaleIcon className="size-3.5" />
+            <IconScale className="size-3.5" />
             Body
           </TabsTrigger>
           <TabsTrigger value="photos" className="gap-1.5">
-            <CameraIcon className="size-3.5" />
+            <IconCamera className="size-3.5" />
             Photos
           </TabsTrigger>
           <TabsTrigger value="records" className="gap-1.5">
-            <TrophyIcon className="size-3.5" />
+            <IconTrophy className="size-3.5" />
             Records
           </TabsTrigger>
           <TabsTrigger value="analytics" className="gap-1.5">
-            <BarChart3Icon className="size-3.5" />
+            <IconChartBar className="size-3.5" />
             Analytics
           </TabsTrigger>
         </TabsList>

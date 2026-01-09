@@ -1,16 +1,24 @@
-import { ChevronDown, ChevronUp, MoreVertical, Plus, Trash2 } from "lucide-react";
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconDotsVertical,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react";
 import { useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+  ActionIcon,
+  Badge,
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Group,
+  Menu,
+  Stack,
+  Text,
+} from "@mantine/core";
 
 import { RestTimer } from "./rest-timer";
 import type { SetType } from "./set-row";
@@ -86,7 +94,6 @@ function ExerciseBlock({
   onRemoveExercise,
   onMoveUp,
   onMoveDown,
-  className,
 }: ExerciseBlockProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const [activeRestTimer, setActiveRestTimer] = useState(false);
@@ -100,122 +107,168 @@ function ExerciseBlock({
   };
 
   return (
-    <div
-      className={cn(
-        "border border-border rounded-none overflow-hidden",
-        supersetGroupId && "border-l-4 border-l-primary",
-        className,
-      )}
+    <Box
+      style={{
+        border: "1px solid var(--mantine-color-default-border)",
+        borderLeft: supersetGroupId ? "4px solid var(--mantine-color-blue-5)" : undefined,
+        overflow: "hidden",
+      }}
     >
       {/* Header */}
-      <div
-        className="flex items-center justify-between gap-2 bg-muted/30 px-3 py-2 cursor-pointer"
+      <Flex
+        align="center"
+        justify="space-between"
+        gap="xs"
+        px="sm"
+        py="xs"
+        style={{
+          backgroundColor: "var(--mantine-color-default-hover)",
+          cursor: "pointer",
+        }}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center gap-2 min-w-0">
-          <button
-            type="button"
-            className="text-muted-foreground hover:text-foreground"
+        <Group gap="xs" style={{ minWidth: 0 }}>
+          <ActionIcon
+            variant="subtle"
+            size="sm"
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded(!isExpanded);
             }}
           >
-            {isExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
-          </button>
+            {isExpanded ? (
+              <IconChevronUp style={{ width: 16, height: 16 }} />
+            ) : (
+              <IconChevronDown style={{ width: 16, height: 16 }} />
+            )}
+          </ActionIcon>
 
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h3 className="font-medium text-sm truncate">{exercise.name}</h3>
+          <Box style={{ minWidth: 0 }}>
+            <Group gap="xs">
+              <Text fz="sm" fw={500} truncate>
+                {exercise.name}
+              </Text>
               {supersetGroupId && (
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" size="xs">
                   Superset
                 </Badge>
               )}
-            </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="capitalize">{exercise.category}</span>
+            </Group>
+            <Group gap="xs">
+              <Text fz="xs" c="dimmed" tt="capitalize">
+                {exercise.category}
+              </Text>
               {exercise.equipment && (
                 <>
-                  <span>•</span>
-                  <span>{exercise.equipment}</span>
+                  <Text fz="xs" c="dimmed">
+                    -
+                  </Text>
+                  <Text fz="xs" c="dimmed">
+                    {exercise.equipment}
+                  </Text>
                 </>
               )}
-            </div>
-          </div>
-        </div>
+            </Group>
+          </Box>
+        </Group>
 
-        <div className="flex items-center gap-2">
-          <Badge
-            variant={completedSets === totalSets ? "success" : "secondary"}
-            className="text-xs"
-          >
+        <Group gap="xs">
+          <Badge color={completedSets === totalSets ? "green" : "gray"} variant="light" size="xs">
             {completedSets}/{totalSets}
           </Badge>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger onClick={(e) => e.stopPropagation()}>
-              <Button variant="ghost" size="icon-sm">
-                <MoreVertical className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+          <Menu position="bottom-end" withinPortal>
+            <Menu.Target>
+              <ActionIcon variant="subtle" size="sm" onClick={(e) => e.stopPropagation()}>
+                <IconDotsVertical style={{ width: 16, height: 16 }} />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
               {onMoveUp && (
-                <DropdownMenuItem onClick={onMoveUp}>
-                  <ChevronUp className="size-4 mr-2" />
+                <Menu.Item
+                  onClick={onMoveUp}
+                  leftSection={<IconChevronUp style={{ width: 16, height: 16 }} />}
+                >
                   Move Up
-                </DropdownMenuItem>
+                </Menu.Item>
               )}
               {onMoveDown && (
-                <DropdownMenuItem onClick={onMoveDown}>
-                  <ChevronDown className="size-4 mr-2" />
+                <Menu.Item
+                  onClick={onMoveDown}
+                  leftSection={<IconChevronDown style={{ width: 16, height: 16 }} />}
+                >
                   Move Down
-                </DropdownMenuItem>
+                </Menu.Item>
               )}
-              {(onMoveUp || onMoveDown) && <DropdownMenuSeparator />}
-              <DropdownMenuItem
+              {(onMoveUp || onMoveDown) && <Menu.Divider />}
+              <Menu.Item
                 onClick={onRemoveExercise}
-                className="text-destructive focus:text-destructive"
+                color="red"
+                leftSection={<IconTrash style={{ width: 16, height: 16 }} />}
               >
-                <Trash2 className="size-4 mr-2" />
                 Remove Exercise
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Group>
+      </Flex>
 
       {/* Content */}
       {isExpanded && (
-        <div className="p-3">
+        <Box p="sm">
           {/* Previous Performance */}
           {previousPerformance?.topSet && (
-            <SimplePreviousPerformance
-              lastWeight={previousPerformance.topSet.weight}
-              lastReps={previousPerformance.topSet.reps}
-              lastRpe={previousPerformance.sets[0]?.rpe}
-              className="mb-3"
-            />
+            <Box mb="sm">
+              <SimplePreviousPerformance
+                lastWeight={previousPerformance.topSet.weight}
+                lastReps={previousPerformance.topSet.reps}
+                lastRpe={previousPerformance.sets[0]?.rpe}
+              />
+            </Box>
           )}
 
           {/* Notes */}
           {notes && (
-            <p className="text-xs text-muted-foreground bg-muted/30 px-2 py-1 mb-3 rounded-none">
+            <Text
+              fz="xs"
+              c="dimmed"
+              px="xs"
+              py={4}
+              mb="sm"
+              style={{ backgroundColor: "var(--mantine-color-default-hover)" }}
+            >
               {notes}
-            </p>
+            </Text>
           )}
 
           {/* Sets Header */}
-          <div className="grid grid-cols-[auto_1fr_1fr_auto_auto] items-center gap-2 px-1 pb-2 text-xs text-muted-foreground font-medium">
-            <span className="min-w-[60px]">Set</span>
-            <span className="text-center min-w-[70px]">Previous</span>
-            <span className="text-center">{weightUnit.toUpperCase()}</span>
-            <span className="text-center">Reps</span>
-            <span className="min-w-[100px]"></span>
-          </div>
+          <Box
+            px={4}
+            pb="xs"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "auto 1fr 1fr auto auto",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <Text fz="xs" c="dimmed" fw={500} style={{ minWidth: 60 }}>
+              Set
+            </Text>
+            <Text fz="xs" c="dimmed" fw={500} ta="center" style={{ minWidth: 70 }}>
+              Previous
+            </Text>
+            <Text fz="xs" c="dimmed" fw={500} ta="center">
+              {weightUnit.toUpperCase()}
+            </Text>
+            <Text fz="xs" c="dimmed" fw={500} ta="center">
+              Reps
+            </Text>
+            <Box style={{ minWidth: 100 }} />
+          </Box>
 
           {/* Sets */}
-          <div className="space-y-0">
+          <Stack gap={0}>
             {sets.map((set) => {
               const prevSet = previousPerformance?.sets.find((s) => s.setNumber === set.setNumber);
               return (
@@ -239,32 +292,40 @@ function ExerciseBlock({
                 />
               );
             })}
-          </div>
+          </Stack>
 
           {/* Add Set Button */}
           <Button
-            variant="ghost"
+            variant="subtle"
             size="sm"
+            fullWidth
+            mt="xs"
+            c="dimmed"
             onClick={onAddSet}
-            className="w-full mt-2 text-muted-foreground"
+            leftSection={<IconPlus style={{ width: 16, height: 16 }} />}
           >
-            <Plus className="size-4 mr-1" />
             Add Set
           </Button>
 
           {/* Rest Timer */}
           {showRestTimer && activeRestTimer && (
-            <div className="mt-3 pt-3 border-t border-border flex items-center justify-center">
-              <RestTimer
-                defaultSeconds={restTimerSeconds}
-                autoStart
-                onComplete={() => setActiveRestTimer(false)}
-              />
-            </div>
+            <Box
+              mt="sm"
+              pt="sm"
+              style={{ borderTop: "1px solid var(--mantine-color-default-border)" }}
+            >
+              <Flex justify="center">
+                <RestTimer
+                  defaultSeconds={restTimerSeconds}
+                  autoStart
+                  onComplete={() => setActiveRestTimer(false)}
+                />
+              </Flex>
+            </Box>
           )}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 

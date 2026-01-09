@@ -146,9 +146,7 @@ export const submitFeedbackRouteContract = protectedProcedure
 // ============================================================================
 // These types can be used in handlers.ts for full type inference
 
-export type GetPreferencesRouteHandler = Parameters<
-  typeof getPreferencesRouteContract.handler
->[0];
+export type GetPreferencesRouteHandler = Parameters<typeof getPreferencesRouteContract.handler>[0];
 export type UpdatePreferencesRouteHandler = Parameters<
   typeof updatePreferencesRouteContract.handler
 >[0];

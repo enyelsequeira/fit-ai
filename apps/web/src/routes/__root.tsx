@@ -1,15 +1,19 @@
 import type { QueryClient } from "@tanstack/react-query";
+import type { orpc } from "@/utils/orpc";
 
+import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
-import type { orpc } from "@/utils/orpc";
+import { theme } from "@/lib/theme";
 
-import { Toaster } from "@/components/ui/sonner";
+// CSS imports with ?url for SSR - these get added to head via links
+import mantineCoreStyles from "@mantine/core/styles.css?url";
+import mantineNotificationsStyles from "@mantine/notifications/styles.css?url";
+import mantineDatesStyles from "@mantine/dates/styles.css?url";
 
-import Header from "../components/header";
-import appCss from "../index.css?url";
 export interface RouterAppContext {
   orpc: typeof orpc;
   queryClient: QueryClient;
@@ -26,34 +30,41 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "My App",
+        title: "Fit AI",
       },
     ],
+
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: mantineCoreStyles },
+      { rel: "stylesheet", href: mantineNotificationsStyles },
+      { rel: "stylesheet", href: mantineDatesStyles },
     ],
   }),
-
-  component: RootDocument,
+  component: RootComponent,
 });
 
-function RootDocument() {
+function RootComponent() {
   return (
-    <html lang="en" className="dark">
+    <RootDocument>
+      <Outlet />
+    </RootDocument>
+  );
+}
+
+function RootDocument({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" {...mantineHtmlProps}>
       <head>
         <HeadContent />
+        <ColorSchemeScript defaultColorScheme="dark" />
       </head>
-      <body>
-        <div className="grid h-svh grid-rows-[auto_1fr]">
-          <Header />
-          <Outlet />
-        </div>
-        <Toaster richColors />
-        <TanStackRouterDevtools position="bottom-left" />
-        <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
+      <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column", margin: 0 }}>
+        <MantineProvider theme={theme} defaultColorScheme="auto">
+          <Notifications position="top-right" />
+          <main style={{ flex: 1 }}>{children}</main>
+          <TanStackRouterDevtools position="bottom-left" />
+          <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
+        </MantineProvider>
         <Scripts />
       </body>
     </html>

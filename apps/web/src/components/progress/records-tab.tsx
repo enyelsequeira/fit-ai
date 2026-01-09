@@ -1,7 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { ArrowUpIcon, CalendarIcon, DumbbellIcon, FilterIcon, TrophyIcon } from "lucide-react";
+import {
+  IconArrowUp,
+  IconCalendar,
+  IconBarbell,
+  IconFilter,
+  IconTrophy,
+} from "@tabler/icons-react";
 import { useMemo, useState } from "react";
+
+import dayjs from "dayjs";
 
 import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
@@ -66,7 +73,7 @@ function PRCard({ record }: { record: PersonalRecord }) {
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full">
-              <TrophyIcon className="size-5" />
+              <IconTrophy className="size-5" />
             </div>
             <div>
               <p className="font-medium">{record.exerciseName}</p>
@@ -81,13 +88,13 @@ function PRCard({ record }: { record: PersonalRecord }) {
               {record.unit}
             </p>
             <p className="text-xs text-muted-foreground">
-              {format(new Date(record.achievedAt), "MMM d, yyyy")}
+              {dayjs(record.achievedAt).format("MMM D, YYYY")}
             </p>
           </div>
         </div>
         {improvement !== null && improvement > 0 && (
           <div className="mt-3 flex items-center gap-1 text-emerald-500">
-            <ArrowUpIcon className="size-3" />
+            <IconArrowUp className="size-3" />
             <span className="text-xs font-medium">
               +{improvement.toFixed(1)}
               {record.unit}
@@ -214,7 +221,7 @@ export function RecordsTab() {
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full">
-                <TrophyIcon className="size-5" />
+                <IconTrophy className="size-5" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{totalPRs}</p>
@@ -228,7 +235,7 @@ export function RecordsTab() {
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-emerald-500/10 text-emerald-500 flex size-10 items-center justify-center rounded-full">
-                <CalendarIcon className="size-5" />
+                <IconCalendar className="size-5" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{prsThisMonth}</p>
@@ -242,7 +249,7 @@ export function RecordsTab() {
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-amber-500/10 text-amber-500 flex size-10 items-center justify-center rounded-full">
-                <DumbbellIcon className="size-5" />
+                <IconBarbell className="size-5" />
               </div>
               <div>
                 <p className="text-lg font-bold truncate">{mostImproved ?? "—"}</p>
@@ -257,7 +264,7 @@ export function RecordsTab() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <FilterIcon className="size-4" />
+            <IconFilter className="size-4" />
             Filters
           </CardTitle>
         </CardHeader>
@@ -343,7 +350,7 @@ export function RecordsTab() {
         <Card>
           <CardContent className="py-12">
             <EmptyState
-              icon={TrophyIcon}
+              icon={IconTrophy}
               title="No personal records"
               description="Complete workouts to start setting records"
             />

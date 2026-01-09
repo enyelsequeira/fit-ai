@@ -3,7 +3,7 @@ import type { EquipmentType } from "@/components/exercise/equipment-icon";
 
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { Dumbbell, Search } from "lucide-react";
+import { IconBarbell, IconSearch } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import z from "zod";
 
@@ -259,7 +259,7 @@ function ExercisesPage() {
         )
       ) : !typedExercises || typedExercises.length === 0 ? (
         <EmptyState
-          icon={searchParams.search ? Search : Dumbbell}
+          icon={searchParams.search ? IconSearch : IconBarbell}
           title={
             searchParams.search
               ? "No exercises found"

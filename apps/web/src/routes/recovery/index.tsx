@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { ActivityIcon, CalendarPlusIcon, RefreshCwIcon } from "lucide-react";
+import { IconActivity, IconCalendarPlus, IconRefresh } from "@tabler/icons-react";
 import { toast } from "sonner";
 
 import { FactorsBreakdown, ReadinessScore } from "@/components/ai/readiness-score";
@@ -60,7 +60,7 @@ function RecoveryStatusPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
-            <ActivityIcon className="size-5" />
+            <IconActivity className="size-5" />
             Recovery Status
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
@@ -75,14 +75,14 @@ function RecoveryStatusPage() {
             disabled={refreshRecovery.isPending}
             className="gap-1.5"
           >
-            <RefreshCwIcon
+            <IconRefresh
               className={`size-3.5 ${refreshRecovery.isPending ? "animate-spin" : ""}`}
             />
             Refresh
           </Button>
           <Link to="/recovery/check-in">
             <Button size="sm" className="gap-1.5">
-              <CalendarPlusIcon className="size-3.5" />
+              <IconCalendarPlus className="size-3.5" />
               Log Check-in
             </Button>
           </Link>
@@ -119,7 +119,7 @@ function RecoveryStatusPage() {
             </div>
           ) : (
             <EmptyState
-              icon={ActivityIcon}
+              icon={IconActivity}
               title="No readiness data"
               description="Log a daily check-in to see your training readiness"
               action={

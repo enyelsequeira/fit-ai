@@ -1,18 +1,14 @@
-import * as React from "react";
+import type { TextareaProps as MantineTextareaProps } from "@mantine/core";
 
-import { cn } from "@/lib/utils";
+import { Textarea as MantineTextarea } from "@mantine/core";
+import { forwardRef } from "react";
 
-function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
-  return (
-    <textarea
-      data-slot="textarea"
-      className={cn(
-        "dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 min-h-20 w-full rounded-none border bg-transparent px-2.5 py-2 text-xs transition-colors focus-visible:ring-1 aria-invalid:ring-1 placeholder:text-muted-foreground outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 resize-none",
-        className,
-      )}
-      {...props}
-    />
-  );
-}
+interface TextareaProps extends MantineTextareaProps {}
+
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => {
+  return <MantineTextarea ref={ref} size="sm" autosize minRows={3} {...props} />;
+});
+
+Textarea.displayName = "Textarea";
 
 export { Textarea };

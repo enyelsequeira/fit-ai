@@ -1,6 +1,6 @@
-import { BarChart3Icon } from "lucide-react";
+import { IconChartBar } from "@tabler/icons-react";
 
-import { cn } from "@/lib/utils";
+import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
@@ -55,96 +55,119 @@ export function PeriodComparison({
     : [];
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2 rounded-none border border-border/50 p-3">
-          <Label className="text-xs text-muted-foreground">Period 1</Label>
-          <div className="flex gap-2">
-            <Input
-              type="date"
-              value={period1Start}
-              onChange={(e) => onPeriod1StartChange(e.target.value)}
-              className="flex-1"
-            />
-            <span className="flex items-center text-xs text-muted-foreground">to</span>
-            <Input
-              type="date"
-              value={period1End}
-              onChange={(e) => onPeriod1EndChange(e.target.value)}
-              className="flex-1"
-            />
-          </div>
-        </div>
-        <div className="space-y-2 rounded-none border border-border/50 p-3">
-          <Label className="text-xs text-muted-foreground">Period 2</Label>
-          <div className="flex gap-2">
-            <Input
-              type="date"
-              value={period2Start}
-              onChange={(e) => onPeriod2StartChange(e.target.value)}
-              className="flex-1"
-            />
-            <span className="flex items-center text-xs text-muted-foreground">to</span>
-            <Input
-              type="date"
-              value={period2End}
-              onChange={(e) => onPeriod2EndChange(e.target.value)}
-              className="flex-1"
-            />
-          </div>
-        </div>
-      </div>
+    <Stack gap="md">
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+        <Box
+          p="sm"
+          style={{
+            border: "1px solid var(--mantine-color-default-border)",
+          }}
+        >
+          <Stack gap="xs">
+            <Label c="dimmed" fz="xs">
+              Period 1
+            </Label>
+            <Flex gap="xs" align="center">
+              <Input
+                type="date"
+                value={period1Start}
+                onChange={(e) => onPeriod1StartChange(e.target.value)}
+                style={{ flex: 1 }}
+              />
+              <Text fz="xs" c="dimmed">
+                to
+              </Text>
+              <Input
+                type="date"
+                value={period1End}
+                onChange={(e) => onPeriod1EndChange(e.target.value)}
+                style={{ flex: 1 }}
+              />
+            </Flex>
+          </Stack>
+        </Box>
+        <Box
+          p="sm"
+          style={{
+            border: "1px solid var(--mantine-color-default-border)",
+          }}
+        >
+          <Stack gap="xs">
+            <Label c="dimmed" fz="xs">
+              Period 2
+            </Label>
+            <Flex gap="xs" align="center">
+              <Input
+                type="date"
+                value={period2Start}
+                onChange={(e) => onPeriod2StartChange(e.target.value)}
+                style={{ flex: 1 }}
+              />
+              <Text fz="xs" c="dimmed">
+                to
+              </Text>
+              <Input
+                type="date"
+                value={period2End}
+                onChange={(e) => onPeriod2EndChange(e.target.value)}
+                style={{ flex: 1 }}
+              />
+            </Flex>
+          </Stack>
+        </Box>
+      </SimpleGrid>
 
       {data ? (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="sm">
           {metrics.map((metric) => {
             const change = metric.p1 > 0 ? ((metric.p2 - metric.p1) / metric.p1) * 100 : 0;
             const isPositive = change > 0;
 
             return (
-              <div
+              <Box
                 key={metric.label}
-                className="rounded-none border border-border/50 p-3 text-center"
+                p="sm"
+                ta="center"
+                style={{
+                  border: "1px solid var(--mantine-color-default-border)",
+                }}
               >
-                <p className="text-xs text-muted-foreground">{metric.label}</p>
-                <div className="mt-2 flex items-center justify-center gap-4">
-                  <div>
-                    <p className="text-lg font-bold">
+                <Text fz="xs" c="dimmed">
+                  {metric.label}
+                </Text>
+                <Flex align="center" justify="center" gap="md" mt="xs">
+                  <Box>
+                    <Text fz="lg" fw={700}>
                       {typeof metric.p1 === "number" ? metric.p1.toLocaleString() : metric.p1}
-                    </p>
-                    <p className="text-xs text-muted-foreground">Period 1</p>
-                  </div>
-                  <div
-                    className={cn(
-                      "text-sm font-medium",
-                      isPositive
-                        ? "text-emerald-500"
-                        : change < 0
-                          ? "text-red-500"
-                          : "text-muted-foreground",
-                    )}
-                  >
+                    </Text>
+                    <Text fz="xs" c="dimmed">
+                      Period 1
+                    </Text>
+                  </Box>
+                  <Text fz="sm" fw={500} c={isPositive ? "green" : change < 0 ? "red" : "dimmed"}>
                     {isPositive ? "+" : ""}
                     {change.toFixed(0)}%
-                  </div>
-                  <div>
-                    <p className="text-lg font-bold">
+                  </Text>
+                  <Box>
+                    <Text fz="lg" fw={700}>
                       {typeof metric.p2 === "number" ? metric.p2.toLocaleString() : metric.p2}
-                    </p>
-                    <p className="text-xs text-muted-foreground">Period 2</p>
-                  </div>
-                </div>
-              </div>
+                    </Text>
+                    <Text fz="xs" c="dimmed">
+                      Period 2
+                    </Text>
+                  </Box>
+                </Flex>
+              </Box>
             );
           })}
-        </div>
+        </SimpleGrid>
       ) : (
         <EmptyState
-          icon={BarChart3Icon}
+          icon={IconChartBar}
           title="No comparison data"
           description="Need at least 2 weeks of data for comparison"
         />
       )}
-    </div>
+    </Stack>
   );
 }

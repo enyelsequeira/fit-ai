@@ -1,16 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
 import {
-  CameraIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ImageIcon,
-  TrashIcon,
-  UploadIcon,
-  XIcon,
-} from "lucide-react";
+  IconCamera,
+  IconChevronLeft,
+  IconChevronRight,
+  IconPhoto,
+  IconTrash,
+  IconUpload,
+  IconX,
+} from "@tabler/icons-react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
+
+import dayjs from "dayjs";
 
 import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
@@ -68,7 +69,7 @@ function PhotoUploadForm({
 }) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [date, setDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [date, setDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [poseType, setPoseType] = useState<PoseType>("front");
   const [notes, setNotes] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -147,12 +148,12 @@ function PhotoUploadForm({
                 setPreview(null);
               }}
             >
-              <XIcon className="size-3" />
+              <IconX className="size-3" />
             </Button>
           </div>
         ) : (
           <>
-            <UploadIcon className="mb-2 size-8 text-muted-foreground" />
+            <IconUpload className="mb-2 size-8 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">Drag & drop or click to upload</p>
             <p className="text-xs text-muted-foreground">PNG, JPG up to 10MB</p>
           </>
@@ -266,7 +267,7 @@ function PhotoLightbox({
         className="absolute right-4 top-4 text-white hover:bg-white/20"
         onClick={onClose}
       >
-        <XIcon className="size-5" />
+        <IconX className="size-5" />
       </Button>
 
       {hasPrev && (
@@ -279,7 +280,7 @@ function PhotoLightbox({
             if (prevPhoto) onNavigate(prevPhoto.id);
           }}
         >
-          <ChevronLeftIcon className="size-6" />
+          <IconChevronLeft className="size-6" />
         </Button>
       )}
 
@@ -293,7 +294,7 @@ function PhotoLightbox({
             if (nextPhoto) onNavigate(nextPhoto.id);
           }}
         >
-          <ChevronRightIcon className="size-6" />
+          <IconChevronRight className="size-6" />
         </Button>
       )}
 
@@ -304,7 +305,7 @@ function PhotoLightbox({
           className="max-h-[80vh] object-contain"
         />
         <div className="mt-4 flex items-center gap-4 text-white">
-          <span className="text-sm">{format(new Date(photo.date), "MMMM d, yyyy")}</span>
+          <span className="text-sm">{dayjs(photo.date).format("MMMM D, YYYY")}</span>
           <Badge className={POSE_COLORS[photo.poseType]}>{POSE_LABELS[photo.poseType]}</Badge>
           {photo.weight && <span className="text-sm">{photo.weight}kg</span>}
           <Button
@@ -313,7 +314,7 @@ function PhotoLightbox({
             className="text-red-400 hover:bg-red-500/20 hover:text-red-300"
             onClick={() => onDelete(photo.id)}
           >
-            <TrashIcon className="size-4" />
+            <IconTrash className="size-4" />
           </Button>
         </div>
         {photo.notes && (
@@ -335,7 +336,7 @@ function PhotoComparison({ photos, onClose }: { photos: [Photo, Photo]; onClose:
         className="absolute right-4 top-4 text-white hover:bg-white/20"
         onClick={onClose}
       >
-        <XIcon className="size-5" />
+        <IconX className="size-5" />
       </Button>
 
       <div className="relative max-h-[80vh] max-w-[90vw]">
@@ -355,8 +356,8 @@ function PhotoComparison({ photos, onClose }: { photos: [Photo, Photo]; onClose:
           >
             <div className="h-full w-1 bg-white" />
             <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 rounded-full bg-white p-2">
-              <ChevronLeftIcon className="absolute -left-3 size-4 text-black" />
-              <ChevronRightIcon className="absolute -right-3 size-4 text-black" />
+              <IconChevronLeft className="absolute -left-3 size-4 text-black" />
+              <IconChevronRight className="absolute -right-3 size-4 text-black" />
             </div>
           </div>
 
@@ -374,15 +375,11 @@ function PhotoComparison({ photos, onClose }: { photos: [Photo, Photo]; onClose:
         <div className="mt-4 flex justify-between text-white">
           <div className="text-center">
             <p className="text-sm font-medium">Before</p>
-            <p className="text-xs text-white/70">
-              {format(new Date(photos[0].date), "MMM d, yyyy")}
-            </p>
+            <p className="text-xs text-white/70">{dayjs(photos[0].date).format("MMM D, YYYY")}</p>
           </div>
           <div className="text-center">
             <p className="text-sm font-medium">After</p>
-            <p className="text-xs text-white/70">
-              {format(new Date(photos[1].date), "MMM d, yyyy")}
-            </p>
+            <p className="text-xs text-white/70">{dayjs(photos[1].date).format("MMM D, YYYY")}</p>
           </div>
         </div>
       </div>
@@ -476,7 +473,7 @@ export function PhotosTab() {
   // Group photos by date
   const groupedPhotos = photos.reduce(
     (acc, photo) => {
-      const dateKey = format(new Date(photo.date), "yyyy-MM-dd");
+      const dateKey = dayjs(photo.date).format("YYYY-MM-DD");
       if (!acc[dateKey]) {
         acc[dateKey] = [];
       }
@@ -504,7 +501,7 @@ export function PhotosTab() {
         <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
           <DialogTrigger asChild>
             <Button size="sm">
-              <CameraIcon className="size-4" />
+              <IconCamera className="size-4" />
               Add Photo
             </Button>
           </DialogTrigger>
@@ -532,7 +529,7 @@ export function PhotosTab() {
             return (
               <div key={dateKey}>
                 <h3 className="mb-3 text-sm font-medium">
-                  {format(new Date(dateKey), "MMMM d, yyyy")}
+                  {dayjs(dateKey).format("MMMM D, YYYY")}
                 </h3>
                 <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                   {datePhotos.map((photo) => (
@@ -580,7 +577,7 @@ export function PhotosTab() {
                               handleDelete(photo.id);
                             }}
                           >
-                            <TrashIcon className="size-3" />
+                            <IconTrash className="size-3" />
                           </Button>
                         </div>
                       </div>
@@ -595,12 +592,12 @@ export function PhotosTab() {
         <Card>
           <CardContent className="py-12">
             <EmptyState
-              icon={ImageIcon}
+              icon={IconPhoto}
               title="No progress photos"
               description="Add progress photos to visualize your journey"
               action={
                 <Button size="sm" onClick={() => setIsUploadOpen(true)}>
-                  <CameraIcon className="size-4" />
+                  <IconCamera className="size-4" />
                   Add First Photo
                 </Button>
               }

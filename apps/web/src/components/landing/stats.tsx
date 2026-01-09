@@ -1,4 +1,6 @@
-import { Dumbbell, Medal, Target } from "lucide-react";
+import { IconBarbell, IconMedal, IconTarget } from "@tabler/icons-react";
+
+import { Box, Container, Flex, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 
 interface StatProps {
   icon: React.ReactNode;
@@ -8,27 +10,42 @@ interface StatProps {
 
 function Stat({ icon, value, label }: StatProps) {
   return (
-    <div className="flex flex-col items-center gap-2 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/5">{icon}</div>
-      <div className="text-3xl font-bold tracking-tight">{value}</div>
-      <div className="text-muted-foreground text-sm">{label}</div>
-    </div>
+    <Stack align="center" gap="xs" ta="center">
+      <Flex
+        h={48}
+        w={48}
+        align="center"
+        justify="center"
+        style={{
+          borderRadius: 8,
+          background: "rgba(255, 255, 255, 0.05)",
+        }}
+      >
+        {icon}
+      </Flex>
+      <Text fz={30} fw={700} lts={-0.5}>
+        {value}
+      </Text>
+      <Text size="sm" c="dimmed">
+        {label}
+      </Text>
+    </Stack>
   );
 }
 
 const stats: StatProps[] = [
   {
-    icon: <Dumbbell className="h-6 w-6 text-purple-400" />,
+    icon: <IconBarbell size={24} style={{ color: "rgb(192, 132, 252)" }} />,
     value: "1,000+",
     label: "Workouts Logged",
   },
   {
-    icon: <Medal className="h-6 w-6 text-yellow-400" />,
+    icon: <IconMedal size={24} style={{ color: "rgb(250, 204, 21)" }} />,
     value: "500+",
     label: "PRs Achieved",
   },
   {
-    icon: <Target className="h-6 w-6 text-blue-400" />,
+    icon: <IconTarget size={24} style={{ color: "rgb(96, 165, 250)" }} />,
     value: "50+",
     label: "Exercises",
   },
@@ -36,25 +53,34 @@ const stats: StatProps[] = [
 
 export function Stats() {
   return (
-    <section className="py-20 lg:py-28">
-      <div className="container mx-auto px-4">
-        <div className="overflow-hidden rounded-lg border border-white/10 bg-gradient-to-br from-purple-900/10 via-transparent to-blue-900/10 p-8 md:p-12">
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+    <Box component="section" py={{ base: 80, lg: 112 }}>
+      <Container>
+        <Box
+          p={{ base: "xl", md: 48 }}
+          style={{
+            overflow: "hidden",
+            borderRadius: 8,
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            background:
+              "linear-gradient(to bottom right, rgba(147, 51, 234, 0.1), transparent, rgba(59, 130, 246, 0.1))",
+          }}
+        >
+          <Box mb="xl" ta="center">
+            <Title order={2} fz={{ base: 24, sm: 30 }} fw={700} lts={-0.5}>
               Trusted by fitness enthusiasts
-            </h2>
-            <p className="text-muted-foreground mt-2">
+            </Title>
+            <Text c="dimmed" mt="xs">
               Join the community of athletes tracking their progress
-            </p>
-          </div>
+            </Text>
+          </Box>
 
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+          <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="xl">
             {stats.map((stat) => (
               <Stat key={stat.label} {...stat} />
             ))}
-          </div>
-        </div>
-      </div>
-    </section>
+          </SimpleGrid>
+        </Box>
+      </Container>
+    </Box>
   );
 }

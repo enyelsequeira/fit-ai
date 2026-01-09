@@ -1,8 +1,7 @@
 import type { useQuery } from "@tanstack/react-query";
 
-import { TrendingUp } from "lucide-react";
-
-import { cn } from "@/lib/utils";
+import { Group, Text } from "@mantine/core";
+import { IconTrendingUp } from "@tabler/icons-react";
 
 interface PreviousPerformanceProps {
   lastPerformance: ReturnType<
@@ -35,19 +34,15 @@ interface PreviousPerformanceProps {
   className?: string;
 }
 
-function PreviousPerformance({
-  lastPerformance,
-  bestPerformance,
-  className,
-}: PreviousPerformanceProps) {
+function PreviousPerformance({ lastPerformance, bestPerformance }: PreviousPerformanceProps) {
   const last = lastPerformance.data;
   const best = bestPerformance?.data;
 
   if (lastPerformance.isLoading) {
     return (
-      <div className={cn("text-muted-foreground animate-pulse text-xs", className)}>
+      <Text fz="xs" c="dimmed" style={{ animation: "pulse 2s infinite" }}>
         Loading previous performance...
-      </div>
+      </Text>
     );
   }
 
@@ -56,29 +51,35 @@ function PreviousPerformance({
   }
 
   return (
-    <div className={cn("flex flex-wrap items-center gap-x-4 gap-y-1 text-xs", className)}>
-      <div className="text-muted-foreground flex items-center gap-1.5">
-        <span>Last:</span>
-        <span className="text-foreground font-medium">
+    <Group gap="md" wrap="wrap">
+      <Group gap={6}>
+        <Text fz="xs" c="dimmed">
+          Last:
+        </Text>
+        <Text fz="xs" fw={500}>
           {last.topSet.weight}kg x {last.topSet.reps}
-        </span>
+        </Text>
         {last.sets.find((s) => s.setNumber === 1)?.rpe && (
-          <span className="text-muted-foreground">
+          <Text fz="xs" c="dimmed">
             (RPE {last.sets.find((s) => s.setNumber === 1)?.rpe})
-          </span>
+          </Text>
         )}
-      </div>
+      </Group>
 
       {best?.maxWeight && (
-        <div className="text-muted-foreground flex items-center gap-1.5">
-          <TrendingUp className="size-3 text-green-500" />
-          <span>Best:</span>
-          <span className="text-foreground font-medium">
+        <Group gap={6}>
+          <IconTrendingUp
+            style={{ width: 12, height: 12, color: "var(--mantine-color-green-5)" }}
+          />
+          <Text fz="xs" c="dimmed">
+            Best:
+          </Text>
+          <Text fz="xs" fw={500}>
             {best.maxWeight.value}kg x {best.maxWeight.reps}
-          </span>
-        </div>
+          </Text>
+        </Group>
       )}
-    </div>
+    </Group>
   );
 }
 
@@ -97,34 +98,43 @@ function SimplePreviousPerformance({
   lastRpe,
   bestWeight,
   bestReps,
-  className,
 }: SimplePreviousPerformanceProps) {
   if (!lastWeight && !lastReps) {
     return null;
   }
 
   return (
-    <div className={cn("flex flex-wrap items-center gap-x-4 gap-y-1 text-xs", className)}>
+    <Group gap="md" wrap="wrap">
       {lastWeight && lastReps && (
-        <div className="text-muted-foreground flex items-center gap-1.5">
-          <span>Last:</span>
-          <span className="text-foreground font-medium">
+        <Group gap={6}>
+          <Text fz="xs" c="dimmed">
+            Last:
+          </Text>
+          <Text fz="xs" fw={500}>
             {lastWeight}kg x {lastReps}
-          </span>
-          {lastRpe && <span>(RPE {lastRpe})</span>}
-        </div>
+          </Text>
+          {lastRpe && (
+            <Text fz="xs" c="dimmed">
+              (RPE {lastRpe})
+            </Text>
+          )}
+        </Group>
       )}
 
       {bestWeight && bestReps && (
-        <div className="text-muted-foreground flex items-center gap-1.5">
-          <TrendingUp className="size-3 text-green-500" />
-          <span>Best:</span>
-          <span className="text-foreground font-medium">
+        <Group gap={6}>
+          <IconTrendingUp
+            style={{ width: 12, height: 12, color: "var(--mantine-color-green-5)" }}
+          />
+          <Text fz="xs" c="dimmed">
+            Best:
+          </Text>
+          <Text fz="xs" fw={500}>
             {bestWeight}kg x {bestReps}
-          </span>
-        </div>
+          </Text>
+        </Group>
       )}
-    </div>
+    </Group>
   );
 }
 

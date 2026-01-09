@@ -1,10 +1,8 @@
 import type { Exercise } from "./exercise-card";
 
+import { ActionIcon, Badge, Box, Flex, Group, Skeleton, Stack, Text } from "@mantine/core";
+import { IconChevronRight, IconPlus } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, Plus } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 import { CategoryBadge } from "./category-badge";
 import { EquipmentIcon } from "./equipment-icon";
@@ -16,17 +14,15 @@ interface ExerciseListProps {
   exercises: Exercise[];
   onAddToWorkout?: (exerciseId: number) => void;
   showAddButton?: boolean;
-  className?: string;
 }
 
 export function ExerciseList({
   exercises,
   onAddToWorkout,
   showAddButton = false,
-  className,
 }: ExerciseListProps) {
   return (
-    <div className={cn("divide-border divide-y", className)}>
+    <Stack gap={0}>
       {exercises.map((exercise) => (
         <ExerciseListItem
           key={exercise.id}
@@ -35,7 +31,7 @@ export function ExerciseList({
           showAddButton={showAddButton}
         />
       ))}
-    </div>
+    </Stack>
   );
 }
 
@@ -51,84 +47,123 @@ function ExerciseListItem({
   showAddButton = false,
 }: ExerciseListItemProps) {
   return (
-    <div className="group hover:bg-muted/50 flex items-center gap-4 p-4 transition-colors">
+    <Flex
+      align="center"
+      gap="md"
+      p="md"
+      style={{
+        borderBottom: "1px solid var(--mantine-color-default-border)",
+        transition: "background-color 150ms ease",
+      }}
+      className="group"
+      styles={{
+        root: {
+          "&:hover": {
+            backgroundColor: "var(--mantine-color-gray-light-hover)",
+          },
+        },
+      }}
+    >
       <ExerciseImageThumbnail src={exercise.primaryImage} alt={exercise.name} />
 
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <Link
+      <Box style={{ flex: 1, minWidth: 0 }}>
+        <Group gap="xs">
+          <Text
+            component={Link}
             to="/exercises/$exerciseId"
             params={{ exerciseId: String(exercise.id) }}
-            className="text-sm font-medium hover:underline truncate"
+            fz="sm"
+            fw={500}
+            style={{
+              textDecoration: "none",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+            styles={{
+              root: {
+                "&:hover": {
+                  textDecoration: "underline",
+                },
+              },
+            }}
           >
             {exercise.name}
-          </Link>
+          </Text>
           {exercise.level && <ExerciseLevelBadge level={exercise.level} size="sm" />}
           {!exercise.isDefault && (
-            <span className="bg-primary/10 text-primary shrink-0 px-1.5 py-0.5 text-[10px] font-medium rounded">
+            <Badge size="xs" variant="light" color="blue" style={{ flexShrink: 0 }}>
               Custom
-            </span>
+            </Badge>
           )}
-        </div>
+        </Group>
 
-        <div className="mt-1 flex flex-wrap items-center gap-2">
+        <Group gap="xs" mt={4}>
           <CategoryBadge category={exercise.category} size="sm" showIcon={false} />
           {exercise.equipment && (
             <EquipmentIcon equipment={exercise.equipment} showLabel size="sm" />
           )}
-        </div>
+        </Group>
 
         {exercise.muscleGroups.length > 0 && (
-          <div className="mt-2">
+          <Box mt="xs">
             <MuscleGroupTags muscles={exercise.muscleGroups} maxVisible={3} size="sm" />
-          </div>
+          </Box>
         )}
-      </div>
+      </Box>
 
-      <div className="flex shrink-0 items-center gap-2">
+      <Group gap="xs" style={{ flexShrink: 0 }}>
         {showAddButton && onAddToWorkout && (
-          <Button
+          <ActionIcon
             variant="outline"
-            size="icon-sm"
-            className="opacity-0 transition-opacity group-hover:opacity-100"
+            size="sm"
             onClick={() => onAddToWorkout(exercise.id)}
+            style={{ opacity: 0, transition: "opacity 150ms ease" }}
+            className="group-hover-visible"
           >
-            <Plus className="size-4" />
-          </Button>
+            <IconPlus size={16} />
+          </ActionIcon>
         )}
-        <Link
+        <ActionIcon
+          component={Link}
           to="/exercises/$exerciseId"
           params={{ exerciseId: String(exercise.id) }}
-          className="text-muted-foreground hover:text-foreground"
+          variant="subtle"
+          color="gray"
         >
-          <ChevronRight className="size-5" />
-        </Link>
-      </div>
-    </div>
+          <IconChevronRight size={20} />
+        </ActionIcon>
+      </Group>
+    </Flex>
   );
 }
 
 interface ExerciseListSkeletonProps {
   count?: number;
-  className?: string;
 }
 
-export function ExerciseListSkeleton({ count = 5, className }: ExerciseListSkeletonProps) {
+export function ExerciseListSkeleton({ count = 5 }: ExerciseListSkeletonProps) {
   return (
-    <div className={cn("divide-border divide-y", className)}>
+    <Stack gap={0}>
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="flex items-center gap-4 p-4">
-          <div className="bg-muted size-12 shrink-0 animate-pulse rounded-md" />
-          <div className="min-w-0 flex-1 space-y-2">
-            <div className="bg-muted h-4 w-32 animate-pulse rounded" />
-            <div className="flex gap-2">
-              <div className="bg-muted h-5 w-16 animate-pulse rounded" />
-              <div className="bg-muted h-5 w-20 animate-pulse rounded" />
-            </div>
-          </div>
-          <div className="bg-muted size-5 shrink-0 animate-pulse rounded" />
-        </div>
+        <Flex
+          key={i}
+          align="center"
+          gap="md"
+          p="md"
+          style={{ borderBottom: "1px solid var(--mantine-color-default-border)" }}
+        >
+          <Skeleton h={48} w={48} radius="md" style={{ flexShrink: 0 }} />
+          <Stack gap="xs" style={{ flex: 1, minWidth: 0 }}>
+            <Skeleton h={16} w={128} radius="sm" />
+            <Group gap="xs">
+              <Skeleton h={20} w={64} radius="sm" />
+              <Skeleton h={20} w={80} radius="sm" />
+            </Group>
+          </Stack>
+          <Skeleton h={20} w={20} radius="sm" style={{ flexShrink: 0 }} />
+        </Flex>
       ))}
-    </div>
+    </Stack>
   );
 }

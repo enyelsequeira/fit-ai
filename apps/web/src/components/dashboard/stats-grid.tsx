@@ -1,10 +1,18 @@
 import type { ReactNode } from "react";
 
-import { Activity, ArrowDownIcon, ArrowUpIcon, Flame, Scale, Trophy } from "lucide-react";
+import {
+  IconActivity,
+  IconArrowDown,
+  IconArrowUp,
+  IconFlame,
+  IconScale,
+  IconTrophy,
+} from "@tabler/icons-react";
+
+import { Box, Flex, Group, SimpleGrid, Text } from "@mantine/core";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 
 interface StatCardProps {
   title: string;
@@ -22,13 +30,15 @@ function StatCard({ title, value, description, icon, trend, isLoading }: StatCar
   if (isLoading) {
     return (
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-4 w-4" />
+        <CardHeader>
+          <Group justify="space-between" pb="xs">
+            <Skeleton h={16} w={96} />
+            <Skeleton h={16} w={16} />
+          </Group>
         </CardHeader>
         <CardContent>
-          <Skeleton className="h-8 w-16 mb-1" />
-          <Skeleton className="h-3 w-32" />
+          <Skeleton h={32} w={64} mb={4} />
+          <Skeleton h={12} w={128} />
         </CardContent>
       </Card>
     );
@@ -36,29 +46,39 @@ function StatCard({ title, value, description, icon, trend, isLoading }: StatCar
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-muted-foreground font-medium">{title}</CardTitle>
-        <div className="text-muted-foreground">{icon}</div>
+      <CardHeader>
+        <Group justify="space-between" pb="xs">
+          <CardTitle c="dimmed" fw={500}>
+            {title}
+          </CardTitle>
+          <Box c="dimmed">{icon}</Box>
+        </Group>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <Text fz={24} fw={700}>
+          {value}
+        </Text>
         {trend && (
-          <p className="text-muted-foreground flex items-center gap-1 text-xs">
+          <Flex align="center" gap={4}>
             {trend.value > 0 ? (
-              <ArrowUpIcon className="h-3 w-3 text-green-500" />
+              <IconArrowUp size={12} style={{ color: "rgb(34, 197, 94)" }} />
             ) : trend.value < 0 ? (
-              <ArrowDownIcon className="h-3 w-3 text-red-500" />
+              <IconArrowDown size={12} style={{ color: "rgb(239, 68, 68)" }} />
             ) : null}
-            <span
-              className={cn(trend.value > 0 && "text-green-500", trend.value < 0 && "text-red-500")}
-            >
+            <Text size="xs" c={trend.value > 0 ? "green" : trend.value < 0 ? "red" : "dimmed"}>
               {trend.value > 0 ? "+" : ""}
               {trend.value}
-            </span>
-            <span>{trend.label}</span>
-          </p>
+            </Text>
+            <Text size="xs" c="dimmed">
+              {trend.label}
+            </Text>
+          </Flex>
         )}
-        {description && !trend && <p className="text-muted-foreground text-xs">{description}</p>}
+        {description && !trend && (
+          <Text size="xs" c="dimmed">
+            {description}
+          </Text>
+        )}
       </CardContent>
     </Card>
   );
@@ -109,45 +129,45 @@ export function StatsGrid({
   };
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
       <StatCard
         title="Workouts This Week"
         value={workoutsThisWeek}
-        icon={<Activity className="h-4 w-4" />}
+        icon={<IconActivity size={16} />}
         trend={workoutTrend}
         isLoading={isLoading}
       />
       <StatCard
         title="Current Streak"
         value={`${currentStreak} days`}
-        icon={<Flame className="h-4 w-4" />}
+        icon={<IconFlame size={16} />}
         description={longestStreak ? `Longest: ${longestStreak} days` : undefined}
         isLoading={isLoading}
       />
       <StatCard
         title="Volume This Week"
         value={formatVolume(totalVolumeThisWeek)}
-        icon={<Scale className="h-4 w-4" />}
+        icon={<IconScale size={16} />}
         trend={volumeTrend}
         isLoading={isLoading}
       />
       <StatCard
         title="PRs This Month"
         value={prsThisMonth}
-        icon={<Trophy className="h-4 w-4" />}
+        icon={<IconTrophy size={16} />}
         description="Personal records achieved"
         isLoading={isLoading}
       />
-    </div>
+    </SimpleGrid>
   );
 }
 
 export function StatsGridSkeleton() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
       {Array.from({ length: 4 }).map((_, i) => (
         <StatCard key={i} title="" value="" icon={null} isLoading={true} />
       ))}
-    </div>
+    </SimpleGrid>
   );
 }

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { ArrowLeftIcon, SettingsIcon } from "lucide-react";
+import { IconArrowLeft, IconSettings } from "@tabler/icons-react";
 import { toast } from "sonner";
 
 import type { PreferencesData } from "@/components/ai/preferences-form";
@@ -65,12 +65,12 @@ function PreferencesPage() {
       <div className="flex items-center gap-4">
         <Link to="/ai">
           <Button variant="ghost" size="icon-sm">
-            <ArrowLeftIcon className="size-4" />
+            <IconArrowLeft className="size-4" />
           </Button>
         </Link>
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
-            <SettingsIcon className="size-5" />
+            <IconSettings className="size-5" />
             Training Preferences
           </h1>
           <p className="text-muted-foreground text-sm">

@@ -1,10 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
-import { Dumbbell, Loader2, Search } from "lucide-react";
+import { IconBarbell, IconSearch } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import {
+  Badge,
+  Box,
+  Button,
+  Center,
+  Flex,
+  Group,
+  Loader,
+  ScrollArea,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { orpc } from "@/utils/orpc";
 
 type ExerciseCategory =
@@ -46,7 +56,7 @@ interface ExerciseSearchProps {
   className?: string;
 }
 
-function ExerciseSearch({ onSelect, selectedExerciseIds = [], className }: ExerciseSearchProps) {
+function ExerciseSearch({ onSelect, selectedExerciseIds = [] }: ExerciseSearchProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
@@ -79,61 +89,70 @@ function ExerciseSearch({ onSelect, selectedExerciseIds = [], className }: Exerc
   }, [filteredExercises]);
 
   return (
-    <div className={cn("flex flex-col gap-4", className)}>
+    <Stack gap="md">
       {/* Search Input */}
-      <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-        <Input
+      <Box pos="relative">
+        <TextInput
           type="search"
           placeholder="Search exercises..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-8"
+          leftSection={
+            <IconSearch style={{ width: 16, height: 16, color: "var(--mantine-color-dimmed)" }} />
+          }
         />
-      </div>
+      </Box>
 
       {/* Category Filters */}
-      <div className="flex flex-wrap gap-1.5">
+      <Group gap={6}>
         {EXERCISE_CATEGORIES.map((category) => (
-          <button
+          <Button
             key={category.value}
-            type="button"
+            variant={selectedCategory === category.value ? "filled" : "default"}
+            size="xs"
             onClick={() => setSelectedCategory(category.value)}
-            className={cn(
-              "px-2.5 py-1 text-xs rounded-none border transition-colors",
-              selectedCategory === category.value
-                ? "bg-primary text-primary-foreground border-primary"
-                : "bg-background border-border hover:bg-muted",
-            )}
+            style={{ borderRadius: 0 }}
           >
             {category.label}
-          </button>
+          </Button>
         ))}
-      </div>
+      </Group>
 
       {/* Exercise List */}
-      <div className="flex-1 overflow-y-auto max-h-[400px] -mx-2">
+      <ScrollArea h={400} mx={-8}>
         {exercises.isLoading ? (
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-          </div>
+          <Center py="xl">
+            <Loader size="md" />
+          </Center>
         ) : filteredExercises.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Dumbbell className="size-8 text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">No exercises found</p>
+          <Stack align="center" justify="center" py="xl" ta="center">
+            <IconBarbell style={{ width: 32, height: 32, color: "var(--mantine-color-dimmed)" }} />
+            <Text fz="sm" c="dimmed">
+              No exercises found
+            </Text>
             {searchQuery && (
-              <p className="text-xs text-muted-foreground mt-1">Try a different search term</p>
+              <Text fz="xs" c="dimmed">
+                Try a different search term
+              </Text>
             )}
-          </div>
+          </Stack>
         ) : selectedCategory === "all" ? (
           // Grouped view
-          <div className="space-y-4">
+          <Stack gap="md">
             {Object.entries(groupedExercises).map(([category, categoryExercises]) => (
-              <div key={category}>
-                <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-2 mb-2">
+              <Box key={category}>
+                <Text
+                  fz="xs"
+                  fw={500}
+                  c="dimmed"
+                  tt="uppercase"
+                  px="xs"
+                  mb="xs"
+                  style={{ letterSpacing: "0.05em" }}
+                >
                   {category}
-                </h4>
-                <div className="space-y-0.5">
+                </Text>
+                <Stack gap={2}>
                   {categoryExercises.map((exercise) => (
                     <ExerciseItem
                       key={exercise.id}
@@ -141,13 +160,13 @@ function ExerciseSearch({ onSelect, selectedExerciseIds = [], className }: Exerc
                       onClick={() => onSelect(exercise)}
                     />
                   ))}
-                </div>
-              </div>
+                </Stack>
+              </Box>
             ))}
-          </div>
+          </Stack>
         ) : (
           // Flat view
-          <div className="space-y-0.5">
+          <Stack gap={2}>
             {filteredExercises.map((exercise) => (
               <ExerciseItem
                 key={exercise.id}
@@ -155,10 +174,10 @@ function ExerciseSearch({ onSelect, selectedExerciseIds = [], className }: Exerc
                 onClick={() => onSelect(exercise)}
               />
             ))}
-          </div>
+          </Stack>
         )}
-      </div>
-    </div>
+      </ScrollArea>
+    </Stack>
   );
 }
 
@@ -170,34 +189,64 @@ interface ExerciseItemProps {
 
 function ExerciseItem({ exercise, onClick, isSelected }: ExerciseItemProps) {
   return (
-    <button
-      type="button"
+    <Button
+      variant="subtle"
+      fullWidth
       onClick={onClick}
-      className={cn(
-        "w-full flex items-center gap-3 px-2 py-2.5 text-left rounded-none transition-colors",
-        "hover:bg-muted focus:bg-muted focus:outline-none",
-        isSelected && "bg-primary/10",
-      )}
+      justify="flex-start"
+      h="auto"
+      py="xs"
+      px="xs"
+      styles={{
+        root: {
+          borderRadius: 0,
+          backgroundColor: isSelected ? "var(--mantine-color-blue-light)" : undefined,
+        },
+        inner: {
+          justifyContent: "flex-start",
+        },
+      }}
     >
-      <div className="flex-shrink-0 size-8 bg-muted rounded-none flex items-center justify-center">
-        <Dumbbell className="size-4 text-muted-foreground" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate">{exercise.name}</p>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          {exercise.equipment && <span>{exercise.equipment}</span>}
-          {exercise.muscleGroups.length > 0 && (
-            <>
-              {exercise.equipment && <span>•</span>}
-              <span className="truncate">{exercise.muscleGroups.slice(0, 2).join(", ")}</span>
-            </>
-          )}
-        </div>
-      </div>
-      <Badge variant="secondary" className="text-xs capitalize">
-        {exercise.exerciseType}
-      </Badge>
-    </button>
+      <Flex align="center" gap="sm" w="100%">
+        <Center
+          w={32}
+          h={32}
+          style={{
+            flexShrink: 0,
+            backgroundColor: "var(--mantine-color-default-hover)",
+          }}
+        >
+          <IconBarbell style={{ width: 16, height: 16, color: "var(--mantine-color-dimmed)" }} />
+        </Center>
+        <Box style={{ flex: 1, minWidth: 0 }}>
+          <Text fz="sm" fw={500} truncate>
+            {exercise.name}
+          </Text>
+          <Group gap="xs">
+            {exercise.equipment && (
+              <Text fz="xs" c="dimmed">
+                {exercise.equipment}
+              </Text>
+            )}
+            {exercise.muscleGroups.length > 0 && (
+              <>
+                {exercise.equipment && (
+                  <Text fz="xs" c="dimmed">
+                    -
+                  </Text>
+                )}
+                <Text fz="xs" c="dimmed" truncate>
+                  {exercise.muscleGroups.slice(0, 2).join(", ")}
+                </Text>
+              </>
+            )}
+          </Group>
+        </Box>
+        <Badge variant="light" size="xs" tt="capitalize">
+          {exercise.exerciseType}
+        </Badge>
+      </Flex>
+    </Button>
   );
 }
 

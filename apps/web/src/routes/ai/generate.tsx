@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { ArrowLeftIcon, SettingsIcon, SparklesIcon } from "lucide-react";
+import { IconArrowLeft, IconSettings, IconSparkles } from "@tabler/icons-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -96,12 +96,12 @@ function GenerateWorkoutPage() {
       <div className="flex items-center gap-4">
         <Link to="/ai">
           <Button variant="ghost" size="icon-sm">
-            <ArrowLeftIcon className="size-4" />
+            <IconArrowLeft className="size-4" />
           </Button>
         </Link>
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
-            <SparklesIcon className="size-5" />
+            <IconSparkles className="size-5" />
             Generate Workout
           </h1>
           <p className="text-muted-foreground text-sm">AI-powered personalized workout creation</p>
@@ -113,7 +113,7 @@ function GenerateWorkoutPage() {
         <Card className="border-amber-500/50 bg-amber-500/5">
           <CardContent className="py-6">
             <EmptyState
-              icon={SettingsIcon}
+              icon={IconSettings}
               title="Set up your training preferences first"
               description="Configure your goals, schedule, and equipment to get personalized AI workouts"
               action={

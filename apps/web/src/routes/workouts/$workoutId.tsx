@@ -1,22 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
-  AlertTriangle,
-  ArrowLeft,
-  Calendar,
-  Check,
-  ChevronDown,
-  ChevronUp,
-  Clock,
-  Dumbbell,
-  Loader2,
-  Minus,
-  MoreVertical,
-  Plus,
-  Target,
-  Trash2,
-  X,
-} from "lucide-react";
+  IconAlertTriangle,
+  IconArrowLeft,
+  IconCalendar,
+  IconCheck,
+  IconChevronDown,
+  IconChevronUp,
+  IconClock,
+  IconBarbell,
+  IconLoader2,
+  IconMinus,
+  IconDotsVertical,
+  IconPlus,
+  IconTarget,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -394,7 +394,7 @@ function WorkoutDetailRoute() {
     return (
       <div className="container mx-auto py-6 px-4">
         <EmptyState
-          icon={AlertTriangle}
+          icon={IconAlertTriangle}
           title="Failed to load workout"
           description={workout.error.message}
           action={
@@ -412,7 +412,7 @@ function WorkoutDetailRoute() {
     return (
       <div className="container mx-auto py-6 px-4">
         <EmptyState
-          icon={AlertTriangle}
+          icon={IconAlertTriangle}
           title="Workout not found"
           description="This workout doesn't exist or has been deleted"
           action={
@@ -446,7 +446,7 @@ function WorkoutDetailRoute() {
                 to="/workouts"
                 className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }))}
               >
-                <ArrowLeft className="size-4" />
+                <IconArrowLeft className="size-4" />
               </Link>
 
               {isEditingName ? (
@@ -462,10 +462,10 @@ function WorkoutDetailRoute() {
                     }}
                   />
                   <Button size="icon-sm" onClick={handleSaveName}>
-                    <Check className="size-4" />
+                    <IconCheck className="size-4" />
                   </Button>
                   <Button size="icon-sm" variant="ghost" onClick={() => setIsEditingName(false)}>
-                    <X className="size-4" />
+                    <IconX className="size-4" />
                   </Button>
                 </div>
               ) : (
@@ -499,14 +499,14 @@ function WorkoutDetailRoute() {
                       "hidden sm:flex",
                     )}
                   >
-                    <Check className="size-4 mr-1" />
+                    <IconCheck className="size-4 mr-1" />
                     Finish
                   </Link>
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon-sm">
-                        <MoreVertical className="size-4" />
+                        <IconDotsVertical className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -514,7 +514,7 @@ function WorkoutDetailRoute() {
                         onClick={() => setIsCancelDialogOpen(true)}
                         className="text-destructive focus:text-destructive"
                       >
-                        <Trash2 className="size-4 mr-2" />
+                        <IconTrash className="size-4 mr-2" />
                         Cancel Workout
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -527,19 +527,19 @@ function WorkoutDetailRoute() {
           {/* Workout meta info row */}
           <div className="flex items-center gap-4 pb-3 text-sm text-muted-foreground overflow-x-auto">
             <div className="flex items-center gap-1.5 shrink-0">
-              <Calendar className="size-3.5" />
+              <IconCalendar className="size-3.5" />
               <span>{formatDate(workoutData.startedAt)}</span>
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
-              <Clock className="size-3.5" />
+              <IconClock className="size-3.5" />
               <LiveTimer startedAt={workoutData.startedAt} />
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
-              <Dumbbell className="size-3.5" />
+              <IconBarbell className="size-3.5" />
               <span>{workoutData.workoutExercises?.length ?? 0} exercises</span>
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
-              <Target className="size-3.5" />
+              <IconTarget className="size-3.5" />
               <span>
                 {completedSets}/{totalSets} sets
               </span>
@@ -594,7 +594,7 @@ function WorkoutDetailRoute() {
                   {(isPending || isTempId) && (
                     <div className="absolute inset-0 bg-background/50 z-10 flex items-center justify-center pointer-events-none rounded-none">
                       <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                        <Loader2 className="size-4 animate-spin" />
+                        <IconLoader2 className="size-4 animate-spin" />
                         <span>Adding exercise...</span>
                       </div>
                     </div>
@@ -630,7 +630,7 @@ function WorkoutDetailRoute() {
                 className="w-full h-12 border-dashed hidden md:flex"
                 onClick={() => setIsAddExerciseOpen(true)}
               >
-                <Plus className="size-4 mr-2" />
+                <IconPlus className="size-4 mr-2" />
                 Add Exercise
               </Button>
             )}
@@ -638,14 +638,14 @@ function WorkoutDetailRoute() {
         ) : (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="size-16 bg-muted rounded-full flex items-center justify-center mb-4">
-              <Dumbbell className="size-8 text-muted-foreground" />
+              <IconBarbell className="size-8 text-muted-foreground" />
             </div>
             <h3 className="text-lg font-medium mb-1">No exercises yet</h3>
             <p className="text-sm text-muted-foreground mb-4">
               Add your first exercise to start tracking
             </p>
             <Button onClick={() => setIsAddExerciseOpen(true)}>
-              <Plus className="size-4 mr-1" />
+              <IconPlus className="size-4 mr-1" />
               Add Exercise
             </Button>
           </div>
@@ -657,7 +657,7 @@ function WorkoutDetailRoute() {
         <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-3 md:hidden safe-area-inset-bottom">
           <div className="flex items-center gap-3">
             <Button variant="outline" className="flex-1" onClick={() => setIsAddExerciseOpen(true)}>
-              <Plus className="size-4 mr-1" />
+              <IconPlus className="size-4 mr-1" />
               Add Exercise
             </Button>
             <Link
@@ -665,7 +665,7 @@ function WorkoutDetailRoute() {
               params={{ workoutId }}
               className={cn(buttonVariants({ variant: "default" }), "flex-1")}
             >
-              <Check className="size-4 mr-1" />
+              <IconCheck className="size-4 mr-1" />
               Finish Workout
             </Link>
           </div>
@@ -700,7 +700,7 @@ function WorkoutDetailRoute() {
             >
               {deleteWorkoutMutation.isPending ? (
                 <>
-                  <Loader2 className="size-4 mr-2 animate-spin" />
+                  <IconLoader2 className="size-4 mr-2 animate-spin" />
                   Cancelling...
                 </>
               ) : (
@@ -796,7 +796,7 @@ function ExerciseCard({
                   : "bg-primary/10 text-primary",
               )}
             >
-              {allSetsCompleted ? <Check className="size-4" /> : exerciseNumber}
+              {allSetsCompleted ? <IconCheck className="size-4" /> : exerciseNumber}
             </div>
 
             <div className="min-w-0 flex-1">
@@ -838,7 +838,11 @@ function ExerciseCard({
 
             {/* Expand/Collapse button */}
             <Button variant="ghost" size="icon-sm" onClick={onToggleExpanded}>
-              {isExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+              {isExpanded ? (
+                <IconChevronUp className="size-4" />
+              ) : (
+                <IconChevronDown className="size-4" />
+              )}
             </Button>
 
             {/* More options */}
@@ -846,12 +850,12 @@ function ExerciseCard({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon-sm">
-                    <MoreVertical className="size-4" />
+                    <IconDotsVertical className="size-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={onAddSet}>
-                    <Plus className="size-4 mr-2" />
+                    <IconPlus className="size-4 mr-2" />
                     Add Set
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -859,7 +863,7 @@ function ExerciseCard({
                     onClick={() => setConfirmDelete(true)}
                     className="text-destructive focus:text-destructive"
                   >
-                    <Trash2 className="size-4 mr-2" />
+                    <IconTrash className="size-4 mr-2" />
                     Remove Exercise
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -916,7 +920,7 @@ function ExerciseCard({
                 onClick={onAddSet}
                 className="w-full text-muted-foreground hover:text-foreground"
               >
-                <Plus className="size-4 mr-1" />
+                <IconPlus className="size-4 mr-1" />
                 Add Set
               </Button>
             </CardFooter>
@@ -1024,7 +1028,7 @@ function SetRowInline({
             onClick={onDelete}
             className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive size-5"
           >
-            <Trash2 className="size-3" />
+            <IconTrash className="size-3" />
           </Button>
         )}
       </div>
@@ -1038,7 +1042,7 @@ function SetRowInline({
           disabled={isDisabled}
           className="size-6"
         >
-          <Minus className="size-3" />
+          <IconMinus className="size-3" />
         </Button>
         <Input
           type="number"
@@ -1059,7 +1063,7 @@ function SetRowInline({
           disabled={isDisabled}
           className="size-6"
         >
-          <Plus className="size-3" />
+          <IconPlus className="size-3" />
         </Button>
       </div>
 
@@ -1072,7 +1076,7 @@ function SetRowInline({
           disabled={isDisabled}
           className="size-6"
         >
-          <Minus className="size-3" />
+          <IconMinus className="size-3" />
         </Button>
         <Input
           type="number"
@@ -1093,7 +1097,7 @@ function SetRowInline({
           disabled={isDisabled}
           className="size-6"
         >
-          <Plus className="size-3" />
+          <IconPlus className="size-3" />
         </Button>
       </div>
 
@@ -1109,7 +1113,7 @@ function SetRowInline({
             isCompleted && "bg-emerald-500 hover:bg-emerald-600 border-emerald-500",
           )}
         >
-          <Check className={cn("size-4", isCompleted && "text-white")} />
+          <IconCheck className={cn("size-4", isCompleted && "text-white")} />
         </Button>
       </div>
     </div>

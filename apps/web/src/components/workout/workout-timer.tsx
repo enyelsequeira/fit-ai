@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { Group, Text } from "@mantine/core";
 
 interface WorkoutTimerProps {
   startedAt: Date;
@@ -18,7 +18,7 @@ function formatTime(seconds: number): string {
   return `${minutes}:${secs.toString().padStart(2, "0")}`;
 }
 
-function WorkoutTimer({ startedAt, className }: WorkoutTimerProps) {
+function WorkoutTimer({ startedAt }: WorkoutTimerProps) {
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
@@ -35,10 +35,14 @@ function WorkoutTimer({ startedAt, className }: WorkoutTimerProps) {
   }, [startedAt]);
 
   return (
-    <div className={cn("flex items-center gap-2 font-mono text-sm tabular-nums", className)}>
-      <span className="text-muted-foreground">Duration:</span>
-      <span className="font-medium">{formatTime(elapsed)}</span>
-    </div>
+    <Group gap="xs" style={{ fontFamily: "monospace" }}>
+      <Text fz="sm" c="dimmed">
+        Duration:
+      </Text>
+      <Text fz="sm" fw={500} style={{ fontVariantNumeric: "tabular-nums" }}>
+        {formatTime(elapsed)}
+      </Text>
+    </Group>
   );
 }
 

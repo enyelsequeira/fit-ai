@@ -1,4 +1,4 @@
-import { Dumbbell } from "lucide-react";
+import { IconBarbell } from "@tabler/icons-react";
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
@@ -49,13 +49,13 @@ export function ExerciseImage({
     >
       {showFallback ? (
         <div className="flex items-center justify-center size-full bg-muted">
-          <Dumbbell className={cn("text-muted-foreground/50", iconSizeClasses[size])} />
+          <IconBarbell className={cn("text-muted-foreground/50", iconSizeClasses[size])} />
         </div>
       ) : (
         <>
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
-              <Dumbbell className={cn("text-muted-foreground/30", iconSizeClasses[size])} />
+              <IconBarbell className={cn("text-muted-foreground/30", iconSizeClasses[size])} />
             </div>
           )}
           <img
@@ -96,7 +96,7 @@ export function ExerciseImageThumbnail({ src, alt, className }: ExerciseImageThu
       )}
     >
       {showFallback ? (
-        <Dumbbell className="size-5 text-muted-foreground/50" />
+        <IconBarbell className="size-5 text-muted-foreground/50" />
       ) : (
         <img
           src={src}

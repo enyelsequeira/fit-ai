@@ -1,39 +1,45 @@
-import type { VariantProps } from "class-variance-authority";
+import type { AvatarProps as MantineAvatarProps } from "@mantine/core";
 
-import { cva } from "class-variance-authority";
-import * as React from "react";
+import { Avatar as MantineAvatar } from "@mantine/core";
+import { forwardRef, useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils";
+export type AvatarSize = "xs" | "sm" | "default" | "lg" | "xl";
 
-const avatarVariants = cva("relative flex shrink-0 overflow-hidden rounded-full", {
-  variants: {
-    size: {
-      xs: "size-6",
-      sm: "size-8",
-      default: "size-10",
-      lg: "size-12",
-      xl: "size-16",
-    },
-  },
-  defaultVariants: {
-    size: "default",
-  },
-});
+const sizeMap: Record<AvatarSize, MantineAvatarProps["size"]> = {
+  xs: "sm",
+  sm: "md",
+  default: "lg",
+  lg: "xl",
+  xl: 64,
+};
 
-interface AvatarProps extends React.ComponentProps<"span">, VariantProps<typeof avatarVariants> {}
-
-function Avatar({ className, size, ...props }: AvatarProps) {
-  return <span data-slot="avatar" className={cn(avatarVariants({ size }), className)} {...props} />;
+interface AvatarProps extends Omit<MantineAvatarProps, "size"> {
+  size?: AvatarSize;
+  children?: React.ReactNode;
 }
 
-interface AvatarImageProps extends React.ComponentProps<"img"> {
+const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
+  ({ size = "default", children, ...props }, ref) => {
+    return (
+      <MantineAvatar ref={ref} size={sizeMap[size]} radius="xl" {...props}>
+        {children}
+      </MantineAvatar>
+    );
+  },
+);
+
+Avatar.displayName = "Avatar";
+
+interface AvatarImageProps {
+  src?: string;
+  alt?: string;
   onLoadingStatusChange?: (status: "loading" | "loaded" | "error") => void;
 }
 
-function AvatarImage({ className, src, alt, onLoadingStatusChange, ...props }: AvatarImageProps) {
-  const [status, setStatus] = React.useState<"loading" | "loaded" | "error">("loading");
+function AvatarImage({ src, alt, onLoadingStatusChange }: AvatarImageProps) {
+  const [status, setStatus] = useState<"loading" | "loaded" | "error">("loading");
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!src) {
       setStatus("error");
       return;
@@ -57,28 +63,15 @@ function AvatarImage({ className, src, alt, onLoadingStatusChange, ...props }: A
     return null;
   }
 
-  return (
-    <img
-      data-slot="avatar-image"
-      src={src}
-      alt={alt}
-      className={cn("aspect-square size-full object-cover", className)}
-      {...props}
-    />
-  );
+  return <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />;
 }
 
-function AvatarFallback({ className, ...props }: React.ComponentProps<"span">) {
-  return (
-    <span
-      data-slot="avatar-fallback"
-      className={cn(
-        "bg-muted text-muted-foreground flex size-full items-center justify-center text-xs font-medium",
-        className,
-      )}
-      {...props}
-    />
-  );
+interface AvatarFallbackProps {
+  children?: React.ReactNode;
+}
+
+function AvatarFallback({ children }: AvatarFallbackProps) {
+  return <>{children}</>;
 }
 
 export { Avatar, AvatarImage, AvatarFallback };

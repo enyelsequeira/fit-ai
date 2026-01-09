@@ -59,3 +59,11 @@ PROMPT.md
 
 # Wrangler local state
 .wrangler
+
+.claude
+.claude_settings.json
+.agent
+scripts
+templates
+claude-progress.txt
+autonomous-coding/

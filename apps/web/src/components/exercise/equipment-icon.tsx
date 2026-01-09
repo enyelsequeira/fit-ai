@@ -1,8 +1,15 @@
-import type { LucideIcon } from "lucide-react";
+import type { Icon } from "@tabler/icons-react";
 
-import { Circle, Dumbbell, Link, PersonStanding, Scale, Settings, Square } from "lucide-react";
-
-import { cn } from "@/lib/utils";
+import { Group, Text } from "@mantine/core";
+import {
+  IconBarbell,
+  IconCircle,
+  IconLink,
+  IconScale,
+  IconSettings,
+  IconSquare,
+  IconStretching,
+} from "@tabler/icons-react";
 
 export type EquipmentType =
   | "barbell"
@@ -16,41 +23,41 @@ export type EquipmentType =
   | null;
 
 interface EquipmentConfig {
-  icon: LucideIcon;
+  icon: Icon;
   label: string;
 }
 
 export const equipmentConfig: Record<NonNullable<EquipmentType>, EquipmentConfig> = {
   barbell: {
-    icon: Scale,
+    icon: IconScale,
     label: "Barbell",
   },
   dumbbell: {
-    icon: Dumbbell,
+    icon: IconBarbell,
     label: "Dumbbell",
   },
   cable: {
-    icon: Link,
+    icon: IconLink,
     label: "Cable",
   },
   machine: {
-    icon: Settings,
+    icon: IconSettings,
     label: "Machine",
   },
   bodyweight: {
-    icon: PersonStanding,
+    icon: IconStretching,
     label: "Bodyweight",
   },
   kettlebell: {
-    icon: Circle,
+    icon: IconCircle,
     label: "Kettlebell",
   },
   bands: {
-    icon: Square,
+    icon: IconSquare,
     label: "Bands",
   },
   other: {
-    icon: Circle,
+    icon: IconCircle,
     label: "Other",
   },
 };
@@ -59,31 +66,29 @@ interface EquipmentIconProps {
   equipment: EquipmentType;
   showLabel?: boolean;
   size?: "sm" | "default" | "lg";
-  className?: string;
 }
+
+const iconSizes = {
+  sm: 12,
+  default: 16,
+  lg: 20,
+};
 
 export function EquipmentIcon({
   equipment,
   showLabel = false,
   size = "default",
-  className,
 }: EquipmentIconProps) {
   if (!equipment) return null;
 
   const config = equipmentConfig[equipment] || equipmentConfig.other;
   const Icon = config.icon;
 
-  const sizeClasses = {
-    sm: "size-3",
-    default: "size-4",
-    lg: "size-5",
-  };
-
   return (
-    <span className={cn("text-muted-foreground inline-flex items-center gap-1", className)}>
-      <Icon className={sizeClasses[size]} />
-      {showLabel && <span className="text-xs">{config.label}</span>}
-    </span>
+    <Group gap={4} wrap="nowrap" c="dimmed">
+      <Icon size={iconSizes[size]} />
+      {showLabel && <Text fz="xs">{config.label}</Text>}
+    </Group>
   );
 }
 

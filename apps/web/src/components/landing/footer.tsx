@@ -1,4 +1,6 @@
-import { Dumbbell } from "lucide-react";
+import { IconBarbell } from "@tabler/icons-react";
+
+import { Anchor, Box, Container, Flex, Group, Text } from "@mantine/core";
 
 const footerLinks = [
   { label: "About", href: "#" },
@@ -9,39 +11,74 @@ const footerLinks = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 py-8">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
+    <Box
+      component="footer"
+      py="xl"
+      style={{
+        borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+      }}
+    >
+      <Container>
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          align="center"
+          justify={{ md: "space-between" }}
+          gap="lg"
+        >
           {/* Logo and brand */}
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-blue-500/20">
-              <Dumbbell className="h-4 w-4 text-purple-400" />
-            </div>
-            <span className="font-semibold">Fit AI</span>
-          </div>
+          <Group gap="xs">
+            <Flex
+              h={32}
+              w={32}
+              align="center"
+              justify="center"
+              style={{
+                borderRadius: 8,
+                background:
+                  "linear-gradient(to bottom right, rgba(168, 85, 247, 0.2), rgba(59, 130, 246, 0.2))",
+              }}
+            >
+              <IconBarbell size={16} style={{ color: "rgb(192, 132, 252)" }} />
+            </Flex>
+            <Text fw={600}>Fit AI</Text>
+          </Group>
 
           {/* Links */}
-          <nav className="flex flex-wrap items-center justify-center gap-6">
+          <Group component="nav" gap="lg" wrap="wrap" justify="center">
             {footerLinks.map((link) => (
-              <a
+              <Anchor
                 key={link.label}
                 href={link.href}
-                className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                size="sm"
+                c="dimmed"
+                underline="never"
+                style={{ transition: "color 0.2s" }}
               >
                 {link.label}
-              </a>
+              </Anchor>
             ))}
-          </nav>
+          </Group>
 
           {/* Tech stack */}
-          <p className="text-muted-foreground text-xs">Built with TanStack + oRPC + AI</p>
-        </div>
+          <Text size="xs" c="dimmed">
+            Built with TanStack + oRPC + AI
+          </Text>
+        </Flex>
 
         {/* Copyright */}
-        <div className="text-muted-foreground mt-6 border-t border-white/5 pt-6 text-center text-xs">
-          &copy; {new Date().getFullYear()} Fit AI. All rights reserved.
-        </div>
-      </div>
-    </footer>
+        <Box
+          mt="lg"
+          pt="lg"
+          ta="center"
+          style={{
+            borderTop: "1px solid rgba(255, 255, 255, 0.05)",
+          }}
+        >
+          <Text size="xs" c="dimmed">
+            &copy; {new Date().getFullYear()} Fit AI. All rights reserved.
+          </Text>
+        </Box>
+      </Container>
+    </Box>
   );
 }

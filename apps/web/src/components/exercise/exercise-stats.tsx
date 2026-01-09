@@ -1,8 +1,7 @@
+import { Box, Card, Flex, Group, SimpleGrid, Skeleton, Stack, Text, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { TrendingUp, Trophy } from "lucide-react";
+import { IconTrendingUp, IconTrophy } from "@tabler/icons-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { orpc } from "@/utils/orpc";
 
 interface ExerciseStatsProps {
@@ -33,123 +32,131 @@ export function ExerciseStats({ exerciseId }: ExerciseStatsProps) {
 
   if (!hasData) {
     return (
-      <Card>
-        <CardContent className="py-8 text-center">
-          <p className="text-muted-foreground text-sm">
+      <Card withBorder>
+        <Box py="xl" ta="center">
+          <Text fz="sm" c="dimmed">
             You haven&apos;t performed this exercise yet.
-          </p>
-          <p className="text-muted-foreground mt-1 text-xs">
+          </Text>
+          <Text fz="xs" c="dimmed" mt={4}>
             Add this exercise to a workout to start tracking your progress.
-          </p>
-        </CardContent>
+          </Text>
+        </Box>
       </Card>
     );
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
       {lastPerformance.data && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <TrendingUp className="text-muted-foreground size-4" />
-              Last Performance
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-1">
-              <p className="text-muted-foreground text-xs">
-                {new Date(lastPerformance.data.lastWorkoutDate).toLocaleDateString()}
-              </p>
-              {lastPerformance.data.topSet && (
-                <>
-                  <p className="text-sm font-medium">{lastPerformance.data.topSet.weight} kg</p>
-                  <p className="text-muted-foreground text-xs">
-                    {lastPerformance.data.topSet.reps} reps
-                  </p>
-                </>
-              )}
-              <p className="text-muted-foreground text-xs">
-                Total volume: {lastPerformance.data.totalVolume}
-              </p>
-            </div>
-          </CardContent>
+        <Card withBorder>
+          <Box pb="xs">
+            <Group gap="xs">
+              <IconTrendingUp size={16} style={{ color: "var(--mantine-color-dimmed)" }} />
+              <Text fz="sm" fw={500}>
+                Last Performance
+              </Text>
+            </Group>
+          </Box>
+          <Stack gap={4}>
+            <Text fz="xs" c="dimmed">
+              {new Date(lastPerformance.data.lastWorkoutDate).toLocaleDateString()}
+            </Text>
+            {lastPerformance.data.topSet && (
+              <>
+                <Text fz="sm" fw={500}>
+                  {lastPerformance.data.topSet.weight} kg
+                </Text>
+                <Text fz="xs" c="dimmed">
+                  {lastPerformance.data.topSet.reps} reps
+                </Text>
+              </>
+            )}
+            <Text fz="xs" c="dimmed">
+              Total volume: {lastPerformance.data.totalVolume}
+            </Text>
+          </Stack>
         </Card>
       )}
 
       {bestPerformance.data && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <Trophy className="size-4 text-yellow-500" />
-              Best Performance
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {bestPerformance.data.maxWeight && (
-                <div>
-                  <p className="text-muted-foreground text-xs">Max Weight</p>
-                  <p className="text-sm font-medium">
-                    {bestPerformance.data.maxWeight.value} kg x{" "}
-                    {bestPerformance.data.maxWeight.reps} reps
-                  </p>
-                </div>
-              )}
-              {bestPerformance.data.estimated1RM && (
-                <div>
-                  <p className="text-muted-foreground text-xs">Estimated 1RM</p>
-                  <p className="text-sm font-medium">
-                    {bestPerformance.data.estimated1RM.value.toFixed(1)} kg
-                  </p>
-                </div>
-              )}
-            </div>
-          </CardContent>
+        <Card withBorder>
+          <Box pb="xs">
+            <Group gap="xs">
+              <IconTrophy size={16} style={{ color: "var(--mantine-color-yellow-5)" }} />
+              <Text fz="sm" fw={500}>
+                Best Performance
+              </Text>
+            </Group>
+          </Box>
+          <Stack gap="xs">
+            {bestPerformance.data.maxWeight && (
+              <Box>
+                <Text fz="xs" c="dimmed">
+                  Max Weight
+                </Text>
+                <Text fz="sm" fw={500}>
+                  {bestPerformance.data.maxWeight.value} kg x {bestPerformance.data.maxWeight.reps}{" "}
+                  reps
+                </Text>
+              </Box>
+            )}
+            {bestPerformance.data.estimated1RM && (
+              <Box>
+                <Text fz="xs" c="dimmed">
+                  Estimated 1RM
+                </Text>
+                <Text fz="sm" fw={500}>
+                  {bestPerformance.data.estimated1RM.value.toFixed(1)} kg
+                </Text>
+              </Box>
+            )}
+          </Stack>
         </Card>
       )}
 
       {personalRecords.data && personalRecords.data.length > 0 && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <Trophy className="size-4 text-amber-500" />
-              Personal Records
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {personalRecords.data.slice(0, 3).map((pr) => (
-                <div key={pr.id} className="flex justify-between text-xs">
-                  <span className="text-muted-foreground capitalize">
-                    {pr.recordType.replace(/_/g, " ")}
-                  </span>
-                  <span className="font-medium">{pr.value}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
+        <Card withBorder>
+          <Box pb="xs">
+            <Group gap="xs">
+              <IconTrophy size={16} style={{ color: "var(--mantine-color-orange-5)" }} />
+              <Text fz="sm" fw={500}>
+                Personal Records
+              </Text>
+            </Group>
+          </Box>
+          <Stack gap="xs">
+            {personalRecords.data.slice(0, 3).map((pr) => (
+              <Flex key={pr.id} justify="space-between">
+                <Text fz="xs" c="dimmed" style={{ textTransform: "capitalize" }}>
+                  {pr.recordType.replace(/_/g, " ")}
+                </Text>
+                <Text fz="xs" fw={500}>
+                  {pr.value}
+                </Text>
+              </Flex>
+            ))}
+          </Stack>
         </Card>
       )}
-    </div>
+    </SimpleGrid>
   );
 }
 
 function ExerciseStatsSkeleton() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
       {[1, 2, 3].map((i) => (
-        <Card key={i}>
-          <CardHeader className="pb-2">
-            <Skeleton className="h-4 w-32" />
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Skeleton className="h-3 w-20" />
-            <Skeleton className="h-5 w-24" />
-            <Skeleton className="h-3 w-16" />
-          </CardContent>
+        <Card key={i} withBorder>
+          <Box pb="xs">
+            <Skeleton h={16} w={128} radius="sm" />
+          </Box>
+          <Stack gap="xs">
+            <Skeleton h={12} w={80} radius="sm" />
+            <Skeleton h={20} w={96} radius="sm" />
+            <Skeleton h={12} w={64} radius="sm" />
+          </Stack>
         </Card>
       ))}
-    </div>
+    </SimpleGrid>
   );
 }

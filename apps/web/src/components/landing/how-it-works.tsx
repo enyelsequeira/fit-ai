@@ -1,4 +1,6 @@
-import { BarChart3, ClipboardList, Sparkles, Target } from "lucide-react";
+import { IconChartBar, IconClipboardList, IconSparkles, IconTarget } from "@tabler/icons-react";
+
+import { Box, Container, Flex, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 
 interface StepProps {
   number: number;
@@ -9,20 +11,64 @@ interface StepProps {
 
 function Step({ number, title, description, icon }: StepProps) {
   return (
-    <div className="group relative flex flex-col items-center text-center">
+    <Stack align="center" ta="center" pos="relative">
       {/* Step number badge */}
-      <div className="bg-background relative z-10 mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-white/10 transition-colors group-hover:border-purple-500/50">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20">
+      <Box
+        pos="relative"
+        mb="md"
+        h={64}
+        w={64}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: "50%",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          background: "var(--mantine-color-body)",
+          zIndex: 10,
+          transition: "border-color 0.2s",
+        }}
+      >
+        <Flex
+          h={48}
+          w={48}
+          align="center"
+          justify="center"
+          style={{
+            borderRadius: "50%",
+            background:
+              "linear-gradient(to bottom right, rgba(168, 85, 247, 0.2), rgba(59, 130, 246, 0.2))",
+          }}
+        >
           {icon}
-        </div>
-        <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-purple-500 text-xs font-bold text-white">
+        </Flex>
+        <Flex
+          pos="absolute"
+          top={-4}
+          right={-4}
+          h={24}
+          w={24}
+          align="center"
+          justify="center"
+          style={{
+            borderRadius: "50%",
+            background: "rgb(168, 85, 247)",
+            fontSize: 12,
+            fontWeight: 700,
+            color: "white",
+          }}
+        >
           {number}
-        </span>
-      </div>
+        </Flex>
+      </Box>
 
-      <h3 className="mb-2 text-lg font-semibold">{title}</h3>
-      <p className="text-muted-foreground text-sm">{description}</p>
-    </div>
+      <Title order={3} size="lg" fw={600} mb="xs">
+        {title}
+      </Title>
+      <Text size="sm" c="dimmed">
+        {description}
+      </Text>
+    </Stack>
   );
 }
 
@@ -30,52 +76,72 @@ const steps: Omit<StepProps, "number">[] = [
   {
     title: "Set Your Goals",
     description: "Define your fitness objectives, preferences, and available equipment.",
-    icon: <Target className="h-6 w-6 text-purple-400" />,
+    icon: <IconTarget size={24} style={{ color: "rgb(192, 132, 252)" }} />,
   },
   {
     title: "Log Workouts",
     description: "Track your exercises, sets, reps, and weights with our intuitive interface.",
-    icon: <ClipboardList className="h-6 w-6 text-blue-400" />,
+    icon: <IconClipboardList size={24} style={{ color: "rgb(96, 165, 250)" }} />,
   },
   {
     title: "Track Progress",
     description: "Monitor your gains with detailed analytics and personal record tracking.",
-    icon: <BarChart3 className="h-6 w-6 text-green-400" />,
+    icon: <IconChartBar size={24} style={{ color: "rgb(74, 222, 128)" }} />,
   },
   {
     title: "Get AI Recommendations",
     description: "Receive personalized workout suggestions based on your performance.",
-    icon: <Sparkles className="h-6 w-6 text-orange-400" />,
+    icon: <IconSparkles size={24} style={{ color: "rgb(251, 146, 60)" }} />,
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section className="bg-muted/30 py-20 lg:py-28">
-      <div className="container mx-auto px-4">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+    <Box
+      component="section"
+      py={{ base: 80, lg: 112 }}
+      style={{ background: "var(--mantine-color-default-hover)" }}
+    >
+      <Container>
+        <Box mb={48} ta="center">
+          <Title order={2} fz={{ base: 30, sm: 36 }} fw={700} lts={-0.5}>
             How it{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <Text
+              component="span"
+              inherit
+              variant="gradient"
+              gradient={{ from: "grape", to: "blue", deg: 90 }}
+            >
               works
-            </span>
-          </h2>
-          <p className="text-muted-foreground mx-auto mt-4 max-w-2xl text-lg">
+            </Text>
+          </Title>
+          <Text size="lg" c="dimmed" maw={672} mx="auto" mt="md">
             Get started in minutes and transform your fitness journey with intelligent tracking.
-          </p>
-        </div>
+          </Text>
+        </Box>
 
-        <div className="relative">
+        <Box pos="relative">
           {/* Connecting line - visible on larger screens */}
-          <div className="absolute left-0 right-0 top-8 hidden h-px bg-gradient-to-r from-transparent via-white/10 to-transparent lg:block" />
+          <Box
+            pos="absolute"
+            left={0}
+            right={0}
+            top={32}
+            h={1}
+            visibleFrom="lg"
+            style={{
+              background:
+                "linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent)",
+            }}
+          />
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="xl">
             {steps.map((step, index) => (
               <Step key={step.title} number={index + 1} {...step} />
             ))}
-          </div>
-        </div>
-      </div>
-    </section>
+          </SimpleGrid>
+        </Box>
+      </Container>
+    </Box>
   );
 }

@@ -1,56 +1,75 @@
+import {
+  ActionIcon,
+  Box,
+  Container,
+  Group,
+  Skeleton,
+  Text,
+  Title,
+  UnstyledButton,
+} from "@mantine/core";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  Dumbbell,
-  Heart,
-  LayoutDashboard,
-  Library,
-  Plus,
-  Sparkles,
-  TrendingUp,
-} from "lucide-react";
+  IconBarbell,
+  IconHeart,
+  IconLayoutDashboard,
+  IconLibrary,
+  IconPlus,
+  IconSparkles,
+  IconTrendingUp,
+} from "@tabler/icons-react";
 
 import { authClient } from "@/lib/auth-client";
-import { cn } from "@/lib/utils";
 
 import MobileNav from "./mobile-nav";
 import { Button } from "./ui/button";
-import { Skeleton } from "./ui/skeleton";
 import UserMenu from "./user-menu";
 
 const navLinks = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/workouts", label: "Workouts", icon: Dumbbell },
-  { to: "/exercises", label: "Exercises", icon: Library },
-  { to: "/progress", label: "Progress", icon: TrendingUp },
-  { to: "/ai", label: "AI", icon: Sparkles },
-  { to: "/recovery", label: "Recovery", icon: Heart },
+  { to: "/dashboard", label: "Dashboard", icon: IconLayoutDashboard },
+  { to: "/workouts", label: "Workouts", icon: IconBarbell },
+  { to: "/exercises", label: "Exercises", icon: IconLibrary },
+  { to: "/progress", label: "Progress", icon: IconTrendingUp },
+  { to: "/ai", label: "AI", icon: IconSparkles },
+  { to: "/recovery", label: "Recovery", icon: IconHeart },
 ] as const;
 
 function HeaderSkeleton() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <div className="mr-6 flex items-center space-x-2">
-          <Skeleton className="h-6 w-6" />
-          <Skeleton className="h-5 w-16" />
-        </div>
-        <div className="hidden flex-1 md:flex md:items-center md:gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-4 w-20" />
-          ))}
-        </div>
-        <div className="ml-auto flex items-center gap-2">
-          <Skeleton className="h-8 w-8 rounded-full" />
-        </div>
-      </div>
-    </header>
+    <Box
+      component="header"
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+        width: "100%",
+        borderBottom: "1px solid var(--mantine-color-dark-4)",
+        backgroundColor: "var(--mantine-color-dark-7)",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      <Container size="xl">
+        <Group h={56} justify="space-between">
+          <Group gap="xs">
+            <Skeleton w={24} h={24} />
+            <Skeleton w={64} h={20} />
+          </Group>
+          <Group gap="md" visibleFrom="md">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} w={80} h={16} />
+            ))}
+          </Group>
+          <Skeleton w={32} h={32} radius="xl" />
+        </Group>
+      </Container>
+    </Box>
   );
 }
 
 interface NavLinkProps {
   to: string;
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: typeof IconLayoutDashboard;
   currentPath: string;
 }
 
@@ -58,17 +77,33 @@ function NavLink({ to, label, icon: Icon, currentPath }: NavLinkProps) {
   const isActive = currentPath === to || currentPath.startsWith(`${to}/`);
 
   return (
-    <Link
+    <UnstyledButton
+      component={Link}
       to={to}
-      className={cn(
-        "flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors",
-        "hover:text-foreground",
-        isActive ? "text-foreground" : "text-muted-foreground",
-      )}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "8px 12px",
+        borderRadius: 4,
+        color: isActive ? "var(--mantine-color-white)" : "var(--mantine-color-dimmed)",
+        fontWeight: 500,
+        fontSize: 14,
+        transition: "color 150ms",
+      }}
+      styles={{
+        root: {
+          "&:hover": {
+            color: "var(--mantine-color-white)",
+          },
+        },
+      }}
     >
-      <Icon className="h-4 w-4" />
-      <span className="hidden lg:inline">{label}</span>
-    </Link>
+      <Icon size={16} />
+      <Text size="sm" visibleFrom="lg">
+        {label}
+      </Text>
+    </UnstyledButton>
   );
 }
 
@@ -82,54 +117,73 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center px-4">
-        {/* Logo */}
-        <Link to="/" className="mr-6 flex items-center space-x-2">
-          <Dumbbell className="h-6 w-6" />
-          <span className="font-bold">Fit AI</span>
-        </Link>
+    <Box
+      component="header"
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+        width: "100%",
+        borderBottom: "1px solid var(--mantine-color-dark-4)",
+        backgroundColor: "var(--mantine-color-dark-7)",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      <Container size="xl" px="md">
+        <Group h={56} justify="space-between">
+          {/* Logo */}
+          <UnstyledButton component={Link} to="/">
+            <Group gap="xs">
+              <IconBarbell size={24} />
+              <Title order={4} fw={700}>
+                Fit AI
+              </Title>
+            </Group>
+          </UnstyledButton>
 
-        {session ? (
-          <>
-            {/* Desktop Navigation */}
-            <nav className="hidden flex-1 items-center gap-1 md:flex">
-              {navLinks.map((link) => (
-                <NavLink key={link.to} {...link} currentPath={currentPath} />
-              ))}
-            </nav>
+          {session ? (
+            <>
+              {/* Desktop Navigation */}
+              <Group gap={4} visibleFrom="md" style={{ flex: 1, justifyContent: "center" }}>
+                {navLinks.map((link) => (
+                  <NavLink key={link.to} {...link} currentPath={currentPath} />
+                ))}
+              </Group>
 
-            {/* Quick Actions & User Menu */}
-            <div className="ml-auto flex items-center gap-2">
-              {/* Quick Add Workout Button */}
-              <Link to="/workouts/new" className="hidden sm:inline-flex">
-                <Button variant="ghost" size="icon-sm" title="Start new workout">
-                  <Plus className="h-4 w-4" />
-                  <span className="sr-only">Start new workout</span>
-                </Button>
-              </Link>
+              {/* Quick Actions & User Menu */}
+              <Group gap="sm">
+                {/* Quick Add Workout Button */}
+                <ActionIcon
+                  component={Link}
+                  to="/workouts/new"
+                  variant="subtle"
+                  size="md"
+                  title="Start new workout"
+                  visibleFrom="sm"
+                >
+                  <IconPlus size={16} />
+                </ActionIcon>
 
-              {/* User Menu */}
-              <UserMenu />
+                {/* User Menu */}
+                <UserMenu />
 
-              {/* Mobile Navigation */}
-              <MobileNav />
-            </div>
-          </>
-        ) : (
-          /* Unauthenticated State */
-          <div className="ml-auto flex items-center gap-2">
-            <Link to="/login">
-              <Button variant="ghost" size="sm">
+                {/* Mobile Navigation */}
+                <MobileNav />
+              </Group>
+            </>
+          ) : (
+            /* Unauthenticated State */
+            <Group gap="sm">
+              <Button component={Link} to="/sign-in" variant="ghost" size="sm">
                 Sign In
               </Button>
-            </Link>
-            <Link to="/login">
-              <Button size="sm">Get Started</Button>
-            </Link>
-          </div>
-        )}
-      </div>
-    </header>
+              <Button component={Link} to="/signup" size="sm">
+                Get Started
+              </Button>
+            </Group>
+          )}
+        </Group>
+      </Container>
+    </Box>
   );
 }

@@ -1,50 +1,34 @@
-import type { LucideIcon } from "lucide-react";
+import type { Icon } from "@tabler/icons-react";
 
-import * as React from "react";
+import { Box, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 
-import { cn } from "@/lib/utils";
-
-interface EmptyStateProps extends React.ComponentProps<"div"> {
-  icon?: LucideIcon;
+interface EmptyStateProps {
+  icon?: Icon;
   title: string;
   description?: string;
   action?: React.ReactNode;
 }
 
-function EmptyState({
-  className,
-  icon: Icon,
-  title,
-  description,
-  action,
-  ...props
-}: EmptyStateProps) {
+function EmptyState({ icon: IconComponent, title, description, action }: EmptyStateProps) {
   return (
-    <div
-      data-slot="empty-state"
-      className={cn("flex flex-col items-center justify-center gap-4 py-12 text-center", className)}
-      {...props}
-    >
-      {Icon && (
-        <div
-          data-slot="empty-state-icon"
-          className="bg-muted text-muted-foreground flex size-12 items-center justify-center rounded-full"
-        >
-          <Icon className="size-6" />
-        </div>
+    <Stack align="center" justify="center" gap="md" py="xl">
+      {IconComponent && (
+        <ThemeIcon size="xl" radius="xl" variant="light" color="gray">
+          <IconComponent size={24} />
+        </ThemeIcon>
       )}
-      <div className="flex flex-col gap-1">
-        <h3 data-slot="empty-state-title" className="text-foreground text-sm font-medium">
+      <Stack align="center" gap="xs">
+        <Title order={4} size="sm" fw={500}>
           {title}
-        </h3>
+        </Title>
         {description && (
-          <p data-slot="empty-state-description" className="text-muted-foreground text-xs">
+          <Text size="xs" c="dimmed" ta="center">
             {description}
-          </p>
+          </Text>
         )}
-      </div>
-      {action && <div data-slot="empty-state-action">{action}</div>}
-    </div>
+      </Stack>
+      {action && <Box>{action}</Box>}
+    </Stack>
   );
 }
 

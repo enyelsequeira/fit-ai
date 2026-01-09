@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { cn } from "@/lib/utils";
+import { Box, Container, Flex, Stack, Text, Title } from "@mantine/core";
 
 import Header from "./header";
 
@@ -15,19 +15,27 @@ interface AppShellProps {
 
 export default function AppShell({
   children,
-  className,
   fullWidth = false,
   noPadding = false,
 }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <Box mih="100vh" bg="var(--mantine-color-body)">
       <Header />
-      <main
-        className={cn("flex-1", !fullWidth && "container", !noPadding && "px-4 py-6", className)}
-      >
-        {children}
-      </main>
-    </div>
+      {fullWidth ? (
+        <Box
+          component="main"
+          style={{ flex: 1 }}
+          px={noPadding ? 0 : "md"}
+          py={noPadding ? 0 : "lg"}
+        >
+          {children}
+        </Box>
+      ) : (
+        <Container component="main" px={noPadding ? 0 : "md"} py={noPadding ? 0 : "lg"}>
+          {children}
+        </Container>
+      )}
+    </Box>
   );
 }
 
@@ -35,22 +43,32 @@ interface PageHeaderProps {
   title: string;
   description?: string;
   actions?: ReactNode;
-  className?: string;
 }
 
-export function PageHeader({ title, description, actions, className }: PageHeaderProps) {
+export function PageHeader({ title, description, actions }: PageHeaderProps) {
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-4 pb-6 sm:flex-row sm:items-center sm:justify-between",
-        className,
-      )}
+    <Flex
+      direction={{ base: "column", sm: "row" }}
+      align={{ sm: "center" }}
+      justify={{ sm: "space-between" }}
+      gap="md"
+      pb="lg"
     >
-      <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
-        {description && <p className="text-sm text-muted-foreground">{description}</p>}
-      </div>
-      {actions && <div className="flex items-center gap-2">{actions}</div>}
-    </div>
+      <Stack gap={4}>
+        <Title order={1} fz={24} fw={700} lts={-0.5}>
+          {title}
+        </Title>
+        {description && (
+          <Text size="sm" c="dimmed">
+            {description}
+          </Text>
+        )}
+      </Stack>
+      {actions && (
+        <Flex align="center" gap="xs">
+          {actions}
+        </Flex>
+      )}
+    </Flex>
   );
 }

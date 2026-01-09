@@ -1,39 +1,35 @@
-import type { VariantProps } from "class-variance-authority";
+import type { BadgeProps as MantineBadgeProps } from "@mantine/core";
 
-import { cva } from "class-variance-authority";
-import * as React from "react";
+import { Badge as MantineBadge } from "@mantine/core";
+import { forwardRef } from "react";
 
-import { cn } from "@/lib/utils";
+export type BadgeVariant =
+  | "default"
+  | "secondary"
+  | "success"
+  | "warning"
+  | "destructive"
+  | "outline";
 
-const badgeVariants = cva(
-  "inline-flex items-center rounded-none border px-2 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-  {
-    variants: {
-      variant: {
-        default: "border-transparent bg-primary text-primary-foreground",
-        secondary: "border-transparent bg-secondary text-secondary-foreground",
-        success:
-          "border-transparent bg-emerald-500/10 text-emerald-500 dark:bg-emerald-500/20 dark:text-emerald-400",
-        warning:
-          "border-transparent bg-amber-500/10 text-amber-500 dark:bg-amber-500/20 dark:text-amber-400",
-        destructive: "border-transparent bg-destructive/10 text-destructive dark:bg-destructive/20",
-        outline: "border-border text-foreground",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  },
-);
-
-function Badge({
-  className,
-  variant,
-  ...props
-}: React.ComponentProps<"span"> & VariantProps<typeof badgeVariants>) {
-  return (
-    <span data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />
-  );
+interface BadgeProps extends Omit<MantineBadgeProps, "variant"> {
+  variant?: BadgeVariant;
 }
 
-export { Badge, badgeVariants };
+const variantMap: Record<BadgeVariant, { variant: MantineBadgeProps["variant"]; color?: string }> =
+  {
+    default: { variant: "filled" },
+    secondary: { variant: "light" },
+    success: { variant: "light", color: "green" },
+    warning: { variant: "light", color: "yellow" },
+    destructive: { variant: "light", color: "red" },
+    outline: { variant: "outline" },
+  };
+
+const Badge = forwardRef<HTMLDivElement, BadgeProps>(({ variant = "default", ...props }, ref) => {
+  const { variant: mantineVariant, color } = variantMap[variant];
+  return <MantineBadge ref={ref} variant={mantineVariant} color={color} size="sm" {...props} />;
+});
+
+Badge.displayName = "Badge";
+
+export { Badge };

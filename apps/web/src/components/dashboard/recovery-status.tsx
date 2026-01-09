@@ -1,9 +1,10 @@
-import { ClipboardCheck, Moon, Zap } from "lucide-react";
+import { IconBolt, IconClipboardCheck, IconMoon } from "@tabler/icons-react";
+
+import { Box, Flex, Progress, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 
 interface CheckIn {
   id: number;
@@ -38,15 +39,9 @@ interface RecoveryStatusProps {
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 70) return "text-green-500";
-  if (score >= 40) return "text-yellow-500";
-  return "text-red-500";
-}
-
-function getScoreBgColor(score: number): string {
-  if (score >= 70) return "bg-green-500/10";
-  if (score >= 40) return "bg-yellow-500/10";
-  return "bg-red-500/10";
+  if (score >= 70) return "green";
+  if (score >= 40) return "yellow";
+  return "red";
 }
 
 function getMoodEmoji(mood: string | null): string {
@@ -64,23 +59,15 @@ function FactorBar({ label, score }: { label: string; score: number | null }) {
   if (score === null) return null;
 
   return (
-    <div className="space-y-1">
-      <div className="flex justify-between text-xs">
-        <span className="text-muted-foreground">{label}</span>
-        <span>{score}%</span>
-      </div>
-      <div className="bg-muted h-1.5 w-full rounded-full">
-        <div
-          className={cn(
-            "h-1.5 rounded-full transition-all",
-            score >= 70 && "bg-green-500",
-            score >= 40 && score < 70 && "bg-yellow-500",
-            score < 40 && "bg-red-500",
-          )}
-          style={{ width: `${score}%` }}
-        />
-      </div>
-    </div>
+    <Stack gap={4}>
+      <Flex justify="space-between">
+        <Text size="xs" c="dimmed">
+          {label}
+        </Text>
+        <Text size="xs">{score}%</Text>
+      </Flex>
+      <Progress value={score} size="xs" color={getScoreColor(score)} radius="xl" />
+    </Stack>
   );
 }
 
@@ -97,22 +84,24 @@ export function RecoveryStatus({
           <CardTitle>Recovery Status</CardTitle>
           <CardDescription>Your training readiness</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-4">
-            <Skeleton className="h-16 w-16 rounded-full" />
-            <div className="space-y-2">
-              <Skeleton className="h-6 w-32" />
-              <Skeleton className="h-4 w-48" />
-            </div>
-          </div>
-          <div className="space-y-3">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="space-y-1">
-                <Skeleton className="h-3 w-full" />
-                <Skeleton className="h-1.5 w-full" />
-              </div>
-            ))}
-          </div>
+        <CardContent>
+          <Stack gap="md">
+            <Flex align="center" gap="md">
+              <Skeleton h={64} w={64} radius="xl" />
+              <Stack gap="xs">
+                <Skeleton h={24} w={128} />
+                <Skeleton h={16} w={192} />
+              </Stack>
+            </Flex>
+            <Stack gap="sm">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Stack key={i} gap={4}>
+                  <Skeleton h={12} w="100%" />
+                  <Skeleton h={6} w="100%" />
+                </Stack>
+              ))}
+            </Stack>
+          </Stack>
         </CardContent>
       </Card>
     );
@@ -127,17 +116,16 @@ export function RecoveryStatus({
           <CardDescription>Your training readiness</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="py-6 text-center">
-            <ClipboardCheck className="text-muted-foreground mx-auto mb-3 h-12 w-12" />
-            <p className="mb-2 font-medium">How are you feeling today?</p>
-            <p className="text-muted-foreground mb-4 text-sm">
+          <Stack py="xl" align="center" ta="center">
+            <IconClipboardCheck size={48} style={{ color: "var(--mantine-color-dimmed)" }} />
+            <Text fw={500}>How are you feeling today?</Text>
+            <Text size="sm" c="dimmed">
               Log your daily check-in to track recovery
-            </p>
-            <Button onClick={onLogCheckIn}>
-              <ClipboardCheck className="mr-2 h-4 w-4" />
+            </Text>
+            <Button onClick={onLogCheckIn} leftSection={<IconClipboardCheck size={16} />}>
               Log Check-in
             </Button>
-          </div>
+          </Stack>
         </CardContent>
       </Card>
     );
@@ -149,68 +137,75 @@ export function RecoveryStatus({
         <CardTitle>Recovery Status</CardTitle>
         <CardDescription>Your training readiness</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Readiness Score */}
-        {readiness && (
-          <div className="flex items-center gap-4">
-            <div
-              className={cn(
-                "flex h-16 w-16 items-center justify-center rounded-full",
-                getScoreBgColor(readiness.score),
-                getScoreColor(readiness.score),
-              )}
-            >
-              <div className="text-center">
-                <span className="text-2xl font-bold">{readiness.score}</span>
-              </div>
-            </div>
-            <div>
-              <p className={cn("font-semibold", getScoreColor(readiness.score))}>
-                {readiness.recommendation}
-              </p>
-              <p className="text-muted-foreground text-sm">Training Readiness Score</p>
-            </div>
-          </div>
-        )}
+      <CardContent>
+        <Stack gap="md">
+          {/* Readiness Score */}
+          {readiness && (
+            <Flex align="center" gap="md">
+              <Flex
+                h={64}
+                w={64}
+                align="center"
+                justify="center"
+                style={{
+                  borderRadius: "50%",
+                  background: `var(--mantine-color-${getScoreColor(readiness.score)}-light)`,
+                }}
+              >
+                <Text fz={24} fw={700} c={getScoreColor(readiness.score)}>
+                  {readiness.score}
+                </Text>
+              </Flex>
+              <Box>
+                <Text fw={600} c={getScoreColor(readiness.score)}>
+                  {readiness.recommendation}
+                </Text>
+                <Text size="sm" c="dimmed">
+                  Training Readiness Score
+                </Text>
+              </Box>
+            </Flex>
+          )}
 
-        {/* Factor Breakdown */}
-        {readiness?.factors && (
-          <div className="space-y-2">
-            <FactorBar label="Sleep" score={readiness.factors.sleepScore} />
-            <FactorBar label="Energy" score={readiness.factors.energyScore} />
-            <FactorBar label="Recovery" score={readiness.factors.sorenessScore} />
-            <FactorBar label="Stress" score={readiness.factors.stressScore} />
-            <FactorBar label="Muscles" score={readiness.factors.muscleRecoveryScore} />
-          </div>
-        )}
+          {/* Factor Breakdown */}
+          {readiness?.factors && (
+            <Stack gap="xs">
+              <FactorBar label="Sleep" score={readiness.factors.sleepScore} />
+              <FactorBar label="Energy" score={readiness.factors.energyScore} />
+              <FactorBar label="Recovery" score={readiness.factors.sorenessScore} />
+              <FactorBar label="Stress" score={readiness.factors.stressScore} />
+              <FactorBar label="Muscles" score={readiness.factors.muscleRecoveryScore} />
+            </Stack>
+          )}
 
-        {/* Today's Check-in Summary */}
-        {todayCheckIn && (
-          <div className="border-t pt-4">
-            <p className="text-muted-foreground mb-2 text-xs font-medium uppercase">
-              Today's Check-in
-            </p>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              {todayCheckIn.sleepHours && (
-                <div className="flex items-center gap-2">
-                  <Moon className="text-muted-foreground h-4 w-4" />
-                  <span>{todayCheckIn.sleepHours}h sleep</span>
-                </div>
-              )}
-              {todayCheckIn.energyLevel && (
-                <div className="flex items-center gap-2">
-                  <Zap className="text-muted-foreground h-4 w-4" />
-                  <span>Energy: {todayCheckIn.energyLevel}/10</span>
-                </div>
-              )}
-              {todayCheckIn.mood && (
-                <div className="col-span-2 text-muted-foreground">
-                  {getMoodEmoji(todayCheckIn.mood)}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+          {/* Today's Check-in Summary */}
+          {todayCheckIn && (
+            <Box pt="md" style={{ borderTop: "1px solid var(--mantine-color-default-border)" }}>
+              <Text size="xs" c="dimmed" fw={500} tt="uppercase" mb="xs">
+                Today's Check-in
+              </Text>
+              <SimpleGrid cols={2} spacing="sm">
+                {todayCheckIn.sleepHours && (
+                  <Flex align="center" gap="xs">
+                    <IconMoon size={16} style={{ color: "var(--mantine-color-dimmed)" }} />
+                    <Text size="sm">{todayCheckIn.sleepHours}h sleep</Text>
+                  </Flex>
+                )}
+                {todayCheckIn.energyLevel && (
+                  <Flex align="center" gap="xs">
+                    <IconBolt size={16} style={{ color: "var(--mantine-color-dimmed)" }} />
+                    <Text size="sm">Energy: {todayCheckIn.energyLevel}/10</Text>
+                  </Flex>
+                )}
+                {todayCheckIn.mood && (
+                  <Text size="sm" c="dimmed" style={{ gridColumn: "span 2" }}>
+                    {getMoodEmoji(todayCheckIn.mood)}
+                  </Text>
+                )}
+              </SimpleGrid>
+            </Box>
+          )}
+        </Stack>
       </CardContent>
     </Card>
   );

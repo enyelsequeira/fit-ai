@@ -1,4 +1,6 @@
-import { Medal, Trophy } from "lucide-react";
+import { IconMedal, IconTrophy } from "@tabler/icons-react";
+
+import { Box, Flex, Group, Stack, Text } from "@mantine/core";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -61,37 +63,52 @@ function formatValue(value: number, recordType: string, unit: string | null): st
 
 function PRItem({ record }: { record: PersonalRecord }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg p-2">
-      <div className="bg-yellow-500/10 text-yellow-500 flex h-8 w-8 items-center justify-center rounded-full">
-        <Medal className="h-4 w-4" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate font-medium text-sm">{record.exerciseName}</p>
-        <p className="text-muted-foreground text-xs">{formatRecordType(record.recordType)}</p>
-      </div>
-      <div className="text-right">
-        <p className="font-semibold text-sm">
+    <Flex align="center" gap="sm" p="xs" style={{ borderRadius: 8 }}>
+      <Flex
+        h={32}
+        w={32}
+        align="center"
+        justify="center"
+        style={{
+          borderRadius: "50%",
+          background: "rgba(234, 179, 8, 0.1)",
+        }}
+      >
+        <IconMedal size={16} style={{ color: "rgb(234, 179, 8)" }} />
+      </Flex>
+      <Box style={{ flex: 1, minWidth: 0 }}>
+        <Text size="sm" fw={500} truncate>
+          {record.exerciseName}
+        </Text>
+        <Text size="xs" c="dimmed">
+          {formatRecordType(record.recordType)}
+        </Text>
+      </Box>
+      <Box ta="right">
+        <Text size="sm" fw={600}>
           {formatValue(record.value, record.recordType, record.displayUnit)}
-        </p>
-        <p className="text-muted-foreground text-xs">{formatDate(record.achievedAt)}</p>
-      </div>
-    </div>
+        </Text>
+        <Text size="xs" c="dimmed">
+          {formatDate(record.achievedAt)}
+        </Text>
+      </Box>
+    </Flex>
   );
 }
 
 function PRItemSkeleton() {
   return (
-    <div className="flex items-center gap-3 rounded-lg p-2">
-      <Skeleton className="h-8 w-8 rounded-full" />
-      <div className="flex-1">
-        <Skeleton className="mb-1 h-4 w-24" />
-        <Skeleton className="h-3 w-16" />
-      </div>
-      <div className="text-right">
-        <Skeleton className="mb-1 h-4 w-16" />
-        <Skeleton className="h-3 w-12" />
-      </div>
-    </div>
+    <Flex align="center" gap="sm" p="xs">
+      <Skeleton h={32} w={32} radius="xl" />
+      <Box style={{ flex: 1 }}>
+        <Skeleton h={16} w={96} mb={4} />
+        <Skeleton h={12} w={64} />
+      </Box>
+      <Box ta="right">
+        <Skeleton h={16} w={64} mb={4} />
+        <Skeleton h={12} w={48} />
+      </Box>
+    </Flex>
   );
 }
 
@@ -99,30 +116,34 @@ export function RecentPRs({ records, isLoading }: RecentPRsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-yellow-500" />
-          Recent PRs
+        <CardTitle>
+          <Group gap="xs">
+            <IconTrophy size={20} style={{ color: "rgb(234, 179, 8)" }} />
+            Recent PRs
+          </Group>
         </CardTitle>
         <CardDescription>Personal records in the last 30 days</CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="space-y-2">
+          <Stack gap="xs">
             {Array.from({ length: 4 }).map((_, i) => (
               <PRItemSkeleton key={i} />
             ))}
-          </div>
+          </Stack>
         ) : records.length === 0 ? (
-          <div className="py-6 text-center">
-            <Trophy className="text-muted-foreground mx-auto mb-2 h-10 w-10" />
-            <p className="text-muted-foreground text-sm">Complete workouts to start tracking PRs</p>
-          </div>
+          <Stack py="lg" align="center" ta="center">
+            <IconTrophy size={40} style={{ color: "var(--mantine-color-dimmed)" }} />
+            <Text size="sm" c="dimmed">
+              Complete workouts to start tracking PRs
+            </Text>
+          </Stack>
         ) : (
-          <div className="space-y-1">
+          <Stack gap={4}>
             {records.map((record) => (
               <PRItem key={record.id} record={record} />
             ))}
-          </div>
+          </Stack>
         )}
       </CardContent>
     </Card>

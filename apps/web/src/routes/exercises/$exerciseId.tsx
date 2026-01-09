@@ -8,7 +8,7 @@ import type {
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Loader2, Trash2 } from "lucide-react";
+import { IconArrowLeft, IconLoader2, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -135,7 +135,7 @@ function ExerciseDetailPage() {
         to="/exercises"
         className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
       >
-        <ArrowLeft className="size-4" />
+        <IconArrowLeft className="size-4" />
         Back to Exercises
       </Link>
 
@@ -182,7 +182,7 @@ function ExerciseDetailPage() {
               }}
             />
             <Button variant="destructive" size="sm" onClick={() => setShowDeleteDialog(true)}>
-              <Trash2 className="mr-1.5 size-4" />
+              <IconTrash className="mr-1.5 size-4" />
               Delete
             </Button>
           </div>
@@ -296,7 +296,7 @@ function ExerciseDetailPage() {
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
+              {deleteMutation.isPending && <IconLoader2 className="mr-2 size-4 animate-spin" />}
               Delete
             </Button>
           </DialogFooter>

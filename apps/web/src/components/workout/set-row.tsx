@@ -1,17 +1,7 @@
-import { Check, Minus, Plus, Trash2 } from "lucide-react";
+import { IconCheck, IconMinus, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useCallback } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { ActionIcon, Box, Checkbox, Flex, Group, NumberInput, Select, Text } from "@mantine/core";
 
 type SetType = "normal" | "warmup" | "failure" | "drop";
 
@@ -44,9 +34,9 @@ const SET_TYPE_LABELS: Record<SetType, string> = {
 
 const SET_TYPE_COLORS: Record<SetType, string> = {
   normal: "",
-  warmup: "text-yellow-500",
-  failure: "text-red-500",
-  drop: "text-blue-500",
+  warmup: "var(--mantine-color-yellow-5)",
+  failure: "var(--mantine-color-red-5)",
+  drop: "var(--mantine-color-blue-5)",
 };
 
 function SetRow({
@@ -66,7 +56,6 @@ function SetRow({
   onComplete,
   onDelete,
   disabled = false,
-  className,
 }: SetRowProps) {
   const showRpe = rpe !== null;
 
@@ -87,151 +76,187 @@ function SetRow({
   );
 
   return (
-    <div
-      className={cn(
-        "grid grid-cols-[auto_1fr_1fr_auto_auto] items-center gap-2 py-2 px-1",
-        "border-b border-border/50 last:border-b-0",
-        isCompleted && "opacity-60",
-        className,
-      )}
+    <Box
+      py="xs"
+      px={4}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "auto 1fr 1fr auto auto",
+        alignItems: "center",
+        gap: 8,
+        borderBottom: "1px solid var(--mantine-color-default-border)",
+        opacity: isCompleted ? 0.6 : 1,
+      }}
     >
       {/* Set number / type */}
-      <div className="flex items-center gap-1 min-w-[60px]">
+      <Box style={{ minWidth: 60 }}>
         <Select
           value={setType}
-          onValueChange={(value) => onSetTypeChange(value as SetType)}
+          onChange={(value) => value && onSetTypeChange(value as SetType)}
           disabled={disabled || isCompleted}
-        >
-          <SelectTrigger className={cn("h-7 w-16 text-xs px-1.5", SET_TYPE_COLORS[setType])}>
-            <span className="truncate">
-              {setType === "normal" ? setNumber : SET_TYPE_LABELS[setType].charAt(0)}
-            </span>
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(SET_TYPE_LABELS).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+          data={Object.entries(SET_TYPE_LABELS).map(([value, label]) => ({
+            value,
+            label,
+          }))}
+          size="xs"
+          w={64}
+          styles={{
+            input: {
+              height: 28,
+              minHeight: 28,
+              paddingLeft: 6,
+              paddingRight: 6,
+              color: SET_TYPE_COLORS[setType] || undefined,
+            },
+          }}
+          comboboxProps={{ withinPortal: true }}
+        />
+      </Box>
 
       {/* Previous performance hint */}
-      <div className="text-muted-foreground text-xs text-center min-w-[70px]">
+      <Text fz="xs" c="dimmed" ta="center" style={{ minWidth: 70 }}>
         {previousWeight && previousReps ? (
           <span>
             {previousWeight}
             {weightUnit} x {previousReps}
           </span>
         ) : (
-          <span className="opacity-50">-</span>
+          <span style={{ opacity: 0.5 }}>-</span>
         )}
-      </div>
+      </Text>
 
       {/* Weight input */}
-      <div className="flex items-center gap-0.5">
-        <Button
-          variant="ghost"
-          size="icon-xs"
+      <Flex align="center" gap={2}>
+        <ActionIcon
+          variant="subtle"
+          size="xs"
           onClick={() => handleWeightIncrement(-2.5)}
           disabled={disabled || isCompleted}
           aria-label="Decrease weight"
         >
-          <Minus className="size-3" />
-        </Button>
-        <Input
-          type="number"
+          <IconMinus style={{ width: 12, height: 12 }} />
+        </ActionIcon>
+        <NumberInput
           value={weight ?? ""}
-          onChange={(e) => onWeightChange(e.target.value ? Number(e.target.value) : null)}
+          onChange={(value) => onWeightChange(typeof value === "number" ? value : null)}
           disabled={disabled || isCompleted}
-          className="h-7 w-16 text-center text-xs px-1"
+          size="xs"
+          w={64}
+          hideControls
           placeholder={weightUnit}
+          styles={{
+            input: {
+              height: 28,
+              minHeight: 28,
+              textAlign: "center",
+              paddingLeft: 4,
+              paddingRight: 4,
+            },
+          }}
         />
-        <Button
-          variant="ghost"
-          size="icon-xs"
+        <ActionIcon
+          variant="subtle"
+          size="xs"
           onClick={() => handleWeightIncrement(2.5)}
           disabled={disabled || isCompleted}
           aria-label="Increase weight"
         >
-          <Plus className="size-3" />
-        </Button>
-      </div>
+          <IconPlus style={{ width: 12, height: 12 }} />
+        </ActionIcon>
+      </Flex>
 
       {/* Reps input */}
-      <div className="flex items-center gap-0.5">
-        <Button
-          variant="ghost"
-          size="icon-xs"
+      <Flex align="center" gap={2}>
+        <ActionIcon
+          variant="subtle"
+          size="xs"
           onClick={() => handleRepsIncrement(-1)}
           disabled={disabled || isCompleted}
           aria-label="Decrease reps"
         >
-          <Minus className="size-3" />
-        </Button>
-        <Input
-          type="number"
+          <IconMinus style={{ width: 12, height: 12 }} />
+        </ActionIcon>
+        <NumberInput
           value={reps ?? ""}
-          onChange={(e) => onRepsChange(e.target.value ? Number(e.target.value) : null)}
+          onChange={(value) => onRepsChange(typeof value === "number" ? value : null)}
           disabled={disabled || isCompleted}
-          className="h-7 w-12 text-center text-xs px-1"
+          size="xs"
+          w={48}
+          hideControls
           placeholder="reps"
+          styles={{
+            input: {
+              height: 28,
+              minHeight: 28,
+              textAlign: "center",
+              paddingLeft: 4,
+              paddingRight: 4,
+            },
+          }}
         />
-        <Button
-          variant="ghost"
-          size="icon-xs"
+        <ActionIcon
+          variant="subtle"
+          size="xs"
           onClick={() => handleRepsIncrement(1)}
           disabled={disabled || isCompleted}
           aria-label="Increase reps"
         >
-          <Plus className="size-3" />
-        </Button>
-      </div>
+          <IconPlus style={{ width: 12, height: 12 }} />
+        </ActionIcon>
+      </Flex>
 
       {/* Complete checkbox and actions */}
-      <div className="flex items-center gap-1">
+      <Group gap={4}>
         {showRpe && (
           <Select
             value={rpe?.toString() ?? ""}
-            onValueChange={(value) => onRpeChange(value ? Number(value) : null)}
+            onChange={(value) => onRpeChange(value ? Number(value) : null)}
             disabled={disabled || isCompleted}
-          >
-            <SelectTrigger className="h-7 w-12 text-xs px-1">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {[6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10].map((value) => (
-                <SelectItem key={value} value={value.toString()}>
-                  {value}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            data={[6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10].map((v) => ({
+              value: v.toString(),
+              label: v.toString(),
+            }))}
+            size="xs"
+            w={48}
+            styles={{
+              input: {
+                height: 28,
+                minHeight: 28,
+                paddingLeft: 4,
+                paddingRight: 4,
+              },
+            }}
+            comboboxProps={{ withinPortal: true }}
+          />
         )}
 
         <Checkbox
           checked={isCompleted}
-          onCheckedChange={onComplete}
+          onChange={() => onComplete()}
           disabled={disabled || (!weight && !reps)}
-          className={cn(
-            "size-6 data-checked:bg-green-500 data-checked:border-green-500",
-            isCompleted && "data-checked:bg-green-600",
-          )}
+          size="md"
+          color="green"
+          styles={{
+            input: {
+              width: 24,
+              height: 24,
+              cursor: "pointer",
+            },
+          }}
         />
 
-        <Button
-          variant="ghost"
-          size="icon-xs"
+        <ActionIcon
+          variant="subtle"
+          size="xs"
           onClick={onDelete}
           disabled={disabled}
-          className="text-muted-foreground hover:text-destructive"
+          c="dimmed"
           aria-label="Delete set"
         >
-          <Trash2 className="size-3" />
-        </Button>
-      </div>
-    </div>
+          <IconTrash style={{ width: 12, height: 12 }} />
+        </ActionIcon>
+      </Group>
+    </Box>
   );
 }
 
@@ -250,63 +275,79 @@ function SetRowCompact({
   onComplete,
   onDelete,
   disabled = false,
-  className,
 }: Omit<SetRowProps, "rpe" | "onRpeChange" | "onSetTypeChange">) {
   return (
-    <div className={cn("flex items-center gap-2 py-2", isCompleted && "opacity-60", className)}>
-      <span
-        className={cn(
-          "w-6 text-center text-xs font-medium",
-          setType === "warmup" && "text-yellow-500",
-          setType === "failure" && "text-red-500",
-          setType === "drop" && "text-blue-500",
-        )}
+    <Flex align="center" gap="xs" py="xs" style={{ opacity: isCompleted ? 0.6 : 1 }}>
+      <Text
+        w={24}
+        ta="center"
+        fz="xs"
+        fw={500}
+        c={
+          setType === "warmup"
+            ? "yellow"
+            : setType === "failure"
+              ? "red"
+              : setType === "drop"
+                ? "blue"
+                : undefined
+        }
       >
         {setNumber}
-      </span>
+      </Text>
 
-      <div className="text-muted-foreground text-xs min-w-[50px]">
+      <Text fz="xs" c="dimmed" style={{ minWidth: 50 }}>
         {previousWeight && previousReps ? `${previousWeight}x${previousReps}` : "-"}
-      </div>
+      </Text>
 
-      <Input
-        type="number"
+      <NumberInput
         value={weight ?? ""}
-        onChange={(e) => onWeightChange(e.target.value ? Number(e.target.value) : null)}
+        onChange={(value) => onWeightChange(typeof value === "number" ? value : null)}
         disabled={disabled || isCompleted}
-        className="h-8 w-16 text-center text-xs"
+        size="xs"
+        w={64}
+        hideControls
         placeholder={weightUnit}
+        styles={{
+          input: {
+            height: 32,
+            minHeight: 32,
+            textAlign: "center",
+          },
+        }}
       />
 
-      <Input
-        type="number"
+      <NumberInput
         value={reps ?? ""}
-        onChange={(e) => onRepsChange(e.target.value ? Number(e.target.value) : null)}
+        onChange={(value) => onRepsChange(typeof value === "number" ? value : null)}
         disabled={disabled || isCompleted}
-        className="h-8 w-12 text-center text-xs"
+        size="xs"
+        w={48}
+        hideControls
         placeholder="reps"
+        styles={{
+          input: {
+            height: 32,
+            minHeight: 32,
+            textAlign: "center",
+          },
+        }}
       />
 
-      <Button
-        variant={isCompleted ? "default" : "outline"}
-        size="icon-sm"
+      <ActionIcon
+        variant={isCompleted ? "filled" : "outline"}
+        size="sm"
         onClick={onComplete}
         disabled={disabled || (!weight && !reps)}
-        className={cn(isCompleted && "bg-green-500 hover:bg-green-600")}
+        color={isCompleted ? "green" : undefined}
       >
-        <Check className="size-4" />
-      </Button>
+        <IconCheck style={{ width: 16, height: 16 }} />
+      </ActionIcon>
 
-      <Button
-        variant="ghost"
-        size="icon-sm"
-        onClick={onDelete}
-        disabled={disabled}
-        className="text-muted-foreground"
-      >
-        <Trash2 className="size-3" />
-      </Button>
-    </div>
+      <ActionIcon variant="subtle" size="sm" onClick={onDelete} disabled={disabled} c="dimmed">
+        <IconTrash style={{ width: 12, height: 12 }} />
+      </ActionIcon>
+    </Flex>
   );
 }
 

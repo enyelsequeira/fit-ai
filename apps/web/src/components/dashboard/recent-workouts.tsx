@@ -1,4 +1,6 @@
-import { Calendar, Clock, Dumbbell } from "lucide-react";
+import { IconBarbell, IconCalendar, IconClock } from "@tabler/icons-react";
+
+import { Box, Flex, Stack, Text } from "@mantine/core";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,48 +45,74 @@ function formatDuration(minutes: number | null): string {
 
 function WorkoutItem({ workout }: { workout: Workout }) {
   return (
-    <div className="hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors">
-      <div className="flex items-center gap-3">
-        <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-lg">
-          <Dumbbell className="h-5 w-5" />
-        </div>
-        <div>
-          <p className="font-medium">{workout.name ?? "Workout"}</p>
-          <div className="text-muted-foreground flex items-center gap-3 text-xs">
-            <span className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              {formatDate(workout.date)}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {formatDuration(workout.duration)}
-            </span>
-          </div>
-        </div>
-      </div>
-      <div className="text-right text-sm">
-        <p className="text-muted-foreground">{workout.exerciseCount} exercises</p>
-        <p className="text-muted-foreground text-xs">{workout.setCount} sets</p>
-      </div>
-    </div>
+    <Flex
+      align="center"
+      justify="space-between"
+      p="sm"
+      style={{
+        borderRadius: 8,
+        cursor: "pointer",
+        transition: "background 0.2s",
+      }}
+    >
+      <Flex align="center" gap="sm">
+        <Flex
+          h={40}
+          w={40}
+          align="center"
+          justify="center"
+          style={{
+            borderRadius: 8,
+            background: "var(--mantine-color-blue-light)",
+          }}
+        >
+          <IconBarbell size={20} style={{ color: "var(--mantine-primary-color-filled)" }} />
+        </Flex>
+        <Box>
+          <Text fw={500}>{workout.name ?? "Workout"}</Text>
+          <Flex gap="sm">
+            <Flex align="center" gap={4}>
+              <IconCalendar size={12} style={{ color: "var(--mantine-color-dimmed)" }} />
+              <Text size="xs" c="dimmed">
+                {formatDate(workout.date)}
+              </Text>
+            </Flex>
+            <Flex align="center" gap={4}>
+              <IconClock size={12} style={{ color: "var(--mantine-color-dimmed)" }} />
+              <Text size="xs" c="dimmed">
+                {formatDuration(workout.duration)}
+              </Text>
+            </Flex>
+          </Flex>
+        </Box>
+      </Flex>
+      <Box ta="right">
+        <Text size="sm" c="dimmed">
+          {workout.exerciseCount} exercises
+        </Text>
+        <Text size="xs" c="dimmed">
+          {workout.setCount} sets
+        </Text>
+      </Box>
+    </Flex>
   );
 }
 
 function WorkoutItemSkeleton() {
   return (
-    <div className="flex items-center justify-between rounded-lg p-3">
-      <div className="flex items-center gap-3">
-        <Skeleton className="h-10 w-10 rounded-lg" />
-        <div>
-          <Skeleton className="mb-1 h-4 w-32" />
-          <Skeleton className="h-3 w-24" />
-        </div>
-      </div>
-      <div className="text-right">
-        <Skeleton className="mb-1 h-4 w-20" />
-        <Skeleton className="h-3 w-16" />
-      </div>
-    </div>
+    <Flex align="center" justify="space-between" p="sm">
+      <Flex align="center" gap="sm">
+        <Skeleton h={40} w={40} radius="md" />
+        <Box>
+          <Skeleton h={16} w={128} mb={4} />
+          <Skeleton h={12} w={96} />
+        </Box>
+      </Flex>
+      <Box ta="right">
+        <Skeleton h={16} w={80} mb={4} />
+        <Skeleton h={12} w={64} />
+      </Box>
+    </Flex>
   );
 }
 
@@ -97,25 +125,23 @@ export function RecentWorkouts({ workouts, isLoading }: RecentWorkoutsProps) {
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="space-y-2">
+          <Stack gap="xs">
             {Array.from({ length: 5 }).map((_, i) => (
               <WorkoutItemSkeleton key={i} />
             ))}
-          </div>
+          </Stack>
         ) : workouts.length === 0 ? (
-          <div className="py-8 text-center">
-            <Dumbbell className="text-muted-foreground mx-auto mb-3 h-12 w-12" />
-            <p className="text-muted-foreground mb-4">
-              No workouts yet. Start your fitness journey!
-            </p>
+          <Stack py="xl" align="center" ta="center">
+            <IconBarbell size={48} style={{ color: "var(--mantine-color-dimmed)" }} />
+            <Text c="dimmed">No workouts yet. Start your fitness journey!</Text>
             <Button>Start Your First Workout</Button>
-          </div>
+          </Stack>
         ) : (
-          <div className="space-y-1">
+          <Stack gap={4}>
             {workouts.map((workout) => (
               <WorkoutItem key={workout.id} workout={workout} />
             ))}
-          </div>
+          </Stack>
         )}
       </CardContent>
     </Card>

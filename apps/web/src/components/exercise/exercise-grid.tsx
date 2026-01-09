@@ -1,6 +1,6 @@
 import type { Exercise } from "./exercise-card";
 
-import { cn } from "@/lib/utils";
+import { SimpleGrid } from "@mantine/core";
 
 import { ExerciseCard, ExerciseCardSkeleton } from "./exercise-card";
 
@@ -8,22 +8,15 @@ interface ExerciseGridProps {
   exercises: Exercise[];
   onAddToWorkout?: (exerciseId: number) => void;
   showAddButton?: boolean;
-  className?: string;
 }
 
 export function ExerciseGrid({
   exercises,
   onAddToWorkout,
   showAddButton = false,
-  className,
 }: ExerciseGridProps) {
   return (
-    <div
-      className={cn(
-        "grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-        className,
-      )}
-    >
+    <SimpleGrid cols={{ base: 1, sm: 2, lg: 3, xl: 4 }} spacing="md">
       {exercises.map((exercise) => (
         <ExerciseCard
           key={exercise.id}
@@ -32,26 +25,20 @@ export function ExerciseGrid({
           showAddButton={showAddButton}
         />
       ))}
-    </div>
+    </SimpleGrid>
   );
 }
 
 interface ExerciseGridSkeletonProps {
   count?: number;
-  className?: string;
 }
 
-export function ExerciseGridSkeleton({ count = 8, className }: ExerciseGridSkeletonProps) {
+export function ExerciseGridSkeleton({ count = 8 }: ExerciseGridSkeletonProps) {
   return (
-    <div
-      className={cn(
-        "grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-        className,
-      )}
-    >
+    <SimpleGrid cols={{ base: 1, sm: 2, lg: 3, xl: 4 }} spacing="md">
       {Array.from({ length: count }).map((_, i) => (
         <ExerciseCardSkeleton key={i} />
       ))}
-    </div>
+    </SimpleGrid>
   );
 }

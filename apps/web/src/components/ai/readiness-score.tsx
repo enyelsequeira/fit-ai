@@ -1,19 +1,18 @@
-import { cn } from "@/lib/utils";
+import { Box, Flex, SimpleGrid, Stack, Text } from "@mantine/core";
 
 interface ReadinessScoreProps {
   score: number;
   size?: "sm" | "md" | "lg";
   showRecommendation?: boolean;
   recommendation?: string;
-  className?: string;
 }
 
 function getScoreColor(score: number) {
   if (score >= 70)
-    return { ring: "stroke-emerald-500", text: "text-emerald-500", bg: "bg-emerald-500/10" };
+    return { ring: "var(--mantine-color-green-6)", text: "green", bg: "rgba(34, 197, 94, 0.1)" };
   if (score >= 40)
-    return { ring: "stroke-amber-500", text: "text-amber-500", bg: "bg-amber-500/10" };
-  return { ring: "stroke-red-500", text: "text-red-500", bg: "bg-red-500/10" };
+    return { ring: "var(--mantine-color-yellow-6)", text: "yellow", bg: "rgba(245, 158, 11, 0.1)" };
+  return { ring: "var(--mantine-color-red-6)", text: "red", bg: "rgba(239, 68, 68, 0.1)" };
 }
 
 function getDefaultRecommendation(score: number) {
@@ -27,15 +26,14 @@ function ReadinessScore({
   size = "md",
   showRecommendation = true,
   recommendation,
-  className,
 }: ReadinessScoreProps) {
   const colors = getScoreColor(score);
   const displayRecommendation = recommendation ?? getDefaultRecommendation(score);
 
   const sizeConfig = {
-    sm: { svg: 80, stroke: 6, fontSize: "text-lg", labelSize: "text-xs" },
-    md: { svg: 120, stroke: 8, fontSize: "text-2xl", labelSize: "text-sm" },
-    lg: { svg: 160, stroke: 10, fontSize: "text-4xl", labelSize: "text-base" },
+    sm: { svg: 80, stroke: 6, fontSize: "lg" as const, labelSize: "xs" as const },
+    md: { svg: 120, stroke: 8, fontSize: "xl" as const, labelSize: "sm" as const },
+    lg: { svg: 160, stroke: 10, fontSize: 32, labelSize: "md" as const },
   };
 
   const config = sizeConfig[size];
@@ -44,13 +42,13 @@ function ReadinessScore({
   const offset = circumference - (score / 100) * circumference;
 
   return (
-    <div className={cn("flex flex-col items-center gap-3", className)}>
-      <div className="relative">
+    <Stack align="center" gap="sm">
+      <Box pos="relative">
         <svg
           width={config.svg}
           height={config.svg}
           viewBox={`0 0 ${config.svg} ${config.svg}`}
-          className="rotate-[-90deg]"
+          style={{ transform: "rotate(-90deg)" }}
         >
           <circle
             cx={config.svg / 2}
@@ -58,7 +56,7 @@ function ReadinessScore({
             r={radius}
             fill="none"
             strokeWidth={config.stroke}
-            className="stroke-secondary"
+            stroke="var(--mantine-color-dark-4)"
           />
           <circle
             cx={config.svg / 2}
@@ -69,28 +67,47 @@ function ReadinessScore({
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={offset}
-            className={cn(colors.ring, "transition-all duration-500 ease-out")}
+            stroke={colors.ring}
+            style={{ transition: "all 0.5s ease-out" }}
           />
         </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={cn(config.fontSize, "font-bold tabular-nums", colors.text)}>
+        <Flex
+          pos="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          direction="column"
+          align="center"
+          justify="center"
+        >
+          <Text
+            fz={config.fontSize}
+            fw={700}
+            c={colors.text}
+            style={{ fontVariantNumeric: "tabular-nums" }}
+          >
             {score}
-          </span>
-          <span className={cn(config.labelSize, "text-muted-foreground")}>/ 100</span>
-        </div>
-      </div>
+          </Text>
+          <Text fz={config.labelSize} c="dimmed">
+            / 100
+          </Text>
+        </Flex>
+      </Box>
       {showRecommendation && (
-        <div
-          className={cn(
-            "rounded-none px-3 py-1.5 text-center text-xs font-medium",
-            colors.bg,
-            colors.text,
-          )}
+        <Box
+          px="sm"
+          py={6}
+          ta="center"
+          fz="xs"
+          fw={500}
+          c={colors.text}
+          style={{ backgroundColor: colors.bg }}
         >
           {displayRecommendation}
-        </div>
+        </Box>
       )}
-    </div>
+    </Stack>
   );
 }
 
@@ -102,10 +119,9 @@ interface FactorsBreakdownProps {
     stressScore: number | null;
     muscleRecoveryScore: number | null;
   };
-  className?: string;
 }
 
-function FactorsBreakdown({ factors, className }: FactorsBreakdownProps) {
+function FactorsBreakdown({ factors }: FactorsBreakdownProps) {
   const items = [
     { label: "Sleep", value: factors.sleepScore, icon: "sleep" },
     { label: "Energy", value: factors.energyScore, icon: "energy" },
@@ -115,29 +131,32 @@ function FactorsBreakdown({ factors, className }: FactorsBreakdownProps) {
   ];
 
   return (
-    <div className={cn("grid grid-cols-5 gap-2", className)}>
+    <SimpleGrid cols={5} spacing="xs">
       {items.map((item) => {
         const value = item.value ?? 0;
         const colors = getScoreColor(value);
 
         return (
-          <div key={item.label} className="flex flex-col items-center gap-1">
-            <div
-              className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-full text-xs font-medium",
-                colors.bg,
-                colors.text,
-              )}
+          <Stack key={item.label} align="center" gap={4}>
+            <Flex
+              h={32}
+              w={32}
+              align="center"
+              justify="center"
+              fz="xs"
+              fw={500}
+              c={colors.text}
+              style={{ backgroundColor: colors.bg, borderRadius: "50%" }}
             >
               {item.value !== null ? value : "-"}
-            </div>
-            <span className="text-muted-foreground text-[10px] text-center leading-tight">
+            </Flex>
+            <Text fz={10} c="dimmed" ta="center" lh={1.2}>
               {item.label}
-            </span>
-          </div>
+            </Text>
+          </Stack>
         );
       })}
-    </div>
+    </SimpleGrid>
   );
 }
 

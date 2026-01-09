@@ -1,75 +1,200 @@
 import { Link } from "@tanstack/react-router";
-import { Activity, Dumbbell, Sparkles, TrendingUp } from "lucide-react";
+import { IconActivity, IconBarbell, IconSparkles, IconTrendingUp } from "@tabler/icons-react";
+
+import { Box, Container, Flex, Group, SimpleGrid, Text, Title } from "@mantine/core";
 
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden py-20 lg:py-32">
+    <Box
+      component="section"
+      pos="relative"
+      style={{ overflow: "hidden" }}
+      py={{ base: 80, lg: 128 }}
+    >
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-blue-900/20" />
+      <Box
+        pos="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        style={{
+          background:
+            "linear-gradient(to bottom right, rgba(147, 51, 234, 0.2), transparent, rgba(59, 130, 246, 0.2))",
+        }}
+      />
 
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-4 top-20 h-72 w-72 animate-pulse rounded-full bg-purple-500/10 blur-3xl" />
-        <div className="absolute -right-4 bottom-20 h-72 w-72 animate-pulse rounded-full bg-blue-500/10 blur-3xl delay-700" />
-      </div>
+      <Box pos="absolute" top={0} left={0} right={0} bottom={0} style={{ overflow: "hidden" }}>
+        <Box
+          pos="absolute"
+          left={-16}
+          top={80}
+          h={288}
+          w={288}
+          style={{
+            borderRadius: "50%",
+            background: "rgba(168, 85, 247, 0.1)",
+            filter: "blur(64px)",
+            animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+          }}
+        />
+        <Box
+          pos="absolute"
+          right={-16}
+          bottom={80}
+          h={288}
+          w={288}
+          style={{
+            borderRadius: "50%",
+            background: "rgba(59, 130, 246, 0.1)",
+            filter: "blur(64px)",
+            animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            animationDelay: "0.7s",
+          }}
+        />
+      </Box>
 
-      <div className="container relative mx-auto px-4 text-center">
+      <Container pos="relative" ta="center">
         {/* Floating icons */}
-        <div className="mb-8 flex items-center justify-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10">
-            <Dumbbell className="h-6 w-6 text-purple-400" />
-          </div>
-          <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-blue-500/20">
-            <Sparkles className="h-7 w-7 text-blue-400" />
-          </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10">
-            <TrendingUp className="h-6 w-6 text-blue-400" />
-          </div>
-        </div>
+        <Group justify="center" gap="md" mb="xl">
+          <Flex
+            h={48}
+            w={48}
+            align="center"
+            justify="center"
+            style={{ borderRadius: 8, background: "rgba(168, 85, 247, 0.1)" }}
+          >
+            <IconBarbell size={24} style={{ color: "rgb(192, 132, 252)" }} />
+          </Flex>
+          <Flex
+            h={56}
+            w={56}
+            align="center"
+            justify="center"
+            style={{
+              borderRadius: 8,
+              background:
+                "linear-gradient(to bottom right, rgba(168, 85, 247, 0.2), rgba(59, 130, 246, 0.2))",
+            }}
+          >
+            <IconSparkles size={28} style={{ color: "rgb(96, 165, 250)" }} />
+          </Flex>
+          <Flex
+            h={48}
+            w={48}
+            align="center"
+            justify="center"
+            style={{ borderRadius: 8, background: "rgba(59, 130, 246, 0.1)" }}
+          >
+            <IconTrendingUp size={24} style={{ color: "rgb(96, 165, 250)" }} />
+          </Flex>
+        </Group>
 
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+        <Title order={1} fz={{ base: 36, sm: 48, lg: 60 }} fw={700} lts={-0.5}>
           Train Smarter with{" "}
-          <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+          <Text
+            component="span"
+            inherit
+            variant="gradient"
+            gradient={{ from: "grape", to: "blue", deg: 90 }}
+          >
             AI-Powered
-          </span>{" "}
+          </Text>{" "}
           Fitness Tracking
-        </h1>
+        </Title>
 
-        <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg">
+        <Text size="lg" c="dimmed" maw={672} mx="auto" mt="xl">
           Track workouts, monitor progress, and get personalized recommendations powered by AI. Your
           intelligent fitness companion that adapts to your goals.
-        </p>
+        </Text>
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <Flex
+          direction={{ base: "column", sm: "row" }}
+          align="center"
+          justify="center"
+          gap="md"
+          mt={40}
+        >
           <Link to="/login" search={{ tab: "signup" }}>
-            <Button size="lg" className="gap-2 px-8">
-              <Activity className="h-4 w-4" />
+            <Button size="lg" leftSection={<IconActivity size={16} />}>
               Get Started
             </Button>
           </Link>
           <Link to="/login">
-            <Button variant="outline" size="lg" className="px-8">
+            <Button variant="outline" size="lg">
               Sign In
             </Button>
           </Link>
-        </div>
+        </Flex>
 
         {/* Hero illustration placeholder */}
-        <div className="mt-16">
-          <div className="mx-auto max-w-4xl overflow-hidden rounded-lg border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-1 shadow-2xl">
-            <div className="bg-background/80 rounded-md p-8 backdrop-blur">
-              <div className="grid grid-cols-3 gap-4">
-                <div className="bg-muted/50 h-24 animate-pulse rounded-md" />
-                <div className="bg-muted/50 h-24 animate-pulse rounded-md delay-100" />
-                <div className="bg-muted/50 h-24 animate-pulse rounded-md delay-200" />
-              </div>
-              <div className="bg-muted/30 mt-4 h-32 animate-pulse rounded-md delay-300" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+        <Box mt={64}>
+          <Box
+            mx="auto"
+            maw={896}
+            style={{
+              overflow: "hidden",
+              borderRadius: 8,
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent)",
+              padding: 4,
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+            }}
+          >
+            <Box
+              p="xl"
+              style={{
+                borderRadius: 6,
+                background: "rgba(var(--mantine-color-body), 0.8)",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              <SimpleGrid cols={3} spacing="md">
+                <Box
+                  h={96}
+                  style={{
+                    borderRadius: 6,
+                    background: "var(--mantine-color-default-hover)",
+                    animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                  }}
+                />
+                <Box
+                  h={96}
+                  style={{
+                    borderRadius: 6,
+                    background: "var(--mantine-color-default-hover)",
+                    animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                    animationDelay: "0.1s",
+                  }}
+                />
+                <Box
+                  h={96}
+                  style={{
+                    borderRadius: 6,
+                    background: "var(--mantine-color-default-hover)",
+                    animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                    animationDelay: "0.2s",
+                  }}
+                />
+              </SimpleGrid>
+              <Box
+                h={128}
+                mt="md"
+                style={{
+                  borderRadius: 6,
+                  background: "var(--mantine-color-default-hover)",
+                  opacity: 0.5,
+                  animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                  animationDelay: "0.3s",
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Container>
+    </Box>
   );
 }

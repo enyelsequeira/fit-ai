@@ -1,13 +1,34 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Clock, Dumbbell, Loader2, Play, Sparkles, Zap } from "lucide-react";
+import {
+  IconArrowLeft,
+  IconClock,
+  IconBarbell,
+  IconLoader2,
+  IconPlayerPlay,
+  IconSparkles,
+  IconBolt,
+} from "@tabler/icons-react";
 import { toast } from "sonner";
 import z from "zod";
 
-import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Card,
+  Center,
+  Container,
+  Flex,
+  Group,
+  Loader,
+  Overlay,
+  Skeleton,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+
 import { client, orpc } from "@/utils/orpc";
 
 const searchSchema = z.object({
@@ -69,159 +90,215 @@ function NewWorkoutRoute() {
   // Show template selection if `from=template`
   if (search.from === "template") {
     return (
-      <div className="container mx-auto py-6 px-4 max-w-2xl">
-        <div className="flex items-center gap-4 mb-6">
-          <Link
-            to="/workouts/new"
-            className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }))}
-          >
-            <ArrowLeft className="size-4" />
-          </Link>
-          <div>
-            <h1 className="text-xl font-semibold">Select Template</h1>
-            <p className="text-sm text-muted-foreground">Choose a template to start your workout</p>
-          </div>
-        </div>
+      <Container py="lg" px="md" maw={600}>
+        <Flex align="center" gap="md" mb="lg">
+          <ActionIcon component={Link} to="/workouts/new" variant="subtle" size="md">
+            <IconArrowLeft style={{ width: 16, height: 16 }} />
+          </ActionIcon>
+          <Box>
+            <Title order={1} fz="xl" fw={600}>
+              Select Template
+            </Title>
+            <Text fz="sm" c="dimmed">
+              Choose a template to start your workout
+            </Text>
+          </Box>
+        </Flex>
 
         {templates.isLoading ? (
-          <div className="space-y-3">
+          <Stack gap="sm">
             {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-20 w-full" />
+              <Skeleton key={i} h={80} w="100%" />
             ))}
-          </div>
+          </Stack>
         ) : templates.data?.length === 0 ? (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-8 text-center">
-              <Sparkles className="size-10 text-muted-foreground mb-3" />
-              <p className="text-sm font-medium">No templates yet</p>
-              <p className="text-xs text-muted-foreground mb-4">
+          <Card withBorder padding="xl">
+            <Stack align="center" ta="center" py="md">
+              <IconSparkles
+                style={{ width: 40, height: 40, color: "var(--mantine-color-dimmed)" }}
+              />
+              <Text fz="sm" fw={500}>
+                No templates yet
+              </Text>
+              <Text fz="xs" c="dimmed" mb="sm">
                 Create a template to quickly start workouts
-              </p>
-              <Link
-                to="/workouts/new"
-                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-              >
+              </Text>
+              <Button component={Link} to="/workouts/new" variant="outline" size="sm">
                 Start Empty Workout
-              </Link>
-            </CardContent>
+              </Button>
+            </Stack>
           </Card>
         ) : (
-          <div className="space-y-3">
+          <Stack gap="sm">
             {templates.data?.map((template) => (
               <Card
                 key={template.id}
-                className="cursor-pointer hover:bg-muted/30 transition-colors"
+                withBorder
+                padding="md"
+                style={{
+                  cursor: "pointer",
+                  transition: "background-color 150ms",
+                }}
                 onClick={() => !isPending && handleStartFromTemplate(template.id)}
               >
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm">{template.name}</CardTitle>
+                <Stack gap="xs">
+                  <Text fz="sm" fw={500}>
+                    {template.name}
+                  </Text>
                   {template.description && (
-                    <CardDescription className="text-xs">{template.description}</CardDescription>
+                    <Text fz="xs" c="dimmed">
+                      {template.description}
+                    </Text>
                   )}
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                  <Group gap="md">
                     {template.estimatedDurationMinutes && (
-                      <span className="flex items-center gap-1">
-                        <Clock className="size-3" />
-                        {template.estimatedDurationMinutes} min
-                      </span>
+                      <Group gap={4}>
+                        <IconClock
+                          style={{ width: 12, height: 12, color: "var(--mantine-color-dimmed)" }}
+                        />
+                        <Text fz="xs" c="dimmed">
+                          {template.estimatedDurationMinutes} min
+                        </Text>
+                      </Group>
                     )}
-                    <span className="flex items-center gap-1">
-                      <Play className="size-3" />
-                      Used {template.timesUsed} times
-                    </span>
-                  </div>
-                </CardContent>
+                    <Group gap={4}>
+                      <IconPlayerPlay
+                        style={{ width: 12, height: 12, color: "var(--mantine-color-dimmed)" }}
+                      />
+                      <Text fz="xs" c="dimmed">
+                        Used {template.timesUsed} times
+                      </Text>
+                    </Group>
+                  </Group>
+                </Stack>
               </Card>
             ))}
-          </div>
+          </Stack>
         )}
-      </div>
+      </Container>
     );
   }
 
   return (
-    <div className="container mx-auto py-6 px-4 max-w-2xl">
-      <div className="flex items-center gap-4 mb-6">
-        <Link to="/workouts" className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }))}>
-          <ArrowLeft className="size-4" />
-        </Link>
-        <div>
-          <h1 className="text-xl font-semibold">Start Workout</h1>
-          <p className="text-sm text-muted-foreground">Choose how to start your workout</p>
-        </div>
-      </div>
+    <Container py="lg" px="md" maw={600}>
+      <Flex align="center" gap="md" mb="lg">
+        <ActionIcon component={Link} to="/workouts" variant="subtle" size="md">
+          <IconArrowLeft style={{ width: 16, height: 16 }} />
+        </ActionIcon>
+        <Box>
+          <Title order={1} fz="xl" fw={600}>
+            Start Workout
+          </Title>
+          <Text fz="sm" c="dimmed">
+            Choose how to start your workout
+          </Text>
+        </Box>
+      </Flex>
 
-      <div className="grid gap-4">
+      <Stack gap="md">
         {/* Empty Workout */}
         <Card
-          className="cursor-pointer hover:bg-muted/30 transition-colors"
+          withBorder
+          padding="md"
+          style={{
+            cursor: "pointer",
+            transition: "background-color 150ms",
+          }}
           onClick={!isPending ? handleStartEmpty : undefined}
         >
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center bg-primary/10 rounded-none">
-                <Dumbbell className="size-5 text-primary" />
-              </div>
-              <div>
-                <CardTitle className="text-sm">Empty Workout</CardTitle>
-                <CardDescription className="text-xs">
-                  Start from scratch and add exercises as you go
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
+          <Flex align="center" gap="sm">
+            <Center w={40} h={40} style={{ backgroundColor: "var(--mantine-primary-color-light)" }}>
+              <IconBarbell
+                style={{ width: 20, height: 20, color: "var(--mantine-primary-color-filled)" }}
+              />
+            </Center>
+            <Box>
+              <Text fz="sm" fw={500}>
+                Empty Workout
+              </Text>
+              <Text fz="xs" c="dimmed">
+                Start from scratch and add exercises as you go
+              </Text>
+            </Box>
+          </Flex>
         </Card>
 
         {/* From Template */}
         <Card
-          className="cursor-pointer hover:bg-muted/30 transition-colors"
+          withBorder
+          padding="md"
+          style={{
+            cursor: "pointer",
+            transition: "background-color 150ms",
+          }}
           onClick={() =>
             !isPending && navigate({ to: "/workouts/new", search: { from: "template" } })
           }
         >
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center bg-purple-500/10 rounded-none">
-                <Sparkles className="size-5 text-purple-500" />
-              </div>
-              <div>
-                <CardTitle className="text-sm">From Template</CardTitle>
-                <CardDescription className="text-xs">
-                  Use a saved template to pre-populate exercises
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
+          <Flex align="center" gap="sm">
+            <Center w={40} h={40} style={{ backgroundColor: "rgba(147, 51, 234, 0.1)" }}>
+              <IconSparkles style={{ width: 20, height: 20, color: "rgb(147, 51, 234)" }} />
+            </Center>
+            <Box>
+              <Text fz="sm" fw={500}>
+                From Template
+              </Text>
+              <Text fz="xs" c="dimmed">
+                Use a saved template to pre-populate exercises
+              </Text>
+            </Box>
+          </Flex>
         </Card>
 
         {/* Quick Start (Last Workout) */}
-        <Card className="cursor-pointer hover:bg-muted/30 transition-colors opacity-50">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center bg-green-500/10 rounded-none">
-                <Zap className="size-5 text-green-500" />
-              </div>
-              <div>
-                <CardTitle className="text-sm">Quick Start</CardTitle>
-                <CardDescription className="text-xs">
-                  Repeat your last workout (coming soon)
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
+        <Card
+          withBorder
+          padding="md"
+          style={{
+            cursor: "pointer",
+            transition: "background-color 150ms",
+            opacity: 0.5,
+          }}
+        >
+          <Flex align="center" gap="sm">
+            <Center w={40} h={40} style={{ backgroundColor: "rgba(34, 197, 94, 0.1)" }}>
+              <IconBolt style={{ width: 20, height: 20, color: "rgb(34, 197, 94)" }} />
+            </Center>
+            <Box>
+              <Text fz="sm" fw={500}>
+                Quick Start
+              </Text>
+              <Text fz="xs" c="dimmed">
+                Repeat your last workout (coming soon)
+              </Text>
+            </Box>
+          </Flex>
         </Card>
-      </div>
+      </Stack>
 
       {isPending && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="flex flex-col items-center gap-3">
-            <Loader2 className="size-8 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground">Creating workout...</p>
-          </div>
-        </div>
+        <Box
+          pos="fixed"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          style={{
+            backgroundColor: "rgba(var(--mantine-color-body-rgb), 0.8)",
+            backdropFilter: "blur(4px)",
+            zIndex: 50,
+          }}
+        >
+          <Center h="100%">
+            <Stack align="center" gap="sm">
+              <Loader size="lg" />
+              <Text fz="sm" c="dimmed">
+                Creating workout...
+              </Text>
+            </Stack>
+          </Center>
+        </Box>
       )}
-    </div>
+    </Container>
   );
 }

@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -79,7 +79,7 @@ export function ExerciseImageGallery({
                 goToPrevious();
               }}
             >
-              <ChevronLeft className="size-4" />
+              <IconChevronLeft className="size-4" />
             </Button>
             <Button
               variant="secondary"
@@ -90,7 +90,7 @@ export function ExerciseImageGallery({
                 goToNext();
               }}
             >
-              <ChevronRight className="size-4" />
+              <IconChevronRight className="size-4" />
             </Button>
 
             {/* Image Counter */}
@@ -139,7 +139,7 @@ export function ExerciseImageGallery({
               className="absolute right-2 top-2 text-white hover:bg-white/20 z-10"
               onClick={() => setIsLightboxOpen(false)}
             >
-              <X className="size-5" />
+              <IconX className="size-5" />
             </Button>
 
             <img
@@ -156,7 +156,7 @@ export function ExerciseImageGallery({
                   className="absolute left-2 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 size-10"
                   onClick={goToPrevious}
                 >
-                  <ChevronLeft className="size-6" />
+                  <IconChevronLeft className="size-6" />
                 </Button>
                 <Button
                   variant="ghost"
@@ -164,7 +164,7 @@ export function ExerciseImageGallery({
                   className="absolute right-2 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 size-10"
                   onClick={goToNext}
                 >
-                  <ChevronRight className="size-6" />
+                  <IconChevronRight className="size-6" />
                 </Button>
 
                 {/* Image Counter */}

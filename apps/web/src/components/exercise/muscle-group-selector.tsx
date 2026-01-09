@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { IconX } from "@tabler/icons-react";
 import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -84,7 +84,7 @@ export function MuscleGroupSelector({
                 onClick={() => handleRemove(group)}
                 className="hover:bg-muted rounded-sm"
               >
-                <X className="size-3" />
+                <IconX className="size-3" />
               </button>
             )}
           </Badge>

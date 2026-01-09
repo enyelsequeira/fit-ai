@@ -1,15 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
 import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  CalendarIcon,
-  EditIcon,
-  MinusIcon,
-  PlusIcon,
-  ScaleIcon,
-  TrashIcon,
-} from "lucide-react";
+  IconArrowDown,
+  IconArrowUp,
+  IconCalendar,
+  IconPencil,
+  IconMinus,
+  IconPlus,
+  IconScale,
+  IconTrash,
+} from "@tabler/icons-react";
 import { useState } from "react";
 import {
   Line,
@@ -21,6 +20,8 @@ import {
   YAxis,
 } from "recharts";
 import { toast } from "sonner";
+
+import dayjs from "dayjs";
 
 import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
@@ -78,7 +79,7 @@ interface MeasurementFormData {
 }
 
 const initialFormData: MeasurementFormData = {
-  date: format(new Date(), "yyyy-MM-dd"),
+  date: dayjs().format("YYYY-MM-DD"),
   weight: "",
   bodyFatPercentage: "",
   chest: "",
@@ -312,7 +313,7 @@ function MeasurementCard({
 }) {
   if (value === null) return null;
 
-  const ChangeIcon = lastChange === null ? MinusIcon : lastChange > 0 ? ArrowUpIcon : ArrowDownIcon;
+  const ChangeIcon = lastChange === null ? IconMinus : lastChange > 0 ? IconArrowUp : IconArrowDown;
 
   return (
     <div className="flex flex-col gap-1 rounded-none border border-border/50 p-3">
@@ -495,13 +496,13 @@ export function BodyTab() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
-              <ScaleIcon className="size-4" />
+              <IconScale className="size-4" />
               Weight
             </CardTitle>
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
               <DialogTrigger asChild>
                 <Button size="sm">
-                  <PlusIcon className="size-4" />
+                  <IconPlus className="size-4" />
                   Log Measurement
                 </Button>
               </DialogTrigger>
@@ -582,7 +583,7 @@ export function BodyTab() {
             </div>
           ) : (
             <EmptyState
-              icon={ScaleIcon}
+              icon={IconScale}
               title="No weight data"
               description="Track your first measurement to see progress"
             />
@@ -656,7 +657,7 @@ export function BodyTab() {
             </div>
           ) : (
             <EmptyState
-              icon={ScaleIcon}
+              icon={IconScale}
               title="No measurements"
               description="Log your first measurement to track body changes"
             />
@@ -668,7 +669,7 @@ export function BodyTab() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <CalendarIcon className="size-4" />
+            <IconCalendar className="size-4" />
             Measurement History
           </CardTitle>
         </CardHeader>
@@ -682,7 +683,7 @@ export function BodyTab() {
                 >
                   <div className="flex items-center gap-4">
                     <span className="text-sm font-medium">
-                      {format(new Date(m.date), "MMM d, yyyy")}
+                      {dayjs(m.date).format("MMM D, YYYY")}
                     </span>
                     {m.weight && <Badge variant="outline">{m.weight.toFixed(1)}kg</Badge>}
                     {m.bodyFatPercentage && (
@@ -711,10 +712,10 @@ export function BodyTab() {
                         })
                       }
                     >
-                      <EditIcon className="size-3" />
+                      <IconPencil className="size-3" />
                     </Button>
                     <Button variant="ghost" size="icon-xs" onClick={() => handleDelete(m.id)}>
-                      <TrashIcon className="size-3" />
+                      <IconTrash className="size-3" />
                     </Button>
                   </div>
                 </div>
@@ -722,7 +723,7 @@ export function BodyTab() {
             </div>
           ) : (
             <EmptyState
-              icon={CalendarIcon}
+              icon={IconCalendar}
               title="No history"
               description="Your measurement history will appear here"
             />
@@ -744,7 +745,7 @@ export function BodyTab() {
             <MeasurementForm
               mode="edit"
               initialData={{
-                date: format(new Date(editingMeasurement.date), "yyyy-MM-dd"),
+                date: dayjs(editingMeasurement.date).format("YYYY-MM-DD"),
                 weight: editingMeasurement.weight?.toString() ?? "",
                 bodyFatPercentage: editingMeasurement.bodyFatPercentage?.toString() ?? "",
                 chest: editingMeasurement.chest?.toString() ?? "",

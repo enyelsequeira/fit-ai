@@ -157,7 +157,9 @@ export const refreshRecoveryRouteContract = protectedProcedure
 // These types can be used in handlers.ts for full type inference
 
 export type CreateCheckInRouteHandler = Parameters<typeof createCheckInRouteContract.handler>[0];
-export type GetTodayCheckInRouteHandler = Parameters<typeof getTodayCheckInRouteContract.handler>[0];
+export type GetTodayCheckInRouteHandler = Parameters<
+  typeof getTodayCheckInRouteContract.handler
+>[0];
 export type GetCheckInByDateRouteHandler = Parameters<
   typeof getCheckInByDateRouteContract.handler
 >[0];
@@ -170,4 +172,6 @@ export type GetRecoveryStatusRouteHandler = Parameters<
   typeof getRecoveryStatusRouteContract.handler
 >[0];
 export type GetReadinessRouteHandler = Parameters<typeof getReadinessRouteContract.handler>[0];
-export type RefreshRecoveryRouteHandler = Parameters<typeof refreshRecoveryRouteContract.handler>[0];
+export type RefreshRecoveryRouteHandler = Parameters<
+  typeof refreshRecoveryRouteContract.handler
+>[0];
