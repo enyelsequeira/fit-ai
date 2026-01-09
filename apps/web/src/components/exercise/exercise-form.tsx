@@ -1,23 +1,25 @@
 import type { ExerciseCategory } from "./category-badge";
 import type { EquipmentType } from "./equipment-icon";
 
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Group,
+  Loader,
+  Modal,
+  NativeSelect,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
+import { IconAlertCircle, IconCircleCheck, IconPlus } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertCircle, CheckCircle2, Loader2, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useDebounce } from "@/hooks/use-debounce";
 import { orpc } from "@/utils/orpc";
 
@@ -191,155 +193,132 @@ export function ExerciseFormDialog({
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>
-        <Plus className="mr-1.5 size-4" />
+      <Button onClick={() => setOpen(true)} leftSection={<IconPlus size={16} />}>
         {isEditing ? "Edit Exercise" : "Create Exercise"}
       </Button>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>{isEditing ? "Edit Exercise" : "Create Custom Exercise"}</DialogTitle>
-            <DialogDescription>
-              {isEditing
-                ? "Update the exercise details below."
-                : "Add a new custom exercise to your library."}
-            </DialogDescription>
-          </DialogHeader>
+      <Modal
+        opened={open}
+        onClose={() => setOpen(false)}
+        title={isEditing ? "Edit Exercise" : "Create Custom Exercise"}
+        size="md"
+        styles={{
+          body: { maxHeight: "70vh", overflowY: "auto" },
+        }}
+      >
+        <Text fz="sm" c="dimmed" mb="md">
+          {isEditing
+            ? "Update the exercise details below."
+            : "Add a new custom exercise to your library."}
+        </Text>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name *</Label>
-              <div className="relative">
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g., Incline Dumbbell Press"
-                  aria-invalid={!!errors.name}
-                  className="pr-8"
-                />
-                {debouncedName.length > 0 && (
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                    {nameCheck.isFetching ? (
-                      <Loader2 className="text-muted-foreground size-4 animate-spin" />
+        <form onSubmit={handleSubmit}>
+          <Stack gap="md">
+            <Box>
+              <TextInput
+                label="Name"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="e.g., Incline Dumbbell Press"
+                error={errors.name}
+                rightSection={
+                  debouncedName.length > 0 ? (
+                    nameCheck.isFetching ? (
+                      <Loader size="xs" />
                     ) : nameCheck.data?.available ? (
-                      <CheckCircle2 className="size-4 text-green-500" />
+                      <IconCircleCheck
+                        size={16}
+                        style={{ color: "var(--mantine-color-green-6)" }}
+                      />
                     ) : nameCheck.data && !nameCheck.data.available ? (
-                      <AlertCircle className="text-destructive size-4" />
-                    ) : null}
-                  </div>
-                )}
-              </div>
-              {errors.name && <p className="text-destructive text-xs">{errors.name}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Describe the exercise, include any tips or instructions..."
-                rows={3}
+                      <IconAlertCircle size={16} style={{ color: "var(--mantine-color-red-6)" }} />
+                    ) : null
+                  ) : null
+                }
               />
-            </div>
+            </Box>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="category">Category *</Label>
-                <select
-                  id="category"
+            <Textarea
+              label="Description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Describe the exercise, include any tips or instructions..."
+              rows={3}
+            />
+
+            <Grid>
+              <Grid.Col span={6}>
+                <NativeSelect
+                  label="Category"
+                  required
                   value={formData.category}
                   onChange={(e) =>
                     setFormData({ ...formData, category: e.target.value as ExerciseCategory })
                   }
-                  className="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 flex h-8 w-full items-center rounded-none border bg-transparent px-2.5 py-1 text-xs transition-colors focus-visible:ring-1 outline-none"
-                >
-                  {categories.map(({ value, label }) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  data={categories.map(({ value, label }) => ({ value, label }))}
+                />
+              </Grid.Col>
 
-              <div className="space-y-2">
-                <Label htmlFor="exerciseType">Type *</Label>
-                <select
-                  id="exerciseType"
+              <Grid.Col span={6}>
+                <NativeSelect
+                  label="Type"
+                  required
                   value={formData.exerciseType}
                   onChange={(e) =>
                     setFormData({ ...formData, exerciseType: e.target.value as ExerciseType })
                   }
-                  className="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 flex h-8 w-full items-center rounded-none border bg-transparent px-2.5 py-1 text-xs transition-colors focus-visible:ring-1 outline-none"
-                >
-                  {exerciseTypes.map(({ value, label }) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+                  data={exerciseTypes.map(({ value, label }) => ({ value, label }))}
+                />
+              </Grid.Col>
+            </Grid>
 
-            <div className="space-y-2">
-              <Label htmlFor="equipment">Equipment</Label>
-              <select
-                id="equipment"
-                value={formData.equipment || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    equipment: e.target.value
-                      ? (e.target.value as NonNullable<EquipmentType>)
-                      : null,
-                  })
-                }
-                className="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 flex h-8 w-full items-center rounded-none border bg-transparent px-2.5 py-1 text-xs transition-colors focus-visible:ring-1 outline-none"
-              >
-                <option value="">None / Bodyweight</option>
-                {equipmentTypes.map(({ value, label }) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <NativeSelect
+              label="Equipment"
+              value={formData.equipment || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  equipment: e.target.value ? (e.target.value as NonNullable<EquipmentType>) : null,
+                })
+              }
+              data={[
+                { value: "", label: "None / Bodyweight" },
+                ...equipmentTypes.map(({ value, label }) => ({ value, label })),
+              ]}
+            />
 
-            <div className="space-y-2">
-              <Label>
+            <Box>
+              <Text fz="sm" fw={500} mb={4}>
                 Muscle Groups{" "}
                 {formData.exerciseType === "strength" && (
-                  <span className="text-muted-foreground">*</span>
+                  <Text component="span" c="dimmed">
+                    *
+                  </Text>
                 )}
-              </Label>
+              </Text>
               <MuscleGroupSelector
                 value={formData.muscleGroups}
                 onChange={(muscleGroups) => setFormData({ ...formData, muscleGroups })}
               />
               {errors.muscleGroups && (
-                <p className="text-destructive text-xs">{errors.muscleGroups}</p>
+                <Text fz="xs" c="red" mt={4}>
+                  {errors.muscleGroups}
+                </Text>
               )}
-            </div>
+            </Box>
 
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button
-                type="button"
-                variant="outline"
-                disabled={isLoading}
-                onClick={() => setOpen(false)}
-              >
+            <Group justify="flex-end" gap="sm" mt="md">
+              <Button variant="outline" disabled={isLoading} onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
+              <Button type="submit" loading={isLoading}>
                 {isEditing ? "Update" : "Create"} Exercise
               </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+            </Group>
+          </Stack>
+        </form>
+      </Modal>
     </>
   );
 }
@@ -468,146 +447,126 @@ export function ExerciseEditButton({
         Edit
       </Button>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit Exercise</DialogTitle>
-            <DialogDescription>Update the exercise details below.</DialogDescription>
-          </DialogHeader>
+      <Modal
+        opened={open}
+        onClose={() => setOpen(false)}
+        title="Edit Exercise"
+        size="md"
+        styles={{
+          body: { maxHeight: "70vh", overflowY: "auto" },
+        }}
+      >
+        <Text fz="sm" c="dimmed" mb="md">
+          Update the exercise details below.
+        </Text>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-name">Name *</Label>
-              <div className="relative">
-                <Input
-                  id="edit-name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g., Incline Dumbbell Press"
-                  aria-invalid={!!errors.name}
-                  className="pr-8"
-                />
-                {debouncedName.length > 0 && (
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                    {nameCheck.isFetching ? (
-                      <Loader2 className="text-muted-foreground size-4 animate-spin" />
+        <form onSubmit={handleSubmit}>
+          <Stack gap="md">
+            <Box>
+              <TextInput
+                label="Name"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="e.g., Incline Dumbbell Press"
+                error={errors.name}
+                rightSection={
+                  debouncedName.length > 0 ? (
+                    nameCheck.isFetching ? (
+                      <Loader size="xs" />
                     ) : nameCheck.data?.available ? (
-                      <CheckCircle2 className="size-4 text-green-500" />
+                      <IconCircleCheck
+                        size={16}
+                        style={{ color: "var(--mantine-color-green-6)" }}
+                      />
                     ) : nameCheck.data && !nameCheck.data.available ? (
-                      <AlertCircle className="text-destructive size-4" />
-                    ) : null}
-                  </div>
-                )}
-              </div>
-              {errors.name && <p className="text-destructive text-xs">{errors.name}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="edit-description">Description</Label>
-              <Textarea
-                id="edit-description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Describe the exercise..."
-                rows={3}
+                      <IconAlertCircle size={16} style={{ color: "var(--mantine-color-red-6)" }} />
+                    ) : null
+                  ) : null
+                }
               />
-            </div>
+            </Box>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="edit-category">Category *</Label>
-                <select
-                  id="edit-category"
+            <Textarea
+              label="Description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Describe the exercise..."
+              rows={3}
+            />
+
+            <Grid>
+              <Grid.Col span={6}>
+                <NativeSelect
+                  label="Category"
+                  required
                   value={formData.category}
                   onChange={(e) =>
                     setFormData({ ...formData, category: e.target.value as ExerciseCategory })
                   }
-                  className="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 flex h-8 w-full items-center rounded-none border bg-transparent px-2.5 py-1 text-xs transition-colors focus-visible:ring-1 outline-none"
-                >
-                  {categories.map(({ value, label }) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  data={categories.map(({ value, label }) => ({ value, label }))}
+                />
+              </Grid.Col>
 
-              <div className="space-y-2">
-                <Label htmlFor="edit-exerciseType">Type *</Label>
-                <select
-                  id="edit-exerciseType"
+              <Grid.Col span={6}>
+                <NativeSelect
+                  label="Type"
+                  required
                   value={formData.exerciseType}
                   onChange={(e) =>
                     setFormData({ ...formData, exerciseType: e.target.value as ExerciseType })
                   }
-                  className="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 flex h-8 w-full items-center rounded-none border bg-transparent px-2.5 py-1 text-xs transition-colors focus-visible:ring-1 outline-none"
-                >
-                  {exerciseTypes.map(({ value, label }) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+                  data={exerciseTypes.map(({ value, label }) => ({ value, label }))}
+                />
+              </Grid.Col>
+            </Grid>
 
-            <div className="space-y-2">
-              <Label htmlFor="edit-equipment">Equipment</Label>
-              <select
-                id="edit-equipment"
-                value={formData.equipment || ""}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    equipment: e.target.value
-                      ? (e.target.value as NonNullable<EquipmentType>)
-                      : null,
-                  })
-                }
-                className="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 flex h-8 w-full items-center rounded-none border bg-transparent px-2.5 py-1 text-xs transition-colors focus-visible:ring-1 outline-none"
-              >
-                <option value="">None / Bodyweight</option>
-                {equipmentTypes.map(({ value, label }) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <NativeSelect
+              label="Equipment"
+              value={formData.equipment || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  equipment: e.target.value ? (e.target.value as NonNullable<EquipmentType>) : null,
+                })
+              }
+              data={[
+                { value: "", label: "None / Bodyweight" },
+                ...equipmentTypes.map(({ value, label }) => ({ value, label })),
+              ]}
+            />
 
-            <div className="space-y-2">
-              <Label>
+            <Box>
+              <Text fz="sm" fw={500} mb={4}>
                 Muscle Groups{" "}
                 {formData.exerciseType === "strength" && (
-                  <span className="text-muted-foreground">*</span>
+                  <Text component="span" c="dimmed">
+                    *
+                  </Text>
                 )}
-              </Label>
+              </Text>
               <MuscleGroupSelector
                 value={formData.muscleGroups}
                 onChange={(muscleGroups) => setFormData({ ...formData, muscleGroups })}
               />
               {errors.muscleGroups && (
-                <p className="text-destructive text-xs">{errors.muscleGroups}</p>
+                <Text fz="xs" c="red" mt={4}>
+                  {errors.muscleGroups}
+                </Text>
               )}
-            </div>
+            </Box>
 
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button
-                type="button"
-                variant="outline"
-                disabled={isLoading}
-                onClick={() => setOpen(false)}
-              >
+            <Group justify="flex-end" gap="sm" mt="md">
+              <Button variant="outline" disabled={isLoading} onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
+              <Button type="submit" loading={isLoading}>
                 Update Exercise
               </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+            </Group>
+          </Stack>
+        </form>
+      </Modal>
     </>
   );
 }

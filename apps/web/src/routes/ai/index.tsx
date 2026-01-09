@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import {
-  BrainIcon,
-  CalendarPlusIcon,
-  ClipboardListIcon,
-  SparklesIcon,
-  SettingsIcon,
-  ZapIcon,
-} from "lucide-react";
+  IconBrain,
+  IconCalendarPlus,
+  IconClipboardList,
+  IconSparkles,
+  IconSettings,
+  IconBolt,
+} from "@tabler/icons-react";
 import { toast } from "sonner";
 
 import { FactorsBreakdown, ReadinessScore } from "@/components/ai/readiness-score";
@@ -66,7 +66,7 @@ function AIHubPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
-            <BrainIcon className="size-5" />
+            <IconBrain className="size-5" />
             AI Hub
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
@@ -75,7 +75,7 @@ function AIHubPage() {
         </div>
         <Link to="/ai/preferences">
           <Button variant="outline" size="sm" className="gap-1.5">
-            <SettingsIcon className="size-3.5" />
+            <IconSettings className="size-3.5" />
             Preferences
           </Button>
         </Link>
@@ -106,7 +106,7 @@ function AIHubPage() {
               {!readiness.data.todayCheckIn && (
                 <Link to="/recovery/check-in">
                   <Button variant="outline" size="sm" className="gap-1.5">
-                    <CalendarPlusIcon className="size-3.5" />
+                    <IconCalendarPlus className="size-3.5" />
                     Log Today's Check-in
                   </Button>
                 </Link>
@@ -114,7 +114,7 @@ function AIHubPage() {
             </div>
           ) : (
             <EmptyState
-              icon={ZapIcon}
+              icon={IconBolt}
               title="No readiness data"
               description="Log a daily check-in to see your training readiness"
               action={
@@ -133,7 +133,7 @@ function AIHubPage() {
           <Card className="h-full hover:border-primary/50 transition-colors cursor-pointer">
             <CardContent className="flex flex-col items-center gap-2 py-6 text-center">
               <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <SparklesIcon className="size-5" />
+                <IconSparkles className="size-5" />
               </div>
               <div>
                 <p className="font-medium text-sm">Generate Workout</p>
@@ -147,7 +147,7 @@ function AIHubPage() {
           <Card className="h-full hover:border-primary/50 transition-colors cursor-pointer">
             <CardContent className="flex flex-col items-center gap-2 py-6 text-center">
               <div className="flex size-10 items-center justify-center rounded-full bg-purple-500/10 text-purple-500">
-                <CalendarPlusIcon className="size-5" />
+                <IconCalendarPlus className="size-5" />
               </div>
               <div>
                 <p className="font-medium text-sm">Daily Check-in</p>
@@ -161,7 +161,7 @@ function AIHubPage() {
           <Card className="h-full hover:border-primary/50 transition-colors cursor-pointer">
             <CardContent className="flex flex-col items-center gap-2 py-6 text-center">
               <div className="flex size-10 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500">
-                <ClipboardListIcon className="size-5" />
+                <IconClipboardList className="size-5" />
               </div>
               <div>
                 <p className="font-medium text-sm">Recovery Status</p>
@@ -177,7 +177,7 @@ function AIHubPage() {
         <Card className="border-amber-500/50 bg-amber-500/5">
           <CardContent className="flex items-center gap-4 py-4">
             <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-amber-500/10 text-amber-500">
-              <SettingsIcon className="size-5" />
+              <IconSettings className="size-5" />
             </div>
             <div className="flex-1">
               <p className="font-medium text-sm">Set up your training preferences</p>
@@ -238,7 +238,7 @@ function AIHubPage() {
           </div>
         ) : (
           <EmptyState
-            icon={SparklesIcon}
+            icon={IconSparkles}
             title="No generated workouts yet"
             description="Generate your first AI-powered workout"
             action={

@@ -1,4 +1,4 @@
-import { ClockIcon, DumbbellIcon, PlayIcon, StarIcon } from "lucide-react";
+import { IconClock, IconBarbell, IconPlayerPlay, IconStar } from "@tabler/icons-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -81,7 +81,7 @@ function GeneratedWorkoutCard({
             {workout.userRating !== null && (
               <div className="flex items-center gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <StarIcon
+                  <IconStar
                     key={i}
                     className={cn(
                       "size-3",
@@ -97,11 +97,11 @@ function GeneratedWorkoutCard({
       <CardContent className="space-y-3">
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1 text-muted-foreground">
-            <ClockIcon className="size-3.5" />
+            <IconClock className="size-3.5" />
             <span>{content.estimatedDuration} min</span>
           </div>
           <div className="flex items-center gap-1 text-muted-foreground">
-            <DumbbellIcon className="size-3.5" />
+            <IconBarbell className="size-3.5" />
             <span>{content.exercises.length} exercises</span>
           </div>
         </div>
@@ -146,7 +146,7 @@ function GeneratedWorkoutCard({
                   onClick={() => onRate(i + 1)}
                   className="p-0.5 hover:scale-110 transition-transform"
                 >
-                  <StarIcon className="size-4 text-muted hover:fill-amber-400 hover:text-amber-400" />
+                  <IconStar className="size-4 text-muted hover:fill-amber-400 hover:text-amber-400" />
                 </button>
               ))}
             </div>
@@ -156,7 +156,7 @@ function GeneratedWorkoutCard({
       {!workout.wasUsed && onUse && (
         <CardFooter>
           <Button size="sm" onClick={onUse} className="w-full gap-1.5">
-            <PlayIcon className="size-3.5" />
+            <IconPlayerPlay className="size-3.5" />
             Use This Workout
           </Button>
         </CardFooter>

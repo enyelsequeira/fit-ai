@@ -1,6 +1,6 @@
-import type { LucideIcon } from "lucide-react";
+import type { TablerIcon } from "@tabler/icons-react";
 
-import { ActivityIcon, BedIcon, SaladIcon, CalendarIcon, XIcon } from "lucide-react";
+import { IconActivity, IconBed, IconSalad, IconCalendar, IconX } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,11 +22,11 @@ interface RecommendationCardProps {
   className?: string;
 }
 
-const typeConfig: Record<RecommendationType, { icon: LucideIcon; color: string }> = {
-  training: { icon: ActivityIcon, color: "text-blue-500 bg-blue-500/10" },
-  recovery: { icon: BedIcon, color: "text-purple-500 bg-purple-500/10" },
-  nutrition: { icon: SaladIcon, color: "text-green-500 bg-green-500/10" },
-  schedule: { icon: CalendarIcon, color: "text-amber-500 bg-amber-500/10" },
+const typeConfig: Record<RecommendationType, { icon: TablerIcon; color: string }> = {
+  training: { icon: IconActivity, color: "text-blue-500 bg-blue-500/10" },
+  recovery: { icon: IconBed, color: "text-purple-500 bg-purple-500/10" },
+  nutrition: { icon: IconSalad, color: "text-green-500 bg-green-500/10" },
+  schedule: { icon: IconCalendar, color: "text-amber-500 bg-amber-500/10" },
 };
 
 const priorityConfig: Record<Priority, { border: string; badge: string }> = {
@@ -62,7 +62,7 @@ function RecommendationCard({ recommendation, onDismiss, className }: Recommenda
         </div>
         {onDismiss && (
           <Button variant="ghost" size="icon-xs" onClick={onDismiss} className="shrink-0">
-            <XIcon className="size-3" />
+            <IconX className="size-3" />
           </Button>
         )}
       </CardContent>

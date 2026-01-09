@@ -49,6 +49,7 @@ export const suggestNextWorkoutRoute =
   suggestNextWorkoutRouteContract.handler(suggestNextWorkoutHandler);
 export const substituteExerciseRoute =
   substituteExerciseRouteContract.handler(substituteExerciseHandler);
-export const getGeneratedHistoryRoute =
-  getGeneratedHistoryRouteContract.handler(getGeneratedHistoryHandler);
+export const getGeneratedHistoryRoute = getGeneratedHistoryRouteContract.handler(
+  getGeneratedHistoryHandler,
+);
 export const submitFeedbackRoute = submitFeedbackRouteContract.handler(submitFeedbackHandler);

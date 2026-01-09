@@ -1,4 +1,4 @@
-import { BarChart3Icon } from "lucide-react";
+import { IconChartBar } from "@tabler/icons-react";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { EmptyState } from "@/components/ui/empty-state";
@@ -17,7 +17,7 @@ export function VolumeChart({ data, height = 256 }: VolumeChartProps) {
   if (data.length === 0) {
     return (
       <EmptyState
-        icon={BarChart3Icon}
+        icon={IconChartBar}
         title="No volume data"
         description="Complete workouts to track your volume"
       />

@@ -1,0 +1,214 @@
+.section {
+  background: var(--mantine-color-dark-8);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-mantine-color-scheme="light"] .section {
+  background: var(--mantine-color-gray-0);
+}
+
+/* Subtle background pattern */
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 0
+  );
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+[data-mantine-color-scheme="light"] .section::before {
+  background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.03) 1px, transparent 0);
+}
+
+.sectionHeader {
+  position: relative;
+  z-index: 1;
+}
+
+.sectionBadge {
+  background: rgba(34, 139, 230, 0.15);
+  border: 1px solid rgba(34, 139, 230, 0.25);
+  color: var(--mantine-color-blue-4);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+[data-mantine-color-scheme="light"] .sectionBadge {
+  background: rgba(34, 139, 230, 0.1);
+  color: var(--mantine-color-blue-6);
+}
+
+.grid {
+  position: relative;
+  z-index: 1;
+}
+
+.card {
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(25, 25, 25, 0.9) 100%);
+  border: 1px solid var(--mantine-color-dark-5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-mantine-color-scheme="light"] .card {
+  background: linear-gradient(
+    135deg,
+    var(--mantine-color-white) 0%,
+    var(--mantine-color-gray-0) 100%
+  );
+  border-color: var(--mantine-color-gray-3);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--mantine-color-blue-6) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  border-color: var(--mantine-color-blue-7);
+  box-shadow:
+    var(--mantine-shadow-xl),
+    0 0 60px rgba(34, 139, 230, 0.1);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.cardInner {
+  padding: var(--mantine-spacing-xl);
+}
+
+.iconWrapper {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mantine-radius-md);
+  background: linear-gradient(135deg, rgba(34, 139, 230, 0.2) 0%, rgba(77, 171, 247, 0.1) 100%);
+  border: 1px solid rgba(34, 139, 230, 0.2);
+  transition: all 0.3s ease;
+}
+
+.card:hover .iconWrapper {
+  background: linear-gradient(
+    135deg,
+    var(--mantine-color-blue-6) 0%,
+    var(--mantine-color-cyan-6) 100%
+  );
+  border-color: transparent;
+  transform: scale(1.05);
+}
+
+.cardTitle {
+  color: var(--mantine-color-gray-1);
+  font-weight: 600;
+  font-size: var(--mantine-font-size-lg);
+  margin-bottom: var(--mantine-spacing-xs);
+}
+
+[data-mantine-color-scheme="light"] .cardTitle {
+  color: var(--mantine-color-gray-9);
+}
+
+.cardDescription {
+  color: var(--mantine-color-gray-5);
+  font-size: var(--mantine-font-size-sm);
+  line-height: 1.65;
+}
+
+[data-mantine-color-scheme="light"] .cardDescription {
+  color: var(--mantine-color-gray-6);
+}
+
+/* Featured card (first card) styling */
+.cardFeatured {
+  grid-column: span 1;
+  background: linear-gradient(135deg, rgba(34, 139, 230, 0.1) 0%, rgba(30, 30, 30, 0.9) 100%);
+  border-color: rgba(34, 139, 230, 0.3);
+}
+
+[data-mantine-color-scheme="light"] .cardFeatured {
+  background: linear-gradient(135deg, rgba(34, 139, 230, 0.08) 0%, var(--mantine-color-white) 100%);
+  border-color: rgba(34, 139, 230, 0.3);
+}
+
+.cardFeatured .iconWrapper {
+  background: linear-gradient(
+    135deg,
+    var(--mantine-color-blue-6) 0%,
+    var(--mantine-color-cyan-6) 100%
+  );
+  border-color: transparent;
+}
+
+@media (min-width: 992px) {
+  .cardFeatured {
+    grid-column: span 2;
+  }
+
+  .cardFeatured .cardInner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--mantine-spacing-lg);
+    align-items: start;
+  }
+
+  .cardFeatured .cardContent {
+    padding-top: var(--mantine-spacing-xs);
+  }
+}
+
+/* Animation on scroll */
+.card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cardFadeIn 0.6s ease forwards;
+}
+
+.card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.card:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+@keyframes cardFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

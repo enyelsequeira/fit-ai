@@ -1,8 +1,9 @@
-import { TrendingUp } from "lucide-react";
+import { IconTrendingUp } from "@tabler/icons-react";
+
+import { Box, Flex, Group, Stack, Text, Tooltip } from "@mantine/core";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 
 interface DataPoint {
   periodStart: string;
@@ -37,21 +38,23 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5" />
-            Volume Trends
+          <CardTitle>
+            <Group gap="xs">
+              <IconTrendingUp size={20} />
+              Volume Trends
+            </Group>
           </CardTitle>
           <CardDescription>Weekly training volume (kg)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex h-48 items-end justify-between gap-2">
+          <Flex h={192} align="flex-end" justify="space-between" gap="xs">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="flex flex-1 flex-col items-center gap-2">
-                <Skeleton className="w-full" style={{ height: `${Math.random() * 100 + 40}px` }} />
-                <Skeleton className="h-3 w-8" />
-              </div>
+              <Flex key={i} direction="column" align="center" gap="xs" style={{ flex: 1 }}>
+                <Skeleton w="100%" style={{ height: `${Math.random() * 100 + 40}px` }} />
+                <Skeleton h={12} w={32} />
+              </Flex>
             ))}
-          </div>
+          </Flex>
         </CardContent>
       </Card>
     );
@@ -61,16 +64,20 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5" />
-            Volume Trends
+          <CardTitle>
+            <Group gap="xs">
+              <IconTrendingUp size={20} />
+              Volume Trends
+            </Group>
           </CardTitle>
           <CardDescription>Weekly training volume (kg)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex h-48 items-center justify-center">
-            <p className="text-muted-foreground text-sm">Complete workouts to see volume trends</p>
-          </div>
+          <Flex h={192} align="center" justify="center">
+            <Text size="sm" c="dimmed">
+              Complete workouts to see volume trends
+            </Text>
+          </Flex>
         </CardContent>
       </Card>
     );
@@ -82,14 +89,16 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5" />
-          Volume Trends
+        <CardTitle>
+          <Group gap="xs">
+            <IconTrendingUp size={20} />
+            Volume Trends
+          </Group>
         </CardTitle>
         <CardDescription>Weekly training volume (kg)</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex h-48 items-end justify-between gap-2">
+        <Flex h={192} align="flex-end" justify="space-between" gap="xs">
           {dataPoints.map((point, index) => {
             const heightPercent =
               point.totalVolume > 0
@@ -98,51 +107,72 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
             const isLast = index === dataPoints.length - 1;
 
             return (
-              <div
+              <Flex
                 key={point.periodStart}
-                className="group flex flex-1 flex-col items-center gap-2"
+                direction="column"
+                align="center"
+                gap="xs"
+                style={{ flex: 1 }}
               >
-                <div className="relative flex h-40 w-full items-end justify-center">
-                  <div
-                    className={cn(
-                      "w-full max-w-8 rounded-t transition-all",
-                      isLast ? "bg-primary" : "bg-primary/40",
-                      "group-hover:bg-primary/80",
-                    )}
-                    style={{ height: `${heightPercent}%` }}
-                  />
-                  <div className="bg-background text-foreground absolute -top-6 hidden rounded px-1.5 py-0.5 text-xs shadow group-hover:block">
-                    {formatVolume(point.totalVolume)} kg
-                  </div>
-                </div>
-                <span className="text-muted-foreground text-xs">
+                <Box
+                  h={160}
+                  w="100%"
+                  pos="relative"
+                  style={{ display: "flex", alignItems: "flex-end", justifyContent: "center" }}
+                >
+                  <Tooltip label={`${formatVolume(point.totalVolume)} kg`} position="top">
+                    <Box
+                      w="100%"
+                      maw={32}
+                      style={{
+                        height: `${heightPercent}%`,
+                        borderRadius: "4px 4px 0 0",
+                        background: isLast
+                          ? "var(--mantine-primary-color-filled)"
+                          : "var(--mantine-primary-color-light)",
+                        transition: "all 0.2s",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </Tooltip>
+                </Box>
+                <Text size="xs" c="dimmed">
                   {formatWeekLabel(point.periodStart)}
-                </span>
-              </div>
+                </Text>
+              </Flex>
             );
           })}
-        </div>
+        </Flex>
         {/* Stats summary */}
         {dataPoints.length >= 2 && (
-          <div className="mt-4 flex justify-between border-t pt-4 text-sm">
-            <div>
-              <p className="text-muted-foreground">Avg Volume</p>
-              <p className="font-medium">
+          <Flex
+            justify="space-between"
+            mt="md"
+            pt="md"
+            style={{ borderTop: "1px solid var(--mantine-color-default-border)" }}
+          >
+            <Box>
+              <Text size="sm" c="dimmed">
+                Avg Volume
+              </Text>
+              <Text fw={500}>
                 {formatVolume(
                   Math.round(
                     dataPoints.reduce((sum, d) => sum + d.totalVolume, 0) / dataPoints.length,
                   ),
                 )}{" "}
                 kg
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-muted-foreground">This Week</p>
-              <p className="font-medium">
+              </Text>
+            </Box>
+            <Box ta="right">
+              <Text size="sm" c="dimmed">
+                This Week
+              </Text>
+              <Text fw={500}>
                 {formatVolume(dataPoints[dataPoints.length - 1]?.totalVolume ?? 0)} kg
-              </p>
-            </div>
-          </div>
+              </Text>
+            </Box>
+          </Flex>
         )}
       </CardContent>
     </Card>

@@ -1,4 +1,4 @@
-import { ArrowUpIcon, TrophyIcon } from "lucide-react";
+import { IconArrowUp, IconTrophy } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 
@@ -66,7 +66,7 @@ export function PRCard({
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full">
-              <TrophyIcon className="size-5" />
+              <IconTrophy className="size-5" />
             </div>
             <div>
               <p className="font-medium">{exerciseName}</p>
@@ -85,7 +85,7 @@ export function PRCard({
         </div>
         {improvement !== null && improvement > 0 && (
           <div className="mt-3 flex items-center gap-1 text-emerald-500">
-            <ArrowUpIcon className="size-3" />
+            <IconArrowUp className="size-3" />
             <span className="text-xs font-medium">
               +{improvement.toFixed(1)}
               {unit}

@@ -96,5 +96,6 @@ export const resumeGoalRoute = resumeGoalRouteContract.handler(resumeGoalHandler
 export const deleteGoalRoute = deleteGoalRouteContract.handler(deleteGoalHandler);
 
 // Goal Progress History Route
-export const getGoalProgressHistoryRoute =
-  getGoalProgressHistoryRouteContract.handler(getGoalProgressHistoryHandler);
+export const getGoalProgressHistoryRoute = getGoalProgressHistoryRouteContract.handler(
+  getGoalProgressHistoryHandler,
+);

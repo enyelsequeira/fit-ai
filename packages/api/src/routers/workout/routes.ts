@@ -68,7 +68,9 @@ export const completeRoute = completeRouteContract.handler(completeWorkoutHandle
 
 // Workout Exercise Routes
 export const addExerciseRoute = addExerciseRouteContract.handler(addExerciseHandler);
-export const updateExerciseRoute = updateExerciseRouteContract.handler(updateWorkoutExerciseHandler);
+export const updateExerciseRoute = updateExerciseRouteContract.handler(
+  updateWorkoutExerciseHandler,
+);
 export const removeExerciseRoute = removeExerciseRouteContract.handler(removeExerciseHandler);
 export const reorderExercisesRoute = reorderExercisesRouteContract.handler(reorderExercisesHandler);
 

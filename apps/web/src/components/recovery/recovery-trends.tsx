@@ -1,5 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Badge, Box, Card, Flex, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 
 interface TrendsData {
   period: string;
@@ -25,7 +24,6 @@ interface TrendsData {
 
 interface RecoveryTrendsProps {
   trends: TrendsData;
-  className?: string;
 }
 
 function StatCard({
@@ -46,23 +44,34 @@ function StatCard({
   const percentage = (value / max) * 100;
   const getColor = () => {
     if (inverse) {
-      if (value <= max * 0.3) return "text-emerald-500";
-      if (value <= max * 0.6) return "text-amber-500";
-      return "text-red-500";
+      if (value <= max * 0.3) return "teal";
+      if (value <= max * 0.6) return "yellow";
+      return "red";
     }
-    if (percentage >= 70) return "text-emerald-500";
-    if (percentage >= 40) return "text-amber-500";
-    return "text-red-500";
+    if (percentage >= 70) return "teal";
+    if (percentage >= 40) return "yellow";
+    return "red";
   };
 
   return (
-    <div className="flex flex-col items-center p-3 rounded-none border">
-      <span className={cn("text-xl font-bold tabular-nums", getColor())}>
+    <Stack
+      align="center"
+      p="xs"
+      gap={4}
+      style={{ border: "1px solid var(--mantine-color-default-border)" }}
+    >
+      <Text fz="xl" fw={700} c={getColor()} style={{ fontVariantNumeric: "tabular-nums" }}>
         {value.toFixed(1)}
-        {unit && <span className="text-xs font-normal">{unit}</span>}
-      </span>
-      <span className="text-[10px] text-muted-foreground text-center">{label}</span>
-    </div>
+        {unit && (
+          <Text component="span" fz="xs" fw={400}>
+            {unit}
+          </Text>
+        )}
+      </Text>
+      <Text fz={10} c="dimmed" ta="center">
+        {label}
+      </Text>
+    </Stack>
   );
 }
 
@@ -76,73 +85,96 @@ function MoodBar({
   if (total === 0) return null;
 
   const items = [
-    { key: "great", color: "bg-emerald-500", count: moodDistribution.great },
-    { key: "good", color: "bg-green-500", count: moodDistribution.good },
-    { key: "neutral", color: "bg-amber-500", count: moodDistribution.neutral },
-    { key: "low", color: "bg-orange-500", count: moodDistribution.low },
-    { key: "bad", color: "bg-red-500", count: moodDistribution.bad },
+    { key: "great", color: "var(--mantine-color-teal-5)", count: moodDistribution.great },
+    { key: "good", color: "var(--mantine-color-green-5)", count: moodDistribution.good },
+    { key: "neutral", color: "var(--mantine-color-yellow-5)", count: moodDistribution.neutral },
+    { key: "low", color: "var(--mantine-color-orange-5)", count: moodDistribution.low },
+    { key: "bad", color: "var(--mantine-color-red-5)", count: moodDistribution.bad },
   ];
 
   return (
-    <div className="space-y-2">
-      <span className="text-xs text-muted-foreground">Mood Distribution</span>
-      <div className="flex h-3 w-full overflow-hidden rounded-none">
+    <Stack gap="xs">
+      <Text fz="xs" c="dimmed">
+        Mood Distribution
+      </Text>
+      <Flex h={12} w="100%" style={{ overflow: "hidden" }}>
         {items.map((item) => {
           const width = (item.count / total) * 100;
           if (width === 0) return null;
           return (
-            <div
+            <Box
               key={item.key}
-              className={cn(item.color, "h-full transition-all")}
-              style={{ width: `${width}%` }}
+              h="100%"
+              style={{
+                width: `${width}%`,
+                backgroundColor: item.color,
+                transition: "all 150ms ease",
+              }}
               title={`${item.key}: ${item.count}`}
             />
           );
         })}
-      </div>
-      <div className="flex justify-between text-[10px] text-muted-foreground">
+      </Flex>
+      <Group justify="space-between" gap={4}>
         {items.map((item) => (
-          <div key={item.key} className="flex items-center gap-1">
-            <div className={cn("size-2 rounded-full", item.color)} />
-            <span className="capitalize">{item.key}</span>
-            <span className="tabular-nums">({item.count})</span>
-          </div>
+          <Group key={item.key} gap={4}>
+            <Box
+              w={8}
+              h={8}
+              style={{
+                borderRadius: "50%",
+                backgroundColor: item.color,
+              }}
+            />
+            <Text fz={10} c="dimmed" tt="capitalize">
+              {item.key}
+            </Text>
+            <Text fz={10} c="dimmed" style={{ fontVariantNumeric: "tabular-nums" }}>
+              ({item.count})
+            </Text>
+          </Group>
         ))}
-      </div>
-    </div>
+      </Group>
+    </Stack>
   );
 }
 
-function RecoveryTrends({ trends, className }: RecoveryTrendsProps) {
+function RecoveryTrends({ trends }: RecoveryTrendsProps) {
   const totalMoods = Object.values(trends.moodDistribution).reduce((a, b) => a + b, 0);
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-sm">Trends ({trends.period})</CardTitle>
-          <span className="text-xs text-muted-foreground">{trends.dataPoints} check-ins</span>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Average Stats */}
-        <div className="grid grid-cols-4 gap-2">
-          <StatCard label="Avg Sleep" value={trends.averages.sleepHours} max={10} unit="h" />
-          <StatCard label="Sleep Quality" value={trends.averages.sleepQuality} max={5} />
-          <StatCard label="Avg Energy" value={trends.averages.energyLevel} max={10} />
-          <StatCard label="Avg Motivation" value={trends.averages.motivationLevel} max={10} />
-        </div>
+    <Card withBorder>
+      <Card.Section withBorder inheritPadding py="sm">
+        <Group justify="space-between">
+          <Text fz="sm" fw={500}>
+            Trends ({trends.period})
+          </Text>
+          <Text fz="xs" c="dimmed">
+            {trends.dataPoints} check-ins
+          </Text>
+        </Group>
+      </Card.Section>
+      <Card.Section inheritPadding py="md">
+        <Stack gap="lg">
+          {/* Average Stats */}
+          <SimpleGrid cols={4} spacing="xs">
+            <StatCard label="Avg Sleep" value={trends.averages.sleepHours} max={10} unit="h" />
+            <StatCard label="Sleep Quality" value={trends.averages.sleepQuality} max={5} />
+            <StatCard label="Avg Energy" value={trends.averages.energyLevel} max={10} />
+            <StatCard label="Avg Motivation" value={trends.averages.motivationLevel} max={10} />
+          </SimpleGrid>
 
-        <div className="grid grid-cols-4 gap-2">
-          <StatCard label="Avg Stress" value={trends.averages.stressLevel} max={10} inverse />
-          <StatCard label="Avg Soreness" value={trends.averages.sorenessLevel} max={10} inverse />
-          <StatCard label="Nutrition" value={trends.averages.nutritionQuality} max={5} />
-          <StatCard label="Hydration" value={trends.averages.hydrationLevel} max={5} />
-        </div>
+          <SimpleGrid cols={4} spacing="xs">
+            <StatCard label="Avg Stress" value={trends.averages.stressLevel} max={10} inverse />
+            <StatCard label="Avg Soreness" value={trends.averages.sorenessLevel} max={10} inverse />
+            <StatCard label="Nutrition" value={trends.averages.nutritionQuality} max={5} />
+            <StatCard label="Hydration" value={trends.averages.hydrationLevel} max={5} />
+          </SimpleGrid>
 
-        {/* Mood Distribution */}
-        <MoodBar moodDistribution={trends.moodDistribution} total={totalMoods} />
-      </CardContent>
+          {/* Mood Distribution */}
+          <MoodBar moodDistribution={trends.moodDistribution} total={totalMoods} />
+        </Stack>
+      </Card.Section>
     </Card>
   );
 }

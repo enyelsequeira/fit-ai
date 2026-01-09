@@ -1,20 +1,18 @@
-import type { LucideIcon } from "lucide-react";
+import type { Icon } from "@tabler/icons-react";
 
+import { Badge, Group } from "@mantine/core";
 import {
-  Dumbbell,
-  Flame,
-  Heart,
-  Layers,
-  MoreHorizontal,
-  PersonStanding,
-  Shield,
-  Target,
-  TrendingUp,
-  Zap,
-} from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+  IconBarbell,
+  IconBolt,
+  IconDotsHorizontal,
+  IconFlame,
+  IconHeart,
+  IconShield,
+  IconStack2,
+  IconStretching,
+  IconTarget,
+  IconTrendingUp,
+} from "@tabler/icons-react";
 
 export type ExerciseCategory =
   | "chest"
@@ -29,7 +27,7 @@ export type ExerciseCategory =
   | "other";
 
 interface CategoryConfig {
-  icon: LucideIcon;
+  icon: Icon;
   color: string;
   bgColor: string;
   label: string;
@@ -37,101 +35,102 @@ interface CategoryConfig {
 
 export const categoryConfig: Record<ExerciseCategory, CategoryConfig> = {
   chest: {
-    icon: Shield,
-    color: "text-red-400",
-    bgColor: "bg-red-500/10",
+    icon: IconShield,
+    color: "var(--mantine-color-red-6)",
+    bgColor: "var(--mantine-color-red-light)",
     label: "Chest",
   },
   back: {
-    icon: Layers,
-    color: "text-blue-400",
-    bgColor: "bg-blue-500/10",
+    icon: IconStack2,
+    color: "var(--mantine-color-blue-6)",
+    bgColor: "var(--mantine-color-blue-light)",
     label: "Back",
   },
   shoulders: {
-    icon: Target,
-    color: "text-yellow-400",
-    bgColor: "bg-yellow-500/10",
+    icon: IconTarget,
+    color: "var(--mantine-color-yellow-6)",
+    bgColor: "var(--mantine-color-yellow-light)",
     label: "Shoulders",
   },
   arms: {
-    icon: Zap,
-    color: "text-purple-400",
-    bgColor: "bg-purple-500/10",
+    icon: IconBolt,
+    color: "var(--mantine-color-violet-6)",
+    bgColor: "var(--mantine-color-violet-light)",
     label: "Arms",
   },
   legs: {
-    icon: PersonStanding,
-    color: "text-green-400",
-    bgColor: "bg-green-500/10",
+    icon: IconStretching,
+    color: "var(--mantine-color-green-6)",
+    bgColor: "var(--mantine-color-green-light)",
     label: "Legs",
   },
   core: {
-    icon: Flame,
-    color: "text-orange-400",
-    bgColor: "bg-orange-500/10",
+    icon: IconFlame,
+    color: "var(--mantine-color-orange-6)",
+    bgColor: "var(--mantine-color-orange-light)",
     label: "Core",
   },
   cardio: {
-    icon: Heart,
-    color: "text-pink-400",
-    bgColor: "bg-pink-500/10",
+    icon: IconHeart,
+    color: "var(--mantine-color-pink-6)",
+    bgColor: "var(--mantine-color-pink-light)",
     label: "Cardio",
   },
   flexibility: {
-    icon: TrendingUp,
-    color: "text-teal-400",
-    bgColor: "bg-teal-500/10",
+    icon: IconTrendingUp,
+    color: "var(--mantine-color-teal-6)",
+    bgColor: "var(--mantine-color-teal-light)",
     label: "Flexibility",
   },
   compound: {
-    icon: Dumbbell,
-    color: "text-indigo-400",
-    bgColor: "bg-indigo-500/10",
+    icon: IconBarbell,
+    color: "var(--mantine-color-indigo-6)",
+    bgColor: "var(--mantine-color-indigo-light)",
     label: "Compound",
   },
   other: {
-    icon: MoreHorizontal,
-    color: "text-gray-400",
-    bgColor: "bg-gray-500/10",
+    icon: IconDotsHorizontal,
+    color: "var(--mantine-color-gray-6)",
+    bgColor: "var(--mantine-color-gray-light)",
     label: "Other",
   },
+};
+
+// Map category to Mantine badge colors
+const categoryColors: Record<ExerciseCategory, string> = {
+  chest: "red",
+  back: "blue",
+  shoulders: "yellow",
+  arms: "violet",
+  legs: "green",
+  core: "orange",
+  cardio: "pink",
+  flexibility: "teal",
+  compound: "indigo",
+  other: "gray",
 };
 
 interface CategoryBadgeProps {
   category: ExerciseCategory;
   showIcon?: boolean;
   size?: "sm" | "default";
-  className?: string;
 }
 
-export function CategoryBadge({
-  category,
-  showIcon = true,
-  size = "default",
-  className,
-}: CategoryBadgeProps) {
+export function CategoryBadge({ category, showIcon = true, size = "default" }: CategoryBadgeProps) {
   const config = categoryConfig[category];
   const Icon = config.icon;
 
   return (
-    <Badge
-      variant="outline"
-      className={cn(
-        config.bgColor,
-        config.color,
-        "border-transparent",
-        size === "sm" && "px-1.5 py-0 text-[10px]",
-        className,
-      )}
-    >
-      {showIcon && <Icon className={cn("mr-1", size === "sm" ? "size-3" : "size-3.5")} />}
-      {config.label}
+    <Badge variant="light" color={categoryColors[category]} size={size === "sm" ? "xs" : "sm"}>
+      <Group gap={4} wrap="nowrap">
+        {showIcon && <Icon size={size === "sm" ? 12 : 14} />}
+        {config.label}
+      </Group>
     </Badge>
   );
 }
 
-export function getCategoryIcon(category: ExerciseCategory): LucideIcon {
+export function getCategoryIcon(category: ExerciseCategory): Icon {
   return categoryConfig[category].icon;
 }
 

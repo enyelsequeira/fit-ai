@@ -1,11 +1,11 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { IconLoader2 } from "@tabler/icons-react";
 import { useCallback } from "react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { Box, Button, Flex, SimpleGrid, Skeleton, Stack } from "@mantine/core";
+
 import { EmptyState } from "@/components/ui/empty-state";
-import { Skeleton } from "@/components/ui/skeleton";
 import { client, orpc } from "@/utils/orpc";
 
 import { WorkoutCard } from "./workout-card";
@@ -101,8 +101,8 @@ function WorkoutList({ status = "all" }: WorkoutListProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <Stack gap="md">
+      <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="md">
         {allWorkouts.map((workout) => (
           <WorkoutCard
             key={workout.id}
@@ -114,10 +114,10 @@ function WorkoutList({ status = "all" }: WorkoutListProps) {
             onDelete={() => handleDelete(workout.id)}
           />
         ))}
-      </div>
+      </SimpleGrid>
 
       {workouts.hasNextPage && (
-        <div className="flex justify-center pt-4">
+        <Flex justify="center" pt="md">
           <Button
             variant="outline"
             onClick={() => workouts.fetchNextPage()}
@@ -125,38 +125,53 @@ function WorkoutList({ status = "all" }: WorkoutListProps) {
           >
             {workouts.isFetchingNextPage ? (
               <>
-                <Loader2 className="size-4 mr-2 animate-spin" />
+                <IconLoader2
+                  style={{
+                    width: 16,
+                    height: 16,
+                    marginRight: 8,
+                    animation: "spin 1s linear infinite",
+                  }}
+                />
                 Loading...
               </>
             ) : (
               "Load More"
             )}
           </Button>
-        </div>
+        </Flex>
       )}
-    </div>
+    </Stack>
   );
 }
 
 function WorkoutListSkeleton() {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="md">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="border border-border rounded-none p-4 space-y-3">
-          <div className="flex items-start justify-between">
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-3 w-20" />
-            </div>
-            <Skeleton className="h-5 w-16" />
-          </div>
-          <div className="flex gap-4">
-            <Skeleton className="h-3 w-20" />
-            <Skeleton className="h-3 w-16" />
-          </div>
-        </div>
+        <Box
+          key={i}
+          p="md"
+          style={{
+            border: "1px solid var(--mantine-color-default-border)",
+          }}
+        >
+          <Stack gap="sm">
+            <Flex justify="space-between" align="flex-start">
+              <Stack gap="xs">
+                <Skeleton height={16} width={128} />
+                <Skeleton height={12} width={80} />
+              </Stack>
+              <Skeleton height={20} width={64} />
+            </Flex>
+            <Flex gap="md">
+              <Skeleton height={12} width={80} />
+              <Skeleton height={12} width={64} />
+            </Flex>
+          </Stack>
+        </Box>
       ))}
-    </div>
+    </SimpleGrid>
   );
 }
 

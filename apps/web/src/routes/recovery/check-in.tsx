@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect, useSearch } from "@tanstack/react-router";
-import { ArrowLeftIcon, CalendarPlusIcon } from "lucide-react";
+import { IconArrowLeft, IconCalendarPlus } from "@tabler/icons-react";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -129,12 +129,12 @@ function CheckInPage() {
       <div className="flex items-center gap-4">
         <Link to="/recovery">
           <Button variant="ghost" size="icon-sm">
-            <ArrowLeftIcon className="size-4" />
+            <IconArrowLeft className="size-4" />
           </Button>
         </Link>
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
-            <CalendarPlusIcon className="size-5" />
+            <IconCalendarPlus className="size-5" />
             {isToday
               ? "Today's Check-in"
               : `Check-in for ${new Date(targetDate).toLocaleDateString()}`}

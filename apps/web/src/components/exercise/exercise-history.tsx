@@ -1,8 +1,7 @@
+import { Box, Card, Flex, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar, Dumbbell } from "lucide-react";
+import { IconBarbell, IconCalendar } from "@tabler/icons-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { orpc } from "@/utils/orpc";
 
 interface ExerciseHistoryProps {
@@ -25,84 +24,105 @@ export function ExerciseHistory({ exerciseId, limit = 10 }: ExerciseHistoryProps
 
   if (!dataPoints || dataPoints.length === 0) {
     return (
-      <Card>
-        <CardContent className="py-8 text-center">
-          <Dumbbell className="text-muted-foreground mx-auto size-8" />
-          <p className="text-muted-foreground mt-2 text-sm">No history yet</p>
-          <p className="text-muted-foreground mt-1 text-xs">
+      <Card withBorder>
+        <Box py="xl" ta="center">
+          <IconBarbell
+            size={32}
+            style={{
+              color: "var(--mantine-color-dimmed)",
+              margin: "0 auto",
+            }}
+          />
+          <Text fz="sm" c="dimmed" mt="xs">
+            No history yet
+          </Text>
+          <Text fz="xs" c="dimmed" mt={4}>
             Complete workouts with this exercise to see your progress.
-          </p>
-        </CardContent>
+          </Text>
+        </Box>
       </Card>
     );
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-sm">
-          <Calendar className="text-muted-foreground size-4" />
-          Exercise History
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="divide-border divide-y">
-          {dataPoints.map((entry, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between py-3 first:pt-0 last:pb-0"
-            >
-              <div className="space-y-1">
-                <p className="text-xs font-medium">
-                  {new Date(entry.date).toLocaleDateString(undefined, {
-                    weekday: "short",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
+    <Card withBorder>
+      <Box mb="md">
+        <Group gap="xs">
+          <IconCalendar size={16} style={{ color: "var(--mantine-color-dimmed)" }} />
+          <Text fz="sm" fw={500}>
+            Exercise History
+          </Text>
+        </Group>
+      </Box>
+      <Stack gap={0}>
+        {dataPoints.map((entry, index) => (
+          <Flex
+            key={index}
+            align="center"
+            justify="space-between"
+            py="sm"
+            style={{
+              borderTop: index > 0 ? "1px solid var(--mantine-color-default-border)" : undefined,
+            }}
+          >
+            <Stack gap={4}>
+              <Text fz="xs" fw={500}>
+                {new Date(entry.date).toLocaleDateString(undefined, {
+                  weekday: "short",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </Text>
+            </Stack>
 
-              <div className="text-right">
-                <p className="text-sm font-medium">
-                  {entry.topSetWeight} kg x {entry.topSetReps}
-                </p>
-                <p className="text-muted-foreground text-xs">Volume: {entry.totalVolume}</p>
-                {entry.estimated1RM > 0 && (
-                  <p className="text-muted-foreground text-xs">
-                    Est. 1RM: {entry.estimated1RM.toFixed(1)} kg
-                  </p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
+            <Stack gap={4} align="flex-end">
+              <Text fz="sm" fw={500}>
+                {entry.topSetWeight} kg x {entry.topSetReps}
+              </Text>
+              <Text fz="xs" c="dimmed">
+                Volume: {entry.totalVolume}
+              </Text>
+              {entry.estimated1RM > 0 && (
+                <Text fz="xs" c="dimmed">
+                  Est. 1RM: {entry.estimated1RM.toFixed(1)} kg
+                </Text>
+              )}
+            </Stack>
+          </Flex>
+        ))}
+      </Stack>
     </Card>
   );
 }
 
 function ExerciseHistorySkeleton() {
   return (
-    <Card>
-      <CardHeader>
-        <Skeleton className="h-4 w-32" />
-      </CardHeader>
-      <CardContent>
-        <div className="divide-border divide-y">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
-              <div className="space-y-1">
-                <Skeleton className="h-3 w-24" />
-                <Skeleton className="h-3 w-16" />
-              </div>
-              <div className="space-y-1 text-right">
-                <Skeleton className="ml-auto h-4 w-20" />
-                <Skeleton className="ml-auto h-3 w-16" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
+    <Card withBorder>
+      <Box mb="md">
+        <Skeleton h={16} w={128} radius="sm" />
+      </Box>
+      <Stack gap={0}>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <Flex
+            key={i}
+            align="center"
+            justify="space-between"
+            py="sm"
+            style={{
+              borderTop: i > 1 ? "1px solid var(--mantine-color-default-border)" : undefined,
+            }}
+          >
+            <Stack gap={4}>
+              <Skeleton h={12} w={96} radius="sm" />
+              <Skeleton h={12} w={64} radius="sm" />
+            </Stack>
+            <Stack gap={4} align="flex-end">
+              <Skeleton h={16} w={80} radius="sm" />
+              <Skeleton h={12} w={64} radius="sm" />
+            </Stack>
+          </Flex>
+        ))}
+      </Stack>
     </Card>
   );
 }

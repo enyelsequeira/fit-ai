@@ -1,8 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ChevronRight, Home } from "lucide-react";
+import { IconChevronRight, IconHome } from "@tabler/icons-react";
 import { Fragment, useMemo } from "react";
 
-import { cn } from "@/lib/utils";
+import { Anchor, Box, Flex, Text } from "@mantine/core";
 
 interface BreadcrumbItem {
   label: string;
@@ -31,13 +31,11 @@ const routeLabels: Record<string, string> = {
 interface BreadcrumbsProps {
   /** Custom items to override auto-generated breadcrumbs */
   items?: BreadcrumbItem[];
-  /** Additional class names */
-  className?: string;
   /** Whether to show home icon */
   showHome?: boolean;
 }
 
-export default function Breadcrumbs({ items, className, showHome = true }: BreadcrumbsProps) {
+export default function Breadcrumbs({ items, showHome = true }: BreadcrumbsProps) {
   const routerState = useRouterState();
   const pathname = routerState.location.pathname;
 
@@ -88,17 +86,22 @@ export default function Breadcrumbs({ items, className, showHome = true }: Bread
   }
 
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className={cn("flex items-center gap-1 text-sm text-muted-foreground", className)}
-    >
+    <Flex component="nav" aria-label="Breadcrumb" align="center" gap={4} fz="sm" c="dimmed">
       {showHome && (
         <>
-          <Link to="/" className="flex items-center hover:text-foreground transition-colors">
-            <Home className="h-4 w-4" />
-            <span className="sr-only">Home</span>
-          </Link>
-          <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+          <Anchor
+            component={Link}
+            to="/"
+            c="dimmed"
+            underline="never"
+            style={{ display: "flex", alignItems: "center", transition: "color 0.2s" }}
+          >
+            <IconHome size={16} />
+            <Box component="span" visually-hidden>
+              Home
+            </Box>
+          </Anchor>
+          <IconChevronRight size={16} style={{ opacity: 0.5 }} />
         </>
       )}
 
@@ -108,25 +111,42 @@ export default function Breadcrumbs({ items, className, showHome = true }: Bread
         return (
           <Fragment key={crumb.label + index}>
             {crumb.href && !isLast ? (
-              <Link
+              <Anchor
+                component={Link}
                 to={crumb.href}
-                className="hover:text-foreground transition-colors truncate max-w-[150px]"
+                c="dimmed"
+                underline="never"
+                style={{
+                  transition: "color 0.2s",
+                  maxWidth: 150,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
               >
                 {crumb.label}
-              </Link>
+              </Anchor>
             ) : (
-              <span
-                className={cn("truncate max-w-[200px]", isLast && "text-foreground font-medium")}
+              <Text
+                component="span"
+                c={isLast ? undefined : "dimmed"}
+                fw={isLast ? 500 : undefined}
+                style={{
+                  maxWidth: 200,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
               >
                 {crumb.label}
-              </span>
+              </Text>
             )}
 
-            {!isLast && <ChevronRight className="h-4 w-4 text-muted-foreground/50 shrink-0" />}
+            {!isLast && <IconChevronRight size={16} style={{ opacity: 0.5, flexShrink: 0 }} />}
           </Fragment>
         );
       })}
-    </nav>
+    </Flex>
   );
 }
 
@@ -138,13 +158,18 @@ function formatSegment(segment: string): string {
 interface BreadcrumbLinkProps {
   to: string;
   children: React.ReactNode;
-  className?: string;
 }
 
-export function BreadcrumbLink({ to, children, className }: BreadcrumbLinkProps) {
+export function BreadcrumbLink({ to, children }: BreadcrumbLinkProps) {
   return (
-    <Link to={to} className={cn("hover:text-foreground transition-colors", className)}>
+    <Anchor
+      component={Link}
+      to={to}
+      c="dimmed"
+      underline="never"
+      style={{ transition: "color 0.2s" }}
+    >
       {children}
-    </Link>
+    </Anchor>
   );
 }

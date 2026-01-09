@@ -1,15 +1,9 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Dumbbell, Plus, Sparkles } from "lucide-react";
+import { IconBarbell, IconPlus, IconSparkles } from "@tabler/icons-react";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Box, Button, Container, Flex, Menu, Stack, Tabs, Text, Title } from "@mantine/core";
+
 import { WorkoutList } from "@/components/workout/workout-list";
 
 export const Route = createFileRoute("/workouts/")({
@@ -17,67 +11,71 @@ export const Route = createFileRoute("/workouts/")({
 });
 
 function WorkoutsIndexRoute() {
-  const [activeTab, setActiveTab] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState<string | null>("all");
 
   return (
-    <div className="container mx-auto py-6 px-4">
+    <Container py="lg" px="md">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-semibold">Workouts</h1>
-          <p className="text-sm text-muted-foreground">Track and manage your workout sessions</p>
-        </div>
+      <Flex align="center" justify="space-between" mb="lg">
+        <Box>
+          <Title order={1} fz="xl" fw={600}>
+            Workouts
+          </Title>
+          <Text fz="sm" c="dimmed">
+            Track and manage your workout sessions
+          </Text>
+        </Box>
 
-        <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button>
-                <Plus className="size-4 mr-1" />
+        <Flex align="center" gap="sm">
+          <Menu position="bottom-end" withinPortal>
+            <Menu.Target>
+              <Button leftSection={<IconPlus style={{ width: 16, height: 16 }} />}>
                 New Workout
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Link to="/workouts/new" className="flex items-center w-full">
-                  <Dumbbell className="size-4 mr-2" />
-                  Empty Workout
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link
-                  to="/workouts/new"
-                  search={{ from: "template" }}
-                  className="flex items-center w-full"
-                >
-                  <Sparkles className="size-4 mr-2" />
-                  From Template
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                component={Link}
+                to="/workouts/new"
+                leftSection={<IconBarbell style={{ width: 16, height: 16 }} />}
+              >
+                Empty Workout
+              </Menu.Item>
+              <Menu.Item
+                component={Link}
+                to="/workouts/new"
+                search={{ from: "template" }}
+                leftSection={<IconSparkles style={{ width: 16, height: 16 }} />}
+              >
+                From Template
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Flex>
+      </Flex>
 
       {/* Tabs */}
-      <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="in-progress">In Progress</TabsTrigger>
-          <TabsTrigger value="completed">Completed</TabsTrigger>
-        </TabsList>
+      <Tabs value={activeTab} onChange={setActiveTab}>
+        <Tabs.List>
+          <Tabs.Tab value="all">All</Tabs.Tab>
+          <Tabs.Tab value="in-progress">In Progress</Tabs.Tab>
+          <Tabs.Tab value="completed">Completed</Tabs.Tab>
+        </Tabs.List>
 
-        <TabsContent value="all">
-          <WorkoutList status="all" />
-        </TabsContent>
+        <Stack mt="md">
+          <Tabs.Panel value="all">
+            <WorkoutList status="all" />
+          </Tabs.Panel>
 
-        <TabsContent value="in-progress">
-          <WorkoutList status="in-progress" />
-        </TabsContent>
+          <Tabs.Panel value="in-progress">
+            <WorkoutList status="in-progress" />
+          </Tabs.Panel>
 
-        <TabsContent value="completed">
-          <WorkoutList status="completed" />
-        </TabsContent>
+          <Tabs.Panel value="completed">
+            <WorkoutList status="completed" />
+          </Tabs.Panel>
+        </Stack>
       </Tabs>
-    </div>
+    </Container>
   );
 }

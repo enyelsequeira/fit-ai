@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { AlertTriangle, ArrowLeft, Clock, Dumbbell, Trophy } from "lucide-react";
+import {
+  IconAlertTriangle,
+  IconArrowLeft,
+  IconClock,
+  IconBarbell,
+  IconTrophy,
+} from "@tabler/icons-react";
 import { toast } from "sonner";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -58,7 +64,7 @@ function CompleteWorkoutRoute() {
     return (
       <div className="container mx-auto py-6 px-4 max-w-xl">
         <EmptyState
-          icon={AlertTriangle}
+          icon={IconAlertTriangle}
           title="Failed to load workout"
           description={workout.error.message}
           action={
@@ -76,7 +82,7 @@ function CompleteWorkoutRoute() {
     return (
       <div className="container mx-auto py-6 px-4 max-w-xl">
         <EmptyState
-          icon={AlertTriangle}
+          icon={IconAlertTriangle}
           title="Workout not found"
           action={
             <Link to="/workouts" className={cn(buttonVariants({ variant: "default" }))}>
@@ -93,7 +99,7 @@ function CompleteWorkoutRoute() {
     return (
       <div className="container mx-auto py-6 px-4 max-w-xl">
         <EmptyState
-          icon={Trophy}
+          icon={IconTrophy}
           title="Workout already completed"
           description="This workout has already been marked as complete"
           action={
@@ -133,7 +139,7 @@ function CompleteWorkoutRoute() {
           params={{ workoutId }}
           className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }))}
         >
-          <ArrowLeft className="size-4" />
+          <IconArrowLeft className="size-4" />
         </Link>
         <div>
           <h1 className="text-xl font-semibold">Complete Workout</h1>
@@ -151,10 +157,10 @@ function CompleteWorkoutRoute() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
-            <StatItem icon={Clock} label="Duration" value={formatDuration(duration)} />
-            <StatItem icon={Dumbbell} label="Exercises" value={exercises.length.toString()} />
+            <StatItem icon={IconClock} label="Duration" value={formatDuration(duration)} />
+            <StatItem icon={IconBarbell} label="Exercises" value={exercises.length.toString()} />
             <StatItem label="Sets Completed" value={`${completedSets}/${totalSets}`} />
-            <StatItem icon={Trophy} label="Total Volume" value={formatVolume(totalVolume)} />
+            <StatItem icon={IconTrophy} label="Total Volume" value={formatVolume(totalVolume)} />
           </div>
 
           {/* PRs would go here */}

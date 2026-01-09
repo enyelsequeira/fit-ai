@@ -1,17 +1,14 @@
-import { Calendar, Clock, Dumbbell, MoreVertical, Play, Trash2 } from "lucide-react";
+import {
+  IconBarbell,
+  IconCalendar,
+  IconClock,
+  IconDotsVertical,
+  IconPlayerPlay,
+  IconTrash,
+} from "@tabler/icons-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+import { ActionIcon, Badge, Box, Button, Card, Flex, Group, Menu, Text } from "@mantine/core";
 
 interface WorkoutCardProps {
   id: number;
@@ -74,7 +71,6 @@ function WorkoutCard({
   rating,
   onDelete,
   onContinue,
-  className,
 }: WorkoutCardProps) {
   const navigate = useNavigate();
   const isInProgress = !completedAt;
@@ -85,92 +81,116 @@ function WorkoutCard({
   };
 
   return (
-    <Card className={cn("relative group", className)}>
-      <CardHeader className="flex flex-row items-start justify-between gap-2 pb-2">
-        <div className="min-w-0 flex-1">
-          <Link to={workoutUrl} className="hover:underline">
-            <h3 className="font-medium text-sm truncate">{name || `Workout #${id}`}</h3>
+    <Card withBorder padding="md" style={{ position: "relative" }}>
+      <Flex justify="space-between" align="flex-start" gap="xs" pb="xs">
+        <Box style={{ minWidth: 0, flex: 1 }}>
+          <Link to={workoutUrl} style={{ textDecoration: "none" }}>
+            <Text fw={500} fz="sm" truncate style={{ cursor: "pointer" }} c="inherit">
+              {name || `Workout #${id}`}
+            </Text>
           </Link>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
-            <Calendar className="size-3" />
-            <span>{formatDate(startedAt)}</span>
-          </div>
-        </div>
+          <Group gap={8} mt={2}>
+            <IconCalendar style={{ width: 12, height: 12, color: "var(--mantine-color-dimmed)" }} />
+            <Text fz="xs" c="dimmed">
+              {formatDate(startedAt)}
+            </Text>
+          </Group>
+        </Box>
 
-        <div className="flex items-center gap-1">
-          <Badge variant={isInProgress ? "warning" : "success"}>
+        <Group gap={4}>
+          <Badge color={isInProgress ? "yellow" : "green"} variant="light">
             {isInProgress ? "In Progress" : "Completed"}
           </Badge>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                className="opacity-0 group-hover:opacity-100 transition-opacity"
+          <Menu position="bottom-end" withinPortal>
+            <Menu.Target>
+              <ActionIcon
+                variant="subtle"
+                size="sm"
+                style={{ opacity: 0, transition: "opacity 150ms" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = "1";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = "0";
+                }}
               >
-                <MoreVertical className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleNavigate}>View Details</DropdownMenuItem>
+                <IconDotsVertical style={{ width: 16, height: 16 }} />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item onClick={handleNavigate}>View Details</Menu.Item>
               {isInProgress && onContinue && (
-                <DropdownMenuItem onClick={onContinue}>
-                  <Play className="size-4 mr-2" />
+                <Menu.Item
+                  onClick={onContinue}
+                  leftSection={<IconPlayerPlay style={{ width: 16, height: 16 }} />}
+                >
                   Continue Workout
-                </DropdownMenuItem>
+                </Menu.Item>
               )}
               {onDelete && (
                 <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
+                  <Menu.Divider />
+                  <Menu.Item
                     onClick={onDelete}
-                    className="text-destructive focus:text-destructive"
+                    color="red"
+                    leftSection={<IconTrash style={{ width: 16, height: 16 }} />}
                   >
-                    <Trash2 className="size-4 mr-2" />
                     Delete
-                  </DropdownMenuItem>
+                  </Menu.Item>
                 </>
               )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </CardHeader>
+            </Menu.Dropdown>
+          </Menu>
+        </Group>
+      </Flex>
 
-      <CardContent className="pt-0">
-        <div className="flex items-center gap-4 text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Dumbbell className="size-3" />
-            <span>{exerciseCount} exercises</span>
-          </div>
+      <Group gap="md" pt={0}>
+        <Group gap={4}>
+          <IconBarbell style={{ width: 12, height: 12, color: "var(--mantine-color-dimmed)" }} />
+          <Text fz="xs" c="dimmed">
+            {exerciseCount} exercises
+          </Text>
+        </Group>
 
-          {duration && (
-            <div className="flex items-center gap-1">
-              <Clock className="size-3" />
-              <span>{formatDuration(duration)}</span>
-            </div>
-          )}
-
-          {totalVolume > 0 && (
-            <div className="flex items-center gap-1">
-              <span>{formatVolume(totalVolume)}</span>
-            </div>
-          )}
-
-          {rating && (
-            <div className="flex items-center gap-1">
-              <span>{"★".repeat(rating)}</span>
-            </div>
-          )}
-        </div>
-
-        {isInProgress && (
-          <Button variant="default" size="sm" className="w-full mt-3" onClick={handleNavigate}>
-            <Play className="size-4 mr-1" />
-            Continue Workout
-          </Button>
+        {duration && (
+          <Group gap={4}>
+            <IconClock style={{ width: 12, height: 12, color: "var(--mantine-color-dimmed)" }} />
+            <Text fz="xs" c="dimmed">
+              {formatDuration(duration)}
+            </Text>
+          </Group>
         )}
-      </CardContent>
+
+        {totalVolume > 0 && (
+          <Group gap={4}>
+            <Text fz="xs" c="dimmed">
+              {formatVolume(totalVolume)}
+            </Text>
+          </Group>
+        )}
+
+        {rating && (
+          <Group gap={4}>
+            <Text fz="xs" c="dimmed">
+              {"★".repeat(rating)}
+            </Text>
+          </Group>
+        )}
+      </Group>
+
+      {isInProgress && (
+        <Button
+          variant="filled"
+          size="sm"
+          fullWidth
+          mt="sm"
+          onClick={handleNavigate}
+          leftSection={<IconPlayerPlay style={{ width: 16, height: 16 }} />}
+        >
+          Continue Workout
+        </Button>
+      )}
     </Card>
   );
 }

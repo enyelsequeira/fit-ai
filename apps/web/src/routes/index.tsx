@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import { CTASection, Features, Footer, Hero, HowItWorks, Stats } from "@/components/landing";
+import { LandingPageA } from "@/landing-page/version-a/Page";
 import { getUser } from "@/functions/get-user";
 
 export const Route = createFileRoute("/")({
@@ -17,14 +17,5 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
-  return (
-    <div className="min-h-screen">
-      <Hero />
-      <Features />
-      <HowItWorks />
-      <Stats />
-      <CTASection />
-      <Footer />
-    </div>
-  );
+  return <LandingPageA />;
 }

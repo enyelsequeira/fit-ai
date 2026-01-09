@@ -1,4 +1,4 @@
-import { ArrowDownIcon, ArrowUpIcon, MinusIcon } from "lucide-react";
+import { IconArrowDown, IconArrowUp, IconMinus } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,7 @@ export function MeasurementCard({
 }: MeasurementCardProps) {
   if (value === null) return null;
 
-  const ChangeIcon = lastChange === null ? MinusIcon : lastChange > 0 ? ArrowUpIcon : ArrowDownIcon;
+  const ChangeIcon = lastChange === null ? IconMinus : lastChange > 0 ? IconArrowUp : IconArrowDown;
 
   return (
     <div className="flex flex-col gap-1 rounded-none border border-border/50 p-3">

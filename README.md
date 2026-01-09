@@ -9,6 +9,7 @@ A full-featured fitness tracking application with workout logging, exercise libr
 ## Features
 
 ### Exercise Library
+
 - **873+ Exercises** from [Free Exercise DB](https://github.com/yuhonas/free-exercise-db) with images
 - Categorized by muscle group (chest, back, shoulders, arms, legs, core)
 - Detailed instructions, difficulty levels, and equipment requirements
@@ -16,6 +17,7 @@ A full-featured fitness tracking application with workout logging, exercise libr
 - Paginated browsing with search and filters
 
 ### Workout Tracking
+
 - Log workouts with multiple exercises and sets
 - Set types: normal, warmup, dropset, failure, rest-pause
 - RPE (Rate of Perceived Exertion) and RIR (Reps in Reserve) tracking
@@ -24,12 +26,14 @@ A full-featured fitness tracking application with workout logging, exercise libr
 - Rest timer
 
 ### Goals System
+
 - 5 goal types: weight, strength, body measurement, workout frequency, custom
 - Progress tracking with history
 - Visual progress indicators
 - Goal status management (active, paused, completed, abandoned)
 
 ### Progress Tracking
+
 - Body measurements tracking
 - Progress photos with before/after comparison
 - Personal records (PRs) detection and history
@@ -37,26 +41,28 @@ A full-featured fitness tracking application with workout logging, exercise libr
 - Volume and strength charts
 
 ### Recovery System
+
 - Daily recovery check-ins (sleep, stress, soreness, energy)
 - Recovery score calculation
 - Trend analysis
 - Muscle recovery mapping
 
 ### AI Features
+
 - AI-powered workout generator
 - Training recommendations based on history
 - Workout analysis and suggestions
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| **Frontend** | React 19, TanStack Start/Router/Query, TailwindCSS 4 |
-| **Backend** | Hono, oRPC (type-safe RPC) |
-| **Database** | Drizzle ORM, Cloudflare D1 (SQLite) |
-| **Auth** | better-auth with cookie sessions |
-| **Infrastructure** | Cloudflare Workers, pnpm workspaces, Turborepo |
-| **Testing** | Vitest (712 tests) |
+| Layer              | Technology                                           |
+| ------------------ | ---------------------------------------------------- |
+| **Frontend**       | React 19, TanStack Start/Router/Query, TailwindCSS 4 |
+| **Backend**        | Hono, oRPC (type-safe RPC)                           |
+| **Database**       | Drizzle ORM, Cloudflare D1 (SQLite)                  |
+| **Auth**           | better-auth with cookie sessions                     |
+| **Infrastructure** | Cloudflare Workers, pnpm workspaces, Turborepo       |
+| **Testing**        | Vitest (712 tests)                                   |
 
 ## Project Structure
 
@@ -131,16 +137,16 @@ pnpm check
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start all apps in development mode |
-| `pnpm build` | Build all applications |
-| `pnpm test` | Run test suite |
-| `pnpm check-types` | TypeScript type checking |
-| `pnpm check` | Run Oxlint + Oxfmt |
-| `pnpm db:push` | Push schema to database |
-| `pnpm db:generate` | Generate migrations |
-| `pnpm deploy` | Deploy to Cloudflare |
+| Command            | Description                        |
+| ------------------ | ---------------------------------- |
+| `pnpm dev`         | Start all apps in development mode |
+| `pnpm build`       | Build all applications             |
+| `pnpm test`        | Run test suite                     |
+| `pnpm check-types` | TypeScript type checking           |
+| `pnpm check`       | Run Oxlint + Oxfmt                 |
+| `pnpm db:push`     | Push schema to database            |
+| `pnpm db:generate` | Generate migrations                |
+| `pnpm deploy`      | Deploy to Cloudflare               |
 
 ## Deployment
 
@@ -170,7 +176,7 @@ The API uses oRPC for type-safe endpoints. Key routers:
 
 ## Screenshots
 
-*Coming soon*
+_Coming soon_
 
 ## Contributing
 

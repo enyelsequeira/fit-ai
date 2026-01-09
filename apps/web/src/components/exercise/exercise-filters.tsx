@@ -1,20 +1,9 @@
 import type { ExerciseCategory } from "./category-badge";
 import type { EquipmentType } from "./equipment-icon";
 
-import { Filter, Grid, List, X } from "lucide-react";
+import { ActionIcon, Badge, Button, Checkbox, Group, Menu, Text } from "@mantine/core";
+import { IconFilter, IconLayoutGrid, IconList, IconX } from "@tabler/icons-react";
 import { useState } from "react";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 
 import { categoryConfig } from "./category-badge";
 import { equipmentConfig } from "./equipment-icon";
@@ -50,7 +39,6 @@ interface ExerciseFiltersProps {
   onFiltersChange: (filters: ExerciseFilters) => void;
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
-  className?: string;
 }
 
 export function ExerciseFiltersBar({
@@ -58,7 +46,6 @@ export function ExerciseFiltersBar({
   onFiltersChange,
   viewMode,
   onViewModeChange,
-  className,
 }: ExerciseFiltersProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -79,122 +66,163 @@ export function ExerciseFiltersBar({
   };
 
   return (
-    <div className={cn("flex flex-wrap items-center gap-2", className)}>
-      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuTrigger className="focus-visible:border-ring focus-visible:ring-ring/50 border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground inline-flex h-7 items-center justify-center gap-1 rounded-none border px-2.5 text-xs font-medium transition-all focus-visible:ring-1 outline-none">
-          <Filter className="mr-1.5 size-3.5" />
-          Filters
-          {activeFiltersCount > 0 && (
-            <Badge variant="secondary" className="ml-1.5 px-1.5 py-0 text-[10px]">
-              {activeFiltersCount}
-            </Badge>
-          )}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-56">
-          <DropdownMenuLabel>Category</DropdownMenuLabel>
+    <Group gap="xs" wrap="wrap">
+      <Menu opened={isOpen} onChange={setIsOpen} position="bottom-start" withinPortal>
+        <Menu.Target>
+          <Button
+            variant="default"
+            size="xs"
+            leftSection={<IconFilter size={14} />}
+            rightSection={
+              activeFiltersCount > 0 ? (
+                <Badge size="xs" variant="filled" circle>
+                  {activeFiltersCount}
+                </Badge>
+              ) : null
+            }
+          >
+            Filters
+          </Button>
+        </Menu.Target>
+        <Menu.Dropdown miw={220}>
+          <Menu.Label>Category</Menu.Label>
           {categories.map(({ value, label }) => (
-            <DropdownMenuCheckboxItem
+            <Menu.Item
               key={value}
-              checked={filters.category === value}
-              onCheckedChange={(checked) =>
+              leftSection={
+                <Checkbox
+                  checked={filters.category === value}
+                  onChange={() => {}}
+                  size="xs"
+                  styles={{ input: { cursor: "pointer" } }}
+                />
+              }
+              onClick={() =>
                 onFiltersChange({
                   ...filters,
-                  category: checked ? value : null,
+                  category: filters.category === value ? null : value,
                 })
               }
             >
               {label}
-            </DropdownMenuCheckboxItem>
+            </Menu.Item>
           ))}
 
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel>Exercise Type</DropdownMenuLabel>
+          <Menu.Divider />
+          <Menu.Label>Exercise Type</Menu.Label>
           {exerciseTypes.map(({ value, label }) => (
-            <DropdownMenuCheckboxItem
+            <Menu.Item
               key={value}
-              checked={filters.exerciseType === value}
-              onCheckedChange={(checked) =>
+              leftSection={
+                <Checkbox
+                  checked={filters.exerciseType === value}
+                  onChange={() => {}}
+                  size="xs"
+                  styles={{ input: { cursor: "pointer" } }}
+                />
+              }
+              onClick={() =>
                 onFiltersChange({
                   ...filters,
-                  exerciseType: checked ? value : null,
+                  exerciseType: filters.exerciseType === value ? null : value,
                 })
               }
             >
               {label}
-            </DropdownMenuCheckboxItem>
+            </Menu.Item>
           ))}
 
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel>Equipment</DropdownMenuLabel>
+          <Menu.Divider />
+          <Menu.Label>Equipment</Menu.Label>
           {equipmentTypes.map(({ value, label }) => (
-            <DropdownMenuCheckboxItem
+            <Menu.Item
               key={value}
-              checked={filters.equipment === value}
-              onCheckedChange={(checked) =>
+              leftSection={
+                <Checkbox
+                  checked={filters.equipment === value}
+                  onChange={() => {}}
+                  size="xs"
+                  styles={{ input: { cursor: "pointer" } }}
+                />
+              }
+              onClick={() =>
                 onFiltersChange({
                   ...filters,
-                  equipment: checked ? value : null,
+                  equipment: filters.equipment === value ? null : value,
                 })
               }
             >
               {label}
-            </DropdownMenuCheckboxItem>
+            </Menu.Item>
           ))}
 
-          <DropdownMenuSeparator />
-          <DropdownMenuCheckboxItem
-            checked={filters.customOnly}
-            onCheckedChange={(checked) =>
+          <Menu.Divider />
+          <Menu.Item
+            leftSection={
+              <Checkbox
+                checked={filters.customOnly}
+                onChange={() => {}}
+                size="xs"
+                styles={{ input: { cursor: "pointer" } }}
+              />
+            }
+            onClick={() =>
               onFiltersChange({
                 ...filters,
-                customOnly: Boolean(checked),
+                customOnly: !filters.customOnly,
               })
             }
           >
             My Exercises Only
-          </DropdownMenuCheckboxItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
 
       {activeFiltersCount > 0 && (
-        <Button variant="ghost" size="sm" onClick={clearFilters} className="text-muted-foreground">
+        <Button
+          variant="subtle"
+          size="xs"
+          color="gray"
+          rightSection={<IconX size={12} />}
+          onClick={clearFilters}
+        >
           Clear filters
-          <X className="ml-1 size-3" />
         </Button>
       )}
 
-      <div className="ml-auto flex items-center gap-1">
-        <Button
-          variant={viewMode === "grid" ? "secondary" : "ghost"}
-          size="icon-sm"
+      <Group gap={4} ml="auto">
+        <ActionIcon
+          variant={viewMode === "grid" ? "filled" : "subtle"}
+          size="sm"
           onClick={() => onViewModeChange("grid")}
+          aria-label="Grid view"
         >
-          <Grid className="size-4" />
-        </Button>
-        <Button
-          variant={viewMode === "list" ? "secondary" : "ghost"}
-          size="icon-sm"
+          <IconLayoutGrid size={16} />
+        </ActionIcon>
+        <ActionIcon
+          variant={viewMode === "list" ? "filled" : "subtle"}
+          size="sm"
           onClick={() => onViewModeChange("list")}
+          aria-label="List view"
         >
-          <List className="size-4" />
-        </Button>
-      </div>
-    </div>
+          <IconList size={16} />
+        </ActionIcon>
+      </Group>
+    </Group>
   );
 }
 
 interface CategoryTabsProps {
   selectedCategory: ExerciseCategory | null;
   onCategoryChange: (category: ExerciseCategory | null) => void;
-  className?: string;
 }
 
-export function CategoryTabs({ selectedCategory, onCategoryChange, className }: CategoryTabsProps) {
+export function CategoryTabs({ selectedCategory, onCategoryChange }: CategoryTabsProps) {
   return (
-    <div className={cn("flex flex-wrap gap-1", className)}>
+    <Group gap="xs" wrap="wrap">
       <Button
-        variant={selectedCategory === null ? "secondary" : "ghost"}
-        size="sm"
+        variant={selectedCategory === null ? "filled" : "subtle"}
+        size="xs"
         onClick={() => onCategoryChange(null)}
       >
         All
@@ -204,16 +232,20 @@ export function CategoryTabs({ selectedCategory, onCategoryChange, className }: 
         return (
           <Button
             key={value}
-            variant={selectedCategory === value ? "secondary" : "ghost"}
-            size="sm"
+            variant={selectedCategory === value ? "filled" : "subtle"}
+            size="xs"
             onClick={() => onCategoryChange(value)}
-            className="gap-1.5"
+            leftSection={
+              <config.icon
+                size={14}
+                style={{ color: selectedCategory === value ? undefined : config.color }}
+              />
+            }
           >
-            <config.icon className={cn("size-3.5", config.color)} />
             {label}
           </Button>
         );
       })}
-    </div>
+    </Group>
   );
 }

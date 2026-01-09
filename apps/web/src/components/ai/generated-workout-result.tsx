@@ -1,12 +1,12 @@
 import { useState } from "react";
 import {
-  ClockIcon,
-  DumbbellIcon,
-  PlayIcon,
-  RefreshCwIcon,
-  SaveIcon,
-  RepeatIcon,
-} from "lucide-react";
+  IconClock,
+  IconBarbell,
+  IconPlayerPlay,
+  IconRefresh,
+  IconDeviceFloppy,
+  IconRepeat,
+} from "@tabler/icons-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -69,11 +69,11 @@ function GeneratedWorkoutResult({
             <CardTitle>{workout.name}</CardTitle>
             <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1.5">
-                <ClockIcon className="size-4" />
+                <IconClock className="size-4" />
                 <span>{workout.estimatedDuration} min</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <DumbbellIcon className="size-4" />
+                <IconBarbell className="size-4" />
                 <span>{workout.exercises.length} exercises</span>
               </div>
             </div>
@@ -86,7 +86,7 @@ function GeneratedWorkoutResult({
               disabled={isRegenerating}
               className="shrink-0 gap-1.5"
             >
-              <RefreshCwIcon className={cn("size-3.5", isRegenerating && "animate-spin")} />
+              <IconRefresh className={cn("size-3.5", isRegenerating && "animate-spin")} />
               Regenerate
             </Button>
           )}
@@ -146,7 +146,7 @@ function GeneratedWorkoutResult({
                     onClick={() => onSwapExercise(exercise.exerciseId)}
                     title="Swap exercise"
                   >
-                    <RepeatIcon className="size-3.5" />
+                    <IconRepeat className="size-3.5" />
                   </Button>
                 )}
               </div>
@@ -179,13 +179,13 @@ function GeneratedWorkoutResult({
       <CardFooter className="flex gap-2">
         {onSaveAsTemplate && (
           <Button variant="outline" onClick={onSaveAsTemplate} className="gap-1.5">
-            <SaveIcon className="size-3.5" />
+            <IconDeviceFloppy className="size-3.5" />
             Save as Template
           </Button>
         )}
         {onStart && (
           <Button onClick={onStart} className="flex-1 gap-1.5">
-            <PlayIcon className="size-3.5" />
+            <IconPlayerPlay className="size-3.5" />
             Start This Workout
           </Button>
         )}

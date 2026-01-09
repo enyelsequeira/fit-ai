@@ -1,12 +1,6 @@
 import type { Exercise } from "./exercise-search";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Box, Modal, Text } from "@mantine/core";
 
 import { ExerciseSearch } from "./exercise-search";
 
@@ -29,23 +23,30 @@ function AddExerciseModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[90vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Add Exercise</DialogTitle>
-          <DialogDescription>
-            Search and select an exercise to add to your workout
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex-1 overflow-hidden">
-          <ExerciseSearch
-            onSelect={handleSelect}
-            selectedExerciseIds={selectedExerciseIds}
-            className="h-full"
-          />
-        </div>
-      </DialogContent>
-    </Dialog>
+    <Modal
+      opened={open}
+      onClose={() => onOpenChange(false)}
+      title="Add Exercise"
+      size="lg"
+      styles={{
+        content: {
+          maxHeight: "90vh",
+          display: "flex",
+          flexDirection: "column",
+        },
+        body: {
+          flex: 1,
+          overflow: "hidden",
+        },
+      }}
+    >
+      <Text fz="sm" c="dimmed" mb="md">
+        Search and select an exercise to add to your workout
+      </Text>
+      <Box style={{ flex: 1, overflow: "hidden" }}>
+        <ExerciseSearch onSelect={handleSelect} selectedExerciseIds={selectedExerciseIds} />
+      </Box>
+    </Modal>
   );
 }
 

@@ -1,4 +1,4 @@
-import { ActivityIcon } from "lucide-react";
+import { IconActivity } from "@tabler/icons-react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 import { EmptyState } from "@/components/ui/empty-state";
@@ -36,7 +36,7 @@ export function MuscleVolumeChart({ data, size = 200 }: MuscleVolumeChartProps) 
   if (chartData.length === 0) {
     return (
       <EmptyState
-        icon={ActivityIcon}
+        icon={IconActivity}
         title="No muscle data"
         description="Complete workouts to see muscle breakdown"
       />

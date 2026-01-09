@@ -276,7 +276,9 @@ export type CreateCustomGoalRouteHandler = Parameters<
 >[0];
 export type GetGoalByIdRouteHandler = Parameters<typeof getGoalByIdRouteContract.handler>[0];
 export type ListGoalsRouteHandler = Parameters<typeof listGoalsRouteContract.handler>[0];
-export type GetGoalsSummaryRouteHandler = Parameters<typeof getGoalsSummaryRouteContract.handler>[0];
+export type GetGoalsSummaryRouteHandler = Parameters<
+  typeof getGoalsSummaryRouteContract.handler
+>[0];
 export type UpdateGoalRouteHandler = Parameters<typeof updateGoalRouteContract.handler>[0];
 export type UpdateGoalProgressRouteHandler = Parameters<
   typeof updateGoalProgressRouteContract.handler

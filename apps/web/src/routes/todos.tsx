@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Loader2, Trash2 } from "lucide-react";
+import { IconLoader2, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -71,13 +71,13 @@ function TodosRoute() {
               disabled={createMutation.isPending}
             />
             <Button type="submit" disabled={createMutation.isPending || !newTodoText.trim()}>
-              {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Add"}
+              {createMutation.isPending ? <IconLoader2 className="h-4 w-4 animate-spin" /> : "Add"}
             </Button>
           </form>
 
           {todos.isLoading ? (
             <div className="flex justify-center py-4">
-              <Loader2 className="h-6 w-6 animate-spin" />
+              <IconLoader2 className="h-6 w-6 animate-spin" />
             </div>
           ) : todos.data?.length === 0 ? (
             <p className="py-4 text-center">No todos yet. Add one above!</p>
@@ -107,7 +107,7 @@ function TodosRoute() {
                     onClick={() => handleDeleteTodo(todo.id)}
                     aria-label="Delete todo"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <IconTrash className="h-4 w-4" />
                   </Button>
                 </li>
               ))}

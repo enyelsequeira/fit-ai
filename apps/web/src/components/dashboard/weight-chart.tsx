@@ -1,8 +1,9 @@
-import { Scale, TrendingDown, TrendingUp } from "lucide-react";
+import { IconScale, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+
+import { Box, Flex, Group, Text } from "@mantine/core";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 
 interface DataPoint {
   date: Date;
@@ -32,16 +33,18 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Scale className="h-5 w-5" />
-            Weight Trend
+          <CardTitle>
+            <Group gap="xs">
+              <IconScale size={20} />
+              Weight Trend
+            </Group>
           </CardTitle>
           <CardDescription>Body weight over time</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex h-48 items-center justify-center">
-            <Skeleton className="h-40 w-full" />
-          </div>
+          <Flex h={192} align="center" justify="center">
+            <Skeleton h={160} w="100%" />
+          </Flex>
         </CardContent>
       </Card>
     );
@@ -51,18 +54,20 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Scale className="h-5 w-5" />
-            Weight Trend
+          <CardTitle>
+            <Group gap="xs">
+              <IconScale size={20} />
+              Weight Trend
+            </Group>
           </CardTitle>
           <CardDescription>Body weight over time</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex h-48 items-center justify-center">
-            <p className="text-muted-foreground text-sm">
+          <Flex h={192} align="center" justify="center">
+            <Text size="sm" c="dimmed">
               Log body measurements to see weight trends
-            </p>
-          </div>
+            </Text>
+          </Flex>
         </CardContent>
       </Card>
     );
@@ -101,24 +106,34 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Scale className="h-5 w-5" />
-          Weight Trend
+        <CardTitle>
+          <Group gap="xs">
+            <IconScale size={20} />
+            Weight Trend
+          </Group>
         </CardTitle>
         <CardDescription>Body weight over time</CardDescription>
       </CardHeader>
       <CardContent>
         {/* SVG Chart */}
-        <div className="relative h-48">
+        <Box pos="relative" h={192}>
           <svg
             viewBox={`0 0 ${chartWidth} ${chartHeight}`}
-            className="h-full w-full"
+            style={{ width: "100%", height: "100%" }}
             preserveAspectRatio="none"
           >
             <defs>
               <linearGradient id="weightGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                <stop
+                  offset="0%"
+                  stopColor="var(--mantine-primary-color-filled)"
+                  stopOpacity="0.3"
+                />
+                <stop
+                  offset="100%"
+                  stopColor="var(--mantine-primary-color-filled)"
+                  stopOpacity="0"
+                />
               </linearGradient>
             </defs>
             {/* Area fill */}
@@ -127,7 +142,7 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
             <path
               d={pathData}
               fill="none"
-              stroke="hsl(var(--primary))"
+              stroke="var(--mantine-primary-color-filled)"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -139,54 +154,79 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
                 cx={point.x}
                 cy={point.y}
                 r="3"
-                fill="hsl(var(--background))"
-                stroke="hsl(var(--primary))"
+                fill="var(--mantine-color-body)"
+                stroke="var(--mantine-primary-color-filled)"
                 strokeWidth="2"
               />
             ))}
           </svg>
           {/* Y-axis labels */}
-          <div className="text-muted-foreground absolute left-0 top-0 flex h-full flex-col justify-between text-xs">
-            <span>{(maxWeight + padding).toFixed(1)}</span>
-            <span>{(minWeight - padding).toFixed(1)}</span>
-          </div>
-        </div>
+          <Flex pos="absolute" left={0} top={0} h="100%" direction="column" justify="space-between">
+            <Text size="xs" c="dimmed">
+              {(maxWeight + padding).toFixed(1)}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {(minWeight - padding).toFixed(1)}
+            </Text>
+          </Flex>
+        </Box>
 
         {/* X-axis labels */}
         {validPoints.length > 1 && (
-          <div className="text-muted-foreground mt-2 flex justify-between text-xs">
-            <span>{formatDate(validPoints[0]!.date)}</span>
-            <span>{formatDate(validPoints[validPoints.length - 1]!.date)}</span>
-          </div>
+          <Flex justify="space-between" mt="xs">
+            <Text size="xs" c="dimmed">
+              {formatDate(validPoints[0]!.date)}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {formatDate(validPoints[validPoints.length - 1]!.date)}
+            </Text>
+          </Flex>
         )}
 
         {/* Stats summary */}
-        <div className="mt-4 flex justify-between border-t pt-4 text-sm">
-          <div>
-            <p className="text-muted-foreground">Current</p>
-            <p className="font-medium">{latestWeight?.toFixed(1)} kg</p>
-          </div>
+        <Flex
+          justify="space-between"
+          mt="md"
+          pt="md"
+          style={{ borderTop: "1px solid var(--mantine-color-default-border)" }}
+        >
+          <Box>
+            <Text size="sm" c="dimmed">
+              Current
+            </Text>
+            <Text fw={500}>{latestWeight?.toFixed(1)} kg</Text>
+          </Box>
           {weightChange !== null && (
-            <div className="text-right">
-              <p className="text-muted-foreground">Change</p>
-              <p
-                className={cn(
-                  "flex items-center gap-1 font-medium",
-                  weightChange > 0 && "text-orange-500",
-                  weightChange < 0 && "text-green-500",
-                )}
+            <Box ta="right">
+              <Text size="sm" c="dimmed">
+                Change
+              </Text>
+              <Flex
+                align="center"
+                gap={4}
+                justify="flex-end"
+                style={{
+                  color:
+                    weightChange > 0
+                      ? "rgb(249, 115, 22)"
+                      : weightChange < 0
+                        ? "rgb(34, 197, 94)"
+                        : undefined,
+                }}
               >
                 {weightChange > 0 ? (
-                  <TrendingUp className="h-4 w-4" />
+                  <IconTrendingUp size={16} />
                 ) : weightChange < 0 ? (
-                  <TrendingDown className="h-4 w-4" />
+                  <IconTrendingDown size={16} />
                 ) : null}
-                {weightChange > 0 ? "+" : ""}
-                {weightChange.toFixed(1)} kg
-              </p>
-            </div>
+                <Text fw={500} inherit>
+                  {weightChange > 0 ? "+" : ""}
+                  {weightChange.toFixed(1)} kg
+                </Text>
+              </Flex>
+            </Box>
           )}
-        </div>
+        </Flex>
       </CardContent>
     </Card>
   );

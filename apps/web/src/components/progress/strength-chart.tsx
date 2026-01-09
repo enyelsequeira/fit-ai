@@ -1,4 +1,4 @@
-import { TrendingUpIcon } from "lucide-react";
+import { IconTrendingUp } from "@tabler/icons-react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { EmptyState } from "@/components/ui/empty-state";
@@ -18,7 +18,7 @@ export function StrengthChart({ data, height = 256 }: StrengthChartProps) {
   if (data.length === 0) {
     return (
       <EmptyState
-        icon={TrendingUpIcon}
+        icon={IconTrendingUp}
         title="No strength data"
         description="Complete more workouts to track progression"
       />

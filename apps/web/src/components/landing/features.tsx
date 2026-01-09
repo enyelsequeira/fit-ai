@@ -1,103 +1,138 @@
-import type { LucideIcon } from "lucide-react";
+import type { Icon } from "@tabler/icons-react";
 
-import { Battery, Dumbbell, Sparkles, TrendingUp } from "lucide-react";
+import { IconBarbell, IconBattery, IconSparkles, IconTrendingUp } from "@tabler/icons-react";
+
+import { Box, Container, Flex, SimpleGrid, Text, Title } from "@mantine/core";
 
 import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 
 interface FeatureCardProps {
-  icon: LucideIcon;
+  icon: Icon;
   title: string;
   description: string;
-  gradient: string;
+  gradientFrom: string;
   iconColor: string;
 }
 
-function FeatureCard({ icon: Icon, title, description, gradient, iconColor }: FeatureCardProps) {
+function FeatureCard({
+  icon: Icon,
+  title,
+  description,
+  gradientFrom,
+  iconColor,
+}: FeatureCardProps) {
   return (
-    <Card className="group relative overflow-hidden p-6 transition-all hover:border-white/20">
+    <Card
+      p="lg"
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        transition: "border-color 0.2s",
+      }}
+    >
       {/* Hover gradient effect */}
-      <div
-        className={cn(
-          "absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100",
-          gradient,
-        )}
+      <Box
+        pos="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        style={{
+          background: `linear-gradient(to bottom right, ${gradientFrom}, transparent)`,
+          opacity: 0,
+          transition: "opacity 0.2s",
+        }}
       />
 
-      <div className="relative">
-        <div
-          className={cn(
-            "mb-4 flex h-12 w-12 items-center justify-center rounded-lg",
-            "bg-white/5 transition-colors group-hover:bg-white/10",
-          )}
+      <Box pos="relative">
+        <Flex
+          h={48}
+          w={48}
+          mb="md"
+          align="center"
+          justify="center"
+          style={{
+            borderRadius: 8,
+            background: "rgba(255, 255, 255, 0.05)",
+            transition: "background 0.2s",
+          }}
         >
-          <Icon className={cn("h-6 w-6", iconColor)} />
-        </div>
-        <h3 className="mb-2 text-lg font-semibold">{title}</h3>
-        <p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
-      </div>
+          <Icon size={24} style={{ color: iconColor }} />
+        </Flex>
+        <Title order={3} size="lg" fw={600} mb="xs">
+          {title}
+        </Title>
+        <Text size="sm" c="dimmed" lh={1.6}>
+          {description}
+        </Text>
+      </Box>
     </Card>
   );
 }
 
 const features: FeatureCardProps[] = [
   {
-    icon: Dumbbell,
+    icon: IconBarbell,
     title: "Smart Workout Tracking",
     description:
       "Log exercises, sets, and reps with ease. See your previous performance to beat your records and stay motivated.",
-    gradient: "bg-gradient-to-br from-orange-500/5 to-transparent",
-    iconColor: "text-orange-400",
+    gradientFrom: "rgba(249, 115, 22, 0.05)",
+    iconColor: "rgb(251, 146, 60)",
   },
   {
-    icon: Sparkles,
+    icon: IconSparkles,
     title: "AI-Generated Workouts",
     description:
       "Get personalized workout recommendations based on your goals, available equipment, and recovery status.",
-    gradient: "bg-gradient-to-br from-purple-500/5 to-transparent",
-    iconColor: "text-purple-400",
+    gradientFrom: "rgba(168, 85, 247, 0.05)",
+    iconColor: "rgb(192, 132, 252)",
   },
   {
-    icon: TrendingUp,
+    icon: IconTrendingUp,
     title: "Progress Analytics",
     description:
       "Track your strength gains, body measurements, and PRs with beautiful charts and actionable insights.",
-    gradient: "bg-gradient-to-br from-blue-500/5 to-transparent",
-    iconColor: "text-blue-400",
+    gradientFrom: "rgba(59, 130, 246, 0.05)",
+    iconColor: "rgb(96, 165, 250)",
   },
   {
-    icon: Battery,
+    icon: IconBattery,
     title: "Recovery Tracking",
     description:
       "Daily check-ins help optimize your training by tracking sleep, energy levels, and muscle recovery.",
-    gradient: "bg-gradient-to-br from-green-500/5 to-transparent",
-    iconColor: "text-green-400",
+    gradientFrom: "rgba(34, 197, 94, 0.05)",
+    iconColor: "rgb(74, 222, 128)",
   },
 ];
 
 export function Features() {
   return (
-    <section className="py-20 lg:py-28">
-      <div className="container mx-auto px-4">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+    <Box component="section" py={{ base: 80, lg: 112 }}>
+      <Container>
+        <Box mb={48} ta="center">
+          <Title order={2} fz={{ base: 30, sm: 36 }} fw={700} lts={-0.5}>
             Everything you need to{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <Text
+              component="span"
+              inherit
+              variant="gradient"
+              gradient={{ from: "grape", to: "blue", deg: 90 }}
+            >
               level up
-            </span>
-          </h2>
-          <p className="text-muted-foreground mx-auto mt-4 max-w-2xl text-lg">
+            </Text>
+          </Title>
+          <Text size="lg" c="dimmed" maw={672} mx="auto" mt="md">
             Powerful features designed to help you train smarter, recover faster, and achieve your
             fitness goals.
-          </p>
-        </div>
+          </Text>
+        </Box>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="lg">
           {features.map((feature) => (
             <FeatureCard key={feature.title} {...feature} />
           ))}
-        </div>
-      </div>
-    </section>
+        </SimpleGrid>
+      </Container>
+    </Box>
   );
 }

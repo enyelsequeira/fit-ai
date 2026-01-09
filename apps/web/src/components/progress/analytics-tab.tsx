@@ -1,5 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { ActivityIcon, BarChart3Icon, CalendarIcon, FlameIcon, TrendingUpIcon } from "lucide-react";
+import {
+  IconActivity,
+  IconChartBar,
+  IconCalendar,
+  IconFlame,
+  IconTrendingUp,
+} from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import {
   Bar,
@@ -101,7 +107,7 @@ function VolumeAnalysis() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">
-              <BarChart3Icon className="size-4" />
+              <IconChartBar className="size-4" />
               Total Volume (Last 12 Weeks)
             </CardTitle>
           </CardHeader>
@@ -143,7 +149,7 @@ function VolumeAnalysis() {
               </div>
             ) : (
               <EmptyState
-                icon={BarChart3Icon}
+                icon={IconChartBar}
                 title="No volume data"
                 description="Complete workouts to track volume"
               />
@@ -156,7 +162,7 @@ function VolumeAnalysis() {
           <CardHeader>
             <CardTitle className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2">
-                <ActivityIcon className="size-4" />
+                <IconActivity className="size-4" />
                 Volume by Muscle Group
               </span>
               <Badge variant={volumeChange >= 0 ? "success" : "destructive"}>
@@ -219,7 +225,7 @@ function VolumeAnalysis() {
               </div>
             ) : (
               <EmptyState
-                icon={ActivityIcon}
+                icon={IconActivity}
                 title="No muscle data"
                 description="Complete workouts to see muscle breakdown"
               />
@@ -284,7 +290,7 @@ function StrengthProgress() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-sm">
-            <TrendingUpIcon className="size-4" />
+            <IconTrendingUp className="size-4" />
             Exercise Progression
           </CardTitle>
         </CardHeader>
@@ -341,13 +347,13 @@ function StrengthProgress() {
             </div>
           ) : selectedExerciseId ? (
             <EmptyState
-              icon={TrendingUpIcon}
+              icon={IconTrendingUp}
               title="No data for this exercise"
               description="Complete more workouts with this exercise"
             />
           ) : (
             <EmptyState
-              icon={TrendingUpIcon}
+              icon={IconTrendingUp}
               title="Select an exercise"
               description="Choose an exercise above to view progression"
             />
@@ -426,7 +432,7 @@ function TrainingFrequency() {
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full">
-                <FlameIcon className="size-5" />
+                <IconFlame className="size-5" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{currentStreak}</p>
@@ -440,7 +446,7 @@ function TrainingFrequency() {
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-amber-500/10 text-amber-500 flex size-10 items-center justify-center rounded-full">
-                <TrendingUpIcon className="size-5" />
+                <IconTrendingUp className="size-5" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{longestStreak}</p>
@@ -454,7 +460,7 @@ function TrainingFrequency() {
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-emerald-500/10 text-emerald-500 flex size-10 items-center justify-center rounded-full">
-                <CalendarIcon className="size-5" />
+                <IconCalendar className="size-5" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{avgWorkoutsPerWeek.toFixed(1)}</p>
@@ -719,7 +725,7 @@ function PeriodComparison() {
             </div>
           ) : (
             <EmptyState
-              icon={BarChart3Icon}
+              icon={IconChartBar}
               title="No comparison data"
               description="Need at least 2 weeks of data for comparison"
             />
@@ -749,7 +755,7 @@ export function AnalyticsTab() {
       <Card>
         <CardContent className="py-12">
           <EmptyState
-            icon={BarChart3Icon}
+            icon={IconChartBar}
             title="Not enough data"
             description="Need at least 2 weeks of workout data for analytics"
           />

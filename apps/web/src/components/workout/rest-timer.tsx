@@ -1,8 +1,7 @@
-import { Pause, Play, RotateCcw } from "lucide-react";
+import { IconPlayerPause, IconPlayerPlay, IconRotate } from "@tabler/icons-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { ActionIcon, Box, Flex, Group, Text } from "@mantine/core";
 
 interface RestTimerProps {
   defaultSeconds?: number;
@@ -17,12 +16,7 @@ function formatTime(seconds: number): string {
   return `${minutes}:${secs.toString().padStart(2, "0")}`;
 }
 
-function RestTimer({
-  defaultSeconds = 90,
-  autoStart = false,
-  onComplete,
-  className,
-}: RestTimerProps) {
+function RestTimer({ defaultSeconds = 90, autoStart = false, onComplete }: RestTimerProps) {
   const [remaining, setRemaining] = useState(defaultSeconds);
   const [isRunning, setIsRunning] = useState(autoStart);
   const [hasCompleted, setHasCompleted] = useState(false);
@@ -91,54 +85,72 @@ function RestTimer({
   const progress = (remaining / defaultSeconds) * 100;
 
   return (
-    <div className={cn("flex items-center gap-3", className)}>
-      <div className="relative flex items-center justify-center">
-        <svg className="size-12 -rotate-90">
+    <Flex align="center" gap="sm">
+      <Box
+        pos="relative"
+        style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
+        <svg
+          style={{
+            width: 48,
+            height: 48,
+            transform: "rotate(-90deg)",
+          }}
+        >
           <circle
             cx="24"
             cy="24"
             r="20"
             fill="none"
-            stroke="currentColor"
+            stroke="var(--mantine-color-default-border)"
             strokeWidth="4"
-            className="text-muted"
           />
           <circle
             cx="24"
             cy="24"
             r="20"
             fill="none"
-            stroke="currentColor"
+            stroke={hasCompleted ? "var(--mantine-color-green-5)" : "var(--mantine-color-blue-5)"}
             strokeWidth="4"
             strokeDasharray={2 * Math.PI * 20}
             strokeDashoffset={2 * Math.PI * 20 * (1 - progress / 100)}
-            className={cn(
-              "transition-all duration-1000",
-              hasCompleted ? "text-green-500" : "text-primary",
-            )}
+            style={{ transition: "all 1s" }}
           />
         </svg>
-        <span className="absolute text-xs font-mono tabular-nums">{formatTime(remaining)}</span>
-      </div>
+        <Text
+          fz="xs"
+          style={{
+            position: "absolute",
+            fontFamily: "monospace",
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          {formatTime(remaining)}
+        </Text>
+      </Box>
 
-      <div className="flex gap-1">
-        <Button
-          variant="ghost"
-          size="icon-sm"
+      <Group gap={4}>
+        <ActionIcon
+          variant="subtle"
+          size="sm"
           onClick={handleToggle}
           aria-label={isRunning ? "Pause timer" : "Start timer"}
         >
-          {isRunning ? <Pause className="size-3" /> : <Play className="size-3" />}
-        </Button>
-        <Button variant="ghost" size="icon-sm" onClick={handleReset} aria-label="Reset timer">
-          <RotateCcw className="size-3" />
-        </Button>
-      </div>
+          {isRunning ? (
+            <IconPlayerPause style={{ width: 12, height: 12 }} />
+          ) : (
+            <IconPlayerPlay style={{ width: 12, height: 12 }} />
+          )}
+        </ActionIcon>
+        <ActionIcon variant="subtle" size="sm" onClick={handleReset} aria-label="Reset timer">
+          <IconRotate style={{ width: 12, height: 12 }} />
+        </ActionIcon>
+      </Group>
 
       <audio ref={audioRef} preload="auto">
         <source src="/notification.mp3" type="audio/mpeg" />
       </audio>
-    </div>
+    </Flex>
   );
 }
 

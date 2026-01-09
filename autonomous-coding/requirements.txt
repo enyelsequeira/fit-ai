@@ -1,0 +1,3 @@
+# No external dependencies needed!
+# Uses Claude CLI directly via subprocess
+# Just make sure you have: npm install -g @anthropic-ai/claude-code

@@ -1,6 +1,6 @@
 import type { CurveType } from "recharts/types/shape/Curve";
 
-import * as React from "react";
+import { Box, Group, Paper, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import {
   Area,
   AreaChart as RechartsAreaChart,
@@ -15,15 +15,13 @@ import {
   YAxis,
 } from "recharts";
 
-import { cn } from "@/lib/utils";
-
-// Chart color palette using CSS variables
+// Chart color palette
 const chartColors = [
-  "var(--color-chart-1)",
-  "var(--color-chart-2)",
-  "var(--color-chart-3)",
-  "var(--color-chart-4)",
-  "var(--color-chart-5)",
+  "var(--mantine-color-blue-5)",
+  "var(--mantine-color-cyan-5)",
+  "var(--mantine-color-teal-5)",
+  "var(--mantine-color-grape-5)",
+  "var(--mantine-color-pink-5)",
 ];
 
 interface ChartTooltipProps {
@@ -44,20 +42,26 @@ function ChartTooltip({ active, payload, label, formatter }: ChartTooltipProps) 
   }
 
   return (
-    <div className="bg-popover text-popover-foreground ring-foreground/10 rounded-none p-2 shadow-md ring-1">
-      {label && <p className="text-muted-foreground mb-1 text-xs font-medium">{label}</p>}
-      <div className="flex flex-col gap-1">
+    <Paper p="xs" shadow="sm" withBorder>
+      {label && (
+        <Text size="xs" c="dimmed" mb="xs" fw={500}>
+          {label}
+        </Text>
+      )}
+      <Stack gap={4}>
         {payload.map((entry, index) => (
-          <div key={index} className="flex items-center gap-2 text-xs">
-            <span className="size-2 rounded-full" style={{ backgroundColor: entry.color }} />
-            <span className="text-muted-foreground">{entry.name}:</span>
-            <span className="font-medium">
+          <Group key={index} gap="xs">
+            <Box w={8} h={8} style={{ backgroundColor: entry.color, borderRadius: "50%" }} />
+            <Text size="xs" c="dimmed">
+              {entry.name}:
+            </Text>
+            <Text size="xs" fw={500}>
               {formatter ? formatter(entry.value, entry.name) : entry.value}
-            </span>
-          </div>
+            </Text>
+          </Group>
         ))}
-      </div>
-    </div>
+      </Stack>
+    </Paper>
   );
 }
 
@@ -66,7 +70,6 @@ interface BaseChartProps {
   xKey: string;
   yKey: string | string[];
   height?: number;
-  className?: string;
   showGrid?: boolean;
   showXAxis?: boolean;
   showYAxis?: boolean;
@@ -85,7 +88,6 @@ function LineChart({
   xKey,
   yKey,
   height = 300,
-  className,
   showGrid = true,
   showXAxis = true,
   showYAxis = true,
@@ -98,27 +100,29 @@ function LineChart({
   const yKeys = Array.isArray(yKey) ? yKey : [yKey];
 
   return (
-    <div className={cn("w-full", className)} style={{ height }}>
+    <Box w="100%" h={height}>
       <ResponsiveContainer width="100%" height="100%">
         <RechartsLineChart data={data}>
           {showGrid && (
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border" vertical={false} />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="var(--mantine-color-dark-4)"
+              vertical={false}
+            />
           )}
           {showXAxis && (
             <XAxis
               dataKey={xKey}
               tickLine={false}
               axisLine={false}
-              className="text-muted-foreground fill-muted-foreground text-xs"
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: "var(--mantine-color-dimmed)" }}
             />
           )}
           {showYAxis && (
             <YAxis
               tickLine={false}
               axisLine={false}
-              className="text-muted-foreground fill-muted-foreground text-xs"
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: "var(--mantine-color-dimmed)" }}
               width={40}
             />
           )}
@@ -145,7 +149,7 @@ function LineChart({
           ))}
         </RechartsLineChart>
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 }
 
@@ -159,7 +163,6 @@ function BarChart({
   xKey,
   yKey,
   height = 300,
-  className,
   showGrid = true,
   showXAxis = true,
   showYAxis = true,
@@ -171,27 +174,29 @@ function BarChart({
   const yKeys = Array.isArray(yKey) ? yKey : [yKey];
 
   return (
-    <div className={cn("w-full", className)} style={{ height }}>
+    <Box w="100%" h={height}>
       <ResponsiveContainer width="100%" height="100%">
         <RechartsBarChart data={data}>
           {showGrid && (
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border" vertical={false} />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="var(--mantine-color-dark-4)"
+              vertical={false}
+            />
           )}
           {showXAxis && (
             <XAxis
               dataKey={xKey}
               tickLine={false}
               axisLine={false}
-              className="text-muted-foreground fill-muted-foreground text-xs"
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: "var(--mantine-color-dimmed)" }}
             />
           )}
           {showYAxis && (
             <YAxis
               tickLine={false}
               axisLine={false}
-              className="text-muted-foreground fill-muted-foreground text-xs"
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: "var(--mantine-color-dimmed)" }}
               width={40}
             />
           )}
@@ -204,7 +209,7 @@ function BarChart({
                 formatter={tooltipFormatter}
               />
             )}
-            cursor={{ fill: "var(--color-muted)", opacity: 0.3 }}
+            cursor={{ fill: "var(--mantine-color-dark-6)", opacity: 0.3 }}
           />
           {yKeys.map((key, index) => (
             <Bar
@@ -217,7 +222,7 @@ function BarChart({
           ))}
         </RechartsBarChart>
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 }
 
@@ -233,7 +238,6 @@ function AreaChart({
   xKey,
   yKey,
   height = 300,
-  className,
   showGrid = true,
   showXAxis = true,
   showYAxis = true,
@@ -247,27 +251,29 @@ function AreaChart({
   const yKeys = Array.isArray(yKey) ? yKey : [yKey];
 
   return (
-    <div className={cn("w-full", className)} style={{ height }}>
+    <Box w="100%" h={height}>
       <ResponsiveContainer width="100%" height="100%">
         <RechartsAreaChart data={data}>
           {showGrid && (
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border" vertical={false} />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="var(--mantine-color-dark-4)"
+              vertical={false}
+            />
           )}
           {showXAxis && (
             <XAxis
               dataKey={xKey}
               tickLine={false}
               axisLine={false}
-              className="text-muted-foreground fill-muted-foreground text-xs"
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: "var(--mantine-color-dimmed)" }}
             />
           )}
           {showYAxis && (
             <YAxis
               tickLine={false}
               axisLine={false}
-              className="text-muted-foreground fill-muted-foreground text-xs"
-              tick={{ fontSize: 11 }}
+              tick={{ fontSize: 11, fill: "var(--mantine-color-dimmed)" }}
               width={40}
             />
           )}
@@ -295,7 +301,7 @@ function AreaChart({
           ))}
         </RechartsAreaChart>
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 }
 
@@ -304,7 +310,6 @@ interface SparklineProps {
   data: Array<Record<string, unknown>>;
   dataKey: string;
   height?: number;
-  className?: string;
   color?: string;
   type?: "line" | "area";
 }
@@ -313,12 +318,11 @@ function Sparkline({
   data,
   dataKey,
   height = 40,
-  className,
   color = chartColors[0],
   type = "line",
 }: SparklineProps) {
   return (
-    <div className={cn("w-full", className)} style={{ height }}>
+    <Box w="100%" h={height}>
       <ResponsiveContainer width="100%" height="100%">
         {type === "area" ? (
           <RechartsAreaChart data={data}>
@@ -338,12 +342,12 @@ function Sparkline({
           </RechartsLineChart>
         )}
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 }
 
 // StatCard with optional sparkline
-interface StatCardProps extends React.ComponentProps<"div"> {
+interface StatCardProps {
   title: string;
   value: string | number;
   change?: {
@@ -362,65 +366,59 @@ function StatCard({
   sparklineData,
   sparklineKey = "value",
   icon,
-  className,
-  ...props
 }: StatCardProps) {
   const changeColor =
-    change?.type === "increase"
-      ? "text-emerald-500"
-      : change?.type === "decrease"
-        ? "text-red-500"
-        : "text-muted-foreground";
+    change?.type === "increase" ? "green" : change?.type === "decrease" ? "red" : "dimmed";
 
   const changePrefix = change?.type === "increase" ? "+" : "";
 
   return (
-    <div
-      data-slot="stat-card"
-      className={cn(
-        "bg-card text-card-foreground ring-foreground/10 flex flex-col gap-3 rounded-none p-4 ring-1",
-        className,
-      )}
-      {...props}
-    >
-      <div className="flex items-start justify-between">
-        <div className="flex flex-col gap-1">
-          <span className="text-muted-foreground text-xs">{title}</span>
-          <span className="text-foreground text-2xl font-semibold tabular-nums">{value}</span>
-        </div>
-        {icon && (
-          <div className="bg-muted text-muted-foreground flex size-8 items-center justify-center rounded-full">
-            {icon}
-          </div>
-        )}
-      </div>
+    <Paper p="md" withBorder>
+      <Stack gap="sm">
+        <Group justify="space-between" align="flex-start">
+          <Stack gap={4}>
+            <Text size="xs" c="dimmed">
+              {title}
+            </Text>
+            <Title order={3} style={{ fontVariantNumeric: "tabular-nums" }}>
+              {value}
+            </Title>
+          </Stack>
+          {icon && (
+            <ThemeIcon size="lg" radius="xl" variant="light" color="gray">
+              {icon}
+            </ThemeIcon>
+          )}
+        </Group>
 
-      {(change || sparklineData) && (
-        <div className="flex items-end justify-between gap-4">
-          {change && (
-            <span className={cn("text-xs font-medium", changeColor)}>
-              {changePrefix}
-              {change.value}%
-            </span>
-          )}
-          {sparklineData && sparklineData.length > 0 && (
-            <Sparkline
-              data={sparklineData}
-              dataKey={sparklineKey}
-              height={32}
-              className="flex-1"
-              color={
-                change?.type === "increase"
-                  ? "var(--color-chart-1)"
-                  : change?.type === "decrease"
-                    ? "var(--color-destructive)"
-                    : "var(--color-chart-1)"
-              }
-            />
-          )}
-        </div>
-      )}
-    </div>
+        {(change || sparklineData) && (
+          <Group justify="space-between" align="flex-end" gap="md">
+            {change && (
+              <Text size="xs" fw={500} c={changeColor}>
+                {changePrefix}
+                {change.value}%
+              </Text>
+            )}
+            {sparklineData && sparklineData.length > 0 && (
+              <Box style={{ flex: 1 }}>
+                <Sparkline
+                  data={sparklineData}
+                  dataKey={sparklineKey}
+                  height={32}
+                  color={
+                    change?.type === "increase"
+                      ? "var(--mantine-color-green-5)"
+                      : change?.type === "decrease"
+                        ? "var(--mantine-color-red-5)"
+                        : "var(--mantine-color-blue-5)"
+                  }
+                />
+              </Box>
+            )}
+          </Group>
+        )}
+      </Stack>
+    </Paper>
   );
 }
 

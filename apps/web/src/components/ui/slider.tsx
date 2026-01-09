@@ -1,64 +1,71 @@
-import { Slider as SliderPrimitive } from "@base-ui/react/slider";
+import type { SliderProps as MantineSliderProps } from "@mantine/core";
 
-import { cn } from "@/lib/utils";
+import { Slider as MantineSlider, Text } from "@mantine/core";
+import { forwardRef, useState } from "react";
 
-interface SliderProps extends SliderPrimitive.Root.Props {
+interface SliderProps extends Omit<MantineSliderProps, "value" | "defaultValue" | "onChange"> {
+  value?: number[];
+  defaultValue?: number[];
   showValue?: boolean;
+  onValueChange?: (value: number[]) => void;
 }
 
-function Slider({
-  className,
-  defaultValue,
-  value,
-  min = 0,
-  max = 100,
-  step = 1,
-  showValue = false,
-  ...props
-}: SliderProps) {
-  return (
-    <SliderPrimitive.Root
-      data-slot="slider"
-      defaultValue={defaultValue}
-      value={value}
-      min={min}
-      max={max}
-      step={step}
-      className={cn("relative flex w-full touch-none items-center select-none", className)}
-      {...props}
-    >
-      <SliderPrimitive.Control data-slot="slider-control" className="flex w-full items-center">
-        <SliderPrimitive.Track
-          data-slot="slider-track"
-          className="bg-secondary relative h-2 w-full grow overflow-hidden rounded-none"
-        >
-          <SliderPrimitive.Indicator
-            data-slot="slider-indicator"
-            className="bg-primary absolute h-full"
-          />
-        </SliderPrimitive.Track>
-        <SliderPrimitive.Thumb
-          data-slot="slider-thumb"
-          className="border-primary bg-background ring-offset-background focus-visible:ring-ring block size-4 rounded-full border-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-        />
-      </SliderPrimitive.Control>
-      {showValue && (
-        <SliderPrimitive.Value
-          data-slot="slider-value"
-          className="text-muted-foreground ml-3 min-w-[2ch] text-xs tabular-nums"
-        />
-      )}
-    </SliderPrimitive.Root>
-  );
-}
+const Slider = forwardRef<HTMLDivElement, SliderProps>(
+  (
+    {
+      value,
+      defaultValue,
+      showValue = false,
+      onValueChange,
+      min = 0,
+      max = 100,
+      step = 1,
+      ...props
+    },
+    ref,
+  ) => {
+    const initialValue = value?.[0] ?? defaultValue?.[0] ?? min;
+    const [currentValue, setCurrentValue] = useState(initialValue);
 
-function SliderOutput({ className, ...props }: SliderPrimitive.Value.Props) {
+    const handleChange = (newValue: number) => {
+      setCurrentValue(newValue);
+      onValueChange?.([newValue]);
+    };
+
+    return (
+      <div ref={ref} style={{ display: "flex", alignItems: "center", gap: "12px", width: "100%" }}>
+        <MantineSlider
+          value={value?.[0] ?? currentValue}
+          defaultValue={defaultValue?.[0]}
+          onChange={handleChange}
+          min={min}
+          max={max}
+          step={step}
+          style={{ flex: 1 }}
+          size="sm"
+          {...props}
+        />
+        {showValue && (
+          <Text
+            size="xs"
+            c="dimmed"
+            style={{ minWidth: "2ch", fontVariantNumeric: "tabular-nums" }}
+          >
+            {value?.[0] ?? currentValue}
+          </Text>
+        )}
+      </div>
+    );
+  },
+);
+
+Slider.displayName = "Slider";
+
+function SliderOutput({ children }: { children?: React.ReactNode }) {
   return (
-    <SliderPrimitive.Value
-      data-slot="slider-output"
-      className={cn("text-muted-foreground text-xs tabular-nums", className)}
-      {...props}
-    />
+    <Text size="xs" c="dimmed" style={{ fontVariantNumeric: "tabular-nums" }}>
+      {children}
+    </Text>
   );
 }
 

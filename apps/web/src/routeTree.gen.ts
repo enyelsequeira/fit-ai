@@ -10,13 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TodosRouteImport } from './routes/todos'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkoutsIndexRouteImport } from './routes/workouts/index'
 import { Route as RecoveryIndexRouteImport } from './routes/recovery/index'
 import { Route as ProgressIndexRouteImport } from './routes/progress/index'
 import { Route as ExercisesIndexRouteImport } from './routes/exercises/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AiIndexRouteImport } from './routes/ai/index'
 import { Route as WorkoutsNewRouteImport } from './routes/workouts/new'
 import { Route as WorkoutsWorkoutIdRouteImport } from './routes/workouts/$workoutId'
@@ -35,12 +37,17 @@ const TodosRoute = TodosRouteImport.update({
   path: '/todos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
@@ -69,6 +76,11 @@ const ExercisesIndexRoute = ExercisesIndexRouteImport.update({
   id: '/exercises/',
   path: '/exercises/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const AiIndexRoute = AiIndexRouteImport.update({
   id: '/ai/',
@@ -134,8 +146,9 @@ const WorkoutsWorkoutIdCompleteRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
+  '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/sign-in': typeof SignInRoute
+  '/signup': typeof SignupRoute
   '/todos': typeof TodosRoute
   '/ai/generate': typeof AiGenerateRoute
   '/ai/preferences': typeof AiPreferencesRoute
@@ -148,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/workouts/$workoutId': typeof WorkoutsWorkoutIdRouteWithChildren
   '/workouts/new': typeof WorkoutsNewRoute
   '/ai': typeof AiIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/exercises': typeof ExercisesIndexRoute
   '/progress': typeof ProgressIndexRoute
   '/recovery': typeof RecoveryIndexRoute
@@ -156,8 +170,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
+  '/sign-in': typeof SignInRoute
+  '/signup': typeof SignupRoute
   '/todos': typeof TodosRoute
   '/ai/generate': typeof AiGenerateRoute
   '/ai/preferences': typeof AiPreferencesRoute
@@ -170,6 +184,7 @@ export interface FileRoutesByTo {
   '/workouts/$workoutId': typeof WorkoutsWorkoutIdRouteWithChildren
   '/workouts/new': typeof WorkoutsNewRoute
   '/ai': typeof AiIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/exercises': typeof ExercisesIndexRoute
   '/progress': typeof ProgressIndexRoute
   '/recovery': typeof RecoveryIndexRoute
@@ -179,8 +194,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
+  '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/sign-in': typeof SignInRoute
+  '/signup': typeof SignupRoute
   '/todos': typeof TodosRoute
   '/ai/generate': typeof AiGenerateRoute
   '/ai/preferences': typeof AiPreferencesRoute
@@ -193,6 +209,7 @@ export interface FileRoutesById {
   '/workouts/$workoutId': typeof WorkoutsWorkoutIdRouteWithChildren
   '/workouts/new': typeof WorkoutsNewRoute
   '/ai/': typeof AiIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/exercises/': typeof ExercisesIndexRoute
   '/progress/': typeof ProgressIndexRoute
   '/recovery/': typeof RecoveryIndexRoute
@@ -204,7 +221,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
-    | '/login'
+    | '/sign-in'
+    | '/signup'
     | '/todos'
     | '/ai/generate'
     | '/ai/preferences'
@@ -217,6 +235,7 @@ export interface FileRouteTypes {
     | '/workouts/$workoutId'
     | '/workouts/new'
     | '/ai'
+    | '/dashboard/'
     | '/exercises'
     | '/progress'
     | '/recovery'
@@ -225,8 +244,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/dashboard'
-    | '/login'
+    | '/sign-in'
+    | '/signup'
     | '/todos'
     | '/ai/generate'
     | '/ai/preferences'
@@ -239,6 +258,7 @@ export interface FileRouteTypes {
     | '/workouts/$workoutId'
     | '/workouts/new'
     | '/ai'
+    | '/dashboard'
     | '/exercises'
     | '/progress'
     | '/recovery'
@@ -248,7 +268,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dashboard'
-    | '/login'
+    | '/sign-in'
+    | '/signup'
     | '/todos'
     | '/ai/generate'
     | '/ai/preferences'
@@ -261,6 +282,7 @@ export interface FileRouteTypes {
     | '/workouts/$workoutId'
     | '/workouts/new'
     | '/ai/'
+    | '/dashboard/'
     | '/exercises/'
     | '/progress/'
     | '/recovery/'
@@ -270,8 +292,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
-  LoginRoute: typeof LoginRoute
+  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
+  SignInRoute: typeof SignInRoute
+  SignupRoute: typeof SignupRoute
   TodosRoute: typeof TodosRoute
   AiGenerateRoute: typeof AiGenerateRoute
   AiPreferencesRoute: typeof AiPreferencesRoute
@@ -299,18 +322,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TodosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
+      preLoaderRoute: typeof DashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -347,6 +377,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/exercises'
       preLoaderRoute: typeof ExercisesIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
     '/ai/': {
       id: '/ai/'
@@ -435,6 +472,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardRouteRouteChildren {
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
+  DashboardRouteRouteChildren,
+)
+
 interface WorkoutsWorkoutIdRouteChildren {
   WorkoutsWorkoutIdCompleteRoute: typeof WorkoutsWorkoutIdCompleteRoute
 }
@@ -448,8 +497,9 @@ const WorkoutsWorkoutIdRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
-  LoginRoute: LoginRoute,
+  DashboardRouteRoute: DashboardRouteRouteWithChildren,
+  SignInRoute: SignInRoute,
+  SignupRoute: SignupRoute,
   TodosRoute: TodosRoute,
   AiGenerateRoute: AiGenerateRoute,
   AiPreferencesRoute: AiPreferencesRoute,

@@ -1,18 +1,16 @@
-import { Loader2, Star } from "lucide-react";
+import { IconLoader2, IconStar } from "@tabler/icons-react";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { Box, Button, Group, Stack, Text, Textarea, UnstyledButton } from "@mantine/core";
 
 type WorkoutMood = "great" | "good" | "okay" | "tired" | "bad";
 
 const MOOD_OPTIONS: { value: WorkoutMood; label: string; emoji: string }[] = [
-  { value: "great", label: "Great", emoji: "😄" },
-  { value: "good", label: "Good", emoji: "🙂" },
-  { value: "okay", label: "Okay", emoji: "😐" },
-  { value: "tired", label: "Tired", emoji: "😓" },
-  { value: "bad", label: "Bad", emoji: "😞" },
+  { value: "great", label: "Great", emoji: "great" },
+  { value: "good", label: "Good", emoji: "good" },
+  { value: "okay", label: "Okay", emoji: "okay" },
+  { value: "tired", label: "Tired", emoji: "tired" },
+  { value: "bad", label: "Bad", emoji: "bad" },
 ];
 
 interface CompleteWorkoutFormProps {
@@ -21,11 +19,7 @@ interface CompleteWorkoutFormProps {
   className?: string;
 }
 
-function CompleteWorkoutForm({
-  onSubmit,
-  isSubmitting = false,
-  className,
-}: CompleteWorkoutFormProps) {
+function CompleteWorkoutForm({ onSubmit, isSubmitting = false }: CompleteWorkoutFormProps) {
   const [rating, setRating] = useState<number>(0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [mood, setMood] = useState<WorkoutMood | null>(null);
@@ -38,89 +32,138 @@ function CompleteWorkoutForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-6", className)}>
-      {/* Rating */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">How was your workout?</label>
-        <div className="flex gap-1">
-          {[1, 2, 3, 4, 5].map((value) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setRating(value)}
-              onMouseEnter={() => setHoveredRating(value)}
-              onMouseLeave={() => setHoveredRating(0)}
-              className="p-1 transition-transform hover:scale-110"
-            >
-              <Star
-                className={cn(
-                  "size-8 transition-colors",
-                  (hoveredRating || rating) >= value
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-muted-foreground",
-                )}
+    <form onSubmit={handleSubmit}>
+      <Stack gap="lg">
+        {/* Rating */}
+        <Stack gap="xs">
+          <Text fz="sm" fw={500}>
+            How was your workout?
+          </Text>
+          <Group gap={4}>
+            {[1, 2, 3, 4, 5].map((value) => (
+              <UnstyledButton
+                key={value}
+                onClick={() => setRating(value)}
+                onMouseEnter={() => setHoveredRating(value)}
+                onMouseLeave={() => setHoveredRating(0)}
+                p={4}
+                style={{
+                  transition: "transform 150ms",
+                  transform: hoveredRating >= value ? "scale(1.1)" : undefined,
+                }}
+              >
+                <IconStar
+                  style={{
+                    width: 32,
+                    height: 32,
+                    transition: "color 150ms, fill 150ms",
+                    fill:
+                      (hoveredRating || rating) >= value
+                        ? "var(--mantine-color-yellow-4)"
+                        : "transparent",
+                    color:
+                      (hoveredRating || rating) >= value
+                        ? "var(--mantine-color-yellow-4)"
+                        : "var(--mantine-color-dimmed)",
+                  }}
+                />
+              </UnstyledButton>
+            ))}
+          </Group>
+          {rating > 0 && (
+            <Text fz="xs" c="dimmed">
+              {rating === 1 && "Could be better"}
+              {rating === 2 && "It was okay"}
+              {rating === 3 && "Pretty good"}
+              {rating === 4 && "Great workout!"}
+              {rating === 5 && "Best workout ever!"}
+            </Text>
+          )}
+        </Stack>
+
+        {/* Mood */}
+        <Stack gap="xs">
+          <Text fz="sm" fw={500}>
+            How are you feeling?
+          </Text>
+          <Group gap="xs">
+            {MOOD_OPTIONS.map((option) => (
+              <UnstyledButton
+                key={option.value}
+                onClick={() => setMood(option.value)}
+                px="sm"
+                py="xs"
+                style={{
+                  border:
+                    mood === option.value
+                      ? "1px solid var(--mantine-color-blue-5)"
+                      : "1px solid var(--mantine-color-default-border)",
+                  backgroundColor:
+                    mood === option.value
+                      ? "var(--mantine-color-blue-filled)"
+                      : "var(--mantine-color-body)",
+                  color: mood === option.value ? "white" : undefined,
+                  transition: "all 150ms",
+                }}
+              >
+                <Group gap="xs">
+                  <Text fz="lg">{getMoodEmoji(option.value)}</Text>
+                  <Text fz="xs">{option.label}</Text>
+                </Group>
+              </UnstyledButton>
+            ))}
+          </Group>
+        </Stack>
+
+        {/* Notes */}
+        <Stack gap="xs">
+          <Text fz="sm" fw={500}>
+            Notes (optional)
+          </Text>
+          <Textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="How did the workout go? Any notes for next time?"
+            rows={3}
+          />
+        </Stack>
+
+        {/* Submit */}
+        <Button type="submit" fullWidth disabled={rating === 0 || !mood || isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <IconLoader2
+                style={{
+                  width: 16,
+                  height: 16,
+                  marginRight: 8,
+                  animation: "spin 1s linear infinite",
+                }}
               />
-            </button>
-          ))}
-        </div>
-        {rating > 0 && (
-          <p className="text-xs text-muted-foreground">
-            {rating === 1 && "Could be better"}
-            {rating === 2 && "It was okay"}
-            {rating === 3 && "Pretty good"}
-            {rating === 4 && "Great workout!"}
-            {rating === 5 && "Best workout ever!"}
-          </p>
-        )}
-      </div>
-
-      {/* Mood */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">How are you feeling?</label>
-        <div className="flex flex-wrap gap-2">
-          {MOOD_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => setMood(option.value)}
-              className={cn(
-                "flex items-center gap-2 px-3 py-2 border rounded-none transition-colors",
-                mood === option.value
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-background border-border hover:bg-muted",
-              )}
-            >
-              <span className="text-lg">{option.emoji}</span>
-              <span className="text-xs">{option.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Notes */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium">Notes (optional)</label>
-        <Textarea
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="How did the workout go? Any notes for next time?"
-          rows={3}
-        />
-      </div>
-
-      {/* Submit */}
-      <Button type="submit" className="w-full" disabled={rating === 0 || !mood || isSubmitting}>
-        {isSubmitting ? (
-          <>
-            <Loader2 className="size-4 mr-2 animate-spin" />
-            Saving...
-          </>
-        ) : (
-          "Complete Workout"
-        )}
-      </Button>
+              Saving...
+            </>
+          ) : (
+            "Complete Workout"
+          )}
+        </Button>
+      </Stack>
     </form>
   );
+}
+
+function getMoodEmoji(mood: WorkoutMood): string {
+  switch (mood) {
+    case "great":
+      return String.fromCodePoint(0x1f604);
+    case "good":
+      return String.fromCodePoint(0x1f642);
+    case "okay":
+      return String.fromCodePoint(0x1f610);
+    case "tired":
+      return String.fromCodePoint(0x1f613);
+    case "bad":
+      return String.fromCodePoint(0x1f61e);
+  }
 }
 
 export { CompleteWorkoutForm, MOOD_OPTIONS };

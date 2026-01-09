@@ -1,0 +1,343 @@
+/* Dashboard AppShell Layout Styles */
+
+/* Header styles */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 var(--mantine-spacing-md);
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding: 0 var(--mantine-spacing-lg);
+  }
+}
+
+/* Logo/brand section */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.brand:hover {
+  opacity: 0.85;
+}
+
+.logoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--mantine-radius-md);
+  background: linear-gradient(135deg, var(--mantine-color-blue-6), var(--mantine-color-cyan-5));
+  color: white;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .logoIcon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.logoText {
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--mantine-color-blue-5), var(--mantine-color-cyan-4));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@media (min-width: 768px) {
+  .logoText {
+    font-size: 1.375rem;
+  }
+}
+
+/* Header right section */
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+}
+
+@media (min-width: 768px) {
+  .headerRight {
+    gap: var(--mantine-spacing-sm);
+  }
+}
+
+/* Color scheme toggle button */
+.colorSchemeToggle {
+  background: transparent;
+  border: none;
+  color: var(--mantine-color-text);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mantine-radius-md);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.colorSchemeToggle:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.colorSchemeToggle:active {
+  transform: scale(0.95);
+}
+
+/* User menu button */
+.userMenuButton {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+  padding: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-md);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: inherit;
+  transition: background-color 0.2s ease;
+}
+
+.userMenuButton:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.userName {
+  display: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .userName {
+    display: block;
+  }
+}
+
+/* Navbar styles */
+.navbar {
+  padding: var(--mantine-spacing-md);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Nav links container */
+.navLinks {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+}
+
+/* Navigation link */
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  color: var(--mantine-color-text);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.navLink:hover {
+  background: var(--mantine-color-default-hover);
+  transform: translateX(2px);
+}
+
+/* Active navigation link */
+.navLinkActive {
+  background: var(--mantine-color-blue-light);
+  color: var(--mantine-color-blue-light-color);
+}
+
+.navLinkActive:hover {
+  background: var(--mantine-color-blue-light-hover);
+  transform: none;
+}
+
+/* Nav link icon */
+.navLinkIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* Section divider in navbar */
+.navDivider {
+  height: 1px;
+  background: var(--mantine-color-default-border);
+  margin: var(--mantine-spacing-md) 0;
+}
+
+/* Bottom section of navbar */
+.navBottom {
+  margin-top: auto;
+  padding-top: var(--mantine-spacing-md);
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+/* Main content area */
+.main {
+  min-height: calc(100vh - 60px);
+  background: var(--mantine-color-body);
+}
+
+@media (min-width: 768px) {
+  .main {
+    min-height: calc(100vh - 70px);
+  }
+}
+
+/* User dropdown menu items */
+.menuItem {
+  font-size: 0.875rem;
+}
+
+.menuItemDanger {
+  color: var(--mantine-color-red-6);
+}
+
+.menuItemDanger:hover {
+  background: var(--mantine-color-red-light);
+}
+
+/* Mobile burger button */
+.burger {
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .burger {
+    display: none;
+  }
+}
+
+/* Desktop burger (shown when collapsed) */
+.burgerDesktop {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .burgerDesktop {
+    display: flex;
+  }
+}
+
+/* Loading state for user avatar */
+.avatarLoading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* App shell wrapper customization */
+.appShell {
+  --app-shell-border-color: var(--mantine-color-default-border);
+}
+
+/* Navbar scrollable area */
+.navScrollArea {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Nav section label */
+.navSectionLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mantine-color-dimmed);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  padding-bottom: var(--mantine-spacing-xs);
+}
+
+/* Badge for nav items (e.g., notification count) */
+.navBadge {
+  margin-left: auto;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: var(--mantine-radius-xl);
+  background: var(--mantine-color-blue-light);
+  color: var(--mantine-color-blue-light-color);
+}
+
+/* Transition for navbar collapse */
+.navbarTransition {
+  transition:
+    width 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* User info in dropdown */
+.userInfo {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+}
+
+.userInfoName {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.userInfoEmail {
+  font-size: 0.75rem;
+  color: var(--mantine-color-dimmed);
+}
+
+/* Dropdown menu styling */
+.dropdown {
+  padding: var(--mantine-spacing-xs);
+  min-width: 200px;
+}
+
+/* Responsive adjustments for very small screens */
+@media (max-width: 360px) {
+  .header {
+    padding: 0 var(--mantine-spacing-sm);
+  }
+
+  .logoText {
+    font-size: 1.125rem;
+  }
+
+  .logoIcon {
+    width: 32px;
+    height: 32px;
+  }
+}
