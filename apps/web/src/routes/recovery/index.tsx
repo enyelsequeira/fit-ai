@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { IconActivity, IconCalendarPlus, IconRefresh } from "@tabler/icons-react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import { FactorsBreakdown, ReadinessScore } from "@/components/ai/readiness-score";
 import { MuscleRecoveryMap } from "@/components/recovery/muscle-recovery-map";
 import { RecoveryTrends } from "@/components/recovery/recovery-trends";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -68,7 +68,7 @@ function RecoveryStatusPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
+          <FitAiButton
             variant="outline"
             size="sm"
             onClick={() => refreshRecovery.mutate({})}
@@ -79,12 +79,12 @@ function RecoveryStatusPage() {
               className={`size-3.5 ${refreshRecovery.isPending ? "animate-spin" : ""}`}
             />
             Refresh
-          </Button>
+          </FitAiButton>
           <Link to="/recovery/check-in">
-            <Button size="sm" className="gap-1.5">
+            <FitAiButton size="sm" className="gap-1.5">
               <IconCalendarPlus className="size-3.5" />
               Log Check-in
-            </Button>
+            </FitAiButton>
           </Link>
         </div>
       </div>
@@ -124,7 +124,7 @@ function RecoveryStatusPage() {
               description="Log a daily check-in to see your training readiness"
               action={
                 <Link to="/recovery/check-in">
-                  <Button size="sm">Log Check-in</Button>
+                  <FitAiButton size="sm">Log Check-in</FitAiButton>
                 </Link>
               }
             />
@@ -213,7 +213,7 @@ function RecoveryStatusPage() {
               description="Log your first daily check-in"
               action={
                 <Link to="/recovery/check-in">
-                  <Button size="sm">Log Check-in</Button>
+                  <FitAiButton size="sm">Log Check-in</FitAiButton>
                 </Link>
               }
             />

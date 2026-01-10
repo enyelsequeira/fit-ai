@@ -9,7 +9,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import dayjs from "dayjs";
 
@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -137,7 +137,7 @@ function PhotoUploadForm({
         {preview ? (
           <div className="relative h-48 w-full">
             <img src={preview} alt="Preview" className="h-full w-full object-contain" />
-            <Button
+            <FitAiButton
               type="button"
               variant="ghost"
               size="icon-xs"
@@ -149,7 +149,7 @@ function PhotoUploadForm({
               }}
             >
               <IconX className="size-3" />
-            </Button>
+            </FitAiButton>
           </div>
         ) : (
           <>
@@ -187,7 +187,7 @@ function PhotoUploadForm({
           <Label>Pose Type</Label>
           <div className="flex gap-2">
             {(["front", "side", "back", "other"] as PoseType[]).map((pose) => (
-              <Button
+              <FitAiButton
                 key={pose}
                 type="button"
                 variant={poseType === pose ? "default" : "outline"}
@@ -195,7 +195,7 @@ function PhotoUploadForm({
                 onClick={() => setPoseType(pose)}
               >
                 {POSE_LABELS[pose]}
-              </Button>
+              </FitAiButton>
             ))}
           </div>
         </div>
@@ -212,12 +212,12 @@ function PhotoUploadForm({
       </div>
 
       <DialogFooter>
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <FitAiButton type="button" variant="outline" onClick={onCancel}>
           Cancel
-        </Button>
-        <Button type="submit" disabled={!file || isSubmitting}>
+        </FitAiButton>
+        <FitAiButton type="submit" disabled={!file || isSubmitting}>
           {isSubmitting ? "Uploading..." : "Upload Photo"}
-        </Button>
+        </FitAiButton>
       </DialogFooter>
     </form>
   );
@@ -261,17 +261,17 @@ function PhotoLightbox({
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
-      <Button
+      <FitAiButton
         variant="ghost"
         size="icon"
         className="absolute right-4 top-4 text-white hover:bg-white/20"
         onClick={onClose}
       >
         <IconX className="size-5" />
-      </Button>
+      </FitAiButton>
 
       {hasPrev && (
-        <Button
+        <FitAiButton
           variant="ghost"
           size="icon"
           className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20"
@@ -281,11 +281,11 @@ function PhotoLightbox({
           }}
         >
           <IconChevronLeft className="size-6" />
-        </Button>
+        </FitAiButton>
       )}
 
       {hasNext && (
-        <Button
+        <FitAiButton
           variant="ghost"
           size="icon"
           className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20"
@@ -295,7 +295,7 @@ function PhotoLightbox({
           }}
         >
           <IconChevronRight className="size-6" />
-        </Button>
+        </FitAiButton>
       )}
 
       <div className="flex max-h-[90vh] max-w-[90vw] flex-col items-center">
@@ -308,14 +308,14 @@ function PhotoLightbox({
           <span className="text-sm">{dayjs(photo.date).format("MMMM D, YYYY")}</span>
           <Badge className={POSE_COLORS[photo.poseType]}>{POSE_LABELS[photo.poseType]}</Badge>
           {photo.weight && <span className="text-sm">{photo.weight}kg</span>}
-          <Button
+          <FitAiButton
             variant="ghost"
             size="icon-sm"
             className="text-red-400 hover:bg-red-500/20 hover:text-red-300"
             onClick={() => onDelete(photo.id)}
           >
             <IconTrash className="size-4" />
-          </Button>
+          </FitAiButton>
         </div>
         {photo.notes && (
           <p className="mt-2 max-w-md text-center text-sm text-white/70">{photo.notes}</p>
@@ -330,14 +330,14 @@ function PhotoComparison({ photos, onClose }: { photos: [Photo, Photo]; onClose:
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
-      <Button
+      <FitAiButton
         variant="ghost"
         size="icon"
         className="absolute right-4 top-4 text-white hover:bg-white/20"
         onClick={onClose}
       >
         <IconX className="size-5" />
-      </Button>
+      </FitAiButton>
 
       <div className="relative max-h-[80vh] max-w-[90vw]">
         <div className="relative overflow-hidden">
@@ -500,10 +500,10 @@ export function PhotosTab() {
         </div>
         <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
           <DialogTrigger asChild>
-            <Button size="sm">
+            <FitAiButton size="sm">
               <IconCamera className="size-4" />
               Add Photo
-            </Button>
+            </FitAiButton>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -557,7 +557,7 @@ export function PhotosTab() {
                           {POSE_LABELS[photo.poseType]}
                         </Badge>
                         <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between opacity-0 transition-opacity group-hover:opacity-100">
-                          <Button
+                          <FitAiButton
                             variant="ghost"
                             size="xs"
                             className="text-white hover:bg-white/20"
@@ -567,8 +567,8 @@ export function PhotosTab() {
                             }}
                           >
                             Compare
-                          </Button>
-                          <Button
+                          </FitAiButton>
+                          <FitAiButton
                             variant="ghost"
                             size="icon-xs"
                             className="text-white hover:bg-white/20"
@@ -578,7 +578,7 @@ export function PhotosTab() {
                             }}
                           >
                             <IconTrash className="size-3" />
-                          </Button>
+                          </FitAiButton>
                         </div>
                       </div>
                     </Card>
@@ -596,10 +596,10 @@ export function PhotosTab() {
               title="No progress photos"
               description="Add progress photos to visualize your journey"
               action={
-                <Button size="sm" onClick={() => setIsUploadOpen(true)}>
+                <FitAiButton size="sm" onClick={() => setIsUploadOpen(true)}>
                   <IconCamera className="size-4" />
                   Add First Photo
-                </Button>
+                </FitAiButton>
               }
             />
           </CardContent>

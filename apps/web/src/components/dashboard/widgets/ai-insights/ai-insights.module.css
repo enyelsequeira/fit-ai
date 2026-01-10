@@ -1,0 +1,201 @@
+/* AI Insights Widget Styles */
+
+.card {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  animation-delay: 200ms;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header Sparkle Animation */
+.headerSparkle {
+  color: var(--mantine-color-grape-5);
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 0.9;
+    transform: scale(1.1) rotate(-5deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  75% {
+    opacity: 0.9;
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+/* Regenerate Button */
+.regenerateButton {
+  transition:
+    transform 200ms ease,
+    background-color 150ms ease;
+}
+
+.regenerateButton:hover {
+  transform: rotate(180deg);
+}
+
+/* Insight Card */
+.insightCard {
+  position: relative;
+  padding: var(--mantine-spacing-sm);
+  background: var(--mantine-color-default-hover);
+  border-radius: var(--mantine-radius-md);
+  border-left: 3px solid var(--insight-accent-color, var(--mantine-color-gray-5));
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease;
+  animation: fadeSlideUp 400ms ease-out backwards;
+  animation-delay: var(--insight-delay, 100ms);
+}
+
+.insightCard:hover {
+  background: var(--mantine-color-default);
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Insight Header */
+.insightHeader {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Insight Icon */
+.insightIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: color-mix(in srgb, var(--insight-accent-color) 15%, transparent);
+  border-radius: var(--mantine-radius-sm);
+  flex-shrink: 0;
+  transition: transform 200ms ease;
+}
+
+.insightCard:hover .insightIcon {
+  transform: scale(1.05);
+}
+
+/* Expand Button */
+.expandButton {
+  transition: transform 200ms ease;
+  flex-shrink: 0;
+}
+
+.expandButton[data-expanded="true"] {
+  transform: rotate(180deg);
+}
+
+/* Insight Content */
+.insightContent {
+  padding-top: var(--mantine-spacing-sm);
+  padding-left: calc(32px + var(--mantine-spacing-sm));
+  animation: fadeIn 200ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Empty State */
+.emptyState {
+  animation: fadeSlideUp 400ms ease-out;
+}
+
+.emptyIcon {
+  color: var(--mantine-color-grape-5);
+  padding: var(--mantine-spacing-sm);
+  background: var(--mantine-color-grape-light);
+  border-radius: 50%;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* Skeleton Card */
+.skeletonCard {
+  padding: var(--mantine-spacing-sm);
+  background: var(--mantine-color-default-hover);
+  border-radius: var(--mantine-radius-md);
+  border-left: 3px solid var(--mantine-color-gray-4);
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .insightCard,
+  .emptyState {
+    animation: none;
+  }
+
+  .headerSparkle {
+    animation: none;
+  }
+
+  .emptyIcon {
+    animation: none;
+  }
+
+  .regenerateButton:hover {
+    transform: none;
+  }
+
+  .insightCard:hover {
+    transform: none;
+  }
+
+  .insightCard:hover .insightIcon {
+    transform: none;
+  }
+
+  .expandButton {
+    transition: none;
+  }
+
+  .insightContent {
+    animation: none;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .insightCard:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}

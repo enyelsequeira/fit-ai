@@ -1,4 +1,5 @@
-import type { CardProps as MantineCardProps, PaperProps } from "@mantine/core";
+import type { CardProps as MantineCardProps, PaperProps, TextProps, TitleProps } from "@mantine/core";
+import type { ReactNode } from "react";
 
 import { Card as MantineCard, Group, Stack, Text, Title } from "@mantine/core";
 import { forwardRef } from "react";
@@ -22,7 +23,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
 Card.displayName = "Card";
 
 interface CardSectionProps extends PaperProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 function CardHeader({ children, ...props }: CardSectionProps) {
@@ -33,7 +34,11 @@ function CardHeader({ children, ...props }: CardSectionProps) {
   );
 }
 
-function CardTitle({ children, ...props }: React.ComponentProps<typeof Title>) {
+interface CardTitleProps extends Omit<TitleProps, "order" | "size"> {
+  children?: ReactNode;
+}
+
+function CardTitle({ children, ...props }: CardTitleProps) {
   return (
     <Title order={4} size="sm" fw={500} {...props}>
       {children}
@@ -41,7 +46,11 @@ function CardTitle({ children, ...props }: React.ComponentProps<typeof Title>) {
   );
 }
 
-function CardDescription({ children, ...props }: React.ComponentProps<typeof Text>) {
+interface CardDescriptionProps extends Omit<TextProps, "size" | "c"> {
+  children?: ReactNode;
+}
+
+function CardDescription({ children, ...props }: CardDescriptionProps) {
   return (
     <Text size="xs" c="dimmed" {...props}>
       {children}

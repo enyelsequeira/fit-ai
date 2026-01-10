@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { IconLoader2, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -70,9 +70,9 @@ function TodosRoute() {
               placeholder="Add a new task..."
               disabled={createMutation.isPending}
             />
-            <Button type="submit" disabled={createMutation.isPending || !newTodoText.trim()}>
+            <FitAiButton type="submit" disabled={createMutation.isPending || !newTodoText.trim()}>
               {createMutation.isPending ? <IconLoader2 className="h-4 w-4 animate-spin" /> : "Add"}
-            </Button>
+            </FitAiButton>
           </form>
 
           {todos.isLoading ? (
@@ -101,14 +101,14 @@ function TodosRoute() {
                       {todo.text}
                     </label>
                   </div>
-                  <Button
+                  <FitAiButton
                     variant="ghost"
                     size="icon"
                     onClick={() => handleDeleteTodo(todo.id)}
                     aria-label="Delete todo"
                   >
                     <IconTrash className="h-4 w-4" />
-                  </Button>
+                  </FitAiButton>
                 </li>
               ))}
             </ul>

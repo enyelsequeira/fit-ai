@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -219,9 +219,9 @@ function WorkoutGeneratorForm({
           </div>
         </div>
 
-        <Button onClick={handleGenerate} disabled={isLoading} className="w-full">
+        <FitAiButton onClick={handleGenerate} disabled={isLoading} className="w-full">
           {isLoading ? "Generating..." : "Generate Workout"}
-        </Button>
+        </FitAiButton>
       </CardContent>
     </Card>
   );

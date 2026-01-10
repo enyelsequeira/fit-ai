@@ -1,0 +1,70 @@
+/* Recovery Status Widget Styles */
+
+.card {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  animation-delay: 150ms;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ringProgress {
+  transition: transform 200ms ease;
+}
+
+.card:hover .ringProgress {
+  transform: scale(1.05);
+}
+
+.progressBar {
+  transition: width 800ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.emptyState {
+  animation: fadeSlideUp 400ms ease-out;
+}
+
+.emptyIcon {
+  color: var(--mantine-color-dimmed);
+  padding: var(--mantine-spacing-md);
+  background: var(--mantine-color-teal-light);
+  border-radius: 50%;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .emptyState {
+    animation: none;
+  }
+
+  .emptyIcon {
+    animation: none;
+  }
+
+  .card:hover .ringProgress {
+    transform: none;
+  }
+
+  .progressBar {
+    transition: none;
+  }
+}

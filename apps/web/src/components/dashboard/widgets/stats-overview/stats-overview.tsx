@@ -14,19 +14,32 @@ import { Box, Flex, Group, SimpleGrid, Text } from "@mantine/core";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import styles from "./stats-overview.module.css";
+
 interface StatCardProps {
   title: string;
   value: string | number;
   description?: string;
   icon: ReactNode;
+  iconVariant?: "blue" | "orange" | "teal" | "yellow";
   trend?: {
     value: number;
     label: string;
   };
   isLoading?: boolean;
+  animationDelay?: number;
 }
 
-function StatCard({ title, value, description, icon, trend, isLoading }: StatCardProps) {
+function StatCard({
+  title,
+  value,
+  description,
+  icon,
+  iconVariant = "blue",
+  trend,
+  isLoading,
+  animationDelay = 0,
+}: StatCardProps) {
   if (isLoading) {
     return (
       <Card>
@@ -44,14 +57,21 @@ function StatCard({ title, value, description, icon, trend, isLoading }: StatCar
     );
   }
 
+  const iconBgClass = {
+    blue: styles.iconBgBlue,
+    orange: styles.iconBgOrange,
+    teal: styles.iconBgTeal,
+    yellow: styles.iconBgYellow,
+  }[iconVariant];
+
   return (
-    <Card>
+    <Card className={styles.statCard} style={{ animationDelay: `${animationDelay}ms` }}>
       <CardHeader>
         <Group justify="space-between" pb="xs">
           <CardTitle c="dimmed" fw={500}>
             {title}
           </CardTitle>
-          <Box c="dimmed">{icon}</Box>
+          <Box className={`${styles.iconWrapper} ${iconBgClass}`}>{icon}</Box>
         </Group>
       </CardHeader>
       <CardContent>
@@ -61,11 +81,20 @@ function StatCard({ title, value, description, icon, trend, isLoading }: StatCar
         {trend && (
           <Flex align="center" gap={4}>
             {trend.value > 0 ? (
-              <IconArrowUp size={12} style={{ color: "rgb(34, 197, 94)" }} />
+              <IconArrowUp size={12} className={styles.trendPositive} />
             ) : trend.value < 0 ? (
-              <IconArrowDown size={12} style={{ color: "rgb(239, 68, 68)" }} />
+              <IconArrowDown size={12} className={styles.trendNegative} />
             ) : null}
-            <Text size="xs" c={trend.value > 0 ? "green" : trend.value < 0 ? "red" : "dimmed"}>
+            <Text
+              size="xs"
+              className={
+                trend.value > 0
+                  ? styles.trendPositive
+                  : trend.value < 0
+                    ? styles.trendNegative
+                    : styles.trendNeutral
+              }
+            >
               {trend.value > 0 ? "+" : ""}
               {trend.value}
             </Text>
@@ -84,7 +113,7 @@ function StatCard({ title, value, description, icon, trend, isLoading }: StatCar
   );
 }
 
-interface StatsGridProps {
+interface StatsOverviewProps {
   workoutsThisWeek: number;
   workoutsLastWeek?: number;
   currentStreak: number;
@@ -95,7 +124,7 @@ interface StatsGridProps {
   isLoading?: boolean;
 }
 
-export function StatsGrid({
+export function StatsOverview({
   workoutsThisWeek,
   workoutsLastWeek,
   currentStreak,
@@ -104,7 +133,7 @@ export function StatsGrid({
   volumeLastWeek,
   prsThisMonth,
   isLoading,
-}: StatsGridProps) {
+}: StatsOverviewProps) {
   const workoutTrend =
     workoutsLastWeek !== undefined
       ? {
@@ -129,40 +158,48 @@ export function StatsGrid({
   };
 
   return (
-    <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
+    <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md" className={styles.statsGrid}>
       <StatCard
         title="Workouts This Week"
         value={workoutsThisWeek}
         icon={<IconActivity size={16} />}
+        iconVariant="blue"
         trend={workoutTrend}
         isLoading={isLoading}
+        animationDelay={0}
       />
       <StatCard
         title="Current Streak"
         value={`${currentStreak} days`}
         icon={<IconFlame size={16} />}
+        iconVariant="orange"
         description={longestStreak ? `Longest: ${longestStreak} days` : undefined}
         isLoading={isLoading}
+        animationDelay={50}
       />
       <StatCard
         title="Volume This Week"
         value={formatVolume(totalVolumeThisWeek)}
         icon={<IconScale size={16} />}
+        iconVariant="teal"
         trend={volumeTrend}
         isLoading={isLoading}
+        animationDelay={100}
       />
       <StatCard
         title="PRs This Month"
         value={prsThisMonth}
         icon={<IconTrophy size={16} />}
+        iconVariant="yellow"
         description="Personal records achieved"
         isLoading={isLoading}
+        animationDelay={150}
       />
     </SimpleGrid>
   );
 }
 
-export function StatsGridSkeleton() {
+export function StatsOverviewSkeleton() {
   return (
     <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
       {Array.from({ length: 4 }).map((_, i) => (

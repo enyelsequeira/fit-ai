@@ -1,7 +1,7 @@
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
@@ -70,7 +70,7 @@ export function ExerciseImageGallery({
         {/* Navigation Arrows */}
         {hasMultipleImages && (
           <>
-            <Button
+            <FitAiButton
               variant="secondary"
               size="icon"
               className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity size-8"
@@ -80,8 +80,8 @@ export function ExerciseImageGallery({
               }}
             >
               <IconChevronLeft className="size-4" />
-            </Button>
-            <Button
+            </FitAiButton>
+            <FitAiButton
               variant="secondary"
               size="icon"
               className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity size-8"
@@ -91,7 +91,7 @@ export function ExerciseImageGallery({
               }}
             >
               <IconChevronRight className="size-4" />
-            </Button>
+            </FitAiButton>
 
             {/* Image Counter */}
             <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
@@ -133,14 +133,14 @@ export function ExerciseImageGallery({
             {exerciseName} - Image {selectedIndex + 1} of {allImages.length}
           </DialogTitle>
           <div className="relative flex items-center justify-center min-h-[60vh]">
-            <Button
+            <FitAiButton
               variant="ghost"
               size="icon"
               className="absolute right-2 top-2 text-white hover:bg-white/20 z-10"
               onClick={() => setIsLightboxOpen(false)}
             >
               <IconX className="size-5" />
-            </Button>
+            </FitAiButton>
 
             <img
               src={currentImage ?? undefined}
@@ -150,22 +150,22 @@ export function ExerciseImageGallery({
 
             {hasMultipleImages && (
               <>
-                <Button
+                <FitAiButton
                   variant="ghost"
                   size="icon"
                   className="absolute left-2 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 size-10"
                   onClick={goToPrevious}
                 >
                   <IconChevronLeft className="size-6" />
-                </Button>
-                <Button
+                </FitAiButton>
+                <FitAiButton
                   variant="ghost"
                   size="icon"
                   className="absolute right-2 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 size-10"
                   onClick={goToNext}
                 >
                   <IconChevronRight className="size-6" />
-                </Button>
+                </FitAiButton>
 
                 {/* Image Counter */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-sm px-3 py-1 rounded">

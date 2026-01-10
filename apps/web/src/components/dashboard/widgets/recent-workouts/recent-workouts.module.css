@@ -1,0 +1,75 @@
+/* Recent Workouts Widget Styles */
+
+.card {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  animation-delay: 100ms;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.workoutItem {
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+
+.workoutItem:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.workoutIcon {
+  border-radius: 8px;
+  background: var(--mantine-color-blue-light);
+  color: var(--mantine-primary-color-filled);
+  transition: transform 200ms ease;
+}
+
+.workoutItem:hover .workoutIcon {
+  transform: scale(1.05);
+}
+
+.emptyState {
+  animation: fadeSlideUp 400ms ease-out;
+}
+
+.emptyIcon {
+  color: var(--mantine-color-dimmed);
+  padding: var(--mantine-spacing-sm);
+  background: var(--mantine-color-blue-light);
+  border-radius: 50%;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .emptyState {
+    animation: none;
+  }
+
+  .emptyIcon {
+    animation: none;
+  }
+
+  .workoutItem:hover .workoutIcon {
+    transform: none;
+  }
+}

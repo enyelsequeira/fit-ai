@@ -9,7 +9,7 @@ import {
 } from "@tabler/icons-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -79,7 +79,7 @@ function GeneratedWorkoutResult({
             </div>
           </div>
           {onRegenerate && (
-            <Button
+            <FitAiButton
               variant="outline"
               size="sm"
               onClick={onRegenerate}
@@ -88,7 +88,7 @@ function GeneratedWorkoutResult({
             >
               <IconRefresh className={cn("size-3.5", isRegenerating && "animate-spin")} />
               Regenerate
-            </Button>
+            </FitAiButton>
           )}
         </div>
       </CardHeader>
@@ -140,14 +140,14 @@ function GeneratedWorkoutResult({
                   </div>
                 </div>
                 {exercise.alternatives && exercise.alternatives.length > 0 && onSwapExercise && (
-                  <Button
+                  <FitAiButton
                     variant="ghost"
                     size="icon-xs"
                     onClick={() => onSwapExercise(exercise.exerciseId)}
                     title="Swap exercise"
                   >
                     <IconRepeat className="size-3.5" />
-                  </Button>
+                  </FitAiButton>
                 )}
               </div>
             ))}
@@ -178,16 +178,16 @@ function GeneratedWorkoutResult({
 
       <CardFooter className="flex gap-2">
         {onSaveAsTemplate && (
-          <Button variant="outline" onClick={onSaveAsTemplate} className="gap-1.5">
+          <FitAiButton variant="outline" onClick={onSaveAsTemplate} className="gap-1.5">
             <IconDeviceFloppy className="size-3.5" />
             Save as Template
-          </Button>
+          </FitAiButton>
         )}
         {onStart && (
-          <Button onClick={onStart} className="flex-1 gap-1.5">
+          <FitAiButton onClick={onStart} className="flex-1 gap-1.5">
             <IconPlayerPlay className="size-3.5" />
             Start This Workout
-          </Button>
+          </FitAiButton>
         )}
       </CardFooter>
     </Card>

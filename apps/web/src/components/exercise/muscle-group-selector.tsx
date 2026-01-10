@@ -2,7 +2,7 @@ import { IconX } from "@tabler/icons-react";
 import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -107,7 +107,7 @@ export function MuscleGroupSelector({
         <div className="ring-foreground/10 bg-popover text-popover-foreground absolute top-full left-0 z-50 mt-1 max-h-60 w-full overflow-auto rounded-none shadow-md ring-1">
           <div className="p-1">
             {filteredGroups.map((group) => (
-              <Button
+              <FitAiButton
                 key={group}
                 type="button"
                 variant="ghost"
@@ -116,7 +116,7 @@ export function MuscleGroupSelector({
                 onClick={() => handleSelect(group)}
               >
                 {group}
-              </Button>
+              </FitAiButton>
             ))}
           </div>
         </div>

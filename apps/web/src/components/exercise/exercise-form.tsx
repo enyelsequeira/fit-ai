@@ -18,7 +18,7 @@ import {
 import { IconAlertCircle, IconCircleCheck, IconPlus } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import { useDebounce } from "@/hooks/use-debounce";
 import { orpc } from "@/utils/orpc";

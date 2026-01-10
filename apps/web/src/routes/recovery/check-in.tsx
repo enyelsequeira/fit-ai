@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect, useSearch } from "@tanstack/react-router";
 import { IconArrowLeft, IconCalendarPlus } from "@tabler/icons-react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 import z from "zod";
 
 import type { CheckInData } from "@/components/recovery/check-in-form";
@@ -9,7 +9,7 @@ import type { CheckInData } from "@/components/recovery/check-in-form";
 import { CheckInForm } from "@/components/recovery/check-in-form";
 import { CheckInSummary } from "@/components/recovery/check-in-summary";
 import { ReadinessScore } from "@/components/ai/readiness-score";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUser } from "@/functions/get-user";
@@ -128,9 +128,9 @@ function CheckInPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link to="/recovery">
-          <Button variant="ghost" size="icon-sm">
+          <FitAiButton variant="ghost" size="icon-sm">
             <IconArrowLeft className="size-4" />
-          </Button>
+          </FitAiButton>
         </Link>
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
@@ -184,16 +184,16 @@ function CheckInPage() {
 
           {/* Actions */}
           <div className="flex gap-2">
-            <Button
+            <FitAiButton
               variant="outline"
               onClick={() => queryClient.setQueryData(["recovery", "getTodayCheckIn"], null)}
               className="flex-1"
             >
               Edit Check-in
-            </Button>
-            <Button variant="destructive" onClick={handleDelete} disabled={deleteCheckIn.isPending}>
+            </FitAiButton>
+            <FitAiButton variant="destructive" onClick={handleDelete} disabled={deleteCheckIn.isPending}>
               Delete
-            </Button>
+            </FitAiButton>
           </div>
         </div>
       ) : (

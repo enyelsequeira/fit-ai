@@ -1,0 +1,115 @@
+/* Weight Chart Widget Styles */
+
+.card {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  animation-delay: 250ms;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes drawLine {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.chartContainer {
+  overflow: hidden;
+}
+
+.chart {
+  overflow: visible;
+}
+
+.areaPath {
+  animation: fadeIn 800ms ease-out;
+}
+
+.linePath {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  animation: drawLine 1.2s ease-out;
+}
+
+.dataPoint {
+  opacity: 0;
+  animation: fadeIn 400ms ease-out forwards;
+  transition:
+    transform 200ms ease,
+    r 200ms ease;
+}
+
+.dataPoint:nth-child(1) {
+  animation-delay: 200ms;
+}
+.dataPoint:nth-child(2) {
+  animation-delay: 300ms;
+}
+.dataPoint:nth-child(3) {
+  animation-delay: 400ms;
+}
+.dataPoint:nth-child(4) {
+  animation-delay: 500ms;
+}
+.dataPoint:nth-child(5) {
+  animation-delay: 600ms;
+}
+.dataPoint:nth-child(6) {
+  animation-delay: 700ms;
+}
+.dataPoint:nth-child(7) {
+  animation-delay: 800ms;
+}
+.dataPoint:nth-child(8) {
+  animation-delay: 900ms;
+}
+
+.dataPoint:hover {
+  transform: scale(1.5);
+}
+
+.trendUp {
+  color: var(--mantine-color-orange-5);
+}
+
+.trendDown {
+  color: var(--mantine-color-teal-5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .areaPath,
+  .dataPoint {
+    animation: none;
+  }
+
+  .linePath {
+    animation: none;
+    stroke-dasharray: none;
+  }
+
+  .dataPoint {
+    opacity: 1;
+  }
+}

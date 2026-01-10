@@ -1,7 +1,7 @@
 import { IconClock, IconBarbell, IconPlayerPlay, IconStar } from "@tabler/icons-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -155,10 +155,10 @@ function GeneratedWorkoutCard({
       </CardContent>
       {!workout.wasUsed && onUse && (
         <CardFooter>
-          <Button size="sm" onClick={onUse} className="w-full gap-1.5">
+          <FitAiButton size="sm" onClick={onUse} className="w-full gap-1.5">
             <IconPlayerPlay className="size-3.5" />
             Use This Workout
-          </Button>
+          </FitAiButton>
         </CardFooter>
       )}
     </Card>

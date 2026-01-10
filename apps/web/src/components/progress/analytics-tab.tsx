@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
@@ -299,14 +299,14 @@ function StrengthProgress() {
             <Label>Select Exercise</Label>
             <div className="flex flex-wrap gap-1">
               {exercises.slice(0, 10).map((exercise) => (
-                <Button
+                <FitAiButton
                   key={exercise.id}
                   variant={selectedExerciseId === exercise.id ? "default" : "outline"}
                   size="xs"
                   onClick={() => setSelectedExerciseId(exercise.id)}
                 >
                   {exercise.name}
-                </Button>
+                </FitAiButton>
               ))}
             </div>
           </div>

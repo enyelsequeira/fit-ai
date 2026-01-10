@@ -1,0 +1,165 @@
+/* Muscle Balance Widget Styles */
+
+.card {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  animation-delay: 200ms;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.headerIcon {
+  color: var(--mantine-color-teal-5);
+}
+
+.periodControl {
+  flex-shrink: 0;
+}
+
+/* Chart Container */
+.chartContainer {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+}
+
+.chart {
+  display: block;
+}
+
+/* Donut Segment Animation */
+.segment {
+  cursor: pointer;
+  transition:
+    stroke-width 200ms ease,
+    opacity 200ms ease;
+  animation: segmentDraw 800ms ease-out backwards;
+}
+
+@keyframes segmentDraw {
+  from {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  to {
+    opacity: 0.85;
+  }
+}
+
+/* Center Content */
+.centerContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Legend */
+.legend {
+  flex: 1;
+  min-width: 140px;
+}
+
+.legendItem {
+  padding: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-sm);
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    transform 200ms ease;
+  animation: fadeSlideUp 400ms ease-out backwards;
+}
+
+.legendItem:hover,
+.legendItemHovered {
+  background: var(--mantine-color-default-hover);
+  transform: translateX(4px);
+}
+
+.legendColor {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--mantine-radius-sm);
+  flex-shrink: 0;
+  transition: transform 200ms ease;
+}
+
+.legendItem:hover .legendColor,
+.legendItemHovered .legendColor {
+  transform: scale(1.2);
+}
+
+.legendLabel {
+  color: var(--mantine-color-text);
+}
+
+/* Alert */
+.alert {
+  animation: fadeSlideUp 400ms ease-out;
+}
+
+/* Empty State */
+.emptyState {
+  animation: fadeSlideUp 400ms ease-out;
+}
+
+.emptyIcon {
+  color: var(--mantine-color-dimmed);
+  padding: var(--mantine-spacing-sm);
+  background: var(--mantine-color-teal-light);
+  border-radius: 50%;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .legendItem,
+  .alert,
+  .emptyState {
+    animation: none;
+  }
+
+  .segment {
+    animation: none;
+  }
+
+  .emptyIcon {
+    animation: none;
+  }
+
+  .legendItem:hover,
+  .legendItemHovered {
+    transform: none;
+  }
+
+  .legendItem:hover .legendColor,
+  .legendItemHovered .legendColor {
+    transform: none;
+  }
+
+  .segment {
+    transition: none;
+  }
+}

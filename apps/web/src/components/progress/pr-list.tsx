@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -86,42 +86,42 @@ export function PRList({ records, loading }: PRListProps) {
         <div className="space-y-2">
           <Label>Record Type</Label>
           <div className="flex flex-wrap gap-1">
-            <Button
+            <FitAiButton
               variant={selectedType === "all" ? "default" : "outline"}
               size="xs"
               onClick={() => setSelectedType("all")}
             >
               All
-            </Button>
+            </FitAiButton>
             {(Object.keys(PR_TYPE_LABELS) as RecordType[]).map((type) => (
-              <Button
+              <FitAiButton
                 key={type}
                 variant={selectedType === type ? "default" : "outline"}
                 size="xs"
                 onClick={() => setSelectedType(type)}
               >
                 {PR_TYPE_LABELS[type]}
-              </Button>
+              </FitAiButton>
             ))}
           </div>
         </div>
         <div className="space-y-2">
           <Label>Group By</Label>
           <div className="flex gap-1">
-            <Button
+            <FitAiButton
               variant={!groupByExercise ? "default" : "outline"}
               size="xs"
               onClick={() => setGroupByExercise(false)}
             >
               Date
-            </Button>
-            <Button
+            </FitAiButton>
+            <FitAiButton
               variant={groupByExercise ? "default" : "outline"}
               size="xs"
               onClick={() => setGroupByExercise(true)}
             >
               Exercise
-            </Button>
+            </FitAiButton>
           </div>
         </div>
       </div>

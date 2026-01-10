@@ -1,0 +1,91 @@
+/* Stats Overview Widget Styles */
+
+.statsGrid {
+  animation: fadeSlideUp 400ms ease-out backwards;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.statCard {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--mantine-radius-md);
+  transition: transform 200ms ease;
+}
+
+.statCard:hover .iconWrapper {
+  transform: scale(1.1);
+}
+
+.iconBgBlue {
+  background: var(--mantine-color-blue-light);
+  color: var(--mantine-color-blue-6);
+}
+
+.iconBgOrange {
+  background: var(--mantine-color-orange-light);
+  color: var(--mantine-color-orange-6);
+}
+
+.iconBgTeal {
+  background: var(--mantine-color-teal-light);
+  color: var(--mantine-color-teal-6);
+}
+
+.iconBgYellow {
+  background: var(--mantine-color-yellow-light);
+  color: var(--mantine-color-yellow-6);
+}
+
+.trendPositive {
+  color: var(--mantine-color-teal-6);
+}
+
+.trendNegative {
+  color: var(--mantine-color-red-6);
+}
+
+.trendNeutral {
+  color: var(--mantine-color-dimmed);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statsGrid,
+  .statCard {
+    animation: none;
+  }
+
+  .statCard:hover {
+    transform: none;
+  }
+
+  .statCard:hover .iconWrapper {
+    transform: none;
+  }
+}

@@ -1,10 +1,12 @@
 import { IconBolt, IconClipboardCheck, IconMoon } from "@tabler/icons-react";
 
-import { Box, Flex, Progress, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Box, Flex, Progress, RingProgress, SimpleGrid, Stack, Text } from "@mantine/core";
 
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+
+import styles from "./recovery-status.module.css";
 
 interface CheckIn {
   id: number;
@@ -39,7 +41,7 @@ interface RecoveryStatusProps {
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 70) return "green";
+  if (score >= 70) return "teal";
   if (score >= 40) return "yellow";
   return "red";
 }
@@ -66,7 +68,13 @@ function FactorBar({ label, score }: { label: string; score: number | null }) {
         </Text>
         <Text size="xs">{score}%</Text>
       </Flex>
-      <Progress value={score} size="xs" color={getScoreColor(score)} radius="xl" />
+      <Progress
+        value={score}
+        size="xs"
+        color={getScoreColor(score)}
+        radius="xl"
+        className={styles.progressBar}
+      />
     </Stack>
   );
 }
@@ -79,7 +87,7 @@ export function RecoveryStatus({
 }: RecoveryStatusProps) {
   if (isLoading) {
     return (
-      <Card>
+      <Card className={styles.card}>
         <CardHeader>
           <CardTitle>Recovery Status</CardTitle>
           <CardDescription>Your training readiness</CardDescription>
@@ -87,7 +95,7 @@ export function RecoveryStatus({
         <CardContent>
           <Stack gap="md">
             <Flex align="center" gap="md">
-              <Skeleton h={64} w={64} radius="xl" />
+              <Skeleton h={80} w={80} radius="xl" />
               <Stack gap="xs">
                 <Skeleton h={24} w={128} />
                 <Skeleton h={16} w={192} />
@@ -110,54 +118,56 @@ export function RecoveryStatus({
   // No check-in logged today
   if (!readiness?.todayCheckIn && !todayCheckIn) {
     return (
-      <Card>
+      <Card className={styles.card}>
         <CardHeader>
           <CardTitle>Recovery Status</CardTitle>
           <CardDescription>Your training readiness</CardDescription>
         </CardHeader>
         <CardContent>
-          <Stack py="xl" align="center" ta="center">
-            <IconClipboardCheck size={48} style={{ color: "var(--mantine-color-dimmed)" }} />
+          <Stack py="xl" align="center" ta="center" className={styles.emptyState}>
+            <Box className={styles.emptyIcon}>
+              <IconClipboardCheck size={48} />
+            </Box>
             <Text fw={500}>How are you feeling today?</Text>
             <Text size="sm" c="dimmed">
               Log your daily check-in to track recovery
             </Text>
-            <Button onClick={onLogCheckIn} leftSection={<IconClipboardCheck size={16} />}>
+            <FitAiButton onClick={onLogCheckIn} leftSection={<IconClipboardCheck size={16} />}>
               Log Check-in
-            </Button>
+            </FitAiButton>
           </Stack>
         </CardContent>
       </Card>
     );
   }
 
+  const scoreColor = readiness ? getScoreColor(readiness.score) : "blue";
+
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardHeader>
         <CardTitle>Recovery Status</CardTitle>
         <CardDescription>Your training readiness</CardDescription>
       </CardHeader>
       <CardContent>
         <Stack gap="md">
-          {/* Readiness Score */}
+          {/* Readiness Score with Ring Progress */}
           {readiness && (
             <Flex align="center" gap="md">
-              <Flex
-                h={64}
-                w={64}
-                align="center"
-                justify="center"
-                style={{
-                  borderRadius: "50%",
-                  background: `var(--mantine-color-${getScoreColor(readiness.score)}-light)`,
-                }}
-              >
-                <Text fz={24} fw={700} c={getScoreColor(readiness.score)}>
-                  {readiness.score}
-                </Text>
-              </Flex>
+              <RingProgress
+                size={80}
+                thickness={8}
+                roundCaps
+                sections={[{ value: readiness.score, color: scoreColor }]}
+                label={
+                  <Text fz="lg" fw={700} ta="center" c={scoreColor}>
+                    {readiness.score}
+                  </Text>
+                }
+                className={styles.ringProgress}
+              />
               <Box>
-                <Text fw={600} c={getScoreColor(readiness.score)}>
+                <Text fw={600} c={scoreColor}>
                   {readiness.recommendation}
                 </Text>
                 <Text size="sm" c="dimmed">

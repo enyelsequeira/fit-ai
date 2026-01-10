@@ -2,13 +2,13 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { IconArrowLeft, IconSettings, IconSparkles } from "@tabler/icons-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import type { GeneratorOptions } from "@/components/ai/workout-generator-form";
 
 import { GeneratedWorkoutResult } from "@/components/ai/generated-workout-result";
 import { WorkoutGeneratorForm } from "@/components/ai/workout-generator-form";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { getUser } from "@/functions/get-user";
@@ -95,9 +95,9 @@ function GenerateWorkoutPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link to="/ai">
-          <Button variant="ghost" size="icon-sm">
+          <FitAiButton variant="ghost" size="icon-sm">
             <IconArrowLeft className="size-4" />
-          </Button>
+          </FitAiButton>
         </Link>
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
@@ -118,7 +118,7 @@ function GenerateWorkoutPage() {
               description="Configure your goals, schedule, and equipment to get personalized AI workouts"
               action={
                 <Link to="/ai/preferences">
-                  <Button>Set Up Preferences</Button>
+                  <FitAiButton>Set Up Preferences</FitAiButton>
                 </Link>
               }
             />
@@ -146,9 +146,9 @@ function GenerateWorkoutPage() {
             isRegenerating={generateWorkout.isPending}
           />
 
-          <Button variant="outline" onClick={() => setGeneratedWorkout(null)} className="w-full">
+          <FitAiButton variant="outline" onClick={() => setGeneratedWorkout(null)} className="w-full">
             Generate Another Workout
-          </Button>
+          </FitAiButton>
         </div>
       )}
     </div>

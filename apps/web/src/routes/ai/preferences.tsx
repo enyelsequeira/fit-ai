@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { IconArrowLeft, IconSettings } from "@tabler/icons-react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import type { PreferencesData } from "@/components/ai/preferences-form";
 
 import { PreferencesForm } from "@/components/ai/preferences-form";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUser } from "@/functions/get-user";
 import { orpc, queryClient } from "@/utils/orpc";
@@ -64,9 +64,9 @@ function PreferencesPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link to="/ai">
-          <Button variant="ghost" size="icon-sm">
+          <FitAiButton variant="ghost" size="icon-sm">
             <IconArrowLeft className="size-4" />
-          </Button>
+          </FitAiButton>
         </Link>
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">

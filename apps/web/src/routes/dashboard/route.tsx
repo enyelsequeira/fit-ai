@@ -5,13 +5,18 @@ import {
   Avatar,
   Box,
   Burger,
+  Divider,
   Group,
   Menu,
+  Paper,
+  Stack,
   Text,
+  Title,
   Tooltip,
   UnstyledButton,
   useMantineColorScheme,
 } from "@mantine/core";
+import { IconHeart } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconActivity,
@@ -30,6 +35,7 @@ import {
 } from "@tabler/icons-react";
 import { Link, Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
 
+import { FitAiActionIcon, FitAiButton } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 
 import styles from "./route.module.css";
@@ -92,7 +98,11 @@ function ColorSchemeToggle() {
   return (
     <Tooltip label={colorScheme === "dark" ? "Light mode" : "Dark mode"} position="bottom">
       <UnstyledButton className={styles.colorSchemeToggle} onClick={toggleColorScheme}>
-        {colorScheme === "dark" ? <IconSun size={20} stroke={1.5} /> : <IconMoon size={20} stroke={1.5} />}
+        {colorScheme === "dark" ? (
+          <IconSun size={20} stroke={1.5} />
+        ) : (
+          <IconMoon size={20} stroke={1.5} />
+        )}
       </UnstyledButton>
     </Tooltip>
   );
@@ -165,11 +175,107 @@ function UserMenu({ session }: { session: Session | null }) {
   );
 }
 
+function ButtonShowcase() {
+  const variants = ["default", "outline", "secondary", "ghost", "destructive", "link"] as const;
+  const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
+  const actionIconVariants = ["default", "outline", "secondary", "ghost", "destructive"] as const;
+  const actionIconSizes = ["xs", "sm", "md", "lg", "xl"] as const;
+
+  return (
+    <Paper p="md" mt="xl" withBorder>
+      <Title order={4} mb="md">
+        FitAiButton Variants
+      </Title>
+
+      {/* Text Buttons by Variant */}
+      <Stack gap="lg">
+        {variants.map((variant) => (
+          <Box key={variant}>
+            <Text size="sm" fw={500} mb="xs" tt="capitalize">
+              {variant}
+            </Text>
+            <Group gap="sm">
+              {sizes.map((size) => (
+                <FitAiButton key={size} variant={variant} size={size}>
+                  {size}
+                </FitAiButton>
+              ))}
+            </Group>
+          </Box>
+        ))}
+      </Stack>
+
+      <Divider my="lg" label="FitAiButton with Icons" labelPosition="center" />
+
+      {/* Buttons with left/right sections */}
+      <Group gap="sm">
+        <FitAiButton leftSection={<IconHeart size={16} />}>Left Icon</FitAiButton>
+        <FitAiButton rightSection={<IconHeart size={16} />}>Right Icon</FitAiButton>
+        <FitAiButton variant="outline" leftSection={<IconHeart size={16} />}>
+          Outline
+        </FitAiButton>
+        <FitAiButton variant="ghost" leftSection={<IconHeart size={16} />}>
+          Ghost
+        </FitAiButton>
+      </Group>
+
+      <Divider my="lg" label="FitAiButton States" labelPosition="center" />
+
+      {/* States */}
+      <Group gap="sm">
+        <FitAiButton>Normal</FitAiButton>
+        <FitAiButton disabled>Disabled</FitAiButton>
+        <FitAiButton loading>Loading</FitAiButton>
+        <FitAiButton fullWidth>Full Width</FitAiButton>
+      </Group>
+
+      <Divider my="lg" label="FitAiActionIcon Variants" labelPosition="center" />
+
+      {/* Action Icon Buttons */}
+      <Stack gap="lg">
+        {actionIconVariants.map((variant) => (
+          <Box key={variant}>
+            <Text size="sm" fw={500} mb="xs" tt="capitalize">
+              {variant}
+            </Text>
+            <Group gap="sm">
+              {actionIconSizes.map((size) => (
+                <FitAiActionIcon key={size} variant={variant} size={size} aria-label={`${variant} ${size}`}>
+                  <IconHeart size={size === "xs" ? 14 : size === "sm" ? 16 : 18} />
+                </FitAiActionIcon>
+              ))}
+            </Group>
+          </Box>
+        ))}
+      </Stack>
+
+      <Divider my="lg" label="FitAiActionIcon States" labelPosition="center" />
+
+      {/* Action Icon States */}
+      <Group gap="sm">
+        <FitAiActionIcon aria-label="Normal">
+          <IconHeart size={18} />
+        </FitAiActionIcon>
+        <FitAiActionIcon disabled aria-label="Disabled">
+          <IconHeart size={18} />
+        </FitAiActionIcon>
+        <FitAiActionIcon loading aria-label="Loading">
+          <IconHeart size={18} />
+        </FitAiActionIcon>
+        <FitAiActionIcon variant="destructive" destructiveOutline aria-label="Destructive Outline">
+          <IconHeart size={18} />
+        </FitAiActionIcon>
+      </Group>
+    </Paper>
+  );
+}
+
 function DashboardLayout() {
   const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] = useDisclosure(false);
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
   const location = useLocation();
   const { session } = Route.useRouteContext();
+  console.log({ session });
 
   const isActiveRoute = (href: string) => {
     if (href === "/dashboard") {
@@ -263,6 +369,7 @@ function DashboardLayout() {
       {/* Main content */}
       <AppShell.Main className={styles.main}>
         <Outlet />
+        <ButtonShowcase />
       </AppShell.Main>
     </AppShell>
   );

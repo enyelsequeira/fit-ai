@@ -2,7 +2,7 @@ import type { TablerIcon } from "@tabler/icons-react";
 
 import { IconActivity, IconBed, IconSalad, IconCalendar, IconX } from "@tabler/icons-react";
 
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -61,9 +61,9 @@ function RecommendationCard({ recommendation, onDismiss, className }: Recommenda
           <p className="text-muted-foreground mt-0.5 text-xs line-clamp-2">{description}</p>
         </div>
         {onDismiss && (
-          <Button variant="ghost" size="icon-xs" onClick={onDismiss} className="shrink-0">
+          <FitAiButton variant="ghost" size="icon-xs" onClick={onDismiss} className="shrink-0">
             <IconX className="size-3" />
-          </Button>
+          </FitAiButton>
         )}
       </CardContent>
     </Card>

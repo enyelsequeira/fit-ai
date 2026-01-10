@@ -5,6 +5,8 @@ import { Box, Flex, Group, Text } from "@mantine/core";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import styles from "./weight-chart.module.css";
+
 interface DataPoint {
   date: Date;
   weight: number | null;
@@ -31,7 +33,7 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className={styles.card}>
         <CardHeader>
           <CardTitle>
             <Group gap="xs">
@@ -52,7 +54,7 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
 
   if (validPoints.length === 0) {
     return (
-      <Card>
+      <Card className={styles.card}>
         <CardHeader>
           <CardTitle>
             <Group gap="xs">
@@ -104,7 +106,7 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
   const latestWeight = validPoints[validPoints.length - 1]?.weight;
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardHeader>
         <CardTitle>
           <Group gap="xs">
@@ -116,36 +118,39 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
       </CardHeader>
       <CardContent>
         {/* SVG Chart */}
-        <Box pos="relative" h={192}>
+        <Box pos="relative" h={192} className={styles.chartContainer}>
           <svg
             viewBox={`0 0 ${chartWidth} ${chartHeight}`}
             style={{ width: "100%", height: "100%" }}
             preserveAspectRatio="none"
+            className={styles.chart}
           >
             <defs>
               <linearGradient id="weightGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="0%"
-                  stopColor="var(--mantine-primary-color-filled)"
-                  stopOpacity="0.3"
-                />
-                <stop
-                  offset="100%"
-                  stopColor="var(--mantine-primary-color-filled)"
-                  stopOpacity="0"
-                />
+                <stop offset="0%" stopColor="var(--mantine-color-blue-5)" stopOpacity="0.4" />
+                <stop offset="50%" stopColor="var(--mantine-color-blue-6)" stopOpacity="0.15" />
+                <stop offset="100%" stopColor="var(--mantine-color-blue-6)" stopOpacity="0" />
               </linearGradient>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
             </defs>
             {/* Area fill */}
-            <path d={areaPath} fill="url(#weightGradient)" />
+            <path d={areaPath} fill="url(#weightGradient)" className={styles.areaPath} />
             {/* Line */}
             <path
               d={pathData}
               fill="none"
-              stroke="var(--mantine-primary-color-filled)"
+              stroke="var(--mantine-color-blue-5)"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
+              filter="url(#glow)"
+              className={styles.linePath}
             />
             {/* Points */}
             {points.map((point, index) => (
@@ -153,10 +158,11 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
                 key={index}
                 cx={point.x}
                 cy={point.y}
-                r="3"
+                r="4"
                 fill="var(--mantine-color-body)"
-                stroke="var(--mantine-primary-color-filled)"
+                stroke="var(--mantine-color-blue-5)"
                 strokeWidth="2"
+                className={styles.dataPoint}
               />
             ))}
           </svg>
@@ -205,14 +211,13 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
                 align="center"
                 gap={4}
                 justify="flex-end"
-                style={{
-                  color:
-                    weightChange > 0
-                      ? "rgb(249, 115, 22)"
-                      : weightChange < 0
-                        ? "rgb(34, 197, 94)"
-                        : undefined,
-                }}
+                className={
+                  weightChange > 0
+                    ? styles.trendUp
+                    : weightChange < 0
+                      ? styles.trendDown
+                      : undefined
+                }
               >
                 {weightChange > 0 ? (
                   <IconTrendingUp size={16} />

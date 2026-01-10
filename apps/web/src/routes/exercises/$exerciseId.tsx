@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { IconArrowLeft, IconLoader2, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import {
   CategoryBadge,
@@ -25,7 +25,7 @@ import {
 } from "@/components/exercise";
 import { EquipmentIcon, getEquipmentLabel } from "@/components/exercise/equipment-icon";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -90,13 +90,13 @@ function ExerciseDetailPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">Exercise not found</p>
-            <Button
+            <FitAiButton
               variant="outline"
               className="mt-4"
               onClick={() => navigate({ to: "/exercises" })}
             >
               Back to Exercises
-            </Button>
+            </FitAiButton>
           </CardContent>
         </Card>
       </div>
@@ -181,10 +181,10 @@ function ExerciseDetailPage() {
                 equipment: exercise.equipment as NonNullable<EquipmentType> | null,
               }}
             />
-            <Button variant="destructive" size="sm" onClick={() => setShowDeleteDialog(true)}>
+            <FitAiButton variant="destructive" size="sm" onClick={() => setShowDeleteDialog(true)}>
               <IconTrash className="mr-1.5 size-4" />
               Delete
-            </Button>
+            </FitAiButton>
           </div>
         )}
       </div>
@@ -284,21 +284,21 @@ function ExerciseDetailPage() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button
+            <FitAiButton
               variant="outline"
               onClick={() => setShowDeleteDialog(false)}
               disabled={deleteMutation.isPending}
             >
               Cancel
-            </Button>
-            <Button
+            </FitAiButton>
+            <FitAiButton
               variant="destructive"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
             >
               {deleteMutation.isPending && <IconLoader2 className="mr-2 size-4 animate-spin" />}
               Delete
-            </Button>
+            </FitAiButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

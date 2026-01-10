@@ -3,7 +3,7 @@ import { IconActivity, IconBarbell, IconSparkles, IconTrendingUp } from "@tabler
 
 import { Box, Container, Flex, Group, SimpleGrid, Text, Title } from "@mantine/core";
 
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 
 export function Hero() {
   return (
@@ -119,14 +119,14 @@ export function Hero() {
           mt={40}
         >
           <Link to="/login" search={{ tab: "signup" }}>
-            <Button size="lg" leftSection={<IconActivity size={16} />}>
+            <FitAiButton size="lg" leftSection={<IconActivity size={16} />}>
               Get Started
-            </Button>
+            </FitAiButton>
           </Link>
           <Link to="/login">
-            <Button variant="outline" size="lg">
+            <FitAiButton variant="outline" size="lg">
               Sign In
-            </Button>
+            </FitAiButton>
           </Link>
         </Flex>
 

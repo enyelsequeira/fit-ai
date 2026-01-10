@@ -5,6 +5,8 @@ import { Box, Flex, Group, Stack, Text } from "@mantine/core";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import styles from "./recent-prs.module.css";
+
 interface PersonalRecord {
   id: number;
   exerciseName: string;
@@ -17,6 +19,7 @@ interface PersonalRecord {
 interface RecentPRsProps {
   records: PersonalRecord[];
   isLoading?: boolean;
+  onRecordClick?: (recordId: number) => void;
 }
 
 function formatRecordType(type: string): string {
@@ -61,20 +64,26 @@ function formatValue(value: number, recordType: string, unit: string | null): st
   return `${value} ${unit ?? "kg"}`;
 }
 
-function PRItem({ record }: { record: PersonalRecord }) {
+function PRItem({
+  record,
+  onClick,
+  index,
+}: {
+  record: PersonalRecord;
+  onClick?: () => void;
+  index: number;
+}) {
   return (
-    <Flex align="center" gap="sm" p="xs" style={{ borderRadius: 8 }}>
-      <Flex
-        h={32}
-        w={32}
-        align="center"
-        justify="center"
-        style={{
-          borderRadius: "50%",
-          background: "rgba(234, 179, 8, 0.1)",
-        }}
-      >
-        <IconMedal size={16} style={{ color: "rgb(234, 179, 8)" }} />
+    <Flex
+      align="center"
+      gap="sm"
+      p="xs"
+      className={styles.prItem}
+      onClick={onClick}
+      style={{ animationDelay: `${index * 50}ms` }}
+    >
+      <Flex h={32} w={32} align="center" justify="center" className={styles.medalIcon}>
+        <IconMedal size={16} />
       </Flex>
       <Box style={{ flex: 1, minWidth: 0 }}>
         <Text size="sm" fw={500} truncate>
@@ -112,13 +121,13 @@ function PRItemSkeleton() {
   );
 }
 
-export function RecentPRs({ records, isLoading }: RecentPRsProps) {
+export function RecentPRs({ records, isLoading, onRecordClick }: RecentPRsProps) {
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardHeader>
         <CardTitle>
           <Group gap="xs">
-            <IconTrophy size={20} style={{ color: "rgb(234, 179, 8)" }} />
+            <IconTrophy size={20} className={styles.trophyIcon} />
             Recent PRs
           </Group>
         </CardTitle>
@@ -132,16 +141,23 @@ export function RecentPRs({ records, isLoading }: RecentPRsProps) {
             ))}
           </Stack>
         ) : records.length === 0 ? (
-          <Stack py="lg" align="center" ta="center">
-            <IconTrophy size={40} style={{ color: "var(--mantine-color-dimmed)" }} />
+          <Stack py="lg" align="center" ta="center" className={styles.emptyState}>
+            <Box className={styles.emptyIcon}>
+              <IconTrophy size={40} />
+            </Box>
             <Text size="sm" c="dimmed">
               Complete workouts to start tracking PRs
             </Text>
           </Stack>
         ) : (
           <Stack gap={4}>
-            {records.map((record) => (
-              <PRItem key={record.id} record={record} />
+            {records.map((record, index) => (
+              <PRItem
+                key={record.id}
+                record={record}
+                onClick={() => onRecordClick?.(record.id)}
+                index={index}
+              />
             ))}
           </Stack>
         )}

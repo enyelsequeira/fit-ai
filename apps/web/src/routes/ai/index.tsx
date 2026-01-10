@@ -8,12 +8,12 @@ import {
   IconSettings,
   IconBolt,
 } from "@tabler/icons-react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import { FactorsBreakdown, ReadinessScore } from "@/components/ai/readiness-score";
 import { RecommendationCard } from "@/components/ai/recommendation-card";
 import { GeneratedWorkoutCard } from "@/components/ai/generated-workout-card";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -74,10 +74,10 @@ function AIHubPage() {
           </p>
         </div>
         <Link to="/ai/preferences">
-          <Button variant="outline" size="sm" className="gap-1.5">
+          <FitAiButton variant="outline" size="sm" className="gap-1.5">
             <IconSettings className="size-3.5" />
             Preferences
-          </Button>
+          </FitAiButton>
         </Link>
       </div>
 
@@ -105,10 +105,10 @@ function AIHubPage() {
               <FactorsBreakdown factors={readiness.data.factors} className="w-full max-w-md" />
               {!readiness.data.todayCheckIn && (
                 <Link to="/recovery/check-in">
-                  <Button variant="outline" size="sm" className="gap-1.5">
+                  <FitAiButton variant="outline" size="sm" className="gap-1.5">
                     <IconCalendarPlus className="size-3.5" />
                     Log Today's Check-in
-                  </Button>
+                  </FitAiButton>
                 </Link>
               )}
             </div>
@@ -119,7 +119,7 @@ function AIHubPage() {
               description="Log a daily check-in to see your training readiness"
               action={
                 <Link to="/recovery/check-in">
-                  <Button size="sm">Log Check-in</Button>
+                  <FitAiButton size="sm">Log Check-in</FitAiButton>
                 </Link>
               }
             />
@@ -186,7 +186,7 @@ function AIHubPage() {
               </p>
             </div>
             <Link to="/ai/preferences">
-              <Button size="sm">Set Up</Button>
+              <FitAiButton size="sm">Set Up</FitAiButton>
             </Link>
           </CardContent>
         </Card>
@@ -243,7 +243,7 @@ function AIHubPage() {
             description="Generate your first AI-powered workout"
             action={
               <Link to="/ai/generate">
-                <Button size="sm">Generate Workout</Button>
+                <FitAiButton size="sm">Generate Workout</FitAiButton>
               </Link>
             }
           />

@@ -7,16 +7,15 @@ import {
   IconBarbell,
   IconTrophy,
 } from "@tabler/icons-react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { WorkoutMood } from "@/components/workout/complete-workout-form";
 import { CompleteWorkoutForm } from "@/components/workout/complete-workout-form";
 import { formatDuration, formatVolume } from "@/components/workout/workout-card";
-import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/workouts/$workoutId/complete")({
@@ -68,9 +67,9 @@ function CompleteWorkoutRoute() {
           title="Failed to load workout"
           description={workout.error.message}
           action={
-            <Button variant="outline" onClick={() => workout.refetch()}>
+            <FitAiButton variant="outline" onClick={() => workout.refetch()}>
               Try Again
-            </Button>
+            </FitAiButton>
           }
         />
       </div>
@@ -85,9 +84,9 @@ function CompleteWorkoutRoute() {
           icon={IconAlertTriangle}
           title="Workout not found"
           action={
-            <Link to="/workouts" className={cn(buttonVariants({ variant: "default" }))}>
+            <FitAiButton component={Link} to="/workouts">
               Back to Workouts
-            </Link>
+            </FitAiButton>
           }
         />
       </div>
@@ -103,9 +102,9 @@ function CompleteWorkoutRoute() {
           title="Workout already completed"
           description="This workout has already been marked as complete"
           action={
-            <Link to="/workouts" className={cn(buttonVariants({ variant: "default" }))}>
+            <FitAiButton component={Link} to="/workouts">
               View All Workouts
-            </Link>
+            </FitAiButton>
           }
         />
       </div>
@@ -134,13 +133,15 @@ function CompleteWorkoutRoute() {
     <div className="container mx-auto py-6 px-4 max-w-xl">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
-        <Link
+        <FitAiButton
+          component={Link}
           to="/workouts/$workoutId"
           params={{ workoutId }}
-          className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }))}
+          variant="ghost"
+          size="icon-sm"
         >
           <IconArrowLeft className="size-4" />
-        </Link>
+        </FitAiButton>
         <div>
           <h1 className="text-xl font-semibold">Complete Workout</h1>
           <p className="text-sm text-muted-foreground">

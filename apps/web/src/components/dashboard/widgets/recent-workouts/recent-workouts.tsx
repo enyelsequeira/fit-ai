@@ -2,9 +2,11 @@ import { IconBarbell, IconCalendar, IconClock } from "@tabler/icons-react";
 
 import { Box, Flex, Stack, Text } from "@mantine/core";
 
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+
+import styles from "./recent-workouts.module.css";
 
 interface Workout {
   id: number;
@@ -19,6 +21,8 @@ interface Workout {
 interface RecentWorkoutsProps {
   workouts: Workout[];
   isLoading?: boolean;
+  onWorkoutClick?: (workoutId: number) => void;
+  onStartWorkout?: () => void;
 }
 
 function formatDate(date: Date): string {
@@ -43,30 +47,18 @@ function formatDuration(minutes: number | null): string {
   return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
 }
 
-function WorkoutItem({ workout }: { workout: Workout }) {
+function WorkoutItem({ workout, onClick }: { workout: Workout; onClick?: () => void }) {
   return (
     <Flex
       align="center"
       justify="space-between"
       p="sm"
-      style={{
-        borderRadius: 8,
-        cursor: "pointer",
-        transition: "background 0.2s",
-      }}
+      className={styles.workoutItem}
+      onClick={onClick}
     >
       <Flex align="center" gap="sm">
-        <Flex
-          h={40}
-          w={40}
-          align="center"
-          justify="center"
-          style={{
-            borderRadius: 8,
-            background: "var(--mantine-color-blue-light)",
-          }}
-        >
-          <IconBarbell size={20} style={{ color: "var(--mantine-primary-color-filled)" }} />
+        <Flex h={40} w={40} align="center" justify="center" className={styles.workoutIcon}>
+          <IconBarbell size={20} />
         </Flex>
         <Box>
           <Text fw={500}>{workout.name ?? "Workout"}</Text>
@@ -116,9 +108,14 @@ function WorkoutItemSkeleton() {
   );
 }
 
-export function RecentWorkouts({ workouts, isLoading }: RecentWorkoutsProps) {
+export function RecentWorkouts({
+  workouts,
+  isLoading,
+  onWorkoutClick,
+  onStartWorkout,
+}: RecentWorkoutsProps) {
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardHeader>
         <CardTitle>Recent Workouts</CardTitle>
         <CardDescription>Your last 5 completed workouts</CardDescription>
@@ -131,15 +128,21 @@ export function RecentWorkouts({ workouts, isLoading }: RecentWorkoutsProps) {
             ))}
           </Stack>
         ) : workouts.length === 0 ? (
-          <Stack py="xl" align="center" ta="center">
-            <IconBarbell size={48} style={{ color: "var(--mantine-color-dimmed)" }} />
-            <Text c="dimmed">No workouts yet. Start your fitness journey!</Text>
-            <Button>Start Your First Workout</Button>
+          <Stack py="md" gap="xs" align="center" ta="center" className={styles.emptyState}>
+            <Box className={styles.emptyIcon}>
+              <IconBarbell size={32} />
+            </Box>
+            <Text size="sm" c="dimmed">No workouts yet. Start your fitness journey!</Text>
+            <FitAiButton size="sm" onClick={onStartWorkout}>Start Your First Workout</FitAiButton>
           </Stack>
         ) : (
           <Stack gap={4}>
             {workouts.map((workout) => (
-              <WorkoutItem key={workout.id} workout={workout} />
+              <WorkoutItem
+                key={workout.id}
+                workout={workout}
+                onClick={() => onWorkoutClick?.(workout.id)}
+              />
             ))}
           </Stack>
         )}

@@ -1,0 +1,81 @@
+/* Recent PRs Widget Styles */
+
+.card {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  animation-delay: 300ms;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.trophyIcon {
+  color: var(--mantine-color-yellow-5);
+}
+
+.prItem {
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 200ms ease;
+  animation: fadeSlideUp 400ms ease-out backwards;
+}
+
+.prItem:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.medalIcon {
+  border-radius: 50%;
+  background: rgba(234, 179, 8, 0.1);
+  color: var(--mantine-color-yellow-5);
+  transition: transform 200ms ease;
+}
+
+.prItem:hover .medalIcon {
+  transform: scale(1.1) rotate(10deg);
+}
+
+.emptyState {
+  animation: fadeSlideUp 400ms ease-out;
+}
+
+.emptyIcon {
+  color: var(--mantine-color-dimmed);
+  padding: var(--mantine-spacing-md);
+  background: var(--mantine-color-yellow-light);
+  border-radius: 50%;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .prItem,
+  .emptyState {
+    animation: none;
+  }
+
+  .emptyIcon {
+    animation: none;
+  }
+
+  .prItem:hover .medalIcon {
+    transform: none;
+  }
+}

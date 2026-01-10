@@ -9,7 +9,7 @@ import {
   IconSparkles,
   IconBolt,
 } from "@tabler/icons-react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 import z from "zod";
 
 import {

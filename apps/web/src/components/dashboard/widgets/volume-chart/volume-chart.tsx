@@ -1,9 +1,11 @@
 import { IconTrendingUp } from "@tabler/icons-react";
 
-import { Box, Flex, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { Box, Flex, Group, Text, Tooltip } from "@mantine/core";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+
+import styles from "./volume-chart.module.css";
 
 interface DataPoint {
   periodStart: string;
@@ -36,7 +38,7 @@ function formatWeekLabel(dateString: string): string {
 export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
   if (isLoading) {
     return (
-      <Card>
+      <Card className={styles.card}>
         <CardHeader>
           <CardTitle>
             <Group gap="xs">
@@ -62,7 +64,7 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
 
   if (dataPoints.length === 0) {
     return (
-      <Card>
+      <Card className={styles.card}>
         <CardHeader>
           <CardTitle>
             <Group gap="xs">
@@ -87,7 +89,7 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
   const minBarHeight = 8;
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardHeader>
         <CardTitle>
           <Group gap="xs">
@@ -124,14 +126,10 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
                     <Box
                       w="100%"
                       maw={32}
+                      className={`${styles.chartBar} ${isLast ? styles.chartBarCurrent : styles.chartBarPrevious}`}
                       style={{
                         height: `${heightPercent}%`,
-                        borderRadius: "4px 4px 0 0",
-                        background: isLast
-                          ? "var(--mantine-primary-color-filled)"
-                          : "var(--mantine-primary-color-light)",
-                        transition: "all 0.2s",
-                        cursor: "pointer",
+                        animationDelay: `${index * 50}ms`,
                       }}
                     />
                   </Tooltip>

@@ -3,7 +3,7 @@ import { IconArrowRight } from "@tabler/icons-react";
 
 import { Box, Container, Flex, Text, Title } from "@mantine/core";
 
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 
 export function CTASection() {
   return (
@@ -74,9 +74,9 @@ export function CTASection() {
               mt="xl"
             >
               <Link to="/login" search={{ tab: "signup" }}>
-                <Button size="lg" rightSection={<IconArrowRight size={16} />}>
+                <FitAiButton size="lg" rightSection={<IconArrowRight size={16} />}>
                   Start Free
-                </Button>
+                </FitAiButton>
               </Link>
               <Text size="sm" c="dimmed">
                 No credit card required

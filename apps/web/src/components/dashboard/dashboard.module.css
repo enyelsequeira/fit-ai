@@ -1,0 +1,514 @@
+/* Dashboard Shared Styles & Animations */
+
+/* ============================================
+   Entry Animations
+   ============================================ */
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes barGrow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ============================================
+   Staggered Entry Classes
+   ============================================ */
+
+.fadeInUp {
+  animation: fadeSlideUp 400ms ease-out backwards;
+}
+
+.staggeredEntry > * {
+  animation: fadeSlideUp 400ms ease-out backwards;
+}
+
+.staggeredEntry > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.staggeredEntry > *:nth-child(2) {
+  animation-delay: 50ms;
+}
+.staggeredEntry > *:nth-child(3) {
+  animation-delay: 100ms;
+}
+.staggeredEntry > *:nth-child(4) {
+  animation-delay: 150ms;
+}
+.staggeredEntry > *:nth-child(5) {
+  animation-delay: 200ms;
+}
+.staggeredEntry > *:nth-child(6) {
+  animation-delay: 250ms;
+}
+.staggeredEntry > *:nth-child(7) {
+  animation-delay: 300ms;
+}
+.staggeredEntry > *:nth-child(8) {
+  animation-delay: 350ms;
+}
+
+/* ============================================
+   Card Styles
+   ============================================ */
+
+.card {
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.cardElevated {
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Glassmorphism variant */
+.cardGlass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-mantine-color-scheme="light"] .cardGlass {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================
+   Stat Card Icon Variants
+   ============================================ */
+
+.iconBgBlue {
+  background: var(--mantine-color-blue-light);
+  color: var(--mantine-color-blue-6);
+}
+
+.iconBgOrange {
+  background: var(--mantine-color-orange-light);
+  color: var(--mantine-color-orange-6);
+}
+
+.iconBgTeal {
+  background: var(--mantine-color-teal-light);
+  color: var(--mantine-color-teal-6);
+}
+
+.iconBgYellow {
+  background: var(--mantine-color-yellow-light);
+  color: var(--mantine-color-yellow-6);
+}
+
+.iconBgGreen {
+  background: var(--mantine-color-green-light);
+  color: var(--mantine-color-green-6);
+}
+
+.iconBgRed {
+  background: var(--mantine-color-red-light);
+  color: var(--mantine-color-red-6);
+}
+
+/* ============================================
+   Chart Bar Animations
+   ============================================ */
+
+.chartBar {
+  transform-origin: bottom;
+  transition: all 250ms ease;
+  cursor: pointer;
+}
+
+.chartBar:hover {
+  filter: brightness(1.1);
+  transform: scaleY(1.02);
+}
+
+.barAnimate {
+  transform-origin: bottom;
+  animation: barGrow 600ms ease-out backwards;
+}
+
+.barAnimate:nth-child(1) {
+  animation-delay: 0ms;
+}
+.barAnimate:nth-child(2) {
+  animation-delay: 50ms;
+}
+.barAnimate:nth-child(3) {
+  animation-delay: 100ms;
+}
+.barAnimate:nth-child(4) {
+  animation-delay: 150ms;
+}
+.barAnimate:nth-child(5) {
+  animation-delay: 200ms;
+}
+.barAnimate:nth-child(6) {
+  animation-delay: 250ms;
+}
+.barAnimate:nth-child(7) {
+  animation-delay: 300ms;
+}
+.barAnimate:nth-child(8) {
+  animation-delay: 350ms;
+}
+
+/* ============================================
+   Progress Animations
+   ============================================ */
+
+.progressAnimate {
+  transition: width 800ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ring progress animation */
+.ringAnimate {
+  animation: ringGrow 1s ease-out forwards;
+}
+
+@keyframes ringGrow {
+  from {
+    stroke-dashoffset: 100;
+  }
+}
+
+/* ============================================
+   Pulse & Active States
+   ============================================ */
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.glowActive {
+  box-shadow: 0 0 20px var(--mantine-color-blue-light);
+}
+
+/* ============================================
+   Interactive Hover Effects
+   ============================================ */
+
+.hoverLift {
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.hoverLift:hover {
+  transform: translateY(-2px);
+}
+
+.hoverScale {
+  transition: transform 150ms ease;
+}
+
+.hoverScale:hover {
+  transform: scale(1.02);
+}
+
+.hoverHighlight {
+  transition: background 200ms ease;
+}
+
+.hoverHighlight:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+/* ============================================
+   Skeleton Shimmer
+   ============================================ */
+
+.skeletonShimmer {
+  background: linear-gradient(
+    90deg,
+    var(--mantine-color-dark-6) 0%,
+    var(--mantine-color-dark-5) 50%,
+    var(--mantine-color-dark-6) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+[data-mantine-color-scheme="light"] .skeletonShimmer {
+  background: linear-gradient(
+    90deg,
+    var(--mantine-color-gray-2) 0%,
+    var(--mantine-color-gray-1) 50%,
+    var(--mantine-color-gray-2) 100%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ============================================
+   Dashboard Layout
+   ============================================ */
+
+.dashboardContainer {
+  animation: fadeSlideUp 400ms ease-out;
+}
+
+.dashboardHeader {
+  animation: fadeSlideUp 300ms ease-out;
+}
+
+.statsSection {
+  animation: fadeSlideUp 400ms ease-out 100ms backwards;
+}
+
+.contentSection {
+  animation: fadeSlideUp 400ms ease-out 200ms backwards;
+}
+
+/* ============================================
+   Readiness Score Ring
+   ============================================ */
+
+.readinessRing {
+  position: relative;
+}
+
+.readinessRingSvg {
+  transform: rotate(-90deg);
+}
+
+.readinessRingTrack {
+  fill: none;
+  stroke: var(--mantine-color-dark-5);
+  stroke-width: 8;
+}
+
+[data-mantine-color-scheme="light"] .readinessRingTrack {
+  stroke: var(--mantine-color-gray-3);
+}
+
+.readinessRingProgress {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-out;
+}
+
+.readinessGreen .readinessRingProgress {
+  stroke: var(--mantine-color-teal-5);
+}
+
+.readinessYellow .readinessRingProgress {
+  stroke: var(--mantine-color-yellow-5);
+}
+
+.readinessRed .readinessRingProgress {
+  stroke: var(--mantine-color-red-5);
+}
+
+/* ============================================
+   Trend Indicators
+   ============================================ */
+
+.trendPositive {
+  color: var(--mantine-color-teal-6);
+}
+
+.trendNegative {
+  color: var(--mantine-color-red-6);
+}
+
+.trendNeutral {
+  color: var(--mantine-color-dimmed);
+}
+
+/* ============================================
+   Calendar Heatmap (Workout Frequency)
+   ============================================ */
+
+.heatmapGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.heatmapCell {
+  aspect-ratio: 1;
+  border-radius: var(--mantine-radius-xs);
+  transition:
+    transform 150ms ease,
+    opacity 150ms ease;
+}
+
+.heatmapCell:hover {
+  transform: scale(1.2);
+  z-index: 1;
+}
+
+.heatmapLevel0 {
+  background: var(--mantine-color-dark-6);
+}
+
+.heatmapLevel1 {
+  background: var(--mantine-color-blue-9);
+}
+
+.heatmapLevel2 {
+  background: var(--mantine-color-blue-7);
+}
+
+.heatmapLevel3 {
+  background: var(--mantine-color-blue-5);
+}
+
+.heatmapLevel4 {
+  background: var(--mantine-color-blue-4);
+}
+
+[data-mantine-color-scheme="light"] .heatmapLevel0 {
+  background: var(--mantine-color-gray-2);
+}
+
+/* ============================================
+   Reduced Motion Support
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   Widget Item Hover
+   ============================================ */
+
+.workoutItem {
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+
+.workoutItem:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.prItem {
+  border-radius: 8px;
+  transition: background 200ms ease;
+}
+
+.prItem:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+/* ============================================
+   Goal Progress Ring
+   ============================================ */
+
+.goalRing {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.goalRingValue {
+  position: absolute;
+  font-weight: 700;
+  font-size: var(--mantine-font-size-sm);
+}
+
+/* ============================================
+   AI Insights Card
+   ============================================ */
+
+.insightCard {
+  border-left: 3px solid var(--mantine-color-blue-5);
+  padding-left: var(--mantine-spacing-md);
+  transition: border-color 200ms ease;
+}
+
+.insightCard:hover {
+  border-left-color: var(--mantine-color-blue-4);
+}
+
+/* ============================================
+   Quick Action Button
+   ============================================ */
+
+.quickActionBtn {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.quickActionBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quickActionBtn:active {
+  transform: translateY(0);
+}

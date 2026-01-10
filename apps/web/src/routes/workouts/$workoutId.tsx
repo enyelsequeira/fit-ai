@@ -18,10 +18,10 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
@@ -398,9 +398,9 @@ function WorkoutDetailRoute() {
           title="Failed to load workout"
           description={workout.error.message}
           action={
-            <Button variant="outline" onClick={() => workout.refetch()}>
+            <FitAiButton variant="outline" onClick={() => workout.refetch()}>
               Try Again
-            </Button>
+            </FitAiButton>
           }
         />
       </div>
@@ -416,9 +416,9 @@ function WorkoutDetailRoute() {
           title="Workout not found"
           description="This workout doesn't exist or has been deleted"
           action={
-            <Link to="/workouts" className={cn(buttonVariants({ variant: "default" }))}>
+            <FitAiButton component={Link} to="/workouts">
               Back to Workouts
-            </Link>
+            </FitAiButton>
           }
         />
       </div>
@@ -442,12 +442,9 @@ function WorkoutDetailRoute() {
           {/* Top row - Back button, title, and actions */}
           <div className="flex items-center justify-between gap-3 py-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
-              <Link
-                to="/workouts"
-                className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }))}
-              >
+              <FitAiButton component={Link} to="/workouts" variant="ghost" size="icon-sm">
                 <IconArrowLeft className="size-4" />
-              </Link>
+              </FitAiButton>
 
               {isEditingName ? (
                 <div className="flex items-center gap-2 flex-1">
@@ -461,12 +458,12 @@ function WorkoutDetailRoute() {
                       if (e.key === "Escape") setIsEditingName(false);
                     }}
                   />
-                  <Button size="icon-sm" onClick={handleSaveName}>
+                  <FitAiButton size="icon-sm" onClick={handleSaveName}>
                     <IconCheck className="size-4" />
-                  </Button>
-                  <Button size="icon-sm" variant="ghost" onClick={() => setIsEditingName(false)}>
+                  </FitAiButton>
+                  <FitAiButton size="icon-sm" variant="ghost" onClick={() => setIsEditingName(false)}>
                     <IconX className="size-4" />
-                  </Button>
+                  </FitAiButton>
                 </div>
               ) : (
                 <button
@@ -491,23 +488,22 @@ function WorkoutDetailRoute() {
             <div className="flex items-center gap-2">
               {!isCompleted && (
                 <>
-                  <Link
+                  <FitAiButton
+                    component={Link}
                     to="/workouts/$workoutId/complete"
                     params={{ workoutId }}
-                    className={cn(
-                      buttonVariants({ variant: "default", size: "sm" }),
-                      "hidden sm:flex",
-                    )}
+                    size="sm"
+                    className="hidden sm:flex"
                   >
                     <IconCheck className="size-4 mr-1" />
                     Finish
-                  </Link>
+                  </FitAiButton>
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon-sm">
+                      <FitAiButton variant="ghost" size="icon-sm">
                         <IconDotsVertical className="size-4" />
-                      </Button>
+                      </FitAiButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
@@ -625,14 +621,14 @@ function WorkoutDetailRoute() {
 
             {/* Add exercise button for desktop */}
             {!isCompleted && (
-              <Button
+              <FitAiButton
                 variant="outline"
                 className="w-full h-12 border-dashed hidden md:flex"
                 onClick={() => setIsAddExerciseOpen(true)}
               >
                 <IconPlus className="size-4 mr-2" />
                 Add Exercise
-              </Button>
+              </FitAiButton>
             )}
           </div>
         ) : (
@@ -644,10 +640,10 @@ function WorkoutDetailRoute() {
             <p className="text-sm text-muted-foreground mb-4">
               Add your first exercise to start tracking
             </p>
-            <Button onClick={() => setIsAddExerciseOpen(true)}>
+            <FitAiButton onClick={() => setIsAddExerciseOpen(true)}>
               <IconPlus className="size-4 mr-1" />
               Add Exercise
-            </Button>
+            </FitAiButton>
           </div>
         )}
       </main>
@@ -656,18 +652,19 @@ function WorkoutDetailRoute() {
       {!isCompleted && (
         <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-3 md:hidden safe-area-inset-bottom">
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="flex-1" onClick={() => setIsAddExerciseOpen(true)}>
+            <FitAiButton variant="outline" className="flex-1" onClick={() => setIsAddExerciseOpen(true)}>
               <IconPlus className="size-4 mr-1" />
               Add Exercise
-            </Button>
-            <Link
+            </FitAiButton>
+            <FitAiButton
+              component={Link}
               to="/workouts/$workoutId/complete"
               params={{ workoutId }}
-              className={cn(buttonVariants({ variant: "default" }), "flex-1")}
+              className="flex-1"
             >
               <IconCheck className="size-4 mr-1" />
               Finish Workout
-            </Link>
+            </FitAiButton>
           </div>
         </div>
       )}
@@ -690,10 +687,10 @@ function WorkoutDetailRoute() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCancelDialogOpen(false)}>
+            <FitAiButton variant="outline" onClick={() => setIsCancelDialogOpen(false)}>
               Keep Workout
-            </Button>
-            <Button
+            </FitAiButton>
+            <FitAiButton
               variant="destructive"
               onClick={handleCancelWorkout}
               disabled={deleteWorkoutMutation.isPending}
@@ -706,7 +703,7 @@ function WorkoutDetailRoute() {
               ) : (
                 "Cancel Workout"
               )}
-            </Button>
+            </FitAiButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -837,21 +834,21 @@ function ExerciseCard({
             </div>
 
             {/* Expand/Collapse button */}
-            <Button variant="ghost" size="icon-sm" onClick={onToggleExpanded}>
+            <FitAiButton variant="ghost" size="icon-sm" onClick={onToggleExpanded}>
               {isExpanded ? (
                 <IconChevronUp className="size-4" />
               ) : (
                 <IconChevronDown className="size-4" />
               )}
-            </Button>
+            </FitAiButton>
 
             {/* More options */}
             {!isCompleted && !isPending && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon-sm">
+                  <FitAiButton variant="ghost" size="icon-sm">
                     <IconDotsVertical className="size-4" />
-                  </Button>
+                  </FitAiButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={onAddSet}>
@@ -914,7 +911,7 @@ function ExerciseCard({
           {/* Add set footer */}
           {!isCompleted && !isPending && (
             <CardFooter className="pt-0">
-              <Button
+              <FitAiButton
                 variant="ghost"
                 size="sm"
                 onClick={onAddSet}
@@ -922,7 +919,7 @@ function ExerciseCard({
               >
                 <IconPlus className="size-4 mr-1" />
                 Add Set
-              </Button>
+              </FitAiButton>
             </CardFooter>
           )}
         </>
@@ -938,10 +935,10 @@ function ExerciseCard({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmDelete(false)}>
+            <FitAiButton variant="outline" onClick={() => setConfirmDelete(false)}>
               Cancel
-            </Button>
-            <Button
+            </FitAiButton>
+            <FitAiButton
               variant="destructive"
               onClick={() => {
                 onRemoveExercise();
@@ -949,7 +946,7 @@ function ExerciseCard({
               }}
             >
               Remove
-            </Button>
+            </FitAiButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1022,20 +1019,20 @@ function SetRowInline({
           {setNumber}
         </span>
         {!isWorkoutCompleted && (
-          <Button
+          <FitAiButton
             variant="ghost"
             size="icon-xs"
             onClick={onDelete}
             className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive size-5"
           >
             <IconTrash className="size-3" />
-          </Button>
+          </FitAiButton>
         )}
       </div>
 
       {/* Weight input */}
       <div className="flex items-center gap-0.5">
-        <Button
+        <FitAiButton
           variant="ghost"
           size="icon-xs"
           onClick={() => handleWeightIncrement(-2.5)}
@@ -1043,7 +1040,7 @@ function SetRowInline({
           className="size-6"
         >
           <IconMinus className="size-3" />
-        </Button>
+        </FitAiButton>
         <Input
           type="number"
           inputMode="decimal"
@@ -1056,7 +1053,7 @@ function SetRowInline({
           )}
           placeholder="kg"
         />
-        <Button
+        <FitAiButton
           variant="ghost"
           size="icon-xs"
           onClick={() => handleWeightIncrement(2.5)}
@@ -1064,12 +1061,12 @@ function SetRowInline({
           className="size-6"
         >
           <IconPlus className="size-3" />
-        </Button>
+        </FitAiButton>
       </div>
 
       {/* Reps input */}
       <div className="flex items-center gap-0.5">
-        <Button
+        <FitAiButton
           variant="ghost"
           size="icon-xs"
           onClick={() => handleRepsIncrement(-1)}
@@ -1077,7 +1074,7 @@ function SetRowInline({
           className="size-6"
         >
           <IconMinus className="size-3" />
-        </Button>
+        </FitAiButton>
         <Input
           type="number"
           inputMode="numeric"
@@ -1090,7 +1087,7 @@ function SetRowInline({
           )}
           placeholder="reps"
         />
-        <Button
+        <FitAiButton
           variant="ghost"
           size="icon-xs"
           onClick={() => handleRepsIncrement(1)}
@@ -1098,12 +1095,12 @@ function SetRowInline({
           className="size-6"
         >
           <IconPlus className="size-3" />
-        </Button>
+        </FitAiButton>
       </div>
 
       {/* Complete button */}
       <div className="flex justify-center">
-        <Button
+        <FitAiButton
           variant={isCompleted ? "default" : "outline"}
           size="icon-sm"
           onClick={onComplete}
@@ -1114,7 +1111,7 @@ function SetRowInline({
           )}
         >
           <IconCheck className={cn("size-4", isCompleted && "text-white")} />
-        </Button>
+        </FitAiButton>
       </div>
     </div>
   );

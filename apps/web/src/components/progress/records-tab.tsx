@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
@@ -282,42 +282,42 @@ export function RecordsTab() {
             <div className="space-y-2">
               <Label>Record Type</Label>
               <div className="flex flex-wrap gap-1">
-                <Button
+                <FitAiButton
                   variant={selectedType === "all" ? "default" : "outline"}
                   size="xs"
                   onClick={() => setSelectedType("all")}
                 >
                   All
-                </Button>
+                </FitAiButton>
                 {(Object.keys(PR_TYPE_LABELS) as RecordType[]).map((type) => (
-                  <Button
+                  <FitAiButton
                     key={type}
                     variant={selectedType === type ? "default" : "outline"}
                     size="xs"
                     onClick={() => setSelectedType(type)}
                   >
                     {PR_TYPE_LABELS[type]}
-                  </Button>
+                  </FitAiButton>
                 ))}
               </div>
             </div>
             <div className="space-y-2">
               <Label>Group By</Label>
               <div className="flex gap-1">
-                <Button
+                <FitAiButton
                   variant={!groupByExercise ? "default" : "outline"}
                   size="xs"
                   onClick={() => setGroupByExercise(false)}
                 >
                   Date
-                </Button>
-                <Button
+                </FitAiButton>
+                <FitAiButton
                   variant={groupByExercise ? "default" : "outline"}
                   size="xs"
                   onClick={() => setGroupByExercise(true)}
                 >
                   Exercise
-                </Button>
+                </FitAiButton>
               </div>
             </div>
           </div>

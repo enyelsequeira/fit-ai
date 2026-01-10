@@ -19,7 +19,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import dayjs from "dayjs";
 
@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { FitAiButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -287,12 +287,12 @@ function MeasurementForm({
       </div>
 
       <DialogFooter>
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <FitAiButton type="button" variant="outline" onClick={onCancel}>
           Cancel
-        </Button>
-        <Button type="submit" disabled={isSubmitting}>
+        </FitAiButton>
+        <FitAiButton type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : mode === "create" ? "Log Measurement" : "Update"}
-        </Button>
+        </FitAiButton>
       </DialogFooter>
     </form>
   );
@@ -501,10 +501,10 @@ export function BodyTab() {
             </CardTitle>
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
               <DialogTrigger asChild>
-                <Button size="sm">
+                <FitAiButton size="sm">
                   <IconPlus className="size-4" />
                   Log Measurement
-                </Button>
+                </FitAiButton>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
                 <DialogHeader>
@@ -691,7 +691,7 @@ export function BodyTab() {
                     )}
                   </div>
                   <div className="flex gap-1">
-                    <Button
+                    <FitAiButton
                       variant="ghost"
                       size="icon-xs"
                       onClick={() =>
@@ -713,10 +713,10 @@ export function BodyTab() {
                       }
                     >
                       <IconPencil className="size-3" />
-                    </Button>
-                    <Button variant="ghost" size="icon-xs" onClick={() => handleDelete(m.id)}>
+                    </FitAiButton>
+                    <FitAiButton variant="ghost" size="icon-xs" onClick={() => handleDelete(m.id)}>
                       <IconTrash className="size-3" />
-                    </Button>
+                    </FitAiButton>
                   </div>
                 </div>
               ))}
