@@ -1,11 +1,10 @@
-import type { Session } from "better-auth/types";
-
 import {
   AppShell,
   Avatar,
   Box,
   Burger,
   Divider,
+  Flex,
   Group,
   Menu,
   Paper,
@@ -33,7 +32,7 @@ import {
   IconUser,
   IconWeight,
 } from "@tabler/icons-react";
-import { Link, Outlet, createFileRoute, useLocation } from "@tanstack/react-router";
+import { Link, Outlet, createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 
 import { FitAiActionIcon, FitAiButton } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -44,6 +43,12 @@ export const Route = createFileRoute("/dashboard")({
   component: DashboardLayout,
   beforeLoad: async () => {
     const sessionResult = await authClient.getSession();
+    console.log("sessionResult", sessionResult);
+    if (!sessionResult.data) {
+      throw redirect({
+        to: "/sign-in",
+      });
+    }
     return { session: sessionResult.data };
   },
 });
@@ -89,89 +94,6 @@ function NavLink({
       </span>
       <span>{item.label}</span>
     </Link>
-  );
-}
-
-function ColorSchemeToggle() {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-
-  return (
-    <Tooltip label={colorScheme === "dark" ? "Light mode" : "Dark mode"} position="bottom">
-      <UnstyledButton className={styles.colorSchemeToggle} onClick={toggleColorScheme}>
-        {colorScheme === "dark" ? (
-          <IconSun size={20} stroke={1.5} />
-        ) : (
-          <IconMoon size={20} stroke={1.5} />
-        )}
-      </UnstyledButton>
-    </Tooltip>
-  );
-}
-
-function UserMenu({ session }: { session: Session | null }) {
-  const handleLogout = async () => {
-    await authClient.signOut();
-    window.location.href = "/sign-in";
-  };
-
-  const userName = session?.user?.name ?? "User";
-  const userEmail = session?.user?.email ?? "";
-  const userInitials = userName
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-
-  return (
-    <Menu shadow="md" width={220} position="bottom-end" withArrow arrowPosition="center">
-      <Menu.Target>
-        <UnstyledButton className={styles.userMenuButton}>
-          <Avatar size="sm" radius="xl" color="blue" alt={userName}>
-            {userInitials}
-          </Avatar>
-          <Text className={styles.userName}>{userName}</Text>
-          <IconChevronDown size={14} stroke={1.5} />
-        </UnstyledButton>
-      </Menu.Target>
-
-      <Menu.Dropdown className={styles.dropdown}>
-        <Box className={styles.userInfo}>
-          <Text className={styles.userInfoName}>{userName}</Text>
-          <Text className={styles.userInfoEmail}>{userEmail}</Text>
-        </Box>
-
-        <Menu.Divider />
-
-        <Menu.Item
-          component={Link}
-          to="/settings"
-          leftSection={<IconUser size={16} stroke={1.5} />}
-          className={styles.menuItem}
-        >
-          Profile
-        </Menu.Item>
-
-        <Menu.Item
-          component={Link}
-          to="/settings"
-          leftSection={<IconSettings size={16} stroke={1.5} />}
-          className={styles.menuItem}
-        >
-          Settings
-        </Menu.Item>
-
-        <Menu.Divider />
-
-        <Menu.Item
-          leftSection={<IconLogout size={16} stroke={1.5} />}
-          className={`${styles.menuItem} ${styles.menuItemDanger}`}
-          onClick={handleLogout}
-        >
-          Sign out
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
   );
 }
 
@@ -240,7 +162,12 @@ function ButtonShowcase() {
             </Text>
             <Group gap="sm">
               {actionIconSizes.map((size) => (
-                <FitAiActionIcon key={size} variant={variant} size={size} aria-label={`${variant} ${size}`}>
+                <FitAiActionIcon
+                  key={size}
+                  variant={variant}
+                  size={size}
+                  aria-label={`${variant} ${size}`}
+                >
                   <IconHeart size={size === "xs" ? 14 : size === "sm" ? 16 : 18} />
                 </FitAiActionIcon>
               ))}
@@ -262,7 +189,7 @@ function ButtonShowcase() {
         <FitAiActionIcon loading aria-label="Loading">
           <IconHeart size={18} />
         </FitAiActionIcon>
-        <FitAiActionIcon variant="destructive" destructiveOutline aria-label="Destructive Outline">
+        <FitAiActionIcon variant="destructive" aria-label="Destructive Outline">
           <IconHeart size={18} />
         </FitAiActionIcon>
       </Group>
@@ -273,9 +200,10 @@ function ButtonShowcase() {
 function DashboardLayout() {
   const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] = useDisclosure(false);
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
-  const location = useLocation();
   const { session } = Route.useRouteContext();
+  const router = useRouter();
   console.log({ session });
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   const isActiveRoute = (href: string) => {
     if (href === "/dashboard") {
@@ -284,10 +212,25 @@ function DashboardLayout() {
     return location.pathname.startsWith(href);
   };
 
+  const userName = session?.user?.name ?? "User";
+  const userEmail = session?.user?.email ?? "";
+  const userInitials = userName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
   return (
     <AppShell
-      className={styles.appShell}
       header={{ height: { base: 60, md: 70 } }}
+      styles={{
+        header: {
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingInline: "var(--mantine-spacing-sm)",
+        },
+      }}
       navbar={{
         width: { base: 250, md: 250, lg: 280 },
         breakpoint: "sm",
@@ -297,77 +240,156 @@ function DashboardLayout() {
     >
       {/* Header */}
       <AppShell.Header>
-        <header className={styles.header}>
-          <Group gap="sm">
-            {/* Mobile burger */}
-            <Burger
-              opened={mobileOpened}
-              onClick={toggleMobile}
-              hiddenFrom="sm"
-              size="sm"
-              aria-label="Toggle navigation"
-            />
+        <Flex align={"center"} gap={"xs"}>
+          {/* Mobile burger */}
+          <Burger
+            opened={mobileOpened}
+            onClick={toggleMobile}
+            hiddenFrom="sm"
+            size="sm"
+            aria-label="Toggle navigation"
+          />
+          {/* Desktop burger (for collapsing) */}
+          <Burger
+            opened={desktopOpened}
+            onClick={toggleDesktop}
+            visibleFrom="sm"
+            size="sm"
+            aria-label="Toggle navigation"
+          />
 
-            {/* Desktop burger (for collapsing) */}
-            <Burger
-              opened={desktopOpened}
-              onClick={toggleDesktop}
-              visibleFrom="sm"
-              size="sm"
-              aria-label="Toggle navigation"
-            />
+          {/* Brand/Logo */}
+          <Link to="/dashboard" className={styles.brand}>
+            <Flex
+              justify={"center"}
+              align={"center"}
+              h={36}
+              w={36}
+              bdrs={"md"}
+              c={"white"}
+              style={{
+                flexShrink: 0,
+                background:
+                  " linear-gradient(135deg, var(--mantine-color-blue-6), var(--mantine-color-cyan-5))",
+              }}
+            >
+              <IconActivity size={22} stroke={2} />
+            </Flex>
+            <Text
+              fz={"lg"}
+              fw={700}
+              component={"span"}
+              variant={"gradient"}
+              gradient={{ from: "blue.5", to: "cyan.4", deg: 90 }}
+            >
+              FitAI
+            </Text>
+          </Link>
+        </Flex>
 
-            {/* Brand/Logo */}
-            <Link to="/dashboard" className={styles.brand}>
-              <div className={styles.logoIcon}>
-                <IconActivity size={22} stroke={2} />
-              </div>
-              <span className={styles.logoText}>FitAI</span>
-            </Link>
-          </Group>
+        <Flex align={"center"} gap={"xs"}>
+          <Tooltip label={colorScheme === "dark" ? "Light mode" : "Dark mode"} position="bottom">
+            <FitAiActionIcon variant={"ghost"} size={"sm"} c={"blue"} onClick={toggleColorScheme}>
+              {colorScheme === "dark" ? (
+                <IconSun size={20} stroke={1.5} />
+              ) : (
+                <IconMoon size={20} stroke={1.5} />
+              )}
+            </FitAiActionIcon>
+          </Tooltip>
+          <Menu shadow="md" width={220} position="bottom-end" withArrow arrowPosition="center">
+            <Menu.Target>
+              <UnstyledButton className={styles.userMenuButton}>
+                <Avatar size="sm" radius="xl" color="blue" alt={userName}>
+                  {userInitials}
+                </Avatar>
+                <Text fw={500} fz={"sm"} className={"mantine-visible-from-md"}>
+                  {userName}
+                </Text>
+                <IconChevronDown size={14} stroke={1.5} />
+              </UnstyledButton>
+            </Menu.Target>
 
-          <div className={styles.headerRight}>
-            <ColorSchemeToggle />
-            <UserMenu session={session} />
-          </div>
-        </header>
+            <Menu.Dropdown px={"xs"}>
+              <Box py={"xs"} px={"sm"}>
+                <Text fz={"sm"} fw={600}>
+                  {userName}
+                </Text>
+                <Text fz={"sm"} c={"dimmed"}>
+                  {userEmail}
+                </Text>
+              </Box>
+
+              <Menu.Divider />
+
+              <Menu.Item
+                component={Link}
+                to="/settings"
+                leftSection={<IconUser size={16} stroke={1.5} />}
+                fz={"sm"}
+              >
+                Profile
+              </Menu.Item>
+
+              <Menu.Item
+                component={Link}
+                to="/settings"
+                leftSection={<IconSettings size={16} stroke={1.5} />}
+                fz={"sm"}
+              >
+                Settings
+              </Menu.Item>
+
+              <Menu.Divider />
+
+              <Menu.Item
+                fz={"sm"}
+                leftSection={<IconLogout size={16} stroke={1.5} />}
+                c={"red.6"}
+                onClick={async () => {
+                  await authClient.signOut();
+                  router.invalidate();
+                }}
+              >
+                Sign out
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Flex>
       </AppShell.Header>
 
       {/* Navbar */}
-      <AppShell.Navbar className={styles.navbarTransition}>
-        <nav className={styles.navbar}>
-          {/* Main navigation links */}
-          <div className={styles.navLinks}>
-            <Text className={styles.navSectionLabel}>Menu</Text>
-            {mainNavLinks.map((item) => (
-              <NavLink
-                key={item.href}
-                item={item}
-                isActive={isActiveRoute(item.href)}
-                onClick={closeMobile}
-              />
-            ))}
-          </div>
+      <AppShell.Navbar>
+        {/* Main navigation links */}
+        <Flex flex={1} direction={"column"} gap={"xs"}>
+          <Text fz={"sm"} tt={"uppercase"} fw={"bold"} c={"dimmed"} px={"sm"} py={"md"}>
+            Menu
+          </Text>
+          {mainNavLinks.map((item) => (
+            <NavLink
+              key={item.href}
+              item={item}
+              isActive={isActiveRoute(item.href)}
+              onClick={closeMobile}
+            />
+          ))}
+        </Flex>
 
-          {/* Divider */}
-          <div className={styles.navDivider} />
-
-          {/* Bottom navigation links */}
-          <div className={styles.navBottom}>
-            {bottomNavLinks.map((item) => (
-              <NavLink
-                key={item.href}
-                item={item}
-                isActive={isActiveRoute(item.href)}
-                onClick={closeMobile}
-              />
-            ))}
-          </div>
-        </nav>
+        <Divider my={"xs"} />
+        {/* Bottom navigation links */}
+        <Flex mt={"auto"} pt={"md"}>
+          {bottomNavLinks.map((item) => (
+            <NavLink
+              key={item.href}
+              item={item}
+              isActive={isActiveRoute(item.href)}
+              onClick={closeMobile}
+            />
+          ))}
+        </Flex>
       </AppShell.Navbar>
-
       {/* Main content */}
-      <AppShell.Main className={styles.main}>
+      <AppShell.Main>
         <Outlet />
         <ButtonShowcase />
       </AppShell.Main>

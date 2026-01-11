@@ -1,4 +1,4 @@
-import { Box, Center, Loader, PasswordInput, Stack, Text, TextInput, Title } from "@mantine/core";
+import { Box, Flex, Loader, PasswordInput, Stack, Text, TextInput, Title } from "@mantine/core";
 import { useForm } from "@tanstack/react-form";
 import {
   IconActivity,
@@ -20,7 +20,6 @@ import { Link, useNavigate } from "@tanstack/react-router";
 
 function SignInPage() {
   const navigate = useNavigate({ from: "/sign-in" });
-  const { isPending } = authClient.useSession();
 
   const form = useForm({
     defaultValues: {
@@ -52,23 +51,8 @@ function SignInPage() {
     },
   });
 
-  if (isPending) {
-    return (
-      <Box className={styles.loaderOverlay}>
-        <Center>
-          <Stack align="center" gap="md">
-            <Box className={styles.logo}>
-              <IconBarbell size={28} color="white" />
-            </Box>
-            <Loader size="md" color="grape" />
-          </Stack>
-        </Center>
-      </Box>
-    );
-  }
-
   return (
-    <Box className={styles.container}>
+    <Flex h={"100dvh"}>
       {/* Left side - Form section */}
       <Box className={`${styles.formSection} ${styles.fadeInUp}`}>
         <Box className={styles.formCard}>
@@ -82,10 +66,12 @@ function SignInPage() {
 
           {/* Form header */}
           <Box ta="center" mb="lg">
-            <Title order={2} className={styles.formTitle}>
+            <Title order={2} fw={600} fz={"1.75rem"}>
               Welcome back
             </Title>
-            <Text className={styles.formSubtitle}>Sign in to continue your fitness journey</Text>
+            <Text c={"dimmed"} mb={"lg"}>
+              Sign in to continue your fitness journey
+            </Text>
           </Box>
 
           {/* Sign in form */}
@@ -96,53 +82,49 @@ function SignInPage() {
               form.handleSubmit();
             }}
           >
-            <Stack gap={0}>
+            <Stack gap={"md"}>
               <form.Field name="email">
                 {(field) => (
-                  <Box className={styles.inputWrapper}>
-                    <TextInput
-                      label="Email address"
-                      placeholder="you@example.com"
-                      id={field.name}
-                      name={field.name}
-                      type="email"
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      error={field.state.meta.errors[0]?.message}
-                      size="md"
-                      radius="md"
-                      styles={{
-                        input: {
-                          transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-                        },
-                      }}
-                    />
-                  </Box>
+                  <TextInput
+                    label="Email address"
+                    placeholder="you@example.com"
+                    id={field.name}
+                    name={field.name}
+                    type="email"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    error={field.state.meta.errors[0]?.message}
+                    size="md"
+                    radius="md"
+                    styles={{
+                      input: {
+                        transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+                      },
+                    }}
+                  />
                 )}
               </form.Field>
 
               <form.Field name="password">
                 {(field) => (
-                  <Box className={styles.inputWrapper}>
-                    <PasswordInput
-                      label="Password"
-                      placeholder="Enter your password"
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      error={field.state.meta.errors[0]?.message}
-                      size="md"
-                      radius="md"
-                      styles={{
-                        input: {
-                          transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-                        },
-                      }}
-                    />
-                  </Box>
+                  <PasswordInput
+                    label="Password"
+                    placeholder="Enter your password"
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    error={field.state.meta.errors[0]?.message}
+                    size="md"
+                    radius="md"
+                    styles={{
+                      input: {
+                        transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+                      },
+                    }}
+                  />
                 )}
               </form.Field>
 
@@ -182,7 +164,7 @@ function SignInPage() {
 
           {/* Sign up link */}
           <Box className={styles.signupSection}>
-            <Text size="sm" className={styles.signupText}>
+            <Text size="sm" c={"dimmed"}>
               New to Fit AI?{" "}
               <Link to="/signup" className={styles.signupLink}>
                 Create an account
@@ -221,14 +203,20 @@ function SignInPage() {
           </Box>
 
           {/* Title */}
-          <Text className={styles.visualTitle}>
+          <Text fz={"2.5rem"} fw={700} mb={"md"}>
             Train Smarter.
             <br />
             Get Stronger.
           </Text>
 
           {/* Subtitle */}
-          <Text className={styles.visualSubtitle}>
+          <Text
+            fz={"md"}
+            mb={"xl"}
+            style={{
+              opacity: "0.9",
+            }}
+          >
             AI-powered workout tracking that adapts to your goals and helps you achieve results
             faster than ever.
           </Text>
@@ -260,28 +248,42 @@ function SignInPage() {
               <Box className={styles.featureIcon}>
                 <IconCircleCheck size={20} color="white" />
               </Box>
-              <Text className={styles.featureText}>Recovery optimization</Text>
+              <Text fz={"sm"} fw={500}>
+                Recovery optimization
+              </Text>
             </Box>
           </Box>
 
           {/* Stats */}
-          <Box className={styles.statsRow}>
-            <Box className={styles.statItem}>
-              <Text className={styles.statNumber}>10k+</Text>
-              <Text className={styles.statLabel}>Active Users</Text>
-            </Box>
-            <Box className={styles.statItem}>
-              <Text className={styles.statNumber}>500k+</Text>
-              <Text className={styles.statLabel}>Workouts Logged</Text>
-            </Box>
-            <Box className={styles.statItem}>
-              <Text className={styles.statNumber}>98%</Text>
-              <Text className={styles.statLabel}>Satisfaction</Text>
-            </Box>
-          </Box>
+          <Flex justify={"center"} gap={"xl"} mt={"xl"}>
+            <Flex align={"center"} direction={"column"}>
+              <Text fz={"lg"} fw={700}>
+                10k+
+              </Text>
+              <Text fz={"md"} fw={600}>
+                Active Users
+              </Text>
+            </Flex>
+            <Flex align={"center"} direction={"column"}>
+              <Text fz={"lg"} fw={700}>
+                500k+
+              </Text>
+              <Text fz={"md"} fw={600}>
+                Workouts Logged
+              </Text>
+            </Flex>
+            <Flex align={"center"} direction={"column"}>
+              <Text fz={"lg"} fw={700}>
+                98%
+              </Text>
+              <Text fz={"md"} fw={600}>
+                Satisfaction
+              </Text>
+            </Flex>
+          </Flex>
         </Box>
       </Box>
-    </Box>
+    </Flex>
   );
 }
 
