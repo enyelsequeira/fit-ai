@@ -57,12 +57,12 @@ function SignInPage() {
       <Box className={`${styles.formSection} ${styles.fadeInUp}`}>
         <Box className={styles.formCard}>
           {/* Logo and brand */}
-          <Box className={styles.logoSection}>
+          <Flex direction={"column"} align={"center"} mb={"x"}>
             <Box className={styles.logo}>
               <IconBarbell size={28} color="white" />
             </Box>
             <Text className={styles.brandName}>Fit AI</Text>
-          </Box>
+          </Flex>
 
           {/* Form header */}
           <Box ta="center" mb="lg">
@@ -222,37 +222,35 @@ function SignInPage() {
           </Text>
 
           {/* Features list */}
-          <Box className={styles.featuresList}>
-            <Box className={styles.featureItem}>
+          <Flex direction={"column"} mt={"xl"} ta={"left"} gap={"md"}>
+            <Flex align={"center"} gap={"md"} className={styles.featureItem}>
               <Box className={styles.featureIcon}>
                 <IconBrain size={20} color="white" />
               </Box>
-              <Text className={styles.featureText}>AI-powered workout recommendations</Text>
-            </Box>
+              <Text>AI-powered workout recommendations</Text>
+            </Flex>
 
-            <Box className={styles.featureItem}>
+            <Flex align={"center"} gap={"md"} className={styles.featureItem}>
               <Box className={styles.featureIcon}>
                 <IconChartBar size={20} color="white" />
               </Box>
-              <Text className={styles.featureText}>Detailed progress analytics</Text>
-            </Box>
+              <Text>Detailed progress analytics</Text>
+            </Flex>
 
-            <Box className={styles.featureItem}>
+            <Flex align={"center"} gap={"md"} className={styles.featureItem}>
               <Box className={styles.featureIcon}>
                 <IconTarget size={20} color="white" />
               </Box>
-              <Text className={styles.featureText}>Personalized goal tracking</Text>
-            </Box>
+              <Text>Personalized goal tracking</Text>
+            </Flex>
 
-            <Box className={styles.featureItem}>
+            <Flex align={"center"} gap={"md"} className={styles.featureItem}>
               <Box className={styles.featureIcon}>
                 <IconCircleCheck size={20} color="white" />
               </Box>
-              <Text fz={"sm"} fw={500}>
-                Recovery optimization
-              </Text>
-            </Box>
-          </Box>
+              <Text>Recovery optimization</Text>
+            </Flex>
+          </Flex>
 
           {/* Stats */}
           <Flex justify={"center"} gap={"xl"} mt={"xl"}>

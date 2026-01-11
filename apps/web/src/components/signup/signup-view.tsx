@@ -13,13 +13,15 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "@/components/ui/sonner";
 
 import {
-  Box,
+  Anchor,
   Center,
+  Flex,
   Loader as MantineLoader,
   PasswordInput,
   Stack,
   Text,
   TextInput,
+  Title,
 } from "@mantine/core";
 import { useForm } from "@tanstack/react-form";
 import styles from "./signup.module.css";
@@ -104,34 +106,40 @@ function SignUpPage() {
         <div className={styles.decorativeOrb} />
 
         <div className={styles.brandContent}>
-          <div className={styles.logoContainer}>
+          <Flex justify={"center"} align={"center"} mb={"xl"} gap={"sm"}>
             <div className={styles.logoIcon}>
               <IconActivity size={32} color="white" stroke={2} />
             </div>
-            <span className={styles.logoText}>FitAI</span>
-          </div>
+            <Text fz={"xl"} fw={700} c={"white"}>
+              FitAI
+            </Text>
+          </Flex>
 
-          <h1 className={styles.tagline}>
+          <Title order={2} fw={600} fz={"1.75rem"}>
             Transform Your <span className={styles.taglineHighlight}>Fitness Journey</span>
-          </h1>
+          </Title>
 
-          <p className={styles.taglineSubtext}>
+          <Text fz={"xl"} c={"white"} mb={"xl"}>
             Join thousands of athletes achieving their goals with intelligent workout tracking
-          </p>
+          </Text>
 
-          <div className={styles.benefitsList}>
+          <Flex direction={"column"} gap={"md"} ta={"left"} mt={"xl"}>
             {benefits.map((benefit) => (
               <div key={benefit.title} className={styles.benefitItem}>
                 <div className={styles.benefitIcon}>
                   <benefit.icon size={18} color="white" stroke={2} />
                 </div>
-                <div className={styles.benefitContent}>
-                  <div className={styles.benefitTitle}>{benefit.title}</div>
-                  <div className={styles.benefitDescription}>{benefit.description}</div>
-                </div>
+                <Flex flex={1}>
+                  <Text fw={600} c={"white"} mb={2} fz={"sm"}>
+                    {benefit.title}
+                  </Text>
+                  <Text c={"gray.2"} fz={"sm"}>
+                    {benefit.description}
+                  </Text>
+                </Flex>
               </div>
             ))}
-          </div>
+          </Flex>
         </div>
 
         {/* Social proof */}
@@ -159,10 +167,21 @@ function SignUpPage() {
         </div>
 
         <div className={styles.formCard}>
-          <div className={styles.formHeader}>
-            <h2 className={styles.formTitle}>Create your account</h2>
-            <p className={styles.formSubtitle}>Start your fitness transformation today</p>
-          </div>
+          <Flex
+            align={"center"}
+            justify={"center"}
+            direction={"column"}
+            gap={"md"}
+            ta={"center"}
+            mb={"lg"}
+          >
+            <Title order={2} fw={600} fz={"1.75rem"}>
+              Create your account
+            </Title>
+            <Text fz={"sm"} c={"dimmed"}>
+              Start your fitness transformation today
+            </Text>
+          </Flex>
 
           <form
             className={styles.form}
@@ -175,7 +194,7 @@ function SignUpPage() {
             <Stack gap="md">
               <form.Field name="name">
                 {(field) => (
-                  <Box className={styles.inputWrapper}>
+                  <>
                     <TextInput
                       label="Full Name"
                       placeholder="John Doe"
@@ -193,13 +212,13 @@ function SignUpPage() {
                         },
                       }}
                     />
-                  </Box>
+                  </>
                 )}
               </form.Field>
 
               <form.Field name="email">
                 {(field) => (
-                  <Box className={styles.inputWrapper}>
+                  <>
                     <TextInput
                       label="Email Address"
                       placeholder="you@example.com"
@@ -218,13 +237,13 @@ function SignUpPage() {
                         },
                       }}
                     />
-                  </Box>
+                  </>
                 )}
               </form.Field>
 
               <form.Field name="password">
                 {(field) => (
-                  <Box className={styles.inputWrapper}>
+                  <>
                     <PasswordInput
                       label="Password"
                       placeholder="Create a strong password"
@@ -247,7 +266,7 @@ function SignUpPage() {
                         Must be at least 8 characters
                       </Text>
                     )}
-                  </Box>
+                  </>
                 )}
               </form.Field>
 
@@ -273,12 +292,20 @@ function SignUpPage() {
             </Stack>
           </form>
 
-          <div className={styles.footerLink}>
+          <Flex justify={"center"} align={"center"} c={"dimmed"} mt={"md"} fz={"sm"}>
             Already have an account?
-            <Link to="/sign-in" className={styles.signInLink}>
+            <Anchor
+              fw={600}
+              td={"none"}
+              ml={"xs"}
+              c={"blue.5"}
+              renderRoot={(props) => {
+                return <Link to="/sign-in" {...props} />;
+              }}
+            >
               Sign in
-            </Link>
-          </div>
+            </Anchor>
+          </Flex>
         </div>
       </div>
     </div>
