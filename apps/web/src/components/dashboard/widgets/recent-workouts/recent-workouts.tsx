@@ -1,11 +1,14 @@
 import { IconBarbell, IconCalendar, IconClock } from "@tabler/icons-react";
-
 import { Box, Flex, Stack, Text } from "@mantine/core";
-
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  FitAiCard,
+  FitAiCardContent,
+  FitAiCardDescription,
+  FitAiCardHeader,
+  FitAiCardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import styles from "./recent-workouts.module.css";
 
 interface Workout {
@@ -47,49 +50,6 @@ function formatDuration(minutes: number | null): string {
   return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
 }
 
-function WorkoutItem({ workout, onClick }: { workout: Workout; onClick?: () => void }) {
-  return (
-    <Flex
-      align="center"
-      justify="space-between"
-      p="sm"
-      className={styles.workoutItem}
-      onClick={onClick}
-    >
-      <Flex align="center" gap="sm">
-        <Flex h={40} w={40} align="center" justify="center" className={styles.workoutIcon}>
-          <IconBarbell size={20} />
-        </Flex>
-        <Box>
-          <Text fw={500}>{workout.name ?? "Workout"}</Text>
-          <Flex gap="sm">
-            <Flex align="center" gap={4}>
-              <IconCalendar size={12} style={{ color: "var(--mantine-color-dimmed)" }} />
-              <Text size="xs" c="dimmed">
-                {formatDate(workout.date)}
-              </Text>
-            </Flex>
-            <Flex align="center" gap={4}>
-              <IconClock size={12} style={{ color: "var(--mantine-color-dimmed)" }} />
-              <Text size="xs" c="dimmed">
-                {formatDuration(workout.duration)}
-              </Text>
-            </Flex>
-          </Flex>
-        </Box>
-      </Flex>
-      <Box ta="right">
-        <Text size="sm" c="dimmed">
-          {workout.exerciseCount} exercises
-        </Text>
-        <Text size="xs" c="dimmed">
-          {workout.setCount} sets
-        </Text>
-      </Box>
-    </Flex>
-  );
-}
-
 function WorkoutItemSkeleton() {
   return (
     <Flex align="center" justify="space-between" p="sm">
@@ -115,12 +75,12 @@ export function RecentWorkouts({
   onStartWorkout,
 }: RecentWorkoutsProps) {
   return (
-    <Card className={styles.card}>
-      <CardHeader>
-        <CardTitle>Recent Workouts</CardTitle>
-        <CardDescription>Your last 5 completed workouts</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <FitAiCard className={styles.card}>
+      <FitAiCardHeader>
+        <FitAiCardTitle>Recent Workouts</FitAiCardTitle>
+        <FitAiCardDescription>Your last 5 completed workouts</FitAiCardDescription>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         {isLoading ? (
           <Stack gap="xs">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -132,22 +92,66 @@ export function RecentWorkouts({
             <Box className={styles.emptyIcon}>
               <IconBarbell size={32} />
             </Box>
-            <Text size="sm" c="dimmed">No workouts yet. Start your fitness journey!</Text>
-            <FitAiButton size="sm" onClick={onStartWorkout}>Start Your First Workout</FitAiButton>
+            <Text size="sm" c="dimmed">
+              No workouts yet. Start your fitness journey!
+            </Text>
+            <FitAiButton size="sm" onClick={onStartWorkout}>
+              Start Your First Workout
+            </FitAiButton>
           </Stack>
         ) : (
           <Stack gap={4}>
             {workouts.map((workout) => (
-              <WorkoutItem
+              <Flex
+                align="center"
+                justify="space-between"
+                p="sm"
+                className={styles.workoutItem}
                 key={workout.id}
-                workout={workout}
                 onClick={() => onWorkoutClick?.(workout.id)}
-              />
+              >
+                <Flex align="center" gap="sm">
+                  <Flex
+                    h={40}
+                    w={40}
+                    align="center"
+                    justify="center"
+                    className={styles.workoutIcon}
+                  >
+                    <IconBarbell size={20} />
+                  </Flex>
+                  <Box>
+                    <Text fw={500}>{workout.name ?? "Workout"}</Text>
+                    <Flex gap="sm">
+                      <Flex align="center" gap={4}>
+                        <IconCalendar size={12} style={{ color: "var(--mantine-color-dimmed)" }} />
+                        <Text size="xs" c="dimmed">
+                          {formatDate(workout.date)}
+                        </Text>
+                      </Flex>
+                      <Flex align="center" gap={4}>
+                        <IconClock size={12} style={{ color: "var(--mantine-color-dimmed)" }} />
+                        <Text size="xs" c="dimmed">
+                          {formatDuration(workout.duration)}
+                        </Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                </Flex>
+                <Box ta="right">
+                  <Text size="sm" c="dimmed">
+                    {workout.exerciseCount} exercises
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {workout.setCount} sets
+                  </Text>
+                </Box>
+              </Flex>
             ))}
           </Stack>
         )}
-      </CardContent>
-    </Card>
+      </FitAiCardContent>
+    </FitAiCard>
   );
 }
 

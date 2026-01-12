@@ -9,34 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TodosRouteImport } from './routes/todos'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WorkoutsIndexRouteImport } from './routes/workouts/index'
-import { Route as RecoveryIndexRouteImport } from './routes/recovery/index'
-import { Route as ProgressIndexRouteImport } from './routes/progress/index'
-import { Route as ExercisesIndexRouteImport } from './routes/exercises/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
-import { Route as AiIndexRouteImport } from './routes/ai/index'
-import { Route as WorkoutsNewRouteImport } from './routes/workouts/new'
-import { Route as WorkoutsWorkoutIdRouteImport } from './routes/workouts/$workoutId'
-import { Route as RecoveryCheckInRouteImport } from './routes/recovery/check-in'
-import { Route as ProgressRecordsRouteImport } from './routes/progress/records'
-import { Route as ProgressPhotosRouteImport } from './routes/progress/photos'
-import { Route as ProgressBodyRouteImport } from './routes/progress/body'
-import { Route as ProgressAnalyticsRouteImport } from './routes/progress/analytics'
-import { Route as ExercisesExerciseIdRouteImport } from './routes/exercises/$exerciseId'
-import { Route as AiPreferencesRouteImport } from './routes/ai/preferences'
-import { Route as AiGenerateRouteImport } from './routes/ai/generate'
-import { Route as WorkoutsWorkoutIdCompleteRouteImport } from './routes/workouts/$workoutId/complete'
 
-const TodosRoute = TodosRouteImport.update({
-  id: '/todos',
-  path: '/todos',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -57,139 +35,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkoutsIndexRoute = WorkoutsIndexRouteImport.update({
-  id: '/workouts/',
-  path: '/workouts/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RecoveryIndexRoute = RecoveryIndexRouteImport.update({
-  id: '/recovery/',
-  path: '/recovery/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProgressIndexRoute = ProgressIndexRouteImport.update({
-  id: '/progress/',
-  path: '/progress/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ExercisesIndexRoute = ExercisesIndexRouteImport.update({
-  id: '/exercises/',
-  path: '/exercises/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const AiIndexRoute = AiIndexRouteImport.update({
-  id: '/ai/',
-  path: '/ai/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WorkoutsNewRoute = WorkoutsNewRouteImport.update({
-  id: '/workouts/new',
-  path: '/workouts/new',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WorkoutsWorkoutIdRoute = WorkoutsWorkoutIdRouteImport.update({
-  id: '/workouts/$workoutId',
-  path: '/workouts/$workoutId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RecoveryCheckInRoute = RecoveryCheckInRouteImport.update({
-  id: '/recovery/check-in',
-  path: '/recovery/check-in',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProgressRecordsRoute = ProgressRecordsRouteImport.update({
-  id: '/progress/records',
-  path: '/progress/records',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProgressPhotosRoute = ProgressPhotosRouteImport.update({
-  id: '/progress/photos',
-  path: '/progress/photos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProgressBodyRoute = ProgressBodyRouteImport.update({
-  id: '/progress/body',
-  path: '/progress/body',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProgressAnalyticsRoute = ProgressAnalyticsRouteImport.update({
-  id: '/progress/analytics',
-  path: '/progress/analytics',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ExercisesExerciseIdRoute = ExercisesExerciseIdRouteImport.update({
-  id: '/exercises/$exerciseId',
-  path: '/exercises/$exerciseId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AiPreferencesRoute = AiPreferencesRouteImport.update({
-  id: '/ai/preferences',
-  path: '/ai/preferences',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AiGenerateRoute = AiGenerateRouteImport.update({
-  id: '/ai/generate',
-  path: '/ai/generate',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WorkoutsWorkoutIdCompleteRoute =
-  WorkoutsWorkoutIdCompleteRouteImport.update({
-    id: '/complete',
-    path: '/complete',
-    getParentRoute: () => WorkoutsWorkoutIdRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/signup': typeof SignupRoute
-  '/todos': typeof TodosRoute
-  '/ai/generate': typeof AiGenerateRoute
-  '/ai/preferences': typeof AiPreferencesRoute
-  '/exercises/$exerciseId': typeof ExercisesExerciseIdRoute
-  '/progress/analytics': typeof ProgressAnalyticsRoute
-  '/progress/body': typeof ProgressBodyRoute
-  '/progress/photos': typeof ProgressPhotosRoute
-  '/progress/records': typeof ProgressRecordsRoute
-  '/recovery/check-in': typeof RecoveryCheckInRoute
-  '/workouts/$workoutId': typeof WorkoutsWorkoutIdRouteWithChildren
-  '/workouts/new': typeof WorkoutsNewRoute
-  '/ai': typeof AiIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/exercises': typeof ExercisesIndexRoute
-  '/progress': typeof ProgressIndexRoute
-  '/recovery': typeof RecoveryIndexRoute
-  '/workouts': typeof WorkoutsIndexRoute
-  '/workouts/$workoutId/complete': typeof WorkoutsWorkoutIdCompleteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign-in': typeof SignInRoute
   '/signup': typeof SignupRoute
-  '/todos': typeof TodosRoute
-  '/ai/generate': typeof AiGenerateRoute
-  '/ai/preferences': typeof AiPreferencesRoute
-  '/exercises/$exerciseId': typeof ExercisesExerciseIdRoute
-  '/progress/analytics': typeof ProgressAnalyticsRoute
-  '/progress/body': typeof ProgressBodyRoute
-  '/progress/photos': typeof ProgressPhotosRoute
-  '/progress/records': typeof ProgressRecordsRoute
-  '/recovery/check-in': typeof RecoveryCheckInRoute
-  '/workouts/$workoutId': typeof WorkoutsWorkoutIdRouteWithChildren
-  '/workouts/new': typeof WorkoutsNewRoute
-  '/ai': typeof AiIndexRoute
   '/dashboard': typeof DashboardIndexRoute
-  '/exercises': typeof ExercisesIndexRoute
-  '/progress': typeof ProgressIndexRoute
-  '/recovery': typeof RecoveryIndexRoute
-  '/workouts': typeof WorkoutsIndexRoute
-  '/workouts/$workoutId/complete': typeof WorkoutsWorkoutIdCompleteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -197,97 +60,14 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/signup': typeof SignupRoute
-  '/todos': typeof TodosRoute
-  '/ai/generate': typeof AiGenerateRoute
-  '/ai/preferences': typeof AiPreferencesRoute
-  '/exercises/$exerciseId': typeof ExercisesExerciseIdRoute
-  '/progress/analytics': typeof ProgressAnalyticsRoute
-  '/progress/body': typeof ProgressBodyRoute
-  '/progress/photos': typeof ProgressPhotosRoute
-  '/progress/records': typeof ProgressRecordsRoute
-  '/recovery/check-in': typeof RecoveryCheckInRoute
-  '/workouts/$workoutId': typeof WorkoutsWorkoutIdRouteWithChildren
-  '/workouts/new': typeof WorkoutsNewRoute
-  '/ai/': typeof AiIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/exercises/': typeof ExercisesIndexRoute
-  '/progress/': typeof ProgressIndexRoute
-  '/recovery/': typeof RecoveryIndexRoute
-  '/workouts/': typeof WorkoutsIndexRoute
-  '/workouts/$workoutId/complete': typeof WorkoutsWorkoutIdCompleteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/dashboard'
-    | '/sign-in'
-    | '/signup'
-    | '/todos'
-    | '/ai/generate'
-    | '/ai/preferences'
-    | '/exercises/$exerciseId'
-    | '/progress/analytics'
-    | '/progress/body'
-    | '/progress/photos'
-    | '/progress/records'
-    | '/recovery/check-in'
-    | '/workouts/$workoutId'
-    | '/workouts/new'
-    | '/ai'
-    | '/dashboard/'
-    | '/exercises'
-    | '/progress'
-    | '/recovery'
-    | '/workouts'
-    | '/workouts/$workoutId/complete'
+  fullPaths: '/' | '/dashboard' | '/sign-in' | '/signup' | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/sign-in'
-    | '/signup'
-    | '/todos'
-    | '/ai/generate'
-    | '/ai/preferences'
-    | '/exercises/$exerciseId'
-    | '/progress/analytics'
-    | '/progress/body'
-    | '/progress/photos'
-    | '/progress/records'
-    | '/recovery/check-in'
-    | '/workouts/$workoutId'
-    | '/workouts/new'
-    | '/ai'
-    | '/dashboard'
-    | '/exercises'
-    | '/progress'
-    | '/recovery'
-    | '/workouts'
-    | '/workouts/$workoutId/complete'
-  id:
-    | '__root__'
-    | '/'
-    | '/dashboard'
-    | '/sign-in'
-    | '/signup'
-    | '/todos'
-    | '/ai/generate'
-    | '/ai/preferences'
-    | '/exercises/$exerciseId'
-    | '/progress/analytics'
-    | '/progress/body'
-    | '/progress/photos'
-    | '/progress/records'
-    | '/recovery/check-in'
-    | '/workouts/$workoutId'
-    | '/workouts/new'
-    | '/ai/'
-    | '/dashboard/'
-    | '/exercises/'
-    | '/progress/'
-    | '/recovery/'
-    | '/workouts/'
-    | '/workouts/$workoutId/complete'
+  to: '/' | '/sign-in' | '/signup' | '/dashboard'
+  id: '__root__' | '/' | '/dashboard' | '/sign-in' | '/signup' | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -295,33 +75,10 @@ export interface RootRouteChildren {
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   SignInRoute: typeof SignInRoute
   SignupRoute: typeof SignupRoute
-  TodosRoute: typeof TodosRoute
-  AiGenerateRoute: typeof AiGenerateRoute
-  AiPreferencesRoute: typeof AiPreferencesRoute
-  ExercisesExerciseIdRoute: typeof ExercisesExerciseIdRoute
-  ProgressAnalyticsRoute: typeof ProgressAnalyticsRoute
-  ProgressBodyRoute: typeof ProgressBodyRoute
-  ProgressPhotosRoute: typeof ProgressPhotosRoute
-  ProgressRecordsRoute: typeof ProgressRecordsRoute
-  RecoveryCheckInRoute: typeof RecoveryCheckInRoute
-  WorkoutsWorkoutIdRoute: typeof WorkoutsWorkoutIdRouteWithChildren
-  WorkoutsNewRoute: typeof WorkoutsNewRoute
-  AiIndexRoute: typeof AiIndexRoute
-  ExercisesIndexRoute: typeof ExercisesIndexRoute
-  ProgressIndexRoute: typeof ProgressIndexRoute
-  RecoveryIndexRoute: typeof RecoveryIndexRoute
-  WorkoutsIndexRoute: typeof WorkoutsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/todos': {
-      id: '/todos'
-      path: '/todos'
-      fullPath: '/todos'
-      preLoaderRoute: typeof TodosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -350,124 +107,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/workouts/': {
-      id: '/workouts/'
-      path: '/workouts'
-      fullPath: '/workouts'
-      preLoaderRoute: typeof WorkoutsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/recovery/': {
-      id: '/recovery/'
-      path: '/recovery'
-      fullPath: '/recovery'
-      preLoaderRoute: typeof RecoveryIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/progress/': {
-      id: '/progress/'
-      path: '/progress'
-      fullPath: '/progress'
-      preLoaderRoute: typeof ProgressIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/exercises/': {
-      id: '/exercises/'
-      path: '/exercises'
-      fullPath: '/exercises'
-      preLoaderRoute: typeof ExercisesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
-    }
-    '/ai/': {
-      id: '/ai/'
-      path: '/ai'
-      fullPath: '/ai'
-      preLoaderRoute: typeof AiIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/workouts/new': {
-      id: '/workouts/new'
-      path: '/workouts/new'
-      fullPath: '/workouts/new'
-      preLoaderRoute: typeof WorkoutsNewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/workouts/$workoutId': {
-      id: '/workouts/$workoutId'
-      path: '/workouts/$workoutId'
-      fullPath: '/workouts/$workoutId'
-      preLoaderRoute: typeof WorkoutsWorkoutIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/recovery/check-in': {
-      id: '/recovery/check-in'
-      path: '/recovery/check-in'
-      fullPath: '/recovery/check-in'
-      preLoaderRoute: typeof RecoveryCheckInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/progress/records': {
-      id: '/progress/records'
-      path: '/progress/records'
-      fullPath: '/progress/records'
-      preLoaderRoute: typeof ProgressRecordsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/progress/photos': {
-      id: '/progress/photos'
-      path: '/progress/photos'
-      fullPath: '/progress/photos'
-      preLoaderRoute: typeof ProgressPhotosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/progress/body': {
-      id: '/progress/body'
-      path: '/progress/body'
-      fullPath: '/progress/body'
-      preLoaderRoute: typeof ProgressBodyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/progress/analytics': {
-      id: '/progress/analytics'
-      path: '/progress/analytics'
-      fullPath: '/progress/analytics'
-      preLoaderRoute: typeof ProgressAnalyticsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/exercises/$exerciseId': {
-      id: '/exercises/$exerciseId'
-      path: '/exercises/$exerciseId'
-      fullPath: '/exercises/$exerciseId'
-      preLoaderRoute: typeof ExercisesExerciseIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ai/preferences': {
-      id: '/ai/preferences'
-      path: '/ai/preferences'
-      fullPath: '/ai/preferences'
-      preLoaderRoute: typeof AiPreferencesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ai/generate': {
-      id: '/ai/generate'
-      path: '/ai/generate'
-      fullPath: '/ai/generate'
-      preLoaderRoute: typeof AiGenerateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/workouts/$workoutId/complete': {
-      id: '/workouts/$workoutId/complete'
-      path: '/complete'
-      fullPath: '/workouts/$workoutId/complete'
-      preLoaderRoute: typeof WorkoutsWorkoutIdCompleteRouteImport
-      parentRoute: typeof WorkoutsWorkoutIdRoute
     }
   }
 }
@@ -484,38 +129,11 @@ const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
   DashboardRouteRouteChildren,
 )
 
-interface WorkoutsWorkoutIdRouteChildren {
-  WorkoutsWorkoutIdCompleteRoute: typeof WorkoutsWorkoutIdCompleteRoute
-}
-
-const WorkoutsWorkoutIdRouteChildren: WorkoutsWorkoutIdRouteChildren = {
-  WorkoutsWorkoutIdCompleteRoute: WorkoutsWorkoutIdCompleteRoute,
-}
-
-const WorkoutsWorkoutIdRouteWithChildren =
-  WorkoutsWorkoutIdRoute._addFileChildren(WorkoutsWorkoutIdRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   SignInRoute: SignInRoute,
   SignupRoute: SignupRoute,
-  TodosRoute: TodosRoute,
-  AiGenerateRoute: AiGenerateRoute,
-  AiPreferencesRoute: AiPreferencesRoute,
-  ExercisesExerciseIdRoute: ExercisesExerciseIdRoute,
-  ProgressAnalyticsRoute: ProgressAnalyticsRoute,
-  ProgressBodyRoute: ProgressBodyRoute,
-  ProgressPhotosRoute: ProgressPhotosRoute,
-  ProgressRecordsRoute: ProgressRecordsRoute,
-  RecoveryCheckInRoute: RecoveryCheckInRoute,
-  WorkoutsWorkoutIdRoute: WorkoutsWorkoutIdRouteWithChildren,
-  WorkoutsNewRoute: WorkoutsNewRoute,
-  AiIndexRoute: AiIndexRoute,
-  ExercisesIndexRoute: ExercisesIndexRoute,
-  ProgressIndexRoute: ProgressIndexRoute,
-  RecoveryIndexRoute: RecoveryIndexRoute,
-  WorkoutsIndexRoute: WorkoutsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

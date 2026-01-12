@@ -3,9 +3,9 @@ import type { orpc } from "@/utils/orpc";
 
 import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { theme } from "@/lib/theme";
 
@@ -13,6 +13,7 @@ import { theme } from "@/lib/theme";
 import mantineCoreStyles from "@mantine/core/styles.css?url";
 import mantineNotificationsStyles from "@mantine/notifications/styles.css?url";
 import mantineDatesStyles from "@mantine/dates/styles.css?url";
+import { TanStackDevtools } from "@tanstack/react-devtools";
 
 export interface RouterAppContext {
   orpc: typeof orpc;
@@ -62,8 +63,23 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <MantineProvider theme={theme} defaultColorScheme="auto">
           <Notifications position="top-right" />
           <main style={{ flex: 1 }}>{children}</main>
-          <TanStackRouterDevtools position="bottom-left" />
-          <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
+          <TanStackDevtools
+            // eventBusConfig={{
+            //   debug: true,
+            // }}
+            plugins={[
+              {
+                name: "TanStack Query",
+                render: <ReactQueryDevtoolsPanel />,
+                defaultOpen: true,
+              },
+              {
+                name: "TanStack Router",
+                render: <TanStackRouterDevtoolsPanel />,
+                defaultOpen: false,
+              },
+            ]}
+          />
         </MantineProvider>
         <Scripts />
       </body>

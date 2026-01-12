@@ -3,7 +3,7 @@ import { IconArrowUp, IconTrophy } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, FitAiCardContent } from "@/components/ui/card";
 
 type RecordType =
   | "one_rep_max"
@@ -62,7 +62,7 @@ export function PRCard({
 
   return (
     <Card>
-      <CardContent className="pt-4">
+      <FitAiCardContent className="pt-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full">
@@ -94,7 +94,7 @@ export function PRCard({
             <span className="text-xs text-muted-foreground">from previous PR</span>
           </div>
         )}
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

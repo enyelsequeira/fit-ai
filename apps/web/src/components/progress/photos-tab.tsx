@@ -18,7 +18,7 @@ import { orpc } from "@/utils/orpc";
 
 import { Badge } from "@/components/ui/badge";
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, FitAiCardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -590,7 +590,7 @@ export function PhotosTab() {
         </div>
       ) : (
         <Card>
-          <CardContent className="py-12">
+          <FitAiCardContent className="py-12">
             <EmptyState
               icon={IconPhoto}
               title="No progress photos"
@@ -602,7 +602,7 @@ export function PhotosTab() {
                 </FitAiButton>
               }
             />
-          </CardContent>
+          </FitAiCardContent>
         </Card>
       )}
 

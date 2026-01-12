@@ -2,7 +2,7 @@ import { IconScale, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react
 
 import { Box, Flex, Group, Text } from "@mantine/core";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardDescription, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import styles from "./weight-chart.module.css";
@@ -34,20 +34,20 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
   if (isLoading) {
     return (
       <Card className={styles.card}>
-        <CardHeader>
-          <CardTitle>
+        <FitAiCardHeader>
+          <FitAiCardTitle>
             <Group gap="xs">
               <IconScale size={20} />
               Weight Trend
             </Group>
-          </CardTitle>
-          <CardDescription>Body weight over time</CardDescription>
-        </CardHeader>
-        <CardContent>
+          </FitAiCardTitle>
+          <FitAiCardDescription>Body weight over time</FitAiCardDescription>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <Flex h={192} align="center" justify="center">
             <Skeleton h={160} w="100%" />
           </Flex>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     );
   }
@@ -55,22 +55,22 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
   if (validPoints.length === 0) {
     return (
       <Card className={styles.card}>
-        <CardHeader>
-          <CardTitle>
+        <FitAiCardHeader>
+          <FitAiCardTitle>
             <Group gap="xs">
               <IconScale size={20} />
               Weight Trend
             </Group>
-          </CardTitle>
-          <CardDescription>Body weight over time</CardDescription>
-        </CardHeader>
-        <CardContent>
+          </FitAiCardTitle>
+          <FitAiCardDescription>Body weight over time</FitAiCardDescription>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <Flex h={192} align="center" justify="center">
             <Text size="sm" c="dimmed">
               Log body measurements to see weight trends
             </Text>
           </Flex>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     );
   }
@@ -107,16 +107,16 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
 
   return (
     <Card className={styles.card}>
-      <CardHeader>
-        <CardTitle>
+      <FitAiCardHeader>
+        <FitAiCardTitle>
           <Group gap="xs">
             <IconScale size={20} />
             Weight Trend
           </Group>
-        </CardTitle>
-        <CardDescription>Body weight over time</CardDescription>
-      </CardHeader>
-      <CardContent>
+        </FitAiCardTitle>
+        <FitAiCardDescription>Body weight over time</FitAiCardDescription>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         {/* SVG Chart */}
         <Box pos="relative" h={192} className={styles.chartContainer}>
           <svg
@@ -232,7 +232,7 @@ export function WeightChart({ dataPoints, weightChange, isLoading }: WeightChart
             </Box>
           )}
         </Flex>
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

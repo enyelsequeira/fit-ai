@@ -3,7 +3,7 @@ import type { TablerIcon } from "@tabler/icons-react";
 import { IconActivity, IconBed, IconSalad, IconCalendar, IconX } from "@tabler/icons-react";
 
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, FitAiCardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 type RecommendationType = "training" | "recovery" | "nutrition" | "schedule";
@@ -42,7 +42,7 @@ function RecommendationCard({ recommendation, onDismiss, className }: Recommenda
 
   return (
     <Card className={cn("border-l-4", border, className)}>
-      <CardContent className="flex items-start gap-3 py-3">
+      <FitAiCardContent className="flex items-start gap-3 py-3">
         <div className={cn("flex size-8 shrink-0 items-center justify-center rounded-full", color)}>
           <Icon className="size-4" />
         </div>
@@ -65,7 +65,7 @@ function RecommendationCard({ recommendation, onDismiss, className }: Recommenda
             <IconX className="size-3" />
           </FitAiButton>
         )}
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

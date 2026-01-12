@@ -153,5 +153,3 @@ export function useDashboardData() {
     },
   };
 }
-
-export type DashboardData = ReturnType<typeof useDashboardData>;

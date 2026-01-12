@@ -12,7 +12,7 @@ import {
 import { Badge, Box, Flex, RingProgress, Stack, Text } from "@mantine/core";
 
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardDescription, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import styles from "./goals-progress.module.css";
@@ -172,16 +172,16 @@ export function GoalsProgress({ goals, isLoading, onGoalClick, onCreateGoal }: G
 
   return (
     <Card className={styles.card}>
-      <CardHeader>
+      <FitAiCardHeader>
         <Flex justify="space-between" align="flex-start">
           <Box>
-            <CardTitle>
+            <FitAiCardTitle>
               <Flex align="center" gap="xs">
                 <IconTarget size={20} className={styles.headerIcon} />
                 Goals Progress
               </Flex>
-            </CardTitle>
-            <CardDescription>Track your active fitness goals</CardDescription>
+            </FitAiCardTitle>
+            <FitAiCardDescription>Track your active fitness goals</FitAiCardDescription>
           </Box>
           {!isLoading && goals.length > 0 && (
             <FitAiButton
@@ -194,8 +194,8 @@ export function GoalsProgress({ goals, isLoading, onGoalClick, onCreateGoal }: G
             </FitAiButton>
           )}
         </Flex>
-      </CardHeader>
-      <CardContent>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         {isLoading ? (
           <Stack gap="sm">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -232,7 +232,7 @@ export function GoalsProgress({ goals, isLoading, onGoalClick, onCreateGoal }: G
             )}
           </Stack>
         )}
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

@@ -2,8 +2,13 @@ import { IconClock, IconBarbell, IconPlayerPlay, IconStar } from "@tabler/icons-
 
 import { Badge } from "@/components/ui/badge";
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import {
+  FitAiCard,
+  FitAiCardContent,
+  FitAiCardFooter,
+  FitAiCardHeader,
+  FitAiCardTitle,
+} from "@/components/ui/card";
 
 interface GeneratedWorkoutExercise {
   exerciseId: number;
@@ -65,11 +70,11 @@ function GeneratedWorkoutCard({
   };
 
   return (
-    <Card className={cn(className)}>
-      <CardHeader className="pb-2">
+    <FitAiCard className={cn(className)}>
+      <FitAiCardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <CardTitle className="text-sm">{content.name}</CardTitle>
+            <FitAiCardTitle className="text-sm">{content.name}</FitAiCardTitle>
             <p className="text-muted-foreground text-xs">{formatDate(workout.generatedAt)}</p>
           </div>
           <div className="flex items-center gap-1.5">
@@ -93,8 +98,8 @@ function GeneratedWorkoutCard({
             )}
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
+      </FitAiCardHeader>
+      <FitAiCardContent className="space-y-3">
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1 text-muted-foreground">
             <IconClock className="size-3.5" />
@@ -152,16 +157,16 @@ function GeneratedWorkoutCard({
             </div>
           </div>
         )}
-      </CardContent>
+      </FitAiCardContent>
       {!workout.wasUsed && onUse && (
-        <CardFooter>
+        <FitAiCardFooter>
           <FitAiButton size="sm" onClick={onUse} className="w-full gap-1.5">
             <IconPlayerPlay className="size-3.5" />
             Use This Workout
           </FitAiButton>
-        </CardFooter>
+        </FitAiCardFooter>
       )}
-    </Card>
+    </FitAiCard>
   );
 }
 

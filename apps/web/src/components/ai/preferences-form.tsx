@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Card, FitAiCardContent, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
+import { FitAiCheckbox } from "@/components/ui/fitAiCheckbox.tsx";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -170,10 +170,10 @@ function PreferencesForm({ initialData, onSubmit, isLoading = false }: Preferenc
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Goals Section */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Training Goals</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <FitAiCardHeader>
+          <FitAiCardTitle className="text-sm">Training Goals</FitAiCardTitle>
+        </FitAiCardHeader>
+        <FitAiCardContent className="space-y-4">
           <div className="space-y-2">
             <Label>Primary Goal *</Label>
             <Select
@@ -239,15 +239,15 @@ function PreferencesForm({ initialData, onSubmit, isLoading = false }: Preferenc
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
 
       {/* Schedule Section */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Schedule</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <FitAiCardHeader>
+          <FitAiCardTitle className="text-sm">Schedule</FitAiCardTitle>
+        </FitAiCardHeader>
+        <FitAiCardContent className="space-y-4">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label>Workout Days Per Week</Label>
@@ -316,15 +316,15 @@ function PreferencesForm({ initialData, onSubmit, isLoading = false }: Preferenc
               ))}
             </div>
           </div>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
 
       {/* Equipment Section */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Equipment & Location</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <FitAiCardHeader>
+          <FitAiCardTitle className="text-sm">Equipment & Location</FitAiCardTitle>
+        </FitAiCardHeader>
+        <FitAiCardContent className="space-y-4">
           <div className="space-y-2">
             <Label>Training Location</Label>
             <Select
@@ -359,7 +359,7 @@ function PreferencesForm({ initialData, onSubmit, isLoading = false }: Preferenc
                       : "border-input hover:bg-muted",
                   )}
                 >
-                  <Checkbox
+                  <FitAiCheckbox
                     checked={formData.availableEquipment?.includes(equipment)}
                     onCheckedChange={() =>
                       setFormData((prev) => ({
@@ -376,15 +376,15 @@ function PreferencesForm({ initialData, onSubmit, isLoading = false }: Preferenc
               ))}
             </div>
           </div>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
 
       {/* Preferences Section */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Workout Preferences</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <FitAiCardHeader>
+          <FitAiCardTitle className="text-sm">Workout Preferences</FitAiCardTitle>
+        </FitAiCardHeader>
+        <FitAiCardContent className="space-y-4">
           <div className="space-y-2">
             <Label>Preferred Split</Label>
             <Select
@@ -408,15 +408,15 @@ function PreferencesForm({ initialData, onSubmit, isLoading = false }: Preferenc
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
 
       {/* Limitations Section */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Limitations & Injuries</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <FitAiCardHeader>
+          <FitAiCardTitle className="text-sm">Limitations & Injuries</FitAiCardTitle>
+        </FitAiCardHeader>
+        <FitAiCardContent className="space-y-4">
           <div className="space-y-2">
             <Label>Injuries or Limitations</Label>
             <Textarea
@@ -452,7 +452,7 @@ function PreferencesForm({ initialData, onSubmit, isLoading = false }: Preferenc
               ))}
             </div>
           </div>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
 
       <FitAiButton type="submit" disabled={isLoading} className="w-full">

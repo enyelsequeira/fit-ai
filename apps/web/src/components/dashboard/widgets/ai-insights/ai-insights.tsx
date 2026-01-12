@@ -15,7 +15,7 @@ import { useState } from "react";
 import { ActionIcon, Badge, Box, Collapse, Flex, Stack, Text, Tooltip } from "@mantine/core";
 
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardDescription, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import styles from "./ai-insights.module.css";
@@ -155,7 +155,7 @@ function InsightCard({
 function LoadingSkeleton() {
   return (
     <Card className={styles.card}>
-      <CardHeader>
+      <FitAiCardHeader>
         <Flex justify="space-between" align="center">
           <Stack gap="xs">
             <Skeleton h={20} w={140} />
@@ -163,8 +163,8 @@ function LoadingSkeleton() {
           </Stack>
           <Skeleton h={28} w={28} radius="sm" />
         </Flex>
-      </CardHeader>
-      <CardContent>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         <Stack gap="sm">
           {Array.from({ length: 3 }).map((_, i) => (
             <Box key={i} className={styles.skeletonCard}>
@@ -178,7 +178,7 @@ function LoadingSkeleton() {
             </Box>
           ))}
         </Stack>
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }
@@ -216,14 +216,14 @@ export function AIInsights({
 
   return (
     <Card className={styles.card}>
-      <CardHeader>
+      <FitAiCardHeader>
         <Flex justify="space-between" align="flex-start">
           <Stack gap={2}>
             <Flex gap="xs" align="center">
               <IconSparkles size={18} className={styles.headerSparkle} />
-              <CardTitle>AI Insights</CardTitle>
+              <FitAiCardTitle>AI Insights</FitAiCardTitle>
             </Flex>
-            <CardDescription>Personalized recommendations for you</CardDescription>
+            <FitAiCardDescription>Personalized recommendations for you</FitAiCardDescription>
           </Stack>
           {hasInsights && onRegenerate && (
             <Tooltip label="Regenerate insights" position="left">
@@ -239,8 +239,8 @@ export function AIInsights({
             </Tooltip>
           )}
         </Flex>
-      </CardHeader>
-      <CardContent>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         {hasInsights ? (
           <Stack gap="sm">
             {insights.map((insight, index) => (
@@ -255,7 +255,7 @@ export function AIInsights({
         ) : (
           <EmptyState onRegenerate={onRegenerate} />
         )}
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

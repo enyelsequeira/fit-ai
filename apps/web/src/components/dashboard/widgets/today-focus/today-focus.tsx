@@ -10,7 +10,7 @@ import {
 import { Badge, Box, Flex, RingProgress, Stack, Text, Title } from "@mantine/core";
 
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import styles from "./today-focus.module.css";
@@ -99,13 +99,13 @@ export function TodayFocus({
   if (isLoading) {
     return (
       <Card className={styles.card}>
-        <CardHeader>
+        <FitAiCardHeader>
           <Stack gap="xs">
             <Skeleton h={28} w={200} />
             <Skeleton h={16} w={280} />
           </Stack>
-        </CardHeader>
-        <CardContent>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <Flex gap="lg" wrap="wrap" align="flex-start">
             <Flex align="center" gap="md">
               <Skeleton h={80} w={80} radius="xl" />
@@ -119,7 +119,7 @@ export function TodayFocus({
               <Skeleton h={36} w="100%" />
             </Stack>
           </Flex>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     );
   }
@@ -133,7 +133,7 @@ export function TodayFocus({
 
   return (
     <Card className={styles.card}>
-      <CardHeader>
+      <FitAiCardHeader>
         <Flex justify="space-between" align="flex-start" wrap="wrap" gap="sm">
           <Box className={styles.greetingSection}>
             <Title order={2} size="h3" className={styles.greeting}>
@@ -166,9 +166,9 @@ export function TodayFocus({
             </Flex>
           )}
         </Flex>
-      </CardHeader>
+      </FitAiCardHeader>
 
-      <CardContent>
+      <FitAiCardContent>
         <Flex gap="lg" wrap="wrap" align="flex-start">
           {/* Readiness Score Section */}
           {hasReadiness ? (
@@ -250,7 +250,7 @@ export function TodayFocus({
             </Stack>
           </Box>
         )}
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

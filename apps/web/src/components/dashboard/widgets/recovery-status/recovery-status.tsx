@@ -3,7 +3,7 @@ import { IconBolt, IconClipboardCheck, IconMoon } from "@tabler/icons-react";
 import { Box, Flex, Progress, RingProgress, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardDescription, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import styles from "./recovery-status.module.css";
@@ -88,11 +88,11 @@ export function RecoveryStatus({
   if (isLoading) {
     return (
       <Card className={styles.card}>
-        <CardHeader>
-          <CardTitle>Recovery Status</CardTitle>
-          <CardDescription>Your training readiness</CardDescription>
-        </CardHeader>
-        <CardContent>
+        <FitAiCardHeader>
+          <FitAiCardTitle>Recovery Status</FitAiCardTitle>
+          <FitAiCardDescription>Your training readiness</FitAiCardDescription>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <Stack gap="md">
             <Flex align="center" gap="md">
               <Skeleton h={80} w={80} radius="xl" />
@@ -110,7 +110,7 @@ export function RecoveryStatus({
               ))}
             </Stack>
           </Stack>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     );
   }
@@ -119,11 +119,11 @@ export function RecoveryStatus({
   if (!readiness?.todayCheckIn && !todayCheckIn) {
     return (
       <Card className={styles.card}>
-        <CardHeader>
-          <CardTitle>Recovery Status</CardTitle>
-          <CardDescription>Your training readiness</CardDescription>
-        </CardHeader>
-        <CardContent>
+        <FitAiCardHeader>
+          <FitAiCardTitle>Recovery Status</FitAiCardTitle>
+          <FitAiCardDescription>Your training readiness</FitAiCardDescription>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <Stack py="xl" align="center" ta="center" className={styles.emptyState}>
             <Box className={styles.emptyIcon}>
               <IconClipboardCheck size={48} />
@@ -136,7 +136,7 @@ export function RecoveryStatus({
               Log Check-in
             </FitAiButton>
           </Stack>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     );
   }
@@ -145,11 +145,11 @@ export function RecoveryStatus({
 
   return (
     <Card className={styles.card}>
-      <CardHeader>
-        <CardTitle>Recovery Status</CardTitle>
-        <CardDescription>Your training readiness</CardDescription>
-      </CardHeader>
-      <CardContent>
+      <FitAiCardHeader>
+        <FitAiCardTitle>Recovery Status</FitAiCardTitle>
+        <FitAiCardDescription>Your training readiness</FitAiCardDescription>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         <Stack gap="md">
           {/* Readiness Score with Ring Progress */}
           {readiness && (
@@ -216,7 +216,7 @@ export function RecoveryStatus({
             </Box>
           )}
         </Stack>
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

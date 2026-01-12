@@ -29,7 +29,7 @@ import { Button } from "./ui/button";
 
 const navLinks = [
   { to: "/dashboard", label: "Dashboard", icon: IconLayoutDashboard },
-  { to: "/workouts", label: "Workouts", icon: IconBarbell },
+  { to: "/dashboard/workouts", label: "Workouts", icon: IconBarbell },
   { to: "/exercises", label: "Exercises", icon: IconLibrary },
   { to: "/progress", label: "Progress", icon: IconTrendingUp },
   { to: "/ai", label: "AI", icon: IconSparkles },

@@ -1,0 +1,94 @@
+/* Workouts View Styles */
+
+.workoutsContainer {
+  animation: fadeIn 300ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pageHeader {
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.pageTitle {
+  font-size: var(--mantine-font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--mantine-spacing-xs);
+}
+
+.pageDescription {
+  color: var(--mantine-color-dimmed);
+}
+
+.mainContent {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mantine-spacing-md);
+}
+
+@media (min-width: 992px) {
+  .mainContent {
+    grid-template-columns: 340px 1fr;
+  }
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+/* Sticky sidebar on larger screens */
+@media (min-width: 992px) {
+  .leftColumn {
+    position: sticky;
+    top: var(--mantine-spacing-md);
+    align-self: flex-start;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .leftColumn::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .leftColumn::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .leftColumn::-webkit-scrollbar-thumb {
+    background: var(--mantine-color-gray-4);
+    border-radius: 2px;
+  }
+}
+
+/* Mobile-first: Stack layout */
+@media (max-width: 991px) {
+  .leftColumn {
+    order: 2;
+  }
+
+  .rightColumn {
+    order: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workoutsContainer {
+    animation: none;
+  }
+}

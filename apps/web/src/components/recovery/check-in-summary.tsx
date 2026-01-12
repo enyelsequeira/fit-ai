@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 type Mood = "great" | "good" | "neutral" | "low" | "bad";
@@ -94,9 +94,9 @@ function CheckInSummary({ checkIn, onEdit, className }: CheckInSummaryProps) {
 
   return (
     <Card className={className}>
-      <CardHeader>
+      <FitAiCardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm">{formatDate(checkIn.date)}</CardTitle>
+          <FitAiCardTitle className="text-sm">{formatDate(checkIn.date)}</FitAiCardTitle>
           {onEdit && (
             <button
               onClick={onEdit}
@@ -106,8 +106,8 @@ function CheckInSummary({ checkIn, onEdit, className }: CheckInSummaryProps) {
             </button>
           )}
         </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
+      </FitAiCardHeader>
+      <FitAiCardContent className="space-y-6">
         {/* Mood & Overview */}
         <div className="flex items-center gap-4">
           {checkIn.mood && (
@@ -176,7 +176,7 @@ function CheckInSummary({ checkIn, onEdit, className }: CheckInSummaryProps) {
             <p className="mt-1 text-sm">{checkIn.notes}</p>
           </div>
         )}
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

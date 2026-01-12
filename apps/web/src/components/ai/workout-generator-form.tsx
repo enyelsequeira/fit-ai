@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Card, FitAiCardContent, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
+import { FitAiCheckbox } from "@/components/ui/fitAiCheckbox.tsx";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -134,13 +134,13 @@ function WorkoutGeneratorForm({
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-sm">Generation Options</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
+      <FitAiCardHeader>
+        <FitAiCardTitle className="text-sm">Generation Options</FitAiCardTitle>
+      </FitAiCardHeader>
+      <FitAiCardContent className="space-y-6">
         {hasPreferences && (
           <label className="flex items-center gap-2 cursor-pointer">
-            <Checkbox
+            <FitAiCheckbox
               checked={usePreferences}
               onCheckedChange={(checked) => setUsePreferences(checked === true)}
             />
@@ -222,7 +222,7 @@ function WorkoutGeneratorForm({
         <FitAiButton onClick={handleGenerate} disabled={isLoading} className="w-full">
           {isLoading ? "Generating..." : "Generate Workout"}
         </FitAiButton>
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

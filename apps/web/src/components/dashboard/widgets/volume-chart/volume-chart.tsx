@@ -2,7 +2,7 @@ import { IconTrendingUp } from "@tabler/icons-react";
 
 import { Box, Flex, Group, Text, Tooltip } from "@mantine/core";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardDescription, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import styles from "./volume-chart.module.css";
@@ -39,16 +39,16 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
   if (isLoading) {
     return (
       <Card className={styles.card}>
-        <CardHeader>
-          <CardTitle>
+        <FitAiCardHeader>
+          <FitAiCardTitle>
             <Group gap="xs">
               <IconTrendingUp size={20} />
               Volume Trends
             </Group>
-          </CardTitle>
-          <CardDescription>Weekly training volume (kg)</CardDescription>
-        </CardHeader>
-        <CardContent>
+          </FitAiCardTitle>
+          <FitAiCardDescription>Weekly training volume (kg)</FitAiCardDescription>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <Flex h={192} align="flex-end" justify="space-between" gap="xs">
             {Array.from({ length: 8 }).map((_, i) => (
               <Flex key={i} direction="column" align="center" gap="xs" style={{ flex: 1 }}>
@@ -57,7 +57,7 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
               </Flex>
             ))}
           </Flex>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     );
   }
@@ -65,22 +65,22 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
   if (dataPoints.length === 0) {
     return (
       <Card className={styles.card}>
-        <CardHeader>
-          <CardTitle>
+        <FitAiCardHeader>
+          <FitAiCardTitle>
             <Group gap="xs">
               <IconTrendingUp size={20} />
               Volume Trends
             </Group>
-          </CardTitle>
-          <CardDescription>Weekly training volume (kg)</CardDescription>
-        </CardHeader>
-        <CardContent>
+          </FitAiCardTitle>
+          <FitAiCardDescription>Weekly training volume (kg)</FitAiCardDescription>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <Flex h={192} align="center" justify="center">
             <Text size="sm" c="dimmed">
               Complete workouts to see volume trends
             </Text>
           </Flex>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     );
   }
@@ -90,16 +90,16 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
 
   return (
     <Card className={styles.card}>
-      <CardHeader>
-        <CardTitle>
+      <FitAiCardHeader>
+        <FitAiCardTitle>
           <Group gap="xs">
             <IconTrendingUp size={20} />
             Volume Trends
           </Group>
-        </CardTitle>
-        <CardDescription>Weekly training volume (kg)</CardDescription>
-      </CardHeader>
-      <CardContent>
+        </FitAiCardTitle>
+        <FitAiCardDescription>Weekly training volume (kg)</FitAiCardDescription>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         <Flex h={192} align="flex-end" justify="space-between" gap="xs">
           {dataPoints.map((point, index) => {
             const heightPercent =
@@ -172,7 +172,7 @@ export function VolumeChart({ dataPoints, isLoading }: VolumeChartProps) {
             </Box>
           </Flex>
         )}
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

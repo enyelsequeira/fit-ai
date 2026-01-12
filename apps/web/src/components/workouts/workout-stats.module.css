@@ -1,0 +1,79 @@
+/* Workout Stats Styles */
+
+.statsGrid {
+  animation: fadeSlideUp 400ms ease-out backwards;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.statCard {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--mantine-radius-md);
+  transition: transform 200ms ease;
+}
+
+.iconWrapper[data-variant="blue"] {
+  background: var(--mantine-color-blue-light);
+  color: var(--mantine-color-blue-6);
+}
+
+.iconWrapper[data-variant="orange"] {
+  background: var(--mantine-color-orange-light);
+  color: var(--mantine-color-orange-6);
+}
+
+.iconWrapper[data-variant="teal"] {
+  background: var(--mantine-color-teal-light);
+  color: var(--mantine-color-teal-6);
+}
+
+.iconWrapper[data-variant="violet"] {
+  background: var(--mantine-color-violet-light);
+  color: var(--mantine-color-violet-6);
+}
+
+.statCard:hover .iconWrapper {
+  transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statsGrid,
+  .statCard {
+    animation: none;
+  }
+
+  .statCard:hover {
+    transform: none;
+  }
+
+  .statCard:hover .iconWrapper {
+    transform: none;
+  }
+}

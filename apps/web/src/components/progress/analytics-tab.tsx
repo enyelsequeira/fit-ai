@@ -26,7 +26,7 @@ import { orpc } from "@/utils/orpc";
 
 import { Badge } from "@/components/ui/badge";
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -105,13 +105,13 @@ function VolumeAnalysis() {
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Volume Over Time */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-sm">
+          <FitAiCardHeader>
+            <FitAiCardTitle className="flex items-center gap-2 text-sm">
               <IconChartBar className="size-4" />
               Total Volume (Last 12 Weeks)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </FitAiCardTitle>
+          </FitAiCardHeader>
+          <FitAiCardContent>
             {volumeData.length > 0 ? (
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -154,13 +154,13 @@ function VolumeAnalysis() {
                 description="Complete workouts to track volume"
               />
             )}
-          </CardContent>
+          </FitAiCardContent>
         </Card>
 
         {/* Volume By Muscle */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between text-sm">
+          <FitAiCardHeader>
+            <FitAiCardTitle className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2">
                 <IconActivity className="size-4" />
                 Volume by Muscle Group
@@ -169,9 +169,9 @@ function VolumeAnalysis() {
                 {volumeChange >= 0 ? "+" : ""}
                 {volumeChange.toFixed(1)}% vs last week
               </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </FitAiCardTitle>
+          </FitAiCardHeader>
+          <FitAiCardContent>
             {muscleData.length > 0 ? (
               <div className="flex items-center gap-4">
                 <div className="h-48 w-48">
@@ -230,7 +230,7 @@ function VolumeAnalysis() {
                 description="Complete workouts to see muscle breakdown"
               />
             )}
-          </CardContent>
+          </FitAiCardContent>
         </Card>
       </div>
     </div>
@@ -288,13 +288,13 @@ function StrengthProgress() {
       <h3 className="text-lg font-medium">Strength Progress</h3>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-sm">
+        <FitAiCardHeader>
+          <FitAiCardTitle className="flex items-center gap-2 text-sm">
             <IconTrendingUp className="size-4" />
             Exercise Progression
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </FitAiCardTitle>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <div className="mb-4 space-y-2">
             <Label>Select Exercise</Label>
             <div className="flex flex-wrap gap-1">
@@ -358,7 +358,7 @@ function StrengthProgress() {
               description="Choose an exercise above to view progression"
             />
           )}
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     </div>
   );
@@ -429,7 +429,7 @@ function TrainingFrequency() {
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
-          <CardContent className="pt-4">
+          <FitAiCardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full">
                 <IconFlame className="size-5" />
@@ -439,11 +439,11 @@ function TrainingFrequency() {
                 <p className="text-xs text-muted-foreground">Current Streak (days)</p>
               </div>
             </div>
-          </CardContent>
+          </FitAiCardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-4">
+          <FitAiCardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-amber-500/10 text-amber-500 flex size-10 items-center justify-center rounded-full">
                 <IconTrendingUp className="size-5" />
@@ -453,11 +453,11 @@ function TrainingFrequency() {
                 <p className="text-xs text-muted-foreground">Longest Streak (days)</p>
               </div>
             </div>
-          </CardContent>
+          </FitAiCardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-4">
+          <FitAiCardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-emerald-500/10 text-emerald-500 flex size-10 items-center justify-center rounded-full">
                 <IconCalendar className="size-5" />
@@ -467,17 +467,17 @@ function TrainingFrequency() {
                 <p className="text-xs text-muted-foreground">Avg Workouts/Week</p>
               </div>
             </div>
-          </CardContent>
+          </FitAiCardContent>
         </Card>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Calendar Heatmap */}
         <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Activity (Last 12 Weeks)</CardTitle>
-          </CardHeader>
-          <CardContent>
+          <FitAiCardHeader>
+            <FitAiCardTitle className="text-sm">Activity (Last 12 Weeks)</FitAiCardTitle>
+          </FitAiCardHeader>
+          <FitAiCardContent>
             <div className="flex gap-1">
               <div className="flex flex-col gap-1 text-xs text-muted-foreground">
                 {DAYS_OF_WEEK.map((day) => (
@@ -514,18 +514,18 @@ function TrainingFrequency() {
               </div>
               <span>More</span>
             </div>
-          </CardContent>
+          </FitAiCardContent>
         </Card>
 
         {/* Workouts by Day */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between text-sm">
+          <FitAiCardHeader>
+            <FitAiCardTitle className="flex items-center justify-between text-sm">
               <span>Workouts by Day of Week</span>
               {mostActiveDay && <Badge variant="secondary">Most Active: {mostActiveDay}</Badge>}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </FitAiCardTitle>
+          </FitAiCardHeader>
+          <FitAiCardContent>
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={weeklyData}>
@@ -549,7 +549,7 @@ function TrainingFrequency() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </CardContent>
+          </FitAiCardContent>
         </Card>
       </div>
     </div>
@@ -637,10 +637,10 @@ function PeriodComparison() {
       <h3 className="text-lg font-medium">Period Comparison</h3>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Compare Two Time Periods</CardTitle>
-        </CardHeader>
-        <CardContent>
+        <FitAiCardHeader>
+          <FitAiCardTitle className="text-sm">Compare Two Time Periods</FitAiCardTitle>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <div className="mb-6 grid gap-4 sm:grid-cols-2">
             <div className="space-y-2 rounded-none border border-border/50 p-3">
               <Label className="text-xs text-muted-foreground">Period 1</Label>
@@ -730,7 +730,7 @@ function PeriodComparison() {
               description="Need at least 2 weeks of data for comparison"
             />
           )}
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     </div>
   );
@@ -753,13 +753,13 @@ export function AnalyticsTab() {
   if (!hasData) {
     return (
       <Card>
-        <CardContent className="py-12">
+        <FitAiCardContent className="py-12">
           <EmptyState
             icon={IconChartBar}
             title="Not enough data"
             description="Need at least 2 weeks of workout data for analytics"
           />
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     );
   }
@@ -780,20 +780,20 @@ function AnalyticsSectionSkeleton() {
       <Skeleton className="h-6 w-40" />
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
-          <CardHeader>
+          <FitAiCardHeader>
             <Skeleton className="h-5 w-48" />
-          </CardHeader>
-          <CardContent>
+          </FitAiCardHeader>
+          <FitAiCardContent>
             <Skeleton className="h-64 w-full" />
-          </CardContent>
+          </FitAiCardContent>
         </Card>
         <Card>
-          <CardHeader>
+          <FitAiCardHeader>
             <Skeleton className="h-5 w-48" />
-          </CardHeader>
-          <CardContent>
+          </FitAiCardHeader>
+          <FitAiCardContent>
             <Skeleton className="h-64 w-full" />
-          </CardContent>
+          </FitAiCardContent>
         </Card>
       </div>
     </div>

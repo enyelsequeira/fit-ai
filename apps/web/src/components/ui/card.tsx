@@ -1,44 +1,29 @@
-import type { CardProps as MantineCardProps, PaperProps, TextProps, TitleProps } from "@mantine/core";
+import {
+  Card,
+  type CardProps,
+  type CardSectionProps,
+  Stack,
+  type TextProps,
+  Title,
+  type TitleProps,
+  Text,
+  Group,
+} from "@mantine/core";
 import type { ReactNode } from "react";
 
-import { Card as MantineCard, Group, Stack, Text, Title } from "@mantine/core";
-import { forwardRef } from "react";
+const FitAiCard = (props: CardProps) => {
+  return <Card py={"md"} px={"sm"} withBorder {...props} />;
+};
 
-interface CardProps extends MantineCardProps {
-  size?: "default" | "sm";
-}
-
-const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ size = "default", padding, ...props }, ref) => {
-    return (
-      <MantineCard
-        ref={ref}
-        padding={padding ?? (size === "sm" ? "sm" : "md")}
-        withBorder
-        {...props}
-      />
-    );
-  },
-);
-Card.displayName = "Card";
-
-interface CardSectionProps extends PaperProps {
-  children?: ReactNode;
-}
-
-function CardHeader({ children, ...props }: CardSectionProps) {
+function FitAiCardHeader({ children, ...props }: CardSectionProps & { children?: ReactNode }) {
   return (
-    <MantineCard.Section inheritPadding py="sm" {...props}>
+    <Card.Section inheritPadding py="sm" {...props}>
       <Stack gap="xs">{children}</Stack>
-    </MantineCard.Section>
+    </Card.Section>
   );
 }
 
-interface CardTitleProps extends Omit<TitleProps, "order" | "size"> {
-  children?: ReactNode;
-}
-
-function CardTitle({ children, ...props }: CardTitleProps) {
+function FitAiCardTitle({ children, ...props }: TitleProps & { children?: ReactNode }) {
   return (
     <Title order={4} size="sm" fw={500} {...props}>
       {children}
@@ -46,11 +31,7 @@ function CardTitle({ children, ...props }: CardTitleProps) {
   );
 }
 
-interface CardDescriptionProps extends Omit<TextProps, "size" | "c"> {
-  children?: ReactNode;
-}
-
-function CardDescription({ children, ...props }: CardDescriptionProps) {
+function FitAiCardDescription({ children, ...props }: TextProps & { children?: ReactNode }) {
   return (
     <Text size="xs" c="dimmed" {...props}>
       {children}
@@ -58,28 +39,27 @@ function CardDescription({ children, ...props }: CardDescriptionProps) {
   );
 }
 
-function CardAction({ children, ...props }: React.ComponentProps<typeof Group>) {
+function FitAiCardContent({ children, ...props }: CardSectionProps & { children?: ReactNode }) {
   return (
-    <Group justify="flex-end" {...props}>
+    <Card.Section inheritPadding {...props}>
       {children}
-    </Group>
+    </Card.Section>
   );
 }
 
-function CardContent({ children, ...props }: CardSectionProps) {
+function FitAiCardFooter({ children, ...props }: CardSectionProps & { children?: ReactNode }) {
   return (
-    <MantineCard.Section inheritPadding {...props}>
-      {children}
-    </MantineCard.Section>
-  );
-}
-
-function CardFooter({ children, ...props }: CardSectionProps) {
-  return (
-    <MantineCard.Section inheritPadding py="sm" withBorder {...props}>
+    <Card.Section inheritPadding py="sm" withBorder {...props}>
       <Group>{children}</Group>
-    </MantineCard.Section>
+    </Card.Section>
   );
 }
 
-export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent };
+export {
+  FitAiCard,
+  FitAiCardHeader,
+  FitAiCardFooter,
+  FitAiCardTitle,
+  FitAiCardDescription,
+  FitAiCardContent,
+};

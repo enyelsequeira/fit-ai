@@ -2,7 +2,7 @@ import { IconCalendarStats, IconFlame, IconTrendingUp } from "@tabler/icons-reac
 
 import { Box, Flex, Group, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardDescription, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import styles from "./workout-frequency.module.css";
@@ -180,16 +180,16 @@ export function WorkoutFrequency({
   if (isLoading) {
     return (
       <Card className={styles.card}>
-        <CardHeader>
+        <FitAiCardHeader>
           <Group justify="space-between">
             <Box>
-              <CardTitle>Workout Frequency</CardTitle>
-              <CardDescription>Last 30 days activity</CardDescription>
+              <FitAiCardTitle>Workout Frequency</FitAiCardTitle>
+              <FitAiCardDescription>Last 30 days activity</FitAiCardDescription>
             </Box>
             <Skeleton h={32} w={32} radius="md" />
           </Group>
-        </CardHeader>
-        <CardContent>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <Stack gap="md">
             {/* Stats skeleton */}
             <SimpleGrid cols={3} spacing="xs">
@@ -229,7 +229,7 @@ export function WorkoutFrequency({
               <Skeleton h={12} w={32} />
             </Flex>
           </Stack>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     );
   }
@@ -241,18 +241,18 @@ export function WorkoutFrequency({
 
   return (
     <Card className={styles.card}>
-      <CardHeader>
+      <FitAiCardHeader>
         <Group justify="space-between">
           <Box>
-            <CardTitle>Workout Frequency</CardTitle>
-            <CardDescription>Last 30 days activity</CardDescription>
+            <FitAiCardTitle>Workout Frequency</FitAiCardTitle>
+            <FitAiCardDescription>Last 30 days activity</FitAiCardDescription>
           </Box>
           <Box className={styles.headerIcon}>
             <IconCalendarStats size={20} />
           </Box>
         </Group>
-      </CardHeader>
-      <CardContent>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         <Stack gap="md">
           {/* Summary Stats */}
           <SimpleGrid cols={3} spacing="xs" className={styles.statsGrid}>
@@ -326,7 +326,7 @@ export function WorkoutFrequency({
             </Box>
           )}
         </Stack>
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

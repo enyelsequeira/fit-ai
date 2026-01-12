@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import { LandingPageA } from "@/landing-page/version-a/Page";
-import { getUser } from "@/functions/get-user";
+import { LandingPageA } from "@/landing-page/Page.tsx";
+import { getUser } from "@/lib/get-user.ts";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,

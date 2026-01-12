@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
@@ -98,21 +98,21 @@ function MuscleRecoveryMap({ muscleGroups, className }: MuscleRecoveryMapProps) 
 
   return (
     <Card className={className}>
-      <CardHeader>
+      <FitAiCardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm">Muscle Recovery Status</CardTitle>
+          <FitAiCardTitle className="text-sm">Muscle Recovery Status</FitAiCardTitle>
           <Badge variant="secondary" className="text-xs tabular-nums">
             {overallRecovery}% Overall
           </Badge>
         </div>
-      </CardHeader>
-      <CardContent>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         <div className="grid gap-2 sm:grid-cols-2">
           {sorted.map((muscle) => (
             <MuscleRecoveryItem key={muscle.muscleGroup} muscle={muscle} />
           ))}
         </div>
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }

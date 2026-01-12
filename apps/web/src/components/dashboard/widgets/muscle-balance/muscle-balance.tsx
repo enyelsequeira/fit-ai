@@ -4,7 +4,13 @@ import { IconAlertTriangle, IconChartDonut } from "@tabler/icons-react";
 
 import { Alert, Box, Flex, SegmentedControl, Stack, Text, Tooltip } from "@mantine/core";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  FitAiCard,
+  FitAiCardContent,
+  FitAiCardDescription,
+  FitAiCardHeader,
+  FitAiCardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import styles from "./muscle-balance.module.css";
@@ -225,22 +231,22 @@ function Legend({
 
 function LoadingSkeleton() {
   return (
-    <Card className={styles.card}>
-      <CardHeader>
+    <FitAiCard className={styles.card}>
+      <FitAiCardHeader>
         <Flex justify="space-between" align="flex-start">
           <Box>
-            <CardTitle>
+            <FitAiCardTitle>
               <Flex align="center" gap="xs">
                 <IconChartDonut size={20} />
                 Muscle Balance
               </Flex>
-            </CardTitle>
-            <CardDescription>Training volume distribution</CardDescription>
+            </FitAiCardTitle>
+            <FitAiCardDescription>Training volume distribution</FitAiCardDescription>
           </Box>
           <Skeleton h={32} w={140} />
         </Flex>
-      </CardHeader>
-      <CardContent>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         <Flex gap="lg" align="flex-start" wrap="wrap">
           <Skeleton h={CHART_SIZE} w={CHART_SIZE} radius="xl" />
           <Stack gap={6} style={{ flex: 1, minWidth: 140 }}>
@@ -253,8 +259,8 @@ function LoadingSkeleton() {
             ))}
           </Stack>
         </Flex>
-      </CardContent>
-    </Card>
+      </FitAiCardContent>
+    </FitAiCard>
   );
 }
 
@@ -264,7 +270,9 @@ function EmptyState() {
       <Box className={styles.emptyIcon}>
         <IconChartDonut size={32} />
       </Box>
-      <Text size="sm" fw={500}>No training data</Text>
+      <Text size="sm" fw={500}>
+        No training data
+      </Text>
       <Text size="xs" c="dimmed" maw={200}>
         Complete workouts to see your muscle balance distribution
       </Text>
@@ -289,17 +297,17 @@ export function MuscleBalance({
   const hasData = data.length > 0;
 
   return (
-    <Card className={styles.card}>
-      <CardHeader>
+    <FitAiCard className={styles.card}>
+      <FitAiCardHeader>
         <Flex justify="space-between" align="flex-start" wrap="wrap" gap="sm">
           <Box>
-            <CardTitle>
+            <FitAiCardTitle>
               <Flex align="center" gap="xs">
                 <IconChartDonut size={20} className={styles.headerIcon} />
                 Muscle Balance
               </Flex>
-            </CardTitle>
-            <CardDescription>Training volume distribution</CardDescription>
+            </FitAiCardTitle>
+            <FitAiCardDescription>Training volume distribution</FitAiCardDescription>
           </Box>
           <SegmentedControl
             size="xs"
@@ -312,8 +320,8 @@ export function MuscleBalance({
             className={styles.periodControl}
           />
         </Flex>
-      </CardHeader>
-      <CardContent>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         {!hasData ? (
           <EmptyState />
         ) : (
@@ -335,8 +343,8 @@ export function MuscleBalance({
             </Flex>
           </>
         )}
-      </CardContent>
-    </Card>
+      </FitAiCardContent>
+    </FitAiCard>
   );
 }
 

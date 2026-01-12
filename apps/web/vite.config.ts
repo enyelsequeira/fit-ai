@@ -6,12 +6,14 @@ import type { PluginOption } from "vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import Unfonts from "unplugin-fonts/vite";
+import { devtools } from "@tanstack/devtools-vite";
 
 const alchemyConfigPath = path.resolve(import.meta.dirname, ".alchemy/local/wrangler.jsonc");
 const hasAlchemyConfig = existsSync(alchemyConfigPath);
 
 export default defineConfig(async () => {
   const plugins: PluginOption[] = [
+    devtools(),
     tsconfigPaths(),
     tanstackStart(),
     viteReact(),

@@ -1,0 +1,121 @@
+/* Workout Calendar Styles */
+
+.calendarCard {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  animation-delay: 50ms;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calendarWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+.filterGroup {
+  display: flex;
+  gap: var(--mantine-spacing-xs);
+  flex-wrap: wrap;
+}
+
+.filterButton {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-md);
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--mantine-color-default-border);
+  color: var(--mantine-color-text);
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.filterButton:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.filterButton[data-active="true"] {
+  background: var(--mantine-primary-color-light);
+  border-color: var(--mantine-primary-color-filled);
+  color: var(--mantine-primary-color-filled);
+}
+
+.calendarContainer {
+  display: flex;
+  justify-content: center;
+}
+
+/* Override Mantine calendar styles for workout indicators */
+.workoutDay {
+  position: relative;
+}
+
+.workoutDay::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mantine-primary-color-filled);
+}
+
+.workoutDayCompleted::after {
+  background: var(--mantine-color-teal-6);
+}
+
+.selectedDate {
+  background: var(--mantine-primary-color-light) !important;
+  color: var(--mantine-primary-color-filled) !important;
+  font-weight: 600;
+}
+
+.todayIndicator {
+  font-weight: 700;
+}
+
+.legendContainer {
+  display: flex;
+  gap: var(--mantine-spacing-md);
+  justify-content: center;
+  padding-top: var(--mantine-spacing-xs);
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.legendDot[data-type="workout"] {
+  background: var(--mantine-primary-color-filled);
+}
+
+.legendDot[data-type="completed"] {
+  background: var(--mantine-color-teal-6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calendarCard {
+    animation: none;
+  }
+}

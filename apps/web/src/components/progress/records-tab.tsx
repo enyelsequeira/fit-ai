@@ -15,7 +15,7 @@ import { orpc } from "@/utils/orpc";
 
 import { Badge } from "@/components/ui/badge";
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -69,7 +69,7 @@ function PRCard({ record }: { record: PersonalRecord }) {
 
   return (
     <Card>
-      <CardContent className="pt-4">
+      <FitAiCardContent className="pt-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full">
@@ -103,7 +103,7 @@ function PRCard({ record }: { record: PersonalRecord }) {
             <span className="text-xs text-muted-foreground">from previous PR</span>
           </div>
         )}
-      </CardContent>
+      </FitAiCardContent>
     </Card>
   );
 }
@@ -218,7 +218,7 @@ export function RecordsTab() {
       {/* Summary Cards */}
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
-          <CardContent className="pt-4">
+          <FitAiCardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full">
                 <IconTrophy className="size-5" />
@@ -228,11 +228,11 @@ export function RecordsTab() {
                 <p className="text-xs text-muted-foreground">Total PRs</p>
               </div>
             </div>
-          </CardContent>
+          </FitAiCardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-4">
+          <FitAiCardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-emerald-500/10 text-emerald-500 flex size-10 items-center justify-center rounded-full">
                 <IconCalendar className="size-5" />
@@ -242,11 +242,11 @@ export function RecordsTab() {
                 <p className="text-xs text-muted-foreground">PRs This Month</p>
               </div>
             </div>
-          </CardContent>
+          </FitAiCardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-4">
+          <FitAiCardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="bg-amber-500/10 text-amber-500 flex size-10 items-center justify-center rounded-full">
                 <IconBarbell className="size-5" />
@@ -256,19 +256,19 @@ export function RecordsTab() {
                 <p className="text-xs text-muted-foreground">Most Improved</p>
               </div>
             </div>
-          </CardContent>
+          </FitAiCardContent>
         </Card>
       </div>
 
       {/* Filters */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+        <FitAiCardHeader>
+          <FitAiCardTitle className="flex items-center gap-2">
             <IconFilter className="size-4" />
             Filters
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </FitAiCardTitle>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <div className="flex flex-wrap gap-4">
             <div className="min-w-48 flex-1 space-y-2">
               <Label htmlFor="search">Search Exercise</Label>
@@ -321,7 +321,7 @@ export function RecordsTab() {
               </div>
             </div>
           </div>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
 
       {/* Records List */}
@@ -348,13 +348,13 @@ export function RecordsTab() {
         )
       ) : (
         <Card>
-          <CardContent className="py-12">
+          <FitAiCardContent className="py-12">
             <EmptyState
               icon={IconTrophy}
               title="No personal records"
               description="Complete workouts to start setting records"
             />
-          </CardContent>
+          </FitAiCardContent>
         </Card>
       )}
     </div>
@@ -367,19 +367,19 @@ function RecordsTabSkeleton() {
       <div className="grid gap-4 sm:grid-cols-3">
         {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i}>
-            <CardContent className="pt-4">
+            <FitAiCardContent className="pt-4">
               <Skeleton className="h-16 w-full" />
-            </CardContent>
+            </FitAiCardContent>
           </Card>
         ))}
       </div>
       <Card>
-        <CardHeader>
+        <FitAiCardHeader>
           <Skeleton className="h-5 w-20" />
-        </CardHeader>
-        <CardContent>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <Skeleton className="h-10 w-full" />
-        </CardContent>
+        </FitAiCardContent>
       </Card>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (

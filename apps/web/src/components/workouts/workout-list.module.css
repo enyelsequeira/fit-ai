@@ -1,0 +1,74 @@
+/* Workout List Styles */
+
+.listCard {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  animation-delay: 100ms;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.listHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--mantine-spacing-sm);
+}
+
+.workoutCount {
+  padding: 2px 8px;
+  border-radius: var(--mantine-radius-xl);
+  background: var(--mantine-color-blue-light);
+  color: var(--mantine-primary-color-filled);
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+}
+
+.workoutList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-sm);
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-sm);
+}
+
+.errorContainer {
+  text-align: center;
+  padding: var(--mantine-spacing-xl);
+}
+
+.errorIcon {
+  color: var(--mantine-color-red-6);
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.retryButton {
+  margin-top: var(--mantine-spacing-md);
+}
+
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--mantine-spacing-md);
+  border-top: 1px solid var(--mantine-color-default-border);
+  margin-top: var(--mantine-spacing-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .listCard {
+    animation: none;
+  }
+}

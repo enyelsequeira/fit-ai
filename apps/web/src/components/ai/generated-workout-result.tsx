@@ -10,7 +10,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardFooter, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 interface GeneratedExercise {
@@ -63,10 +63,10 @@ function GeneratedWorkoutResult({
 
   return (
     <Card className={cn(className)}>
-      <CardHeader>
+      <FitAiCardHeader>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <CardTitle>{workout.name}</CardTitle>
+            <FitAiCardTitle>{workout.name}</FitAiCardTitle>
             <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1.5">
                 <IconClock className="size-4" />
@@ -91,9 +91,9 @@ function GeneratedWorkoutResult({
             </FitAiButton>
           )}
         </div>
-      </CardHeader>
+      </FitAiCardHeader>
 
-      <CardContent className="space-y-6">
+      <FitAiCardContent className="space-y-6">
         {/* Warmup */}
         {workout.warmup && (
           <div className="space-y-2">
@@ -174,9 +174,9 @@ function GeneratedWorkoutResult({
             )}
           </div>
         )}
-      </CardContent>
+      </FitAiCardContent>
 
-      <CardFooter className="flex gap-2">
+      <FitAiCardFooter className="flex gap-2">
         {onSaveAsTemplate && (
           <FitAiButton variant="outline" onClick={onSaveAsTemplate} className="gap-1.5">
             <IconDeviceFloppy className="size-3.5" />
@@ -189,7 +189,7 @@ function GeneratedWorkoutResult({
             Start This Workout
           </FitAiButton>
         )}
-      </CardFooter>
+      </FitAiCardFooter>
     </Card>
   );
 }

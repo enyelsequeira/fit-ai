@@ -1,0 +1,166 @@
+/* Empty State Styles */
+
+.emptyStateCard {
+  animation: fadeSlideUp 400ms ease-out backwards;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--mantine-spacing-xl) var(--mantine-spacing-md);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--mantine-color-blue-light) 0%,
+    var(--mantine-color-teal-light) 100%
+  );
+  margin-bottom: var(--mantine-spacing-lg);
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.iconWrapper[data-variant="filtered"] {
+  background: linear-gradient(
+    135deg,
+    var(--mantine-color-gray-2) 0%,
+    var(--mantine-color-gray-3) 100%
+  );
+  animation: none;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.title {
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--mantine-spacing-xs);
+}
+
+.description {
+  max-width: 320px;
+  line-height: 1.6;
+  margin-bottom: var(--mantine-spacing-lg);
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--mantine-spacing-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.templateSuggestions {
+  width: 100%;
+  margin-top: var(--mantine-spacing-xl);
+  padding-top: var(--mantine-spacing-lg);
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.templateGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--mantine-spacing-sm);
+  margin-top: var(--mantine-spacing-md);
+}
+
+.templateCard {
+  padding: var(--mantine-spacing-md);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  text-align: center;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.templateCard:hover {
+  border-color: var(--mantine-primary-color-filled);
+  background: var(--mantine-color-default-hover);
+  transform: translateY(-2px);
+}
+
+.templateIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-blue-light);
+  color: var(--mantine-primary-color-filled);
+}
+
+.templateName {
+  font-weight: 500;
+  font-size: var(--mantine-font-size-sm);
+}
+
+.templateDescription {
+  font-size: var(--mantine-font-size-xs);
+  color: var(--mantine-color-dimmed);
+  margin-top: 2px;
+}
+
+.tipCard {
+  width: 100%;
+  margin-top: var(--mantine-spacing-lg);
+  padding: var(--mantine-spacing-md);
+  background: var(--mantine-color-blue-light);
+  border-radius: var(--mantine-radius-md);
+  text-align: left;
+}
+
+.tipHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+  margin-bottom: var(--mantine-spacing-xs);
+}
+
+.tipIcon {
+  color: var(--mantine-primary-color-filled);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emptyStateCard {
+    animation: none;
+  }
+
+  .iconWrapper {
+    animation: none;
+  }
+
+  .templateCard:hover {
+    transform: none;
+  }
+}

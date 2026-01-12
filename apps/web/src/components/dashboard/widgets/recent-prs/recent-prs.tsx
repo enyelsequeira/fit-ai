@@ -2,7 +2,13 @@ import { IconMedal, IconTrophy } from "@tabler/icons-react";
 
 import { Box, Flex, Group, Stack, Text } from "@mantine/core";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  FitAiCard,
+  FitAiCardContent,
+  FitAiCardDescription,
+  FitAiCardHeader,
+  FitAiCardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import styles from "./recent-prs.module.css";
@@ -123,17 +129,17 @@ function PRItemSkeleton() {
 
 export function RecentPRs({ records, isLoading, onRecordClick }: RecentPRsProps) {
   return (
-    <Card className={styles.card}>
-      <CardHeader>
-        <CardTitle>
+    <FitAiCard className={styles.card}>
+      <FitAiCardHeader>
+        <FitAiCardTitle>
           <Group gap="xs">
             <IconTrophy size={20} className={styles.trophyIcon} />
             Recent PRs
           </Group>
-        </CardTitle>
-        <CardDescription>Personal records in the last 30 days</CardDescription>
-      </CardHeader>
-      <CardContent>
+        </FitAiCardTitle>
+        <FitAiCardDescription>Personal records in the last 30 days</FitAiCardDescription>
+      </FitAiCardHeader>
+      <FitAiCardContent>
         {isLoading ? (
           <Stack gap="xs">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -161,8 +167,8 @@ export function RecentPRs({ records, isLoading, onRecordClick }: RecentPRsProps)
             ))}
           </Stack>
         )}
-      </CardContent>
-    </Card>
+      </FitAiCardContent>
+    </FitAiCard>
   );
 }
 

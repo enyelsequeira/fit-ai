@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Box,
+  Button,
   Container,
   Group,
   Skeleton,
@@ -22,7 +23,6 @@ import {
 import { authClient } from "@/lib/auth-client";
 
 import MobileNav from "./mobile-nav";
-import { Button } from "./ui/button";
 import UserMenu from "./user-menu";
 
 const navLinks = [

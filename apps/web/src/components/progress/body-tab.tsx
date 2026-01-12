@@ -28,7 +28,7 @@ import { orpc } from "@/utils/orpc";
 
 import { Badge } from "@/components/ui/badge";
 import { FitAiButton } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, FitAiCardContent, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -493,12 +493,12 @@ export function BodyTab() {
     <div className="space-y-6">
       {/* Weight Section */}
       <Card>
-        <CardHeader>
+        <FitAiCardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
+            <FitAiCardTitle className="flex items-center gap-2">
               <IconScale className="size-4" />
               Weight
-            </CardTitle>
+            </FitAiCardTitle>
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
               <DialogTrigger asChild>
                 <FitAiButton size="sm">
@@ -522,8 +522,8 @@ export function BodyTab() {
               </DialogContent>
             </Dialog>
           </div>
-        </CardHeader>
-        <CardContent>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <div className="mb-6 flex flex-wrap items-baseline gap-4">
             <span className="text-4xl font-bold">
               {currentWeight ? `${currentWeight.toFixed(1)}kg` : "—"}
@@ -588,15 +588,15 @@ export function BodyTab() {
               description="Track your first measurement to see progress"
             />
           )}
-        </CardContent>
+        </FitAiCardContent>
       </Card>
 
       {/* Measurements Section */}
       <Card>
-        <CardHeader>
-          <CardTitle>Body Measurements</CardTitle>
-        </CardHeader>
-        <CardContent>
+        <FitAiCardHeader>
+          <FitAiCardTitle>Body Measurements</FitAiCardTitle>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           {latest ? (
             <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               <MeasurementCard
@@ -662,18 +662,18 @@ export function BodyTab() {
               description="Log your first measurement to track body changes"
             />
           )}
-        </CardContent>
+        </FitAiCardContent>
       </Card>
 
       {/* Measurement History */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+        <FitAiCardHeader>
+          <FitAiCardTitle className="flex items-center gap-2">
             <IconCalendar className="size-4" />
             Measurement History
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </FitAiCardTitle>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           {history.length > 0 ? (
             <div className="space-y-2">
               {history.map((m) => (
@@ -728,7 +728,7 @@ export function BodyTab() {
               description="Your measurement history will appear here"
             />
           )}
-        </CardContent>
+        </FitAiCardContent>
       </Card>
 
       {/* Edit Dialog */}
@@ -775,25 +775,25 @@ function BodyTabSkeleton() {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
+        <FitAiCardHeader>
           <Skeleton className="h-5 w-24" />
-        </CardHeader>
-        <CardContent>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <Skeleton className="mb-6 h-12 w-32" />
           <Skeleton className="h-64 w-full" />
-        </CardContent>
+        </FitAiCardContent>
       </Card>
       <Card>
-        <CardHeader>
+        <FitAiCardHeader>
           <Skeleton className="h-5 w-40" />
-        </CardHeader>
-        <CardContent>
+        </FitAiCardHeader>
+        <FitAiCardContent>
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton key={i} className="h-24 w-full" />
             ))}
           </div>
-        </CardContent>
+        </FitAiCardContent>
       </Card>
     </div>
   );
