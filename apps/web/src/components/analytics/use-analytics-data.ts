@@ -126,32 +126,31 @@ export function useAnalyticsData() {
 
   // Volume trends query
   const volumeTrendsQuery = useQuery(
-    orpc.analytics.getVolumeTrends.queryOptions({
-      input: { period: "week", weeks },
-    }),
+    orpc.analytics.getVolumeTrends.queryOptions({ input: { period: "week", weeks } }),
   );
 
   // Volume by muscle query
   const volumeByMuscleQuery = useQuery(
-    orpc.analytics.getVolumeByMuscle.queryOptions({
-      input: { period: "week" },
-    }),
+    orpc.analytics.getVolumeByMuscle.queryOptions({ input: { days: 30 } }),
   );
 
   // Strength trends query (enabled when exercise is selected)
   const strengthTrendsQuery = useQuery({
     ...orpc.analytics.getStrengthTrends.queryOptions({
-      input: { exerciseId: selectedExerciseId ?? 0, limit: 20 },
+      input: {
+        exerciseId: selectedExerciseId ?? 0,
+        weeks: 12,
+      },
     }),
     enabled: selectedExerciseId !== null,
   });
 
   // Consistency query
-  const consistencyQuery = useQuery(orpc.analytics.getConsistency.queryOptions({ input: {} }));
+  const consistencyQuery = useQuery(orpc.analytics.getConsistency.queryOptions());
 
   // Get exercises for strength trends selector
   const personalRecordsQuery = useQuery(
-    orpc.personalRecord.list.queryOptions({ input: { limit: 200 } }),
+    orpc.personalRecord.list.queryOptions({ input: { limit: 100 } }),
   );
 
   // Process volume data

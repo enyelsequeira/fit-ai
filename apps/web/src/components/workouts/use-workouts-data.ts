@@ -76,10 +76,12 @@ export function useWorkoutsData() {
   // Fetch workouts for the selected date range
   const workoutsQuery = useQuery(
     orpc.workout.list.queryOptions({
-      startDate,
-      endDate,
-      limit: 100,
-      offset: 0,
+      input: {
+        startDate,
+        endDate,
+        limit: 100,
+        offset: 0,
+      },
     }),
   );
 

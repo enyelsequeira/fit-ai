@@ -78,25 +78,29 @@ export function useMeasurementsData() {
 
   const { startDate, endDate } = getDateRange(period);
 
-  // Fetch the latest measurement
-  const latestQuery = useQuery(orpc.bodyMeasurement.getLatest.queryOptions({}));
+  // Fetch the latest measurement (no input needed - uses authenticated user)
+  const latestQuery = useQuery(orpc.bodyMeasurement.getLatest.queryOptions());
 
   // Fetch measurements list for history
   const listQuery = useQuery(
     orpc.bodyMeasurement.list.queryOptions({
-      startDate,
-      endDate,
-      limit: 100,
-      offset: 0,
+      input: {
+        startDate,
+        endDate,
+        limit: 100,
+        offset: 0,
+      },
     }),
   );
 
   // Fetch trends data
   const trendsQuery = useQuery(
     orpc.bodyMeasurement.getTrends.queryOptions({
-      period,
-      startDate,
-      endDate,
+      input: {
+        period,
+        startDate,
+        endDate,
+      },
     }),
   );
 

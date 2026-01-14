@@ -43,11 +43,12 @@ export function ExerciseDetailModal({
   onClose,
   onAddToWorkout,
 }: ExerciseDetailModalProps) {
-  const exerciseQuery = useQuery(
-    orpc.exercise.getById.queryOptions({
-      id: exerciseId ?? 0,
+  const exerciseQuery = useQuery({
+    ...orpc.exercise.getById.queryOptions({
+      input: { id: exerciseId ?? 0 },
     }),
-  );
+    enabled: exerciseId !== null,
+  });
 
   const exercise = exerciseQuery.data;
   const isLoading = exerciseQuery.isLoading;
@@ -140,7 +141,7 @@ export function ExerciseDetailModal({
                 Muscle Groups
               </Text>
               <Group gap="xs" wrap="wrap">
-                {exercise.muscleGroups.map((muscle: string) => (
+                {[...new Set(exercise.muscleGroups)].map((muscle: string) => (
                   <Badge key={muscle} variant="outline" tt="capitalize">
                     {muscle}
                   </Badge>

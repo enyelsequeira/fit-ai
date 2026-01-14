@@ -70,7 +70,7 @@ export function CreateExerciseModal({ opened, onClose, onSuccess }: CreateExerci
   // Real-time name availability check
   const nameCheck = useQuery({
     ...orpc.exercise.checkNameAvailability.queryOptions({
-      name: debouncedName,
+      input: { name: debouncedName },
     }),
     enabled: debouncedName.length > 0 && opened,
     staleTime: 10000,

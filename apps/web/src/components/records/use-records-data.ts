@@ -154,24 +154,30 @@ export function useRecordsData(options: UseRecordsDataOptions = {}) {
   // Fetch recent personal records
   const recentQuery = useQuery(
     orpc.personalRecord.getRecent.queryOptions({
-      days: recentDays,
-      limit: 20,
+      input: {
+        days: recentDays,
+        limit: 20,
+      },
     }),
   );
 
   // Fetch all personal records with pagination
   const listQuery = useQuery(
     orpc.personalRecord.list.queryOptions({
-      recordType: recordTypeFilter === "all" ? undefined : recordTypeFilter,
-      limit: 100,
-      offset: 0,
+      input: {
+        recordType: recordTypeFilter === "all" ? undefined : recordTypeFilter,
+        limit: 100,
+        offset: 0,
+      },
     }),
   );
 
   // Fetch selected record details
   const selectedRecordQuery = useQuery({
     ...orpc.personalRecord.getById.queryOptions({
-      id: selectedRecordId ?? 0,
+      input: {
+        id: selectedRecordId ?? 0,
+      },
     }),
     enabled: selectedRecordId !== null,
   });

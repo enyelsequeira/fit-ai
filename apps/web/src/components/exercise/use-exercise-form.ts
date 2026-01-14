@@ -38,16 +38,16 @@ export function useExerciseForm({
   const isEditing = exerciseId !== undefined;
   const debouncedName = useDebounce(formData.name.trim(), 400);
 
-  const nameCheck = useQuery(
-    orpc.exercise.checkNameAvailability.queryOptions({
+  const nameCheck = useQuery({
+    ...orpc.exercise.checkNameAvailability.queryOptions({
       input: {
         name: debouncedName,
         excludeId: exerciseId,
       },
-      enabled: debouncedName.length > 0 && isOpen,
-      staleTime: 10000,
     }),
-  );
+    enabled: debouncedName.length > 0 && isOpen,
+    staleTime: 10000,
+  });
 
   const handleMutationError = (error: Error) => {
     if (error.message?.includes("already exists") || error.message?.includes("already have")) {

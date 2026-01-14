@@ -34,11 +34,13 @@ export function useGoalsData() {
   // Fetch goals list
   const goalsQuery = useQuery(
     orpc.goals.list.queryOptions({
-      goalType: queryFilters.goalType,
-      status: queryFilters.status,
-      exerciseId: queryFilters.exerciseId,
-      limit: 100,
-      offset: 0,
+      input: {
+        goalType: queryFilters.goalType,
+        status: queryFilters.status,
+        exerciseId: queryFilters.exerciseId,
+        limit: 100,
+        offset: 0,
+      },
     }),
   );
 
@@ -211,7 +213,7 @@ export function useGoalsData() {
  */
 export function useGoalDetail(goalId: number | null) {
   const goalQuery = useQuery({
-    ...orpc.goals.getById.queryOptions({ id: goalId ?? 0 }),
+    ...orpc.goals.getById.queryOptions({ input: { id: goalId ?? 0 } }),
     enabled: goalId !== null && goalId > 0,
   });
 

@@ -63,29 +63,33 @@ export function useRecoveryData() {
   const [historyOffset, setHistoryOffset] = useState(0);
 
   // Get today's check-in
-  const todayCheckInQuery = useQuery(orpc.recovery.getTodayCheckIn.queryOptions({}));
+  const todayCheckInQuery = useQuery(orpc.recovery.getTodayCheckIn.queryOptions());
 
   // Get readiness score
-  const readinessQuery = useQuery(orpc.recovery.getReadiness.queryOptions({}));
+  const readinessQuery = useQuery(orpc.recovery.getReadiness.queryOptions());
 
   // Get muscle recovery status
-  const recoveryStatusQuery = useQuery(orpc.recovery.getRecoveryStatus.queryOptions({}));
+  const recoveryStatusQuery = useQuery(orpc.recovery.getRecoveryStatus.queryOptions());
 
   // Get trends for selected period
   const { startDate, endDate } = getDateRangeForPeriod(trendPeriod);
   const trendsQuery = useQuery(
     orpc.recovery.getTrends.queryOptions({
-      period: trendPeriod,
-      startDate,
-      endDate,
+      input: {
+        period: trendPeriod,
+        startDate,
+        endDate,
+      },
     }),
   );
 
   // Get check-in history
   const historyQuery = useQuery(
     orpc.recovery.getCheckInHistory.queryOptions({
-      limit: historyLimit,
-      offset: historyOffset,
+      input: {
+        limit: historyLimit,
+        offset: historyOffset,
+      },
     }),
   );
 
@@ -114,7 +118,7 @@ export function useRecoveryData() {
 
   // Refresh recovery handler
   const refreshRecovery = async () => {
-    await refreshRecoveryMutation.mutateAsync({});
+    await refreshRecoveryMutation.mutateAsync();
   };
 
   // Load more history

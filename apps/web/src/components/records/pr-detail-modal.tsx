@@ -107,7 +107,7 @@ export function PRDetailModal({ recordId, opened, onClose }: PRDetailModalProps)
   // Fetch selected record details
   const recordQuery = useQuery({
     ...orpc.personalRecord.getById.queryOptions({
-      id: recordId ?? 0,
+      input: { id: recordId ?? 0 },
     }),
     enabled: recordId !== null && opened,
   });
@@ -116,7 +116,7 @@ export function PRDetailModal({ recordId, opened, onClose }: PRDetailModalProps)
   const exerciseId = recordQuery.data?.exerciseId;
   const historyQuery = useQuery({
     ...orpc.personalRecord.getByExercise.queryOptions({
-      exerciseId: exerciseId ?? 0,
+      input: { exerciseId: exerciseId ?? 0 },
     }),
     enabled: exerciseId !== undefined && opened,
   });

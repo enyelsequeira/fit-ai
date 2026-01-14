@@ -87,8 +87,9 @@ function ExerciseListRow({
   isLoading = false,
   isSelected = false,
 }: ExerciseListRowProps) {
-  const visibleMuscles = exercise.muscleGroups.slice(0, 3);
-  const remainingCount = exercise.muscleGroups.length - 3;
+  const uniqueMuscles = [...new Set(exercise.muscleGroups)];
+  const visibleMuscles = uniqueMuscles.slice(0, 3);
+  const remainingCount = uniqueMuscles.length - 3;
 
   const handleClick = useCallback(() => {
     onClick(exercise.id);

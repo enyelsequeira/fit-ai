@@ -61,7 +61,9 @@ export function useExercisesData() {
   );
 
   // Fetch exercises
-  const exercisesQuery = useQuery(orpc.exercise.list.queryOptions(queryParams));
+  const exercisesQuery = useQuery(
+    orpc.exercise.list.queryOptions({ input: queryParams }),
+  );
 
   // Fetch equipment list for filters
   const equipmentQuery = useQuery(orpc.exercise.getEquipmentList.queryOptions());

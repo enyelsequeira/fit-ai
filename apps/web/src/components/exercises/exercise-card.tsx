@@ -87,8 +87,9 @@ export function ExerciseGridCard({
   isSelected = false,
 }: ExerciseGridCardProps) {
   const config = categoryConfig[exercise.category];
-  const visibleMuscles = exercise.muscleGroups.slice(0, 2);
-  const remainingCount = exercise.muscleGroups.length - 2;
+  const uniqueMuscles = [...new Set(exercise.muscleGroups)];
+  const visibleMuscles = uniqueMuscles.slice(0, 2);
+  const remainingCount = uniqueMuscles.length - 2;
 
   const handleClick = useCallback(() => {
     onClick(exercise.id);
