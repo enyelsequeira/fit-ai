@@ -67,3 +67,6 @@ scripts
 templates
 claude-progress.txt
 autonomous-coding/
+
+# Playwright MCP screenshots
+.playwright-mcp/
