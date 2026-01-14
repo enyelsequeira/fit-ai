@@ -2,9 +2,7 @@
  * ExerciseFiltersDrawer - Mobile-friendly drawer for exercise filters
  */
 
-import type { ExerciseCategory } from "@/components/exercise/category-badge";
-import type { EquipmentType } from "@/components/exercise/equipment-icon";
-import type { ExerciseFilters, ExerciseType } from "./use-exercises-data";
+import type { ExerciseFilters } from "./use-exercises-data";
 
 import { useMemo } from "react";
 import {

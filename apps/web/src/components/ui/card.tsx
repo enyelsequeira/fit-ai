@@ -56,6 +56,7 @@ function FitAiCardFooter({ children, ...props }: CardSectionProps & { children?:
 }
 
 export {
+  Card,
   FitAiCard,
   FitAiCardHeader,
   FitAiCardFooter,
