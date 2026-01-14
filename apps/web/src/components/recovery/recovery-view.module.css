@@ -1,0 +1,358 @@
+/* Recovery View Styles - PostCSS with light-dark(), CSS nesting, and @mixin hover */
+
+/* Hover mixin for consistent interactive states */
+@define-mixin hover {
+  @media (hover: hover) {
+    &:hover {
+      @mixin-content;
+    }
+  }
+}
+
+.recoveryContainer {
+  animation: fadeIn 300ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mainContent {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mantine-spacing-md);
+
+  @media (min-width: 992px) {
+    grid-template-columns: 340px 1fr;
+  }
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+
+  @media (min-width: 992px) {
+    position: sticky;
+    top: var(--mantine-spacing-md);
+    align-self: flex-start;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+
+    /* Scrollbar styling */
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
+      border-radius: 2px;
+    }
+  }
+
+  @media (max-width: 991px) {
+    order: 1;
+  }
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+
+  @media (max-width: 991px) {
+    order: 2;
+  }
+}
+
+/* Readiness Card with data attribute styling */
+.readinessCard {
+  text-align: center;
+  transition: background-color 200ms ease;
+
+  &[data-readiness="high"] {
+    background: light-dark(var(--mantine-color-green-0), var(--mantine-color-green-9));
+
+    & .readinessHighlight {
+      color: light-dark(var(--mantine-color-green-7), var(--mantine-color-green-4));
+    }
+  }
+
+  &[data-readiness="medium"] {
+    background: light-dark(var(--mantine-color-yellow-0), var(--mantine-color-yellow-9));
+
+    & .readinessHighlight {
+      color: light-dark(var(--mantine-color-yellow-7), var(--mantine-color-yellow-4));
+    }
+  }
+
+  &[data-readiness="low"] {
+    background: light-dark(var(--mantine-color-red-0), var(--mantine-color-red-9));
+
+    & .readinessHighlight {
+      color: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4));
+    }
+  }
+
+  &[data-readiness="none"] {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  }
+}
+
+.readinessHighlight {
+  transition: color 200ms ease;
+}
+
+/* Recovery Status Card with data attributes */
+.recoveryStatusCard {
+  transition: background-color 200ms ease;
+
+  &[data-recovery-status="recovered"] {
+    border-color: light-dark(var(--mantine-color-teal-3), var(--mantine-color-teal-7));
+  }
+
+  &[data-recovery-status="recovering"] {
+    border-color: light-dark(var(--mantine-color-yellow-3), var(--mantine-color-yellow-7));
+  }
+
+  &[data-recovery-status="fatigued"] {
+    border-color: light-dark(var(--mantine-color-red-3), var(--mantine-color-red-7));
+  }
+}
+
+/* Muscle Recovery Item styling */
+.muscleItem {
+  padding: var(--mantine-spacing-xs);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  transition: all 150ms ease;
+
+  &[data-recovery-level="high"] {
+    border-color: light-dark(var(--mantine-color-teal-3), var(--mantine-color-teal-7));
+    background: light-dark(var(--mantine-color-teal-0), rgba(32, 201, 151, 0.1));
+  }
+
+  &[data-recovery-level="good"] {
+    border-color: light-dark(var(--mantine-color-green-3), var(--mantine-color-green-7));
+    background: light-dark(var(--mantine-color-green-0), rgba(64, 192, 87, 0.1));
+  }
+
+  &[data-recovery-level="medium"] {
+    border-color: light-dark(var(--mantine-color-yellow-3), var(--mantine-color-yellow-7));
+    background: light-dark(var(--mantine-color-yellow-0), rgba(250, 176, 5, 0.1));
+  }
+
+  &[data-recovery-level="low"] {
+    border-color: light-dark(var(--mantine-color-orange-3), var(--mantine-color-orange-7));
+    background: light-dark(var(--mantine-color-orange-0), rgba(253, 126, 20, 0.1));
+  }
+
+  &[data-recovery-level="critical"] {
+    border-color: light-dark(var(--mantine-color-red-3), var(--mantine-color-red-7));
+    background: light-dark(var(--mantine-color-red-0), rgba(250, 82, 82, 0.1));
+  }
+
+  @mixin hover {
+    transform: translateY(-1px);
+    box-shadow: var(--mantine-shadow-xs);
+  }
+}
+
+/* Check-in form section styles */
+.formSection {
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+}
+
+.formSectionHeader {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.formSectionContent {
+  padding: var(--mantine-spacing-md);
+}
+
+/* Rating button styles */
+.ratingButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: transparent;
+  transition: all 150ms ease;
+  cursor: pointer;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  }
+
+  &[data-selected="true"] {
+    border-color: var(--rating-color, var(--mantine-color-blue-5));
+    background: color-mix(
+      in srgb,
+      var(--rating-color, var(--mantine-color-blue-5)) 15%,
+      transparent
+    );
+    color: var(--rating-color, var(--mantine-color-blue-5));
+  }
+
+  &[data-rating-type="sleep"] {
+    --rating-color: var(--mantine-color-yellow-5);
+  }
+
+  &[data-rating-type="nutrition"] {
+    --rating-color: var(--mantine-color-green-5);
+  }
+
+  &[data-rating-type="hydration"] {
+    --rating-color: var(--mantine-color-blue-5);
+  }
+}
+
+/* Mood button styles */
+.moodButton {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: var(--mantine-spacing-xs);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: transparent;
+  transition: all 150ms ease;
+  cursor: pointer;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  }
+
+  &[data-selected="true"] {
+    border-color: var(--mantine-color-blue-filled);
+    background: color-mix(in srgb, var(--mantine-color-blue-filled) 10%, transparent);
+  }
+}
+
+/* Body part button styles */
+.bodyPartButton {
+  padding: var(--mantine-spacing-xs);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: transparent;
+  text-transform: capitalize;
+  transition: all 150ms ease;
+  cursor: pointer;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  }
+
+  &[data-selected="true"] {
+    border-color: var(--mantine-color-red-5);
+    background: color-mix(in srgb, var(--mantine-color-red-5) 10%, transparent);
+    color: var(--mantine-color-red-5);
+  }
+}
+
+/* Advanced section toggle */
+.advancedToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  @mixin hover {
+    & .advancedToggleText {
+      color: var(--mantine-color-blue-5);
+    }
+  }
+}
+
+.advancedToggleText {
+  transition: color 150ms ease;
+}
+
+/* Notes section */
+.notesBox {
+  padding: var(--mantine-spacing-xs);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  border-left: 3px solid var(--mantine-color-blue-4);
+  border-radius: 0 var(--mantine-radius-sm) var(--mantine-radius-sm) 0;
+}
+
+/* Factor item in readiness card */
+.factorItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.factorCircle {
+  height: 36px;
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: all 150ms ease;
+
+  &[data-score-level="high"] {
+    background: light-dark(rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.2));
+    color: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-4));
+  }
+
+  &[data-score-level="medium"] {
+    background: light-dark(rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.2));
+    color: light-dark(var(--mantine-color-yellow-7), var(--mantine-color-yellow-4));
+  }
+
+  &[data-score-level="low"] {
+    background: light-dark(rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.2));
+    color: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4));
+  }
+
+  &[data-score-level="none"] {
+    background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+    color: var(--mantine-color-dimmed);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recoveryContainer {
+    animation: none;
+  }
+
+  .muscleItem,
+  .ratingButton,
+  .moodButton,
+  .bodyPartButton,
+  .readinessCard,
+  .recoveryStatusCard,
+  .factorCircle {
+    transition: none;
+  }
+}

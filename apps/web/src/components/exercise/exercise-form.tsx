@@ -1,54 +1,86 @@
 import type { ExerciseCategory } from "./category-badge";
 import type { EquipmentType } from "./equipment-icon";
+import type { ExerciseFormValues, ExerciseType } from "./exercise-form-validation";
 
-import {
-  Box,
-  Button,
-  Flex,
-  Grid,
-  Group,
-  Loader,
-  Modal,
-  NativeSelect,
-  Stack,
-  Text,
-  Textarea,
-  TextInput,
-} from "@mantine/core";
-import { IconAlertCircle, IconCircleCheck, IconPlus } from "@tabler/icons-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { toast } from "@/components/ui/sonner";
+import { Button, Group, Modal, Stack, Text } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
+import { IconPlus } from "@tabler/icons-react";
+import { useState } from "react";
 
-import { useDebounce } from "@/hooks/use-debounce";
-import { orpc } from "@/utils/orpc";
+import { BasicInfoSection, EquipmentSection, MuscleGroupSection } from "./form-sections";
+import { useExerciseForm } from "./use-exercise-form";
 
-import { categoryConfig } from "./category-badge";
-import { equipmentConfig } from "./equipment-icon";
-import { MuscleGroupSelector } from "./muscle-group-selector";
+export type { ExerciseType } from "./exercise-form-validation";
+export type { ExerciseFormValues as ExerciseFormData };
 
-export type ExerciseType = "strength" | "cardio" | "flexibility";
-
-export interface ExerciseFormData {
-  name: string;
-  description: string;
-  category: ExerciseCategory;
-  exerciseType: ExerciseType;
-  muscleGroups: string[];
-  equipment: NonNullable<EquipmentType> | null;
+interface ExerciseFormContentProps {
+  formData: ExerciseFormValues;
+  errors: Partial<Record<keyof ExerciseFormValues, string>>;
+  isLoading: boolean;
+  isEditing: boolean;
+  debouncedName: string;
+  nameCheck: ReturnType<typeof useQuery<{ available: boolean; message?: string }>>;
+  updateField: <K extends keyof ExerciseFormValues>(field: K, value: ExerciseFormValues[K]) => void;
+  onSubmit: (e: React.FormEvent) => void;
+  onClose: () => void;
 }
 
-const defaultFormData: ExerciseFormData = {
-  name: "",
-  description: "",
-  category: "other",
-  exerciseType: "strength",
-  muscleGroups: [],
-  equipment: null,
-};
+function ExerciseFormContent({
+  formData,
+  errors,
+  isLoading,
+  isEditing,
+  debouncedName,
+  nameCheck,
+  updateField,
+  onSubmit,
+  onClose,
+}: ExerciseFormContentProps) {
+  return (
+    <form onSubmit={onSubmit}>
+      <Stack gap="md">
+        <BasicInfoSection
+          name={formData.name}
+          description={formData.description}
+          category={formData.category}
+          exerciseType={formData.exerciseType}
+          onNameChange={(value) => updateField("name", value)}
+          onDescriptionChange={(value) => updateField("description", value)}
+          onCategoryChange={(value) => updateField("category", value as ExerciseCategory)}
+          onExerciseTypeChange={(value) => updateField("exerciseType", value as ExerciseType)}
+          nameError={errors.name}
+          isCheckingName={nameCheck.isFetching}
+          isNameAvailable={nameCheck.data?.available}
+          showNameStatus={debouncedName.length > 0}
+        />
+
+        <EquipmentSection
+          equipment={formData.equipment}
+          onChange={(value) => updateField("equipment", value as NonNullable<EquipmentType> | null)}
+        />
+
+        <MuscleGroupSection
+          muscleGroups={formData.muscleGroups}
+          exerciseType={formData.exerciseType}
+          onChange={(value) => updateField("muscleGroups", value)}
+          error={errors.muscleGroups}
+        />
+
+        <Group justify="flex-end" gap="sm" mt="md">
+          <Button variant="outline" disabled={isLoading} onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="submit" loading={isLoading}>
+            {isEditing ? "Update" : "Create"} Exercise
+          </Button>
+        </Group>
+      </Stack>
+    </form>
+  );
+}
 
 interface ExerciseFormDialogProps {
-  initialData?: Partial<ExerciseFormData>;
+  initialData?: Partial<ExerciseFormValues>;
   exerciseId?: number;
   onSuccess?: () => void;
 }
@@ -59,137 +91,15 @@ export function ExerciseFormDialog({
   onSuccess,
 }: ExerciseFormDialogProps) {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<ExerciseFormData>({
-    ...defaultFormData,
-    ...initialData,
-  });
-  const [errors, setErrors] = useState<Partial<Record<keyof ExerciseFormData, string>>>({});
-
-  const queryClient = useQueryClient();
   const isEditing = exerciseId !== undefined;
 
-  // Debounce the name for real-time duplicate checking
-  const debouncedName = useDebounce(formData.name.trim(), 400);
-
-  // Real-time name availability check
-  const nameCheck = useQuery(
-    orpc.exercise.checkNameAvailability.queryOptions({
-      input: {
-        name: debouncedName,
-        excludeId: exerciseId,
-      },
-      enabled: debouncedName.length > 0 && open,
-      staleTime: 10000, // Cache for 10 seconds
-    }),
-  );
-
-  // Update name error when availability check returns
-  useEffect(() => {
-    if (nameCheck.data && !nameCheck.data.available && nameCheck.data.message) {
-      setErrors((prev) => ({ ...prev, name: nameCheck.data.message }));
-    } else if (nameCheck.data?.available && errors.name && !errors.name.includes("required")) {
-      // Clear the duplicate error if name is now available
-      setErrors((prev) => {
-        const { name: _name, ...rest } = prev;
-        return rest;
-      });
-    }
-  }, [nameCheck.data, errors.name]);
-
-  const createMutation = useMutation(
-    orpc.exercise.create.mutationOptions({
-      onSuccess: () => {
-        toast.success("Exercise created successfully");
-        queryClient.invalidateQueries({ queryKey: ["exercise"] });
-        setOpen(false);
-        setFormData(defaultFormData);
-        onSuccess?.();
-      },
-      onError: (error) => {
-        // Check if it's a duplicate name error (CONFLICT)
-        if (error.message?.includes("already exists") || error.message?.includes("already have")) {
-          setErrors((prev) => ({ ...prev, name: error.message }));
-        } else {
-          toast.error(error.message || "Failed to create exercise");
-        }
-      },
-    }),
-  );
-
-  const updateMutation = useMutation(
-    orpc.exercise.update.mutationOptions({
-      onSuccess: () => {
-        toast.success("Exercise updated successfully");
-        queryClient.invalidateQueries({ queryKey: ["exercise"] });
-        setOpen(false);
-        onSuccess?.();
-      },
-      onError: (error) => {
-        // Check if it's a duplicate name error (CONFLICT)
-        if (error.message?.includes("already exists") || error.message?.includes("already have")) {
-          setErrors((prev) => ({ ...prev, name: error.message }));
-        } else {
-          toast.error(error.message || "Failed to update exercise");
-        }
-      },
-    }),
-  );
-
-  const isLoading = createMutation.isPending || updateMutation.isPending;
-
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof ExerciseFormData, string>> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    } else if (nameCheck.data && !nameCheck.data.available && nameCheck.data.message) {
-      newErrors.name = nameCheck.data.message;
-    }
-
-    if (formData.exerciseType === "strength" && formData.muscleGroups.length === 0) {
-      newErrors.muscleGroups = "At least one muscle group is required for strength exercises";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validate()) return;
-
-    const payload = {
-      name: formData.name.trim(),
-      description: formData.description.trim() || undefined,
-      category: formData.category,
-      exerciseType: formData.exerciseType,
-      muscleGroups: formData.muscleGroups,
-      equipment: formData.equipment || undefined,
-    };
-
-    if (isEditing && exerciseId) {
-      updateMutation.mutate({ id: exerciseId, ...payload });
-    } else {
-      createMutation.mutate(payload);
-    }
-  };
-
-  const categories = Object.entries(categoryConfig).map(([key, config]) => ({
-    value: key as ExerciseCategory,
-    label: config.label,
-  }));
-
-  const exerciseTypes: { value: ExerciseType; label: string }[] = [
-    { value: "strength", label: "Strength" },
-    { value: "cardio", label: "Cardio" },
-    { value: "flexibility", label: "Flexibility" },
-  ];
-
-  const equipmentTypes = Object.entries(equipmentConfig).map(([key, config]) => ({
-    value: key as NonNullable<EquipmentType>,
-    label: config.label,
-  }));
+  const form = useExerciseForm({
+    exerciseId,
+    initialData,
+    onSuccess,
+    onClose: () => setOpen(false),
+    isOpen: open,
+  });
 
   return (
     <>
@@ -202,9 +112,7 @@ export function ExerciseFormDialog({
         onClose={() => setOpen(false)}
         title={isEditing ? "Edit Exercise" : "Create Custom Exercise"}
         size="md"
-        styles={{
-          body: { maxHeight: "70vh", overflowY: "auto" },
-        }}
+        styles={{ body: { maxHeight: "70vh", overflowY: "auto" } }}
       >
         <Text fz="sm" c="dimmed" mb="md">
           {isEditing
@@ -212,112 +120,17 @@ export function ExerciseFormDialog({
             : "Add a new custom exercise to your library."}
         </Text>
 
-        <form onSubmit={handleSubmit}>
-          <Stack gap="md">
-            <Box>
-              <TextInput
-                label="Name"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="e.g., Incline Dumbbell Press"
-                error={errors.name}
-                rightSection={
-                  debouncedName.length > 0 ? (
-                    nameCheck.isFetching ? (
-                      <Loader size="xs" />
-                    ) : nameCheck.data?.available ? (
-                      <IconCircleCheck
-                        size={16}
-                        style={{ color: "var(--mantine-color-green-6)" }}
-                      />
-                    ) : nameCheck.data && !nameCheck.data.available ? (
-                      <IconAlertCircle size={16} style={{ color: "var(--mantine-color-red-6)" }} />
-                    ) : null
-                  ) : null
-                }
-              />
-            </Box>
-
-            <Textarea
-              label="Description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Describe the exercise, include any tips or instructions..."
-              rows={3}
-            />
-
-            <Grid>
-              <Grid.Col span={6}>
-                <NativeSelect
-                  label="Category"
-                  required
-                  value={formData.category}
-                  onChange={(e) =>
-                    setFormData({ ...formData, category: e.target.value as ExerciseCategory })
-                  }
-                  data={categories.map(({ value, label }) => ({ value, label }))}
-                />
-              </Grid.Col>
-
-              <Grid.Col span={6}>
-                <NativeSelect
-                  label="Type"
-                  required
-                  value={formData.exerciseType}
-                  onChange={(e) =>
-                    setFormData({ ...formData, exerciseType: e.target.value as ExerciseType })
-                  }
-                  data={exerciseTypes.map(({ value, label }) => ({ value, label }))}
-                />
-              </Grid.Col>
-            </Grid>
-
-            <NativeSelect
-              label="Equipment"
-              value={formData.equipment || ""}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  equipment: e.target.value ? (e.target.value as NonNullable<EquipmentType>) : null,
-                })
-              }
-              data={[
-                { value: "", label: "None / Bodyweight" },
-                ...equipmentTypes.map(({ value, label }) => ({ value, label })),
-              ]}
-            />
-
-            <Box>
-              <Text fz="sm" fw={500} mb={4}>
-                Muscle Groups{" "}
-                {formData.exerciseType === "strength" && (
-                  <Text component="span" c="dimmed">
-                    *
-                  </Text>
-                )}
-              </Text>
-              <MuscleGroupSelector
-                value={formData.muscleGroups}
-                onChange={(muscleGroups) => setFormData({ ...formData, muscleGroups })}
-              />
-              {errors.muscleGroups && (
-                <Text fz="xs" c="red" mt={4}>
-                  {errors.muscleGroups}
-                </Text>
-              )}
-            </Box>
-
-            <Group justify="flex-end" gap="sm" mt="md">
-              <Button variant="outline" disabled={isLoading} onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" loading={isLoading}>
-                {isEditing ? "Update" : "Create"} Exercise
-              </Button>
-            </Group>
-          </Stack>
-        </form>
+        <ExerciseFormContent
+          formData={form.formData}
+          errors={form.errors}
+          isLoading={form.isLoading}
+          isEditing={form.isEditing}
+          debouncedName={form.debouncedName}
+          nameCheck={form.nameCheck}
+          updateField={form.updateField}
+          onSubmit={form.handleSubmit}
+          onClose={() => setOpen(false)}
+        />
       </Modal>
     </>
   );
@@ -325,7 +138,7 @@ export function ExerciseFormDialog({
 
 interface ExerciseEditButtonProps {
   exerciseId: number;
-  initialData: Partial<ExerciseFormData>;
+  initialData: Partial<ExerciseFormValues>;
   onSuccess?: () => void;
 }
 
@@ -335,111 +148,14 @@ export function ExerciseEditButton({
   onSuccess,
 }: ExerciseEditButtonProps) {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<ExerciseFormData>({
-    ...defaultFormData,
-    ...initialData,
+
+  const form = useExerciseForm({
+    exerciseId,
+    initialData,
+    onSuccess,
+    onClose: () => setOpen(false),
+    isOpen: open,
   });
-  const [errors, setErrors] = useState<Partial<Record<keyof ExerciseFormData, string>>>({});
-
-  const queryClient = useQueryClient();
-
-  // Debounce the name for real-time duplicate checking
-  const debouncedName = useDebounce(formData.name.trim(), 400);
-
-  // Real-time name availability check
-  const nameCheck = useQuery(
-    orpc.exercise.checkNameAvailability.queryOptions({
-      input: {
-        name: debouncedName,
-        excludeId: exerciseId,
-      },
-      enabled: debouncedName.length > 0 && open,
-      staleTime: 10000, // Cache for 10 seconds
-    }),
-  );
-
-  // Update name error when availability check returns
-  useEffect(() => {
-    if (nameCheck.data && !nameCheck.data.available && nameCheck.data.message) {
-      setErrors((prev) => ({ ...prev, name: nameCheck.data.message }));
-    } else if (nameCheck.data?.available && errors.name && !errors.name.includes("required")) {
-      // Clear the duplicate error if name is now available
-      setErrors((prev) => {
-        const { name: _name, ...rest } = prev;
-        return rest;
-      });
-    }
-  }, [nameCheck.data, errors.name]);
-
-  const updateMutation = useMutation(
-    orpc.exercise.update.mutationOptions({
-      onSuccess: () => {
-        toast.success("Exercise updated successfully");
-        queryClient.invalidateQueries({ queryKey: ["exercise"] });
-        setOpen(false);
-        onSuccess?.();
-      },
-      onError: (error) => {
-        // Check if it's a duplicate name error (CONFLICT)
-        if (error.message?.includes("already exists") || error.message?.includes("already have")) {
-          setErrors((prev) => ({ ...prev, name: error.message }));
-        } else {
-          toast.error(error.message || "Failed to update exercise");
-        }
-      },
-    }),
-  );
-
-  const isLoading = updateMutation.isPending;
-
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof ExerciseFormData, string>> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    } else if (nameCheck.data && !nameCheck.data.available && nameCheck.data.message) {
-      newErrors.name = nameCheck.data.message;
-    }
-
-    if (formData.exerciseType === "strength" && formData.muscleGroups.length === 0) {
-      newErrors.muscleGroups = "At least one muscle group is required for strength exercises";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validate()) return;
-
-    updateMutation.mutate({
-      id: exerciseId,
-      name: formData.name.trim(),
-      description: formData.description.trim() || undefined,
-      category: formData.category,
-      exerciseType: formData.exerciseType,
-      muscleGroups: formData.muscleGroups,
-      equipment: formData.equipment || undefined,
-    });
-  };
-
-  const categories = Object.entries(categoryConfig).map(([key, config]) => ({
-    value: key as ExerciseCategory,
-    label: config.label,
-  }));
-
-  const exerciseTypes: { value: ExerciseType; label: string }[] = [
-    { value: "strength", label: "Strength" },
-    { value: "cardio", label: "Cardio" },
-    { value: "flexibility", label: "Flexibility" },
-  ];
-
-  const equipmentTypes = Object.entries(equipmentConfig).map(([key, config]) => ({
-    value: key as NonNullable<EquipmentType>,
-    label: config.label,
-  }));
 
   return (
     <>
@@ -452,120 +168,23 @@ export function ExerciseEditButton({
         onClose={() => setOpen(false)}
         title="Edit Exercise"
         size="md"
-        styles={{
-          body: { maxHeight: "70vh", overflowY: "auto" },
-        }}
+        styles={{ body: { maxHeight: "70vh", overflowY: "auto" } }}
       >
         <Text fz="sm" c="dimmed" mb="md">
           Update the exercise details below.
         </Text>
 
-        <form onSubmit={handleSubmit}>
-          <Stack gap="md">
-            <Box>
-              <TextInput
-                label="Name"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="e.g., Incline Dumbbell Press"
-                error={errors.name}
-                rightSection={
-                  debouncedName.length > 0 ? (
-                    nameCheck.isFetching ? (
-                      <Loader size="xs" />
-                    ) : nameCheck.data?.available ? (
-                      <IconCircleCheck
-                        size={16}
-                        style={{ color: "var(--mantine-color-green-6)" }}
-                      />
-                    ) : nameCheck.data && !nameCheck.data.available ? (
-                      <IconAlertCircle size={16} style={{ color: "var(--mantine-color-red-6)" }} />
-                    ) : null
-                  ) : null
-                }
-              />
-            </Box>
-
-            <Textarea
-              label="Description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Describe the exercise..."
-              rows={3}
-            />
-
-            <Grid>
-              <Grid.Col span={6}>
-                <NativeSelect
-                  label="Category"
-                  required
-                  value={formData.category}
-                  onChange={(e) =>
-                    setFormData({ ...formData, category: e.target.value as ExerciseCategory })
-                  }
-                  data={categories.map(({ value, label }) => ({ value, label }))}
-                />
-              </Grid.Col>
-
-              <Grid.Col span={6}>
-                <NativeSelect
-                  label="Type"
-                  required
-                  value={formData.exerciseType}
-                  onChange={(e) =>
-                    setFormData({ ...formData, exerciseType: e.target.value as ExerciseType })
-                  }
-                  data={exerciseTypes.map(({ value, label }) => ({ value, label }))}
-                />
-              </Grid.Col>
-            </Grid>
-
-            <NativeSelect
-              label="Equipment"
-              value={formData.equipment || ""}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  equipment: e.target.value ? (e.target.value as NonNullable<EquipmentType>) : null,
-                })
-              }
-              data={[
-                { value: "", label: "None / Bodyweight" },
-                ...equipmentTypes.map(({ value, label }) => ({ value, label })),
-              ]}
-            />
-
-            <Box>
-              <Text fz="sm" fw={500} mb={4}>
-                Muscle Groups{" "}
-                {formData.exerciseType === "strength" && (
-                  <Text component="span" c="dimmed">
-                    *
-                  </Text>
-                )}
-              </Text>
-              <MuscleGroupSelector
-                value={formData.muscleGroups}
-                onChange={(muscleGroups) => setFormData({ ...formData, muscleGroups })}
-              />
-              {errors.muscleGroups && (
-                <Text fz="xs" c="red" mt={4}>
-                  {errors.muscleGroups}
-                </Text>
-              )}
-            </Box>
-
-            <Group justify="flex-end" gap="sm" mt="md">
-              <Button variant="outline" disabled={isLoading} onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" loading={isLoading}>
-                Update Exercise
-              </Button>
-            </Group>
-          </Stack>
-        </form>
+        <ExerciseFormContent
+          formData={form.formData}
+          errors={form.errors}
+          isLoading={form.isLoading}
+          isEditing={form.isEditing}
+          debouncedName={form.debouncedName}
+          nameCheck={form.nameCheck}
+          updateField={form.updateField}
+          onSubmit={form.handleSubmit}
+          onClose={() => setOpen(false)}
+        />
       </Modal>
     </>
   );

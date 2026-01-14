@@ -1,0 +1,81 @@
+/* Measurements History Styles */
+
+.historyCard {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  animation-delay: 300ms;
+
+  &[data-loading="true"] {
+    .tableScrollArea {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  }
+
+  &[data-empty="true"] {
+    .tableScrollArea {
+      display: none;
+    }
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tableScrollArea {
+  max-height: 400px;
+  transition: opacity 200ms ease;
+}
+
+.table {
+  min-width: 600px;
+}
+
+.tableRow {
+  animation: fadeIn 300ms ease-out backwards;
+  transition: background-color 150ms ease;
+
+  @mixin hover {
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.actionMenu {
+  @mixin hover {
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+    border-radius: var(--mantine-radius-sm);
+  }
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .tableScrollArea {
+    max-height: 300px;
+  }
+
+  .table {
+    font-size: var(--mantine-font-size-xs);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .historyCard,
+  .tableRow {
+    animation: none;
+  }
+}

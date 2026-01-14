@@ -82,7 +82,7 @@
 }
 
 .legendItem:hover,
-.legendItemHovered {
+.legendItem[data-hovered] {
   background: var(--mantine-color-default-hover);
   transform: translateX(4px);
 }
@@ -96,7 +96,7 @@
 }
 
 .legendItem:hover .legendColor,
-.legendItemHovered .legendColor {
+.legendItem[data-hovered] .legendColor {
   transform: scale(1.2);
 }
 
@@ -150,12 +150,12 @@
   }
 
   .legendItem:hover,
-  .legendItemHovered {
+  .legendItem[data-hovered] {
     transform: none;
   }
 
   .legendItem:hover .legendColor,
-  .legendItemHovered .legendColor {
+  .legendItem[data-hovered] .legendColor {
     transform: none;
   }
 

@@ -1,0 +1,149 @@
+/* Analytics View Styles */
+/* Uses PostCSS features: light-dark(), @mixin hover, CSS nesting */
+
+.analyticsContainer {
+  animation: fadeIn 300ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Summary Grid */
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--mantine-spacing-md);
+
+  @media (max-width: $mantine-breakpoint-md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $mantine-breakpoint-xs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summaryCard {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+
+  @mixin hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mantine-shadow-md);
+  }
+}
+
+.summaryIcon {
+  border-radius: var(--mantine-radius-md);
+}
+
+/* Charts Grid */
+.chartsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mantine-spacing-md);
+
+  @media (min-width: $mantine-breakpoint-md) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.chartCard {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  transition: box-shadow 150ms ease;
+
+  @mixin hover {
+    box-shadow: var(--mantine-shadow-sm);
+  }
+}
+
+.chartContainer {
+  height: 300px;
+  width: 100%;
+  transition: opacity 200ms ease;
+
+  /* Data attribute states */
+  &[data-loading="true"] {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &[data-has-data="false"] {
+    opacity: 0.5;
+  }
+}
+
+.fullWidthChart {
+  grid-column: 1 / -1;
+}
+
+/* Muscle Chart Layout - responsive behavior */
+.muscleChart {
+  @media (max-width: $mantine-breakpoint-xs) {
+    flex-direction: column;
+  }
+}
+
+/* Consistency Grid */
+.consistencyGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--mantine-spacing-md);
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Stats Summary Border */
+.statsSummary {
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+
+/* Chart type specific styles via data attributes */
+.chartWrapper {
+  &[data-chart-type="bar"] {
+    .chartContainer {
+      min-height: 250px;
+    }
+  }
+
+  &[data-chart-type="pie"] {
+    .chartContainer {
+      min-height: 200px;
+    }
+  }
+
+  &[data-chart-type="radar"] {
+    .chartContainer {
+      min-height: 300px;
+    }
+  }
+
+  &[data-chart-type="line"] {
+    .chartContainer {
+      min-height: 280px;
+    }
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .analyticsContainer {
+    animation: none;
+  }
+
+  .summaryCard,
+  .chartCard,
+  .chartContainer {
+    transition: none;
+  }
+}

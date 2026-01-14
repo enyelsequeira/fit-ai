@@ -14,6 +14,13 @@ import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardTemplatesIndexRouteImport } from './routes/dashboard/templates/index'
+import { Route as DashboardRecoveryIndexRouteImport } from './routes/dashboard/recovery/index'
+import { Route as DashboardRecordsIndexRouteImport } from './routes/dashboard/records/index'
+import { Route as DashboardMeasurementsIndexRouteImport } from './routes/dashboard/measurements/index'
+import { Route as DashboardGoalsIndexRouteImport } from './routes/dashboard/goals/index'
+import { Route as DashboardExercisesIndexRouteImport } from './routes/dashboard/exercises/index'
+import { Route as DashboardAnalyticsIndexRouteImport } from './routes/dashboard/analytics/index'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -40,6 +47,42 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardTemplatesIndexRoute = DashboardTemplatesIndexRouteImport.update({
+  id: '/templates/',
+  path: '/templates/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardRecoveryIndexRoute = DashboardRecoveryIndexRouteImport.update({
+  id: '/recovery/',
+  path: '/recovery/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardRecordsIndexRoute = DashboardRecordsIndexRouteImport.update({
+  id: '/records/',
+  path: '/records/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardMeasurementsIndexRoute =
+  DashboardMeasurementsIndexRouteImport.update({
+    id: '/measurements/',
+    path: '/measurements/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
+const DashboardGoalsIndexRoute = DashboardGoalsIndexRouteImport.update({
+  id: '/goals/',
+  path: '/goals/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardExercisesIndexRoute = DashboardExercisesIndexRouteImport.update({
+  id: '/exercises/',
+  path: '/exercises/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
+const DashboardAnalyticsIndexRoute = DashboardAnalyticsIndexRouteImport.update({
+  id: '/analytics/',
+  path: '/analytics/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,12 +90,26 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/signup': typeof SignupRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsIndexRoute
+  '/dashboard/exercises': typeof DashboardExercisesIndexRoute
+  '/dashboard/goals': typeof DashboardGoalsIndexRoute
+  '/dashboard/measurements': typeof DashboardMeasurementsIndexRoute
+  '/dashboard/records': typeof DashboardRecordsIndexRoute
+  '/dashboard/recovery': typeof DashboardRecoveryIndexRoute
+  '/dashboard/templates': typeof DashboardTemplatesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign-in': typeof SignInRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsIndexRoute
+  '/dashboard/exercises': typeof DashboardExercisesIndexRoute
+  '/dashboard/goals': typeof DashboardGoalsIndexRoute
+  '/dashboard/measurements': typeof DashboardMeasurementsIndexRoute
+  '/dashboard/records': typeof DashboardRecordsIndexRoute
+  '/dashboard/recovery': typeof DashboardRecoveryIndexRoute
+  '/dashboard/templates': typeof DashboardTemplatesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,13 +118,56 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/signup': typeof SignupRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/analytics/': typeof DashboardAnalyticsIndexRoute
+  '/dashboard/exercises/': typeof DashboardExercisesIndexRoute
+  '/dashboard/goals/': typeof DashboardGoalsIndexRoute
+  '/dashboard/measurements/': typeof DashboardMeasurementsIndexRoute
+  '/dashboard/records/': typeof DashboardRecordsIndexRoute
+  '/dashboard/recovery/': typeof DashboardRecoveryIndexRoute
+  '/dashboard/templates/': typeof DashboardTemplatesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/sign-in' | '/signup' | '/dashboard/'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/sign-in'
+    | '/signup'
+    | '/dashboard/'
+    | '/dashboard/analytics'
+    | '/dashboard/exercises'
+    | '/dashboard/goals'
+    | '/dashboard/measurements'
+    | '/dashboard/records'
+    | '/dashboard/recovery'
+    | '/dashboard/templates'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sign-in' | '/signup' | '/dashboard'
-  id: '__root__' | '/' | '/dashboard' | '/sign-in' | '/signup' | '/dashboard/'
+  to:
+    | '/'
+    | '/sign-in'
+    | '/signup'
+    | '/dashboard'
+    | '/dashboard/analytics'
+    | '/dashboard/exercises'
+    | '/dashboard/goals'
+    | '/dashboard/measurements'
+    | '/dashboard/records'
+    | '/dashboard/recovery'
+    | '/dashboard/templates'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/sign-in'
+    | '/signup'
+    | '/dashboard/'
+    | '/dashboard/analytics/'
+    | '/dashboard/exercises/'
+    | '/dashboard/goals/'
+    | '/dashboard/measurements/'
+    | '/dashboard/records/'
+    | '/dashboard/recovery/'
+    | '/dashboard/templates/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -114,15 +214,78 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/templates/': {
+      id: '/dashboard/templates/'
+      path: '/templates'
+      fullPath: '/dashboard/templates'
+      preLoaderRoute: typeof DashboardTemplatesIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/recovery/': {
+      id: '/dashboard/recovery/'
+      path: '/recovery'
+      fullPath: '/dashboard/recovery'
+      preLoaderRoute: typeof DashboardRecoveryIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/records/': {
+      id: '/dashboard/records/'
+      path: '/records'
+      fullPath: '/dashboard/records'
+      preLoaderRoute: typeof DashboardRecordsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/measurements/': {
+      id: '/dashboard/measurements/'
+      path: '/measurements'
+      fullPath: '/dashboard/measurements'
+      preLoaderRoute: typeof DashboardMeasurementsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/goals/': {
+      id: '/dashboard/goals/'
+      path: '/goals'
+      fullPath: '/dashboard/goals'
+      preLoaderRoute: typeof DashboardGoalsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/exercises/': {
+      id: '/dashboard/exercises/'
+      path: '/exercises'
+      fullPath: '/dashboard/exercises'
+      preLoaderRoute: typeof DashboardExercisesIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/analytics/': {
+      id: '/dashboard/analytics/'
+      path: '/analytics'
+      fullPath: '/dashboard/analytics'
+      preLoaderRoute: typeof DashboardAnalyticsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
   }
 }
 
 interface DashboardRouteRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardAnalyticsIndexRoute: typeof DashboardAnalyticsIndexRoute
+  DashboardExercisesIndexRoute: typeof DashboardExercisesIndexRoute
+  DashboardGoalsIndexRoute: typeof DashboardGoalsIndexRoute
+  DashboardMeasurementsIndexRoute: typeof DashboardMeasurementsIndexRoute
+  DashboardRecordsIndexRoute: typeof DashboardRecordsIndexRoute
+  DashboardRecoveryIndexRoute: typeof DashboardRecoveryIndexRoute
+  DashboardTemplatesIndexRoute: typeof DashboardTemplatesIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardAnalyticsIndexRoute: DashboardAnalyticsIndexRoute,
+  DashboardExercisesIndexRoute: DashboardExercisesIndexRoute,
+  DashboardGoalsIndexRoute: DashboardGoalsIndexRoute,
+  DashboardMeasurementsIndexRoute: DashboardMeasurementsIndexRoute,
+  DashboardRecordsIndexRoute: DashboardRecordsIndexRoute,
+  DashboardRecoveryIndexRoute: DashboardRecoveryIndexRoute,
+  DashboardTemplatesIndexRoute: DashboardTemplatesIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

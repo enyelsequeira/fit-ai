@@ -42,7 +42,8 @@
     transform 0.15s ease;
   @mixin hover {
     background: var(--mantine-color-default-hover);
-    transform: translateX(2px);  }
+    transform: translateX(2px);
+  }
 }
 /* Active navigation link */
 .navLinkActive {
@@ -62,5 +63,3 @@
   height: 24px;
   flex-shrink: 0;
 }
-
-

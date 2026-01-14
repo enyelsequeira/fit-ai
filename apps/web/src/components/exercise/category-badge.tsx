@@ -4,7 +4,7 @@ import { Badge, Group } from "@mantine/core";
 import {
   IconBarbell,
   IconBolt,
-  IconDotsHorizontal,
+  IconDots,
   IconFlame,
   IconHeart,
   IconShield,
@@ -89,7 +89,7 @@ export const categoryConfig: Record<ExerciseCategory, CategoryConfig> = {
     label: "Compound",
   },
   other: {
-    icon: IconDotsHorizontal,
+    icon: IconDots,
     color: "var(--mantine-color-gray-6)",
     bgColor: "var(--mantine-color-gray-light)",
     label: "Other",

@@ -88,10 +88,7 @@ export function WorkoutEmptyState({
               .
             </Text>
             <Stack gap="sm" className={styles.actionButtons}>
-              <Button
-                leftSection={<IconPlus size={16} />}
-                onClick={onStartWorkout}
-              >
+              <Button leftSection={<IconPlus size={16} />} onClick={onStartWorkout}>
                 Start Workout
               </Button>
               {onClearFilter && (
@@ -118,17 +115,13 @@ export function WorkoutEmptyState({
           {/* Welcome message */}
           <Text className={styles.title}>Ready to start your fitness journey?</Text>
           <Text size="sm" c="dimmed" className={styles.description}>
-            Track your workouts, monitor your progress, and achieve your fitness goals.
-            Start your first workout now or choose from our templates.
+            Track your workouts, monitor your progress, and achieve your fitness goals. Start your
+            first workout now or choose from our templates.
           </Text>
 
           {/* Primary actions */}
           <Stack gap="sm" className={styles.actionButtons}>
-            <Button
-              size="md"
-              leftSection={<IconPlus size={18} />}
-              onClick={onStartWorkout}
-            >
+            <Button size="md" leftSection={<IconPlus size={18} />} onClick={onStartWorkout}>
               Start New Workout
             </Button>
             <Button
@@ -157,9 +150,7 @@ export function WorkoutEmptyState({
                     <template.icon size={20} />
                   </Box>
                   <Text className={styles.templateName}>{template.name}</Text>
-                  <Text className={styles.templateDescription}>
-                    {template.description}
-                  </Text>
+                  <Text className={styles.templateDescription}>{template.description}</Text>
                 </UnstyledButton>
               ))}
             </Box>

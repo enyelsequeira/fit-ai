@@ -1,0 +1,80 @@
+/* Records View Styles */
+
+.recordsContainer {
+  animation: fadeIn 300ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mainContent {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mantine-spacing-lg);
+}
+
+@media (min-width: 992px) {
+  .mainContent {
+    grid-template-columns: 380px 1fr;
+  }
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+/* Sticky sidebar on larger screens */
+@media (min-width: 992px) {
+  .leftColumn {
+    position: sticky;
+    top: var(--mantine-spacing-md);
+    align-self: flex-start;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .leftColumn::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .leftColumn::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .leftColumn::-webkit-scrollbar-thumb {
+    background: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
+    border-radius: 2px;
+  }
+}
+
+/* Mobile-first: Stack layout with recent PRs on top */
+@media (max-width: 991px) {
+  .leftColumn {
+    order: 1;
+  }
+
+  .rightColumn {
+    order: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recordsContainer {
+    animation: none;
+  }
+}

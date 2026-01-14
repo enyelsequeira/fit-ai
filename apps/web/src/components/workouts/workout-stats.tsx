@@ -4,18 +4,8 @@
  */
 
 import { Box, Flex, Group, SimpleGrid, Text } from "@mantine/core";
-import {
-  IconActivity,
-  IconBarbell,
-  IconClock,
-  IconFlame,
-} from "@tabler/icons-react";
-import {
-  FitAiCard,
-  FitAiCardContent,
-  FitAiCardHeader,
-  FitAiCardTitle,
-} from "@/components/ui/card";
+import { IconActivity, IconBarbell, IconClock, IconFlame } from "@tabler/icons-react";
+import { FitAiCard, FitAiCardContent, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { WorkoutStats as WorkoutStatsType } from "./types";
 import styles from "./workout-stats.module.css";
@@ -57,10 +47,7 @@ function StatCard({
   }
 
   return (
-    <FitAiCard
-      className={styles.statCard}
-      style={{ animationDelay: `${animationDelay}ms` }}
-    >
+    <FitAiCard className={styles.statCard} style={{ animationDelay: `${animationDelay}ms` }}>
       <FitAiCardHeader>
         <Group justify="space-between" pb="xs">
           <FitAiCardTitle c="dimmed" fw={500}>
@@ -105,11 +92,7 @@ function formatVolume(kg: number): string {
 
 export function WorkoutStats({ stats }: WorkoutStatsProps) {
   return (
-    <SimpleGrid
-      cols={{ base: 2, sm: 2, md: 4 }}
-      spacing="md"
-      className={styles.statsGrid}
-    >
+    <SimpleGrid cols={{ base: 2, sm: 2, md: 4 }} spacing="md" className={styles.statsGrid}>
       <StatCard
         title="Total Workouts"
         value={stats.totalWorkouts}

@@ -1,7 +1,22 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, FitAiCardContent, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+/**
+ * MuscleRecoveryMap - Displays recovery status for each muscle group
+ * Uses Mantine components with data attributes for theme-aware styling
+ */
+
+import {
+  Badge,
+  Box,
+  Card,
+  Group,
+  Progress,
+  SimpleGrid,
+  Skeleton,
+  Stack,
+  Text,
+} from "@mantine/core";
+import { IconActivity } from "@tabler/icons-react";
+import { EmptyState } from "@/components/ui/state-views";
+import styles from "./recovery-view.module.css";
 
 interface MuscleRecoveryStatus {
   muscleGroup: string;
@@ -11,23 +26,44 @@ interface MuscleRecoveryStatus {
   setsLast7Days: number;
   volumeLast7Days: number;
   estimatedFullRecovery: Date | null;
+  updatedAt: Date;
 }
 
 interface MuscleRecoveryMapProps {
   muscleGroups: MuscleRecoveryStatus[];
-  className?: string;
+  overallRecovery?: number;
+  isLoading?: boolean;
 }
 
-function getRecoveryColor(score: number | null) {
-  if (score === null) return { text: "text-muted-foreground", bg: "bg-muted" };
-  if (score >= 80) return { text: "text-emerald-500", bg: "bg-emerald-500" };
-  if (score >= 60) return { text: "text-green-500", bg: "bg-green-500" };
-  if (score >= 40) return { text: "text-amber-500", bg: "bg-amber-500" };
-  if (score >= 20) return { text: "text-orange-500", bg: "bg-orange-500" };
-  return { text: "text-red-500", bg: "bg-red-500" };
+type RecoveryLevel = "high" | "good" | "medium" | "low" | "critical";
+type RecoveryStatus = "recovered" | "recovering" | "fatigued";
+
+function getRecoveryLevel(score: number | null): RecoveryLevel {
+  if (score === null) return "high";
+  if (score >= 80) return "high";
+  if (score >= 60) return "good";
+  if (score >= 40) return "medium";
+  if (score >= 20) return "low";
+  return "critical";
 }
 
-function formatTimeAgo(date: Date | null) {
+function getRecoveryStatus(score: number | null): RecoveryStatus {
+  if (score === null) return "recovered";
+  if (score >= 70) return "recovered";
+  if (score >= 40) return "recovering";
+  return "fatigued";
+}
+
+function getRecoveryColor(score: number | null): string {
+  if (score === null) return "gray";
+  if (score >= 80) return "teal";
+  if (score >= 60) return "green";
+  if (score >= 40) return "yellow";
+  if (score >= 20) return "orange";
+  return "red";
+}
+
+function formatTimeAgo(date: Date | null): string {
   if (!date) return "Never";
 
   const now = new Date();
@@ -40,7 +76,7 @@ function formatTimeAgo(date: Date | null) {
   return "Today";
 }
 
-function formatTimeUntil(date: Date | null) {
+function formatTimeUntil(date: Date | null): string {
   if (!date) return "Recovered";
 
   const now = new Date();
@@ -56,63 +92,127 @@ function formatTimeUntil(date: Date | null) {
   return "< 1h";
 }
 
+function formatMuscleName(name: string): string {
+  return name.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 function MuscleRecoveryItem({ muscle }: { muscle: MuscleRecoveryStatus }) {
-  const colors = getRecoveryColor(muscle.recoveryScore);
   const score = muscle.recoveryScore ?? 100;
+  const color = getRecoveryColor(muscle.recoveryScore);
+  const recoveryLevel = getRecoveryLevel(muscle.recoveryScore);
 
   return (
-    <div className="rounded-none border p-3 space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium capitalize">
-          {muscle.muscleGroup.replace("_", " ")}
-        </span>
-        <Badge variant="outline" className={cn("text-[10px] tabular-nums", colors.text)}>
-          {score}%
-        </Badge>
-      </div>
+    <Box className={styles.muscleItem} data-recovery-level={recoveryLevel}>
+      <Stack gap="xs">
+        <Group justify="space-between">
+          <Text fz="sm" fw={500} tt="capitalize">
+            {formatMuscleName(muscle.muscleGroup)}
+          </Text>
+          <Badge size="sm" color={color} variant="light" ff="var(--mantine-font-family-monospace)">
+            {score}%
+          </Badge>
+        </Group>
 
-      <Progress value={score} className="h-1.5" />
+        <Progress value={score} size="sm" color={color} />
 
-      <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-        <span>Last: {formatTimeAgo(muscle.lastWorkedAt)}</span>
-        <span>{muscle.setsLast7Days} sets / 7d</span>
-        {muscle.recoveryScore !== null && muscle.recoveryScore < 100 && (
-          <span>Full: {formatTimeUntil(muscle.estimatedFullRecovery)}</span>
-        )}
-      </div>
-    </div>
+        <Group justify="space-between" gap="xs">
+          <Text fz={10} c="dimmed">
+            Last: {formatTimeAgo(muscle.lastWorkedAt)}
+          </Text>
+          <Text fz={10} c="dimmed" ff="var(--mantine-font-family-monospace)">
+            {muscle.setsLast7Days} sets / 7d
+          </Text>
+          {muscle.recoveryScore !== null && muscle.recoveryScore < 100 && (
+            <Text fz={10} c="dimmed">
+              Full: {formatTimeUntil(muscle.estimatedFullRecovery)}
+            </Text>
+          )}
+        </Group>
+      </Stack>
+    </Box>
   );
 }
 
-function MuscleRecoveryMap({ muscleGroups, className }: MuscleRecoveryMapProps) {
-  // Sort by recovery score (lowest first)
+function MuscleRecoveryMap({
+  muscleGroups,
+  overallRecovery,
+  isLoading = false,
+}: MuscleRecoveryMapProps) {
+  if (isLoading) {
+    return (
+      <Card withBorder>
+        <Card.Section withBorder inheritPadding py="sm">
+          <Text fz="sm" fw={500}>
+            Muscle Recovery Status
+          </Text>
+        </Card.Section>
+        <Card.Section inheritPadding py="md">
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
+            <Skeleton height={80} />
+            <Skeleton height={80} />
+            <Skeleton height={80} />
+            <Skeleton height={80} />
+          </SimpleGrid>
+        </Card.Section>
+      </Card>
+    );
+  }
+
+  if (muscleGroups.length === 0) {
+    return (
+      <Card withBorder>
+        <Card.Section withBorder inheritPadding py="sm">
+          <Text fz="sm" fw={500}>
+            Muscle Recovery Status
+          </Text>
+        </Card.Section>
+        <Card.Section inheritPadding py="lg">
+          <EmptyState
+            icon={<IconActivity size={48} stroke={1.5} />}
+            title="No recovery data"
+            message="No muscle recovery data available. Complete some workouts to see your recovery status."
+          />
+        </Card.Section>
+      </Card>
+    );
+  }
+
+  // Sort by recovery score (lowest first to highlight areas needing rest)
   const sorted = [...muscleGroups].sort((a, b) => {
     const aScore = a.recoveryScore ?? 100;
     const bScore = b.recoveryScore ?? 100;
     return aScore - bScore;
   });
 
-  const overallRecovery = Math.round(
-    muscleGroups.reduce((sum, m) => sum + (m.recoveryScore ?? 100), 0) / muscleGroups.length,
-  );
+  // Calculate overall recovery if not provided
+  const calculatedOverall =
+    overallRecovery ??
+    Math.round(
+      muscleGroups.reduce((sum, m) => sum + (m.recoveryScore ?? 100), 0) / muscleGroups.length,
+    );
+
+  const overallColor = getRecoveryColor(calculatedOverall);
+  const overallStatus = getRecoveryStatus(calculatedOverall);
 
   return (
-    <Card className={className}>
-      <FitAiCardHeader>
-        <div className="flex items-center justify-between">
-          <FitAiCardTitle className="text-sm">Muscle Recovery Status</FitAiCardTitle>
-          <Badge variant="secondary" className="text-xs tabular-nums">
-            {overallRecovery}% Overall
+    <Card withBorder className={styles.recoveryStatusCard} data-recovery-status={overallStatus}>
+      <Card.Section withBorder inheritPadding py="sm">
+        <Group justify="space-between">
+          <Text fz="sm" fw={500}>
+            Muscle Recovery Status
+          </Text>
+          <Badge color={overallColor} variant="light" ff="var(--mantine-font-family-monospace)">
+            {calculatedOverall}% Overall
           </Badge>
-        </div>
-      </FitAiCardHeader>
-      <FitAiCardContent>
-        <div className="grid gap-2 sm:grid-cols-2">
+        </Group>
+      </Card.Section>
+      <Card.Section inheritPadding py="md">
+        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
           {sorted.map((muscle) => (
             <MuscleRecoveryItem key={muscle.muscleGroup} muscle={muscle} />
           ))}
-        </div>
-      </FitAiCardContent>
+        </SimpleGrid>
+      </Card.Section>
     </Card>
   );
 }

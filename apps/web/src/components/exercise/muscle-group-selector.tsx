@@ -1,10 +1,6 @@
+import { Badge, Box, Group, TextInput, UnstyledButton } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 import { useState } from "react";
-
-import { Badge } from "@/components/ui/badge";
-import { FitAiButton } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 
 export const muscleGroups = [
   // Chest
@@ -39,7 +35,6 @@ export type MuscleGroup = (typeof muscleGroups)[number];
 interface MuscleGroupSelectorProps {
   value: string[];
   onChange: (value: string[]) => void;
-  className?: string;
   placeholder?: string;
   disabled?: boolean;
 }
@@ -47,7 +42,6 @@ interface MuscleGroupSelectorProps {
 export function MuscleGroupSelector({
   value,
   onChange,
-  className,
   placeholder = "Search muscle groups...",
   disabled = false,
 }: MuscleGroupSelectorProps) {
@@ -68,28 +62,52 @@ export function MuscleGroupSelector({
   };
 
   return (
-    <div className={cn("relative", className)}>
-      <div
-        className={cn(
-          "dark:bg-input/30 border-input focus-within:border-ring focus-within:ring-ring/50 flex min-h-8 w-full flex-wrap items-center gap-1 rounded-none border bg-transparent px-2 py-1 text-xs transition-colors focus-within:ring-1",
-          disabled && "opacity-50 cursor-not-allowed",
-        )}
+    <Box pos="relative">
+      <Box
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 4,
+          minHeight: 32,
+          width: "100%",
+          padding: "4px 8px",
+          border: "1px solid var(--mantine-color-default-border)",
+          borderRadius: 0,
+          backgroundColor: "transparent",
+          fontSize: "var(--mantine-font-size-xs)",
+          transition: "border-color 100ms ease, box-shadow 100ms ease",
+          opacity: disabled ? 0.5 : 1,
+          cursor: disabled ? "not-allowed" : undefined,
+        }}
       >
         {value.map((group) => (
-          <Badge key={group} variant="secondary" className="gap-1 px-1.5 py-0 text-[10px]">
+          <Badge
+            key={group}
+            size="xs"
+            variant="default"
+            px={6}
+            py={0}
+            style={{ fontSize: 10 }}
+            rightSection={
+              !disabled && (
+                <UnstyledButton
+                  onClick={() => handleRemove(group)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    borderRadius: 2,
+                  }}
+                >
+                  <IconX size={12} />
+                </UnstyledButton>
+              )
+            }
+          >
             {group}
-            {!disabled && (
-              <button
-                type="button"
-                onClick={() => handleRemove(group)}
-                className="hover:bg-muted rounded-sm"
-              >
-                <IconX className="size-3" />
-              </button>
-            )}
           </Badge>
         ))}
-        <Input
+        <TextInput
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -99,29 +117,66 @@ export function MuscleGroupSelector({
           onBlur={() => setTimeout(() => setIsOpen(false), 200)}
           placeholder={value.length === 0 ? placeholder : ""}
           disabled={disabled}
-          className="h-6 min-w-20 flex-1 border-0 bg-transparent p-0 focus-visible:ring-0"
+          size="xs"
+          variant="unstyled"
+          styles={{
+            input: {
+              height: 24,
+              minWidth: 80,
+              flex: 1,
+              padding: 0,
+            },
+          }}
         />
-      </div>
+      </Box>
 
       {isOpen && filteredGroups.length > 0 && (
-        <div className="ring-foreground/10 bg-popover text-popover-foreground absolute top-full left-0 z-50 mt-1 max-h-60 w-full overflow-auto rounded-none shadow-md ring-1">
-          <div className="p-1">
+        <Box
+          pos="absolute"
+          top="100%"
+          left={0}
+          w="100%"
+          mt={4}
+          style={{
+            zIndex: 50,
+            maxHeight: 240,
+            overflow: "auto",
+            borderRadius: 0,
+            boxShadow: "var(--mantine-shadow-md)",
+            border: "1px solid var(--mantine-color-default-border)",
+            backgroundColor: "var(--mantine-color-body)",
+          }}
+        >
+          <Box p={4}>
             {filteredGroups.map((group) => (
-              <FitAiButton
+              <UnstyledButton
                 key={group}
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start text-xs font-normal"
                 onClick={() => handleSelect(group)}
+                w="100%"
+                py={6}
+                px={8}
+                style={{
+                  display: "block",
+                  textAlign: "left",
+                  fontSize: "var(--mantine-font-size-xs)",
+                  fontWeight: 400,
+                  borderRadius: "var(--mantine-radius-sm)",
+                }}
+                styles={{
+                  root: {
+                    "&:hover": {
+                      backgroundColor: "var(--mantine-color-default-hover)",
+                    },
+                  },
+                }}
               >
                 {group}
-              </FitAiButton>
+              </UnstyledButton>
             ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -129,37 +184,42 @@ interface MuscleGroupTagsProps {
   muscles: string[];
   maxVisible?: number;
   size?: "sm" | "default";
-  className?: string;
 }
 
 export function MuscleGroupTags({
   muscles,
   maxVisible = 3,
   size = "default",
-  className,
 }: MuscleGroupTagsProps) {
   const visible = muscles.slice(0, maxVisible);
   const remaining = muscles.length - maxVisible;
 
+  const badgeSize = size === "sm" ? "xs" : "sm";
+  const badgeStyles = size === "sm" ? { fontSize: 10, padding: "0 4px" } : undefined;
+
   return (
-    <div className={cn("flex flex-wrap gap-1", className)}>
+    <Group gap={4} wrap="wrap">
       {visible.map((muscle) => (
         <Badge
           key={muscle}
+          size={badgeSize}
           variant="outline"
-          className={cn("text-muted-foreground", size === "sm" && "px-1 py-0 text-[10px]")}
+          color="gray"
+          style={badgeStyles}
         >
           {muscle}
         </Badge>
       ))}
       {remaining > 0 && (
         <Badge
+          size={badgeSize}
           variant="outline"
-          className={cn("text-muted-foreground", size === "sm" && "px-1 py-0 text-[10px]")}
+          color="gray"
+          style={badgeStyles}
         >
           +{remaining} more
         </Badge>
       )}
-    </div>
+    </Group>
   );
 }

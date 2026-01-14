@@ -160,7 +160,6 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-
 .taglineHighlight {
   background: linear-gradient(
     135deg,
@@ -226,7 +225,6 @@
   }
 }
 
-
 .benefitIcon {
   width: 32px;
   height: 32px;
@@ -241,7 +239,6 @@
     var(--mantine-color-cyan-6) 100%
   );
 }
-
 
 /* Right side - Form panel */
 .formPanel {
@@ -517,6 +514,4 @@
   .formCard {
     padding: var(--mantine-spacing-lg);
   }
-
-
 }

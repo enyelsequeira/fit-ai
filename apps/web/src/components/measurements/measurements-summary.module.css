@@ -1,0 +1,120 @@
+/* Measurements Summary Styles */
+
+.summaryContainer {
+  animation: fadeIn 300ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.statsGrid {
+  animation: fadeSlideUp 400ms ease-out backwards;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.statCard {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+
+  @mixin hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mantine-shadow-md);
+
+    & .iconWrapper {
+      transform: scale(1.1);
+    }
+  }
+
+  &[data-loading="true"] {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+}
+
+.iconWrapper {
+  border-radius: var(--mantine-radius-md);
+  transition: transform 200ms ease;
+
+  &[data-variant="blue"] {
+    background: var(--mantine-color-blue-light);
+    color: var(--mantine-color-blue-6);
+  }
+
+  &[data-variant="orange"] {
+    background: var(--mantine-color-orange-light);
+    color: var(--mantine-color-orange-6);
+  }
+
+  &[data-variant="teal"] {
+    background: var(--mantine-color-teal-light);
+    color: var(--mantine-color-teal-6);
+  }
+
+  &[data-variant="violet"] {
+    background: var(--mantine-color-violet-light);
+    color: var(--mantine-color-violet-6);
+  }
+
+  &[data-variant="green"] {
+    background: var(--mantine-color-green-light);
+    color: var(--mantine-color-green-6);
+  }
+
+  &[data-variant="red"] {
+    background: var(--mantine-color-red-light);
+    color: var(--mantine-color-red-6);
+  }
+}
+
+/* Trend colors - applied via data attribute */
+.trendIndicator,
+.trendIcon,
+.changeText {
+  &[data-trend="up"] {
+    color: var(--mantine-color-red-6);
+  }
+
+  &[data-trend="down"] {
+    color: var(--mantine-color-green-6);
+  }
+
+  &[data-trend="neutral"] {
+    color: var(--mantine-color-dimmed);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summaryContainer,
+  .statsGrid,
+  .statCard {
+    animation: none;
+  }
+
+  .statCard {
+    @mixin hover {
+      transform: none;
+
+      & .iconWrapper {
+        transform: none;
+      }
+    }
+  }
+}

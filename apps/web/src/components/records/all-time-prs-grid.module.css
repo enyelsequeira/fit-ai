@@ -1,0 +1,261 @@
+/* All-Time PRs Grid Styles */
+
+.container {
+  animation: fadeIn 300ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.trophyIcon {
+  color: var(--mantine-color-yellow-5);
+}
+
+.exerciseCard {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  border: 1px solid var(--mantine-color-default-border);
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+  animation: cardSlideUp 400ms ease-out backwards;
+
+  @mixin hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mantine-shadow-md);
+  }
+}
+
+@keyframes cardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Data attribute styling for exercise categories */
+.exerciseCard[data-category="strength"] {
+  border-left: 3px solid var(--mantine-color-blue-5);
+}
+
+.exerciseCard[data-category="cardio"] {
+  border-left: 3px solid var(--mantine-color-red-5);
+}
+
+.exerciseCard[data-category="flexibility"] {
+  border-left: 3px solid var(--mantine-color-green-5);
+}
+
+.exerciseCard[data-category="olympic"] {
+  border-left: 3px solid var(--mantine-color-violet-5);
+}
+
+/* Highlight cards with recent PRs */
+.exerciseCard[data-has-recent="true"] {
+  animation:
+    cardSlideUp 400ms ease-out backwards,
+    glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px 3px rgba(34, 197, 94, 0.2);
+  }
+}
+
+.exerciseHeader {
+  width: 100%;
+  border-radius: var(--mantine-radius-md);
+  padding: 4px;
+  margin: -4px;
+  transition: background 200ms ease;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  }
+}
+
+.recordBadge {
+  width: 100%;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-md);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  transition:
+    background 200ms ease,
+    transform 150ms ease;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-4));
+    transform: translateX(4px);
+  }
+}
+
+/* Record type colors via data attribute */
+.recordBadge[data-color="violet"] {
+  @mixin light {
+    background: rgba(139, 92, 246, 0.08);
+  }
+  @mixin dark {
+    background: rgba(139, 92, 246, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(139, 92, 246, 0.15);
+    }
+    @mixin dark {
+      background: rgba(139, 92, 246, 0.2);
+    }
+  }
+}
+
+.recordBadge[data-color="blue"] {
+  @mixin light {
+    background: rgba(59, 130, 246, 0.08);
+  }
+  @mixin dark {
+    background: rgba(59, 130, 246, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(59, 130, 246, 0.15);
+    }
+    @mixin dark {
+      background: rgba(59, 130, 246, 0.2);
+    }
+  }
+}
+
+.recordBadge[data-color="green"] {
+  @mixin light {
+    background: rgba(34, 197, 94, 0.08);
+  }
+  @mixin dark {
+    background: rgba(34, 197, 94, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(34, 197, 94, 0.15);
+    }
+    @mixin dark {
+      background: rgba(34, 197, 94, 0.2);
+    }
+  }
+}
+
+.recordBadge[data-color="orange"] {
+  @mixin light {
+    background: rgba(249, 115, 22, 0.08);
+  }
+  @mixin dark {
+    background: rgba(249, 115, 22, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(249, 115, 22, 0.15);
+    }
+    @mixin dark {
+      background: rgba(249, 115, 22, 0.2);
+    }
+  }
+}
+
+.recordBadge[data-color="red"] {
+  @mixin light {
+    background: rgba(239, 68, 68, 0.08);
+  }
+  @mixin dark {
+    background: rgba(239, 68, 68, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(239, 68, 68, 0.15);
+    }
+    @mixin dark {
+      background: rgba(239, 68, 68, 0.2);
+    }
+  }
+}
+
+.recordBadge[data-color="cyan"] {
+  @mixin light {
+    background: rgba(6, 182, 212, 0.08);
+  }
+  @mixin dark {
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(6, 182, 212, 0.15);
+    }
+    @mixin dark {
+      background: rgba(6, 182, 212, 0.2);
+    }
+  }
+}
+
+.recordBadge[data-color="pink"] {
+  @mixin light {
+    background: rgba(236, 72, 153, 0.08);
+  }
+  @mixin dark {
+    background: rgba(236, 72, 153, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(236, 72, 153, 0.15);
+    }
+    @mixin dark {
+      background: rgba(236, 72, 153, 0.2);
+    }
+  }
+}
+
+.emptyCard {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  border: 1px solid var(--mantine-color-default-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .container,
+  .exerciseCard {
+    animation: none;
+  }
+
+  .exerciseCard {
+    @mixin hover {
+      transform: none;
+    }
+  }
+
+  .exerciseCard[data-has-recent="true"] {
+    animation: none;
+  }
+
+  .recordBadge {
+    @mixin hover {
+      transform: none;
+    }
+  }
+}

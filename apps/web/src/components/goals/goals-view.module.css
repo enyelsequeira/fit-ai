@@ -1,0 +1,264 @@
+/* Goals View Styles */
+/* Using PostCSS features: light-dark(), CSS nesting, and @mixin hover */
+
+/* Hover mixin for consistent hover interactions */
+@define-mixin hover {
+  @media (hover: hover) {
+    &:hover {
+      @mixin-content;
+    }
+  }
+}
+
+.goalsContainer {
+  animation: fadeIn 300ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Summary Stats Styles */
+.statCard {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+
+  @mixin hover {
+    transform: translateY(-2px);
+    box-shadow: light-dark(0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.3));
+  }
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--mantine-radius-md);
+  transition: transform 200ms ease;
+
+  &[data-variant="green"] {
+    background: light-dark(var(--mantine-color-green-1), var(--mantine-color-green-9));
+    color: light-dark(var(--mantine-color-green-6), var(--mantine-color-green-4));
+  }
+
+  &[data-variant="blue"] {
+    background: light-dark(var(--mantine-color-blue-1), var(--mantine-color-blue-9));
+    color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-4));
+  }
+
+  &[data-variant="orange"] {
+    background: light-dark(var(--mantine-color-orange-1), var(--mantine-color-orange-9));
+    color: light-dark(var(--mantine-color-orange-6), var(--mantine-color-orange-4));
+  }
+
+  &[data-variant="violet"] {
+    background: light-dark(var(--mantine-color-violet-1), var(--mantine-color-violet-9));
+    color: light-dark(var(--mantine-color-violet-6), var(--mantine-color-violet-4));
+  }
+}
+
+.statCard:hover .iconWrapper {
+  transform: scale(1.1);
+}
+
+/* Goal Card Styles */
+.goalCard {
+  animation: fadeSlideUp 400ms ease-out backwards;
+  cursor: pointer;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    opacity 200ms ease,
+    filter 200ms ease;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+
+  @mixin hover {
+    transform: translateY(-2px);
+    box-shadow: light-dark(0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.3));
+  }
+
+  /* Status-based conditional styling */
+  &[data-status="completed"] {
+    opacity: 0.8;
+
+    @mixin hover {
+      opacity: 0.9;
+    }
+  }
+
+  &[data-status="paused"] {
+    filter: grayscale(0.3);
+
+    @mixin hover {
+      filter: grayscale(0.1);
+    }
+  }
+
+  &[data-status="abandoned"] {
+    opacity: 0.6;
+    filter: grayscale(0.5);
+
+    @mixin hover {
+      opacity: 0.7;
+      filter: grayscale(0.3);
+    }
+  }
+
+  /* Goal type accent styling */
+  &[data-goal-type="weight"] {
+    border-left: 3px solid light-dark(var(--mantine-color-green-5), var(--mantine-color-green-7));
+  }
+
+  &[data-goal-type="strength"] {
+    border-left: 3px solid light-dark(var(--mantine-color-orange-5), var(--mantine-color-orange-7));
+  }
+
+  &[data-goal-type="body_measurement"] {
+    border-left: 3px solid light-dark(var(--mantine-color-violet-5), var(--mantine-color-violet-7));
+  }
+
+  &[data-goal-type="workout_frequency"] {
+    border-left: 3px solid light-dark(var(--mantine-color-teal-5), var(--mantine-color-teal-7));
+  }
+
+  &[data-goal-type="custom"] {
+    border-left: 3px solid light-dark(var(--mantine-color-indigo-5), var(--mantine-color-indigo-7));
+  }
+}
+
+/* Goal Icon Styles */
+.goalIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--mantine-radius-md);
+  flex-shrink: 0;
+  background: light-dark(var(--mantine-color-blue-1), var(--mantine-color-blue-9));
+  color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-4));
+
+  &[data-type="weight"] {
+    background: light-dark(var(--mantine-color-green-1), var(--mantine-color-green-9));
+    color: light-dark(var(--mantine-color-green-6), var(--mantine-color-green-4));
+  }
+
+  &[data-type="strength"] {
+    background: light-dark(var(--mantine-color-orange-1), var(--mantine-color-orange-9));
+    color: light-dark(var(--mantine-color-orange-6), var(--mantine-color-orange-4));
+  }
+
+  &[data-type="body_measurement"] {
+    background: light-dark(var(--mantine-color-violet-1), var(--mantine-color-violet-9));
+    color: light-dark(var(--mantine-color-violet-6), var(--mantine-color-violet-4));
+  }
+
+  &[data-type="workout_frequency"] {
+    background: light-dark(var(--mantine-color-teal-1), var(--mantine-color-teal-9));
+    color: light-dark(var(--mantine-color-teal-6), var(--mantine-color-teal-4));
+  }
+
+  &[data-type="custom"] {
+    background: light-dark(var(--mantine-color-indigo-1), var(--mantine-color-indigo-9));
+    color: light-dark(var(--mantine-color-indigo-6), var(--mantine-color-indigo-4));
+  }
+}
+
+/* Status Badge Styles */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--mantine-radius-sm);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: capitalize;
+  flex-shrink: 0;
+
+  &[data-status="active"] {
+    background: light-dark(var(--mantine-color-green-1), var(--mantine-color-green-9));
+    color: light-dark(var(--mantine-color-green-7), var(--mantine-color-green-3));
+  }
+
+  &[data-status="paused"] {
+    background: light-dark(var(--mantine-color-yellow-1), var(--mantine-color-yellow-9));
+    color: light-dark(var(--mantine-color-yellow-7), var(--mantine-color-yellow-3));
+  }
+
+  &[data-status="completed"] {
+    background: light-dark(var(--mantine-color-blue-1), var(--mantine-color-blue-9));
+    color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-3));
+  }
+
+  &[data-status="abandoned"] {
+    background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4));
+  }
+}
+
+/* Goal Type Selection Card */
+.typeCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    background 200ms ease;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+
+  @mixin hover {
+    border-color: var(--mantine-primary-color-filled);
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  }
+
+  &[data-selected="true"] {
+    border-color: var(--mantine-primary-color-filled);
+    background: light-dark(var(--mantine-primary-color-light), var(--mantine-color-dark-5));
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .goalsContainer,
+  .statCard,
+  .goalCard {
+    animation: none;
+  }
+
+  .statCard,
+  .goalCard {
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .statCard:hover .iconWrapper {
+    transform: none;
+  }
+}
