@@ -1,3 +1,4 @@
+import type { MouseEventHandler } from "react";
 import {
   Card,
   type CardProps,
@@ -11,8 +12,12 @@ import {
 } from "@mantine/core";
 import type { ReactNode } from "react";
 
-const FitAiCard = (props: CardProps) => {
-  return <Card py={"md"} px={"sm"} withBorder {...props} />;
+interface FitAiCardProps extends CardProps {
+  onClick?: MouseEventHandler<HTMLDivElement>;
+}
+
+const FitAiCard = ({ onClick, ...props }: FitAiCardProps) => {
+  return <Card py={"md"} px={"sm"} withBorder onClick={onClick} {...props} />;
 };
 
 function FitAiCardHeader({ children, ...props }: CardSectionProps & { children?: ReactNode }) {

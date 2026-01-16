@@ -1,0 +1,207 @@
+/* Templates List Styles */
+
+/* ============================================
+   Container
+   ============================================ */
+
+.container {
+  width: 100%;
+  animation: fadeIn 300ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Templates Grid
+   ============================================ */
+
+.templatesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mantine-spacing-lg);
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--mantine-spacing-md);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--mantine-spacing-lg);
+  }
+
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ============================================
+   Results Summary
+   ============================================ */
+
+.resultsSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-xs) 0;
+}
+
+.resultsCount {
+  font-size: var(--mantine-font-size-sm);
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+}
+
+.resultsCountNumber {
+  font-weight: 600;
+  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-2));
+}
+
+/* ============================================
+   Empty State
+   ============================================ */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--mantine-spacing-xl) var(--mantine-spacing-md);
+  min-height: 300px;
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+  border-radius: var(--mantine-radius-lg);
+  border: 2px dashed light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+  animation: fadeSlideUp 400ms ease-out;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.emptyStateIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--mantine-radius-xl);
+  margin-bottom: var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+}
+
+.emptyStateTitle {
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 600;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+  margin: 0 0 var(--mantine-spacing-xs) 0;
+}
+
+.emptyStateMessage {
+  font-size: var(--mantine-font-size-sm);
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+  max-width: 360px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Feature icons in empty state */
+.featureIcon {
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+}
+
+/* ============================================
+   Error State
+   ============================================ */
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--mantine-spacing-xl) var(--mantine-spacing-md);
+  min-height: 300px;
+  background: light-dark(var(--mantine-color-red-0), rgba(224, 49, 49, 0.05));
+  border-radius: var(--mantine-radius-lg);
+  border: 1px solid light-dark(var(--mantine-color-red-2), rgba(224, 49, 49, 0.2));
+  animation: fadeSlideUp 400ms ease-out;
+}
+
+.errorStateIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: light-dark(var(--mantine-color-red-1), rgba(224, 49, 49, 0.15));
+  color: light-dark(var(--mantine-color-red-6), var(--mantine-color-red-5));
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.errorStateTitle {
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 600;
+  color: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-5));
+  margin: 0 0 var(--mantine-spacing-xs) 0;
+}
+
+.errorStateMessage {
+  font-size: var(--mantine-font-size-sm);
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+  max-width: 360px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ============================================
+   Skeleton Loading
+   ============================================ */
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mantine-spacing-lg);
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--mantine-spacing-md);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--mantine-spacing-lg);
+  }
+
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .container,
+  .emptyState,
+  .errorState {
+    animation: none;
+  }
+}

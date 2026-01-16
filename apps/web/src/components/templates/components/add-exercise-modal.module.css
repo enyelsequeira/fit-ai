@@ -1,0 +1,68 @@
+/* Add Exercise Modal Styles */
+
+.exerciseItem {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-sm);
+  border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+    border-color: var(--mantine-primary-color-filled);
+    transform: translateX(4px);
+
+    & .exerciseIcon {
+      transform: scale(1.05);
+    }
+  }
+
+  /* Selected state when choosing exercise */
+  &[data-selected="true"] {
+    background: light-dark(var(--mantine-color-blue-0), var(--mantine-color-blue-9));
+    border-color: var(--mantine-color-blue-5);
+  }
+}
+
+.exerciseIcon {
+  border-radius: var(--mantine-radius-sm);
+  background: light-dark(var(--mantine-color-blue-0), var(--mantine-color-blue-9));
+  color: var(--mantine-primary-color-filled);
+  transition:
+    transform 150ms ease,
+    background 150ms ease;
+  flex-shrink: 0;
+}
+
+.selectedExercise {
+  border-radius: var(--mantine-radius-sm);
+  background: light-dark(var(--mantine-color-teal-0), rgba(32, 201, 151, 0.1));
+  border: 1px solid light-dark(var(--mantine-color-teal-4), var(--mantine-color-teal-7));
+}
+
+.selectedIcon {
+  background: var(--mantine-color-teal-6);
+  color: white;
+  border-radius: var(--mantine-radius-sm);
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exerciseItem {
+    transition: none;
+
+    @mixin hover {
+      transform: none;
+    }
+
+    & .exerciseIcon {
+      transition: none;
+    }
+  }
+}

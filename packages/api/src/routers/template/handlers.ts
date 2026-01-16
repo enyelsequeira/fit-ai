@@ -1,3 +1,4 @@
+import type { SQL } from "drizzle-orm";
 import { db } from "@fit-ai/db";
 import { exercise } from "@fit-ai/db/schema/exercise";
 import { exerciseSet, workout, workoutExercise } from "@fit-ai/db/schema/workout";
@@ -201,7 +202,7 @@ export const listTemplatesHandler: ListTemplatesRouteHandler = async ({ input, c
     ownershipCondition = eq(workoutTemplate.userId, userId);
   }
 
-  const conditions: ReturnType<typeof eq>[] = [];
+  const conditions: SQL[] = [];
 
   if (input.folderId !== undefined) {
     if (input.includeNoFolder) {
@@ -353,18 +354,21 @@ export const duplicateTemplateHandler: DuplicateTemplateRouteHandler = async ({
     .where(eq(workoutTemplateExercise.templateId, input.id))
     .orderBy(asc(workoutTemplateExercise.order));
 
-  for (const ex of originalExercises) {
-    await db.insert(workoutTemplateExercise).values({
-      templateId: newTemplate.id,
-      exerciseId: ex.exerciseId,
-      order: ex.order,
-      supersetGroupId: ex.supersetGroupId,
-      notes: ex.notes,
-      targetSets: ex.targetSets,
-      targetReps: ex.targetReps,
-      targetWeight: ex.targetWeight,
-      restSeconds: ex.restSeconds,
-    });
+  // Batch insert all exercises at once to avoid N+1 queries
+  if (originalExercises.length > 0) {
+    await db.insert(workoutTemplateExercise).values(
+      originalExercises.map((ex) => ({
+        templateId: newTemplate.id,
+        exerciseId: ex.exerciseId,
+        order: ex.order,
+        supersetGroupId: ex.supersetGroupId,
+        notes: ex.notes,
+        targetSets: ex.targetSets,
+        targetReps: ex.targetReps,
+        targetWeight: ex.targetWeight,
+        restSeconds: ex.restSeconds,
+      })),
+    );
   }
 
   const exerciseDetails = await db
@@ -427,32 +431,55 @@ export const startWorkoutHandler: StartWorkoutRouteHandler = async ({ input, con
     .where(eq(workoutTemplateExercise.templateId, input.id))
     .orderBy(asc(workoutTemplateExercise.order));
 
-  for (const templateEx of templateExercises) {
-    const workoutExerciseResult = await db
+  // Batch insert all workout exercises at once to avoid N+1 queries
+  if (templateExercises.length > 0) {
+    const createdWorkoutExercises = await db
       .insert(workoutExercise)
-      .values({
-        workoutId: newWorkout.id,
-        exerciseId: templateEx.exerciseId,
-        order: templateEx.order,
-        notes: templateEx.notes,
-        supersetGroupId: templateEx.supersetGroupId,
-      })
+      .values(
+        templateExercises.map((templateEx) => ({
+          workoutId: newWorkout.id,
+          exerciseId: templateEx.exerciseId,
+          order: templateEx.order,
+          notes: templateEx.notes,
+          supersetGroupId: templateEx.supersetGroupId,
+        })),
+      )
       .returning();
 
-    const newWorkoutExercise = workoutExerciseResult[0];
-    if (newWorkoutExercise) {
-      for (let setNum = 1; setNum <= templateEx.targetSets; setNum++) {
-        await db.insert(exerciseSet).values({
-          workoutExerciseId: newWorkoutExercise.id,
-          setNumber: setNum,
-          targetReps: templateEx.targetReps
-            ? Number.parseInt(templateEx.targetReps.split("-")[0] ?? "0", 10)
-            : null,
-          targetWeight: templateEx.targetWeight,
-          restTimeSeconds: templateEx.restSeconds,
-          isCompleted: false,
-        });
+    // Prepare all exercise sets for batch insert
+    const allSets: {
+      workoutExerciseId: number;
+      setNumber: number;
+      targetReps: number | null;
+      targetWeight: number | null;
+      restTimeSeconds: number | null;
+      isCompleted: boolean;
+    }[] = [];
+
+    for (let i = 0; i < templateExercises.length; i++) {
+      const templateEx = templateExercises[i];
+      const workoutEx = createdWorkoutExercises[i];
+
+      if (templateEx && workoutEx) {
+        for (let setNum = 1; setNum <= templateEx.targetSets; setNum++) {
+          allSets.push({
+            workoutExerciseId: workoutEx.id,
+            setNumber: setNum,
+            targetReps: templateEx.targetReps
+              ? Number.parseInt(templateEx.targetReps.split("-")[0] ?? "0", 10)
+              : null,
+            targetWeight: templateEx.targetWeight,
+            restTimeSeconds: templateEx.restSeconds,
+            isCompleted: false,
+          });
+        }
       }
+    }
+
+    // Insert exercise sets one at a time to avoid SQLite/D1 variable limits
+    // D1 has stricter limits than standard SQLite
+    for (const set of allSets) {
+      await db.insert(exerciseSet).values(set);
     }
   }
 
@@ -479,7 +506,8 @@ export const addExerciseHandler: AddExerciseRouteHandler = async ({ input, conte
     .where(eq(exercise.id, input.exerciseId))
     .limit(1);
 
-  if (!exerciseResult[0]) {
+  const foundExercise = exerciseResult[0];
+  if (!foundExercise) {
     notFound("Exercise", input.exerciseId);
   }
 
@@ -512,7 +540,16 @@ export const addExerciseHandler: AddExerciseRouteHandler = async ({ input, conte
     throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to add exercise" });
   }
 
-  return templateExercise;
+  // Return with nested exercise details
+  return {
+    ...templateExercise,
+    exercise: {
+      id: foundExercise.id,
+      name: foundExercise.name,
+      category: foundExercise.category,
+      exerciseType: foundExercise.exerciseType,
+    },
+  };
 };
 
 export const updateExerciseHandler: UpdateExerciseRouteHandler = async ({ input, context }) => {

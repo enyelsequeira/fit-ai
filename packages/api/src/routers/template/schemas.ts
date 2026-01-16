@@ -215,11 +215,27 @@ export type StartWorkoutInput = z.infer<typeof startWorkoutSchema>;
 
 /**
  * Add exercise to template input schema (based on drizzle-zod insert schema)
+ * Note: order, targetSets, and restSeconds are optional here because they have
+ * defaults (order is auto-calculated, others have DB defaults)
  */
 export const addExerciseSchema = insertWorkoutTemplateExerciseSchema
   .omit({ templateId: true })
   .extend({
     id: z.coerce.number().describe("ID of the template to add exercise to"),
+    // Make these optional since they have defaults or are auto-calculated
+    order: z
+      .number()
+      .min(1)
+      .optional()
+      .describe("Order of exercise in template (auto-calculated if not provided)"),
+    targetSets: z.number().min(1).max(20).optional().default(3).describe("Target number of sets"),
+    restSeconds: z
+      .number()
+      .min(0)
+      .max(600)
+      .optional()
+      .default(90)
+      .describe("Rest time between sets in seconds"),
   });
 
 export type AddExerciseInput = z.infer<typeof addExerciseSchema>;

@@ -315,18 +315,18 @@ erDiagram
 
 The database consists of **20 tables** organized into 8 domains:
 
-| Domain | Tables | Description |
-|--------|--------|-------------|
-| **Auth** | `user`, `session`, `account`, `verification` | User authentication and sessions |
-| **Exercise Library** | `exercise` | 800+ exercises with images, instructions, metadata |
-| **Workout System** | `workout`, `workout_exercise`, `exercise_set` | Track workout sessions with sets/reps |
-| **Templates** | `template_folder`, `workout_template`, `workout_template_exercise` | Reusable workout blueprints |
-| **Goals** | `goal`, `goal_progress` | Weight, strength, measurement, frequency goals |
-| **Body Tracking** | `body_measurement`, `progress_photo` | Physical measurements and progress photos |
-| **Recovery** | `daily_check_in`, `muscle_recovery` | Wellness tracking and muscle fatigue |
-| **Analytics** | `personal_record`, `training_summary` | PRs and aggregated training stats |
-| **AI** | `user_training_preferences`, `ai_generated_workout` | AI workout generation |
-| **Settings** | `user_settings` | User preferences |
+| Domain               | Tables                                                             | Description                                        |
+| -------------------- | ------------------------------------------------------------------ | -------------------------------------------------- |
+| **Auth**             | `user`, `session`, `account`, `verification`                       | User authentication and sessions                   |
+| **Exercise Library** | `exercise`                                                         | 800+ exercises with images, instructions, metadata |
+| **Workout System**   | `workout`, `workout_exercise`, `exercise_set`                      | Track workout sessions with sets/reps              |
+| **Templates**        | `template_folder`, `workout_template`, `workout_template_exercise` | Reusable workout blueprints                        |
+| **Goals**            | `goal`, `goal_progress`                                            | Weight, strength, measurement, frequency goals     |
+| **Body Tracking**    | `body_measurement`, `progress_photo`                               | Physical measurements and progress photos          |
+| **Recovery**         | `daily_check_in`, `muscle_recovery`                                | Wellness tracking and muscle fatigue               |
+| **Analytics**        | `personal_record`, `training_summary`                              | PRs and aggregated training stats                  |
+| **AI**               | `user_training_preferences`, `ai_generated_workout`                | AI workout generation                              |
+| **Settings**         | `user_settings`                                                    | User preferences                                   |
 
 ## 📁 Schema Files
 
@@ -354,18 +354,21 @@ packages/db/src/schema/
 ### High Priority
 
 #### 1. Social Features & Community
+
 - [ ] **User Following System**: Add `user_follows` table for social connections
 - [ ] **Workout Sharing**: Share completed workouts with followers
 - [ ] **Public Leaderboards**: Exercise-specific leaderboards for PRs
 - [ ] **Workout Comments/Likes**: Add `workout_comment` and `workout_like` tables
 
 #### 2. Advanced Training Features
+
 - [ ] **Periodization Support**: Add `training_block` and `mesocycle` tables for structured programming
 - [ ] **Deload Week Detection**: Auto-suggest deload based on fatigue accumulation
 - [ ] **Volume Landmarks**: Track MV, MEV, MAV, MRV per muscle group
 - [ ] **Fatigue Management**: Implement SFR (Stimulus to Fatigue Ratio) tracking
 
 #### 3. Enhanced AI Capabilities
+
 - [ ] **Workout Recommendations**: Use historical data for personalized suggestions
 - [ ] **Auto-Regulation**: Adjust sets/reps based on daily readiness score
 - [ ] **Exercise Substitutions**: Smart alternatives based on equipment/injuries
@@ -374,18 +377,21 @@ packages/db/src/schema/
 ### Medium Priority
 
 #### 4. Nutrition Integration
+
 - [ ] **Meal Logging**: Add `meal`, `food_item`, and `meal_food` tables
 - [ ] **Calorie Tracking**: Daily calorie/macro goals with progress
 - [ ] **Meal Planning**: Templates for nutrition similar to workout templates
 - [ ] **Recipe Database**: User-submitted and curated recipes
 
 #### 5. Wearable Integration
+
 - [ ] **Heart Rate Zones**: Track HR during workouts from wearables
 - [ ] **Sleep Data Sync**: Import sleep data from Apple Health/Garmin
 - [ ] **Step Counting**: Daily activity tracking integration
 - [ ] **HRV Trends**: Long-term HRV analysis for recovery optimization
 
 #### 6. Enhanced Analytics
+
 - [ ] **Muscle Balance Analysis**: Identify lagging muscle groups
 - [ ] **Strength Standards**: Compare PRs to population percentiles
 - [ ] **Workout Heatmap**: Calendar view of training consistency
@@ -394,18 +400,21 @@ packages/db/src/schema/
 ### Lower Priority
 
 #### 7. Gamification
+
 - [ ] **Achievement System**: Add `achievement` and `user_achievement` tables
 - [ ] **Badges**: Unlock badges for milestones (100 workouts, 1000kg total volume, etc.)
 - [ ] **Streaks**: Visual streak tracking with rewards
 - [ ] **Challenges**: Time-limited community challenges
 
 #### 8. Coaching Features
+
 - [ ] **Coach-Client Relationship**: Add `coach_client` table
 - [ ] **Program Assignment**: Coaches can assign templates to clients
 - [ ] **Client Dashboard**: Coaches view client progress
 - [ ] **Feedback System**: Coaches can comment on client workouts
 
 #### 9. Performance Optimizations
+
 - [ ] **Real-time Sync**: WebSocket support for live workout updates
 - [ ] **Offline Mode**: Local-first with background sync
 - [ ] **Image Optimization**: Compress and resize progress photos
@@ -414,12 +423,15 @@ packages/db/src/schema/
 ## 🔗 Key Relationships
 
 ### User-Centric Design
+
 Every table (except `verification`) relates back to `user`, enabling:
+
 - Complete data isolation per user
 - Cascade deletes when user is removed
 - Easy user data export (GDPR compliance)
 
 ### Workout Flow
+
 ```
 user → workout → workout_exercise → exercise_set
                        ↓
@@ -427,6 +439,7 @@ user → workout → workout_exercise → exercise_set
 ```
 
 ### Template Flow
+
 ```
 user → template_folder → workout_template → workout_template_exercise
                                                       ↓
@@ -434,6 +447,7 @@ user → template_folder → workout_template → workout_template_exercise
 ```
 
 ### Goal Tracking
+
 ```
 user → goal → goal_progress (history)
          ↓
@@ -441,6 +455,7 @@ user → goal → goal_progress (history)
 ```
 
 ### Recovery System
+
 ```
 user → daily_check_in (subjective wellness)
    → muscle_recovery (calculated fatigue per muscle)

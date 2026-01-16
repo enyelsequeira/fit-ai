@@ -200,23 +200,12 @@ export function MuscleGroupTags({
   return (
     <Group gap={4} wrap="wrap">
       {visible.map((muscle) => (
-        <Badge
-          key={muscle}
-          size={badgeSize}
-          variant="outline"
-          color="gray"
-          style={badgeStyles}
-        >
+        <Badge key={muscle} size={badgeSize} variant="outline" color="gray" style={badgeStyles}>
           {muscle}
         </Badge>
       ))}
       {remaining > 0 && (
-        <Badge
-          size={badgeSize}
-          variant="outline"
-          color="gray"
-          style={badgeStyles}
-        >
+        <Badge size={badgeSize} variant="outline" color="gray" style={badgeStyles}>
           +{remaining} more
         </Badge>
       )}

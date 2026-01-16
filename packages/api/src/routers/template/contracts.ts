@@ -227,7 +227,7 @@ export const addExerciseRouteContract = protectedProcedure
     tags: ["Templates"],
   })
   .input(addExerciseSchema)
-  .output(templateExerciseOutputSchema.omit({ exercise: true }));
+  .output(templateExerciseOutputSchema);
 
 /**
  * Update an exercise in a template
