@@ -1,16 +1,6 @@
-/**
- * FoldersSidebar - Sidebar with folders navigation and stats
- * Uses hooks directly instead of receiving props
- */
-
 import { Tooltip } from "@mantine/core";
-import {
-  IconFolder,
-  IconFolderPlus,
-  IconPencil,
-  IconTemplate,
-} from "@tabler/icons-react";
-import { useTemplateFolders, useTemplatesList } from "../queries/use-queries";
+import { IconFolder, IconFolderPlus, IconPencil, IconTemplate } from "@tabler/icons-react";
+import { useTemplateFolders, useTemplatesList } from "../../queries/use-queries.ts";
 import styles from "./folders-sidebar.module.css";
 
 interface FoldersSidebarProps {
@@ -156,11 +146,7 @@ export function FoldersSidebar({
             </div>
             <p className={styles.emptyStateTitle}>No folders yet</p>
             <p className={styles.emptyStateText}>Create folders to organize your templates</p>
-            <button
-              type="button"
-              className={styles.emptyStateButton}
-              onClick={onCreateFolder}
-            >
+            <button type="button" className={styles.emptyStateButton} onClick={onCreateFolder}>
               <IconFolderPlus size={14} />
               Create Folder
             </button>

@@ -8,7 +8,7 @@ import {
   workoutTemplateExercise,
 } from "@fit-ai/db/schema/workout-template";
 import { ORPCError } from "@orpc/server";
-import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, like, sql } from "drizzle-orm";
 
 import { badRequest, notFound, notOwner } from "../../errors";
 
@@ -120,6 +120,17 @@ export const listFoldersHandler: ListFoldersRouteHandler = async ({ context }) =
 export const createFolderHandler: CreateFolderRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
 
+  // Check for existing folder with same name for this user
+  const existingFolder = await db
+    .select({ id: templateFolder.id })
+    .from(templateFolder)
+    .where(and(eq(templateFolder.userId, userId), eq(templateFolder.name, input.name)))
+    .limit(1);
+
+  if (existingFolder.length > 0) {
+    throw new ORPCError("CONFLICT", { message: "A folder with this name already exists" });
+  }
+
   const maxOrderResult = await db
     .select({ maxOrder: sql<number>`COALESCE(MAX(${templateFolder.order}), -1)` })
     .from(templateFolder)
@@ -143,6 +154,25 @@ export const updateFolderHandler: UpdateFolderRouteHandler = async ({ input, con
   const userId = context.session.user.id;
 
   await verifyFolderOwnership(input.id, userId);
+
+  // Check for existing folder with same name (excluding current folder)
+  if (input.name !== undefined) {
+    const existingFolder = await db
+      .select({ id: templateFolder.id })
+      .from(templateFolder)
+      .where(
+        and(
+          eq(templateFolder.userId, userId),
+          eq(templateFolder.name, input.name),
+          sql`${templateFolder.id} != ${input.id}`,
+        ),
+      )
+      .limit(1);
+
+    if (existingFolder.length > 0) {
+      throw new ORPCError("CONFLICT", { message: "A folder with this name already exists" });
+    }
+  }
 
   const updateData: Partial<typeof templateFolder.$inferInsert> = {};
   if (input.name !== undefined) updateData.name = input.name;
@@ -331,12 +361,33 @@ export const duplicateTemplateHandler: DuplicateTemplateRouteHandler = async ({
 
   const template = await verifyTemplateOwnership(input.id, userId);
 
+  // Generate smart copy name: "Template Copy 1", "Template Copy 2", etc.
+  // First, strip any existing copy suffixes to get the base name
+  const baseName = template.name.replace(/ Copy \d+$/, "").replace(/ \(Copy\)$/, "");
+
+  // Find existing copies to determine the next copy number
+  const existingCopies = await db
+    .select({ name: workoutTemplate.name })
+    .from(workoutTemplate)
+    .where(and(eq(workoutTemplate.userId, userId), like(workoutTemplate.name, `${baseName} Copy%`)));
+
+  // Extract the highest copy number from existing copies
+  let maxCopyNum = 0;
+  for (const copy of existingCopies) {
+    const match = copy.name.match(/ Copy (\d+)$/);
+    if (match?.[1]) {
+      maxCopyNum = Math.max(maxCopyNum, Number.parseInt(match[1], 10));
+    }
+  }
+
+  const newName = `${baseName} Copy ${maxCopyNum + 1}`;
+
   const newTemplateResult = await db
     .insert(workoutTemplate)
     .values({
       userId,
       folderId: template.folderId,
-      name: `${template.name} (Copy)`,
+      name: newName,
       description: template.description,
       estimatedDurationMinutes: template.estimatedDurationMinutes,
       isPublic: false,

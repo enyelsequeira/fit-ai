@@ -1,11 +1,7 @@
-/**
- * EditExerciseForm - Inline form for editing exercise targets (sets, reps, weight, rest)
- */
-
 import { useState } from "react";
 import { Box, Button, Group, NumberInput, Stack, Text, Textarea, TextInput } from "@mantine/core";
 import type { TemplateExercise } from "../types";
-import styles from "./template-detail-modal.module.css";
+import styles from "./template-detail/template-detail-modal.module.css";
 
 export interface ExerciseUpdateData {
   targetSets?: number;

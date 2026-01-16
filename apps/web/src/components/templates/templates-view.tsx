@@ -1,17 +1,12 @@
-/**
- * TemplatesView - Main templates page with sidebar layout
- * Components use hooks directly for data fetching
- */
-
-import { useCallback, useState } from "react";
-import { Box, Text, Group, Button, Tooltip } from "@mantine/core";
+import { useState } from "react";
+import { Box, Text, Group, Button, Tooltip, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconTemplate } from "@tabler/icons-react";
-import { FoldersSidebar } from "./components/folders-sidebar";
-import { TemplatesList } from "./components/templates-list";
+import { FoldersSidebar } from "./components/folders-sidebar/folders-sidebar.tsx";
+import { TemplatesList } from "./components/template-list/templates-list.tsx";
 import { TemplatesHeader } from "./components/templates-header";
-import { CreateTemplateModal } from "./components/create-template-modal";
-import { TemplateDetailModal } from "./components/template-detail-modal";
+import { CreateTemplateModal } from "./components/create-template-modal/create-template-modal.tsx";
+import { TemplateDetailModal } from "./components/template-detail/template-detail-modal.tsx";
 import { FolderManagerModal } from "./components/folder-manager-modal";
 import { useTemplateFolders } from "./queries/use-queries";
 import styles from "./templates-view.module.css";
@@ -36,38 +31,35 @@ export function TemplatesView() {
   const [editingFolder, setEditingFolder] = useState<{ id: number; name: string } | null>(null);
 
   // Handlers
-  const handleTemplateClick = useCallback(
-    (templateId: number) => {
-      setSelectedTemplateId(templateId);
-      openDetailModal();
-    },
-    [openDetailModal],
-  );
-
-  const handleOpenFolderModal = useCallback(
-    (folder?: { id: number; name: string }) => {
-      setEditingFolder(folder ?? null);
-      openFolderModal();
-    },
-    [openFolderModal],
-  );
+  const handleOpenFolderModal = (folder?: { id: number; name: string }) => {
+    setEditingFolder(folder ?? null);
+    openFolderModal();
+  };
 
   // Get current folder name
   const currentFolderName =
     selectedFolderId === null
       ? "All Templates"
-      : folders.find((f) => f.id === selectedFolderId)?.name ?? "Unknown Folder";
+      : (folders.find((f) => f.id === selectedFolderId)?.name ?? "Unknown Folder");
 
   return (
-    <Box className={styles.pageContainer}>
+    <Flex className={styles.pageContainer}>
       {/* Sidebar */}
-      <aside className={styles.sidebar}>
+      <div className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <Group gap="xs" align="center">
             <Tooltip label="Templates">
-              <Box className={styles.logoIcon}>
+              <Flex
+                align={"center"}
+                justify={"center"}
+                w={36}
+                h={36}
+                bdrs={"md"}
+                c={"white"}
+                className={styles.logoIcon}
+              >
                 <IconTemplate size={20} />
-              </Box>
+              </Flex>
             </Tooltip>
             <Text fw={600} size="lg">
               Templates
@@ -84,7 +76,7 @@ export function TemplatesView() {
           />
         </div>
 
-        <div className={styles.sidebarFooter}>
+        <Box p={"md"} className={styles.sidebarFooter}>
           <Tooltip label="Create a new workout template">
             <Button
               fullWidth
@@ -95,17 +87,20 @@ export function TemplatesView() {
               New Template
             </Button>
           </Tooltip>
-        </div>
-      </aside>
+        </Box>
+      </div>
 
       {/* Main Content */}
-      <main className={styles.mainContent}>
+      <Flex direction={"column"} flex={1} miw={0}>
         <TemplatesHeader
           currentFolderName={currentFolderName}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onCreateTemplate={openCreateModal}
           onCreateFolder={() => handleOpenFolderModal()}
+          folders={folders}
+          selectedFolderId={selectedFolderId}
+          onFolderChange={setSelectedFolderId}
         />
 
         {/* Content Area */}
@@ -114,12 +109,15 @@ export function TemplatesView() {
             <TemplatesList
               folderId={selectedFolderId}
               searchQuery={searchQuery}
-              onTemplateClick={handleTemplateClick}
+              onTemplateClick={(id) => {
+                setSelectedTemplateId(id);
+                openDetailModal();
+              }}
               onCreateTemplate={openCreateModal}
             />
           </div>
         </div>
-      </main>
+      </Flex>
 
       {/* Modals */}
       <CreateTemplateModal
@@ -144,6 +142,6 @@ export function TemplatesView() {
         onClose={closeDetailModal}
         templateId={selectedTemplateId}
       />
-    </Box>
+    </Flex>
   );
 }

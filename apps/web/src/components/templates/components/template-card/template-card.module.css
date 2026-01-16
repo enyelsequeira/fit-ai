@@ -13,7 +13,7 @@
     border-color 200ms ease;
   animation: cardEntrance 400ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 
-  &:hover {
+  @mixin hover {
     transform: translateY(-4px) scale(1.01);
     box-shadow:
       0 12px 24px -8px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.4)),
@@ -226,9 +226,11 @@
     border-color 150ms ease;
 }
 
-.exerciseChip:hover {
-  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
-  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+.exerciseChip {
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+    border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  }
 }
 
 .moreExercises {
@@ -326,9 +328,11 @@
   color: white;
   box-shadow: 0 2px 8px light-dark(rgba(56, 178, 172, 0.3), rgba(56, 178, 172, 0.4));
 
-  &:hover:not(:disabled) {
-    background: var(--mantine-color-teal-7);
-    box-shadow: 0 4px 12px light-dark(rgba(56, 178, 172, 0.4), rgba(56, 178, 172, 0.5));
+  @mixin hover {
+    &:not(:disabled) {
+      background: var(--mantine-color-teal-7);
+      box-shadow: 0 4px 12px light-dark(rgba(56, 178, 172, 0.4), rgba(56, 178, 172, 0.5));
+    }
   }
 }
 
@@ -336,8 +340,10 @@
   background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
 
-  &:hover:not(:disabled) {
-    background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+  @mixin hover {
+    &:not(:disabled) {
+      background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+    }
   }
 }
 
@@ -345,8 +351,10 @@
   background: light-dark(var(--mantine-color-red-1), var(--mantine-color-red-9));
   color: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4));
 
-  &:hover:not(:disabled) {
-    background: light-dark(var(--mantine-color-red-2), var(--mantine-color-red-8));
+  @mixin hover {
+    &:not(:disabled) {
+      background: light-dark(var(--mantine-color-red-2), var(--mantine-color-red-8));
+    }
   }
 }
 

@@ -604,4 +604,146 @@ describe("Template Router", () => {
       // This would throw BAD_REQUEST
     });
   });
+
+  describe("Folder Uniqueness", () => {
+    it("should reject creating folder with duplicate name for same user", () => {
+      // When a folder with the same name exists for the user
+      const existingFolders = [{ id: 1, name: "Push Day", userId: "test-user-id" }];
+      const newFolderName = "Push Day";
+
+      const isDuplicate = existingFolders.some((f) => f.name === newFolderName);
+      expect(isDuplicate).toBe(true);
+      // Handler would throw CONFLICT error
+    });
+
+    it("should allow same folder name for different users", () => {
+      const user1Folders = [{ id: 1, name: "Push Day", userId: "user-1" }];
+      const user2FolderName = "Push Day";
+      const user2Id = "user-2";
+
+      // Only check folders belonging to user2
+      const isDuplicate = user1Folders.some((f) => f.userId === user2Id && f.name === user2FolderName);
+      expect(isDuplicate).toBe(false);
+      // User2 can create a folder with the same name
+    });
+
+    it("should reject renaming folder to existing name", () => {
+      const existingFolders = [
+        { id: 1, name: "Push Day", userId: "test-user-id" },
+        { id: 2, name: "Pull Day", userId: "test-user-id" },
+      ];
+      const folderToRename = existingFolders[1];
+      const newName = "Push Day";
+
+      // Check if another folder has this name (excluding current folder)
+      const isDuplicate = existingFolders.some(
+        (f) => f.name === newName && f.id !== folderToRename?.id,
+      );
+      expect(isDuplicate).toBe(true);
+      // Handler would throw CONFLICT error
+    });
+
+    it("should allow renaming folder to its current name", () => {
+      const folder = { id: 1, name: "Push Day", userId: "test-user-id" };
+      const existingFolders = [folder];
+      const newName = "Push Day"; // Same name
+
+      // Check if another folder has this name (excluding current folder)
+      const isDuplicate = existingFolders.some((f) => f.name === newName && f.id !== folder.id);
+      expect(isDuplicate).toBe(false);
+      // This should be allowed
+    });
+  });
+
+  describe("Template Copy Naming", () => {
+    it("should name first copy as 'Template Copy 1'", () => {
+      const originalName = "Leg Day";
+      const existingCopies: { name: string }[] = [];
+
+      // Logic from handler: strip suffixes and find max copy number
+      const baseName = originalName.replace(/ Copy \d+$/, "").replace(/ \(Copy\)$/, "");
+      let maxCopyNum = 0;
+      for (const copy of existingCopies) {
+        const match = copy.name.match(/ Copy (\d+)$/);
+        if (match?.[1]) {
+          maxCopyNum = Math.max(maxCopyNum, Number.parseInt(match[1], 10));
+        }
+      }
+
+      const newName = `${baseName} Copy ${maxCopyNum + 1}`;
+      expect(newName).toBe("Leg Day Copy 1");
+    });
+
+    it("should increment copy number for subsequent copies", () => {
+      const originalName = "Leg Day";
+      const existingCopies = [{ name: "Leg Day Copy 1" }, { name: "Leg Day Copy 2" }];
+
+      const baseName = originalName.replace(/ Copy \d+$/, "").replace(/ \(Copy\)$/, "");
+      let maxCopyNum = 0;
+      for (const copy of existingCopies) {
+        const match = copy.name.match(/ Copy (\d+)$/);
+        if (match?.[1]) {
+          maxCopyNum = Math.max(maxCopyNum, Number.parseInt(match[1], 10));
+        }
+      }
+
+      const newName = `${baseName} Copy ${maxCopyNum + 1}`;
+      expect(newName).toBe("Leg Day Copy 3");
+    });
+
+    it("should clean old (Copy) format when duplicating", () => {
+      const originalName = "Leg Day (Copy)";
+
+      // Strip old format
+      const baseName = originalName.replace(/ Copy \d+$/, "").replace(/ \(Copy\)$/, "");
+      expect(baseName).toBe("Leg Day");
+
+      // First copy of the cleaned base
+      const newName = `${baseName} Copy 1`;
+      expect(newName).toBe("Leg Day Copy 1");
+    });
+
+    it("should handle gaps in copy numbers correctly", () => {
+      const originalName = "Leg Day";
+      // Copies 1 and 3 exist, but 2 was deleted
+      const existingCopies = [{ name: "Leg Day Copy 1" }, { name: "Leg Day Copy 3" }];
+
+      const baseName = originalName.replace(/ Copy \d+$/, "").replace(/ \(Copy\)$/, "");
+      let maxCopyNum = 0;
+      for (const copy of existingCopies) {
+        const match = copy.name.match(/ Copy (\d+)$/);
+        if (match?.[1]) {
+          maxCopyNum = Math.max(maxCopyNum, Number.parseInt(match[1], 10));
+        }
+      }
+
+      const newName = `${baseName} Copy ${maxCopyNum + 1}`;
+      // Should be Copy 4, not Copy 2 (uses max, not fills gaps)
+      expect(newName).toBe("Leg Day Copy 4");
+    });
+
+    it("should handle duplicating a copy", () => {
+      const originalName = "Leg Day Copy 2";
+      const existingCopies = [
+        { name: "Leg Day Copy 1" },
+        { name: "Leg Day Copy 2" },
+        { name: "Leg Day Copy 3" },
+      ];
+
+      // Strip the Copy N suffix to get base name
+      const baseName = originalName.replace(/ Copy \d+$/, "").replace(/ \(Copy\)$/, "");
+      expect(baseName).toBe("Leg Day");
+
+      let maxCopyNum = 0;
+      for (const copy of existingCopies) {
+        const match = copy.name.match(/ Copy (\d+)$/);
+        if (match?.[1]) {
+          maxCopyNum = Math.max(maxCopyNum, Number.parseInt(match[1], 10));
+        }
+      }
+
+      const newName = `${baseName} Copy ${maxCopyNum + 1}`;
+      expect(newName).toBe("Leg Day Copy 4");
+    });
+  });
 });

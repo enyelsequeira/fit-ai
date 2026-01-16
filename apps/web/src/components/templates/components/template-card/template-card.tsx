@@ -1,15 +1,5 @@
-/**
- * TemplateCard - Modern template card component
- * Features:
- * - Visible actions on hover (Start Workout, Duplicate, Delete)
- * - Exercise preview chips
- * - Visual hierarchy with duration, folder, and usage stats
- * - Smooth animations and micro-interactions
- * - Keyboard accessible
- */
-
 import type { KeyboardEvent, MouseEvent } from "react";
-import { useCallback, useState } from "react";
+import { useMemo, useState } from "react";
 import { Tooltip, Modal, Stack, Text, Button } from "@mantine/core";
 import {
   IconTemplate,
@@ -29,91 +19,35 @@ import {
   useDeleteTemplate,
   useDuplicateTemplate,
   useStartWorkout,
-} from "@/components/templates/hooks/use-mutations";
+} from "@/components/templates/hooks/use-mutations.ts";
+import { useTemplateById, useTemplateFolders } from "../../queries/use-queries.ts";
 import styles from "./template-card.module.css";
-
-// ============================================================================
-// Types
-// ============================================================================
-
-interface TemplateExercise {
-  id: number;
-  exercise?: {
-    id: number;
-    name: string;
-    category: string;
-    exerciseType: string;
-  };
-}
-
-export interface TemplateCardData {
-  id: number;
-  name: string;
-  description: string | null;
-  estimatedDurationMinutes: number | null;
-  isPublic: boolean;
-  usageCount: number;
-  exerciseCount?: number;
-  exercises?: TemplateExercise[];
-}
+import { formatDuration } from "@/components/templates/utils.ts";
 
 interface TemplateCardProps {
-  /** Template data object */
-  template: TemplateCardData;
-  /** Folder name for badge display */
-  folderName?: string;
-  /** Callback when card body is clicked (opens detail modal) */
+  templateId: number;
   onClick?: (id: number) => void;
-  /** Animation delay in ms for stagger effect */
   animationDelay?: number;
 }
 
-// ============================================================================
-// Helper Functions
-// ============================================================================
+export function TemplateCard({ templateId, onClick, animationDelay = 0 }: TemplateCardProps) {
+  // Fetch template data using hook
+  const { data: template, isLoading } = useTemplateById(templateId);
+  const { data: folders } = useTemplateFolders();
 
-function formatDuration(minutes: number | null): string {
-  if (!minutes) return "-";
-  if (minutes < 60) return `${minutes}m`;
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
-}
-
-// ============================================================================
-// Component
-// ============================================================================
-
-export function TemplateCard({
-  template,
-  folderName,
-  onClick,
-  animationDelay = 0,
-}: TemplateCardProps) {
-  const {
-    id,
-    name,
-    description,
-    estimatedDurationMinutes,
-    isPublic,
-    usageCount,
-    exerciseCount,
-    exercises = [],
-  } = template;
+  // Get folder name from folders data
+  const folderName = useMemo(() => {
+    if (!template?.folderId || !folders) return undefined;
+    const folder = folders.find((f) => f.id === template.folderId);
+    return folder?.name;
+  }, [template?.folderId, folders]);
 
   const navigate = useNavigate();
-  const isHighUsage = usageCount > 10;
 
-  // Prepare exercise preview
-  const displayExercises = exercises.slice(0, 3);
-  const remainingExercises = exercises.length > 3 ? exercises.length - 3 : 0;
-
-  // Mutations
   const startWorkoutMutation = useStartWorkout();
   const deleteTemplateMutation = useDeleteTemplate();
   const duplicateTemplateMutation = useDuplicateTemplate();
 
-  // Confirmation dialog state
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const isAnyLoading =
@@ -121,74 +55,56 @@ export function TemplateCard({
     deleteTemplateMutation.isPending ||
     duplicateTemplateMutation.isPending;
 
-  // ============================================================================
-  // Handlers
-  // ============================================================================
-
-  const handleCardClick = useCallback(() => {
-    onClick?.(id);
-  }, [id, onClick]);
-
-  const handleCardKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        handleCardClick();
-      }
-    },
-    [handleCardClick],
-  );
-
-  const handleStartWorkout = useCallback(
-    (e: MouseEvent) => {
-      e.stopPropagation();
-      startWorkoutMutation.mutate(
-        { id },
-        {
-          onSuccess: (data) => {
-            navigate({ to: `/dashboard/workouts/${data.id}` as string });
-          },
-        },
-      );
-    },
-    [id, startWorkoutMutation, navigate],
-  );
-
-  const handleDuplicate = useCallback(
-    (e: MouseEvent) => {
-      e.stopPropagation();
-      duplicateTemplateMutation.mutate({ id });
-    },
-    [id, duplicateTemplateMutation],
-  );
-
-  const handleDeleteClick = useCallback((e: MouseEvent) => {
+  const handleStartWorkout = (e: MouseEvent) => {
     e.stopPropagation();
-    setConfirmDeleteOpen(true);
-  }, []);
+    startWorkoutMutation.mutate(
+      { id: templateId },
+      {
+        onSuccess: (data) => {
+          navigate({ to: `/dashboard/workouts/${data.id}` as string });
+        },
+      },
+    );
+  };
 
-  const handleConfirmDelete = useCallback(() => {
+  const handleConfirmDelete = () => {
     deleteTemplateMutation.mutate(
-      { id },
+      { id: templateId },
       {
         onSuccess: () => {
           setConfirmDeleteOpen(false);
         },
       },
     );
-  }, [id, deleteTemplateMutation]);
+  };
 
-  // ============================================================================
-  // Render
-  // ============================================================================
+  if (isLoading || !template) {
+    return <TemplateCardSkeleton animationDelay={animationDelay} />;
+  }
+
+  const {
+    name,
+    description,
+    estimatedDurationMinutes,
+    isPublic,
+    timesUsed,
+    exercises = [],
+  } = template;
+
+  const isHighUsage = (timesUsed ?? 0) > 10;
 
   return (
     <>
       <article
         className={styles.card}
         style={{ animationDelay: `${animationDelay}ms` }}
-        onClick={handleCardClick}
-        onKeyDown={handleCardKeyDown}
+        onClick={() => onClick?.(templateId)}
+        onKeyDown={(e: KeyboardEvent) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onClick?.(templateId);
+          }
+        }}
         data-is-public={isPublic}
         data-high-usage={isHighUsage}
         role="button"
@@ -199,7 +115,7 @@ export function TemplateCard({
         <div className={styles.cardGlow} aria-hidden="true" />
 
         {/* Header with icon and title */}
-        <header className={styles.cardHeader}>
+        <div className={styles.cardHeader}>
           <Tooltip label="Workout template" position="top" withArrow>
             <div className={styles.iconWrapper}>
               <IconTemplate size={22} stroke={1.5} />
@@ -215,7 +131,7 @@ export function TemplateCard({
               </p>
             )}
           </div>
-        </header>
+        </div>
 
         {/* Meta pills section */}
         <div className={styles.metaSection}>
@@ -256,41 +172,22 @@ export function TemplateCard({
               )}
             </span>
           </Tooltip>
-          {usageCount > 0 && (
+          {(timesUsed ?? 0) > 0 && (
             <Tooltip label="Number of times this template has been used" position="top" withArrow>
               <span className={`${styles.metaPill} ${styles.usageBadge}`}>
                 <IconFlame size={12} className={styles.metaPillIcon} />
-                {usageCount} uses
+                {timesUsed} uses
               </span>
             </Tooltip>
           )}
         </div>
-
-        {/* Exercise preview chips */}
-        {displayExercises.length > 0 && (
-          <div className={styles.exercisePreview}>
-            <div className={styles.exercisePreviewLabel}>Exercises</div>
-            <div className={styles.exerciseChips}>
-              {displayExercises.map((ex) => (
-                <span key={ex.id} className={styles.exerciseChip}>
-                  {ex.exercise?.name ?? "Unknown"}
-                </span>
-              ))}
-              {remainingExercises > 0 && (
-                <span className={`${styles.exerciseChip} ${styles.moreExercises}`}>
-                  +{remainingExercises} more
-                </span>
-              )}
-            </div>
-          </div>
-        )}
 
         {/* Stats row */}
         <div className={styles.statsRow}>
           <Tooltip label="Total exercises in template" position="top" withArrow>
             <div className={styles.statItem}>
               <IconBarbell size={14} className={styles.statIcon} />
-              <span className={styles.statValue}>{exerciseCount ?? exercises.length}</span>
+              <span className={styles.statValue}>{exercises.length}</span>
               <span className={styles.statLabel}>exercises</span>
             </div>
           </Tooltip>
@@ -326,7 +223,10 @@ export function TemplateCard({
               <button
                 type="button"
                 className={`${styles.actionButton} ${styles.secondaryAction} ${styles.iconOnlyAction}`}
-                onClick={handleDuplicate}
+                onClick={(e: MouseEvent) => {
+                  e.stopPropagation();
+                  duplicateTemplateMutation.mutate({ id: templateId });
+                }}
                 disabled={isAnyLoading}
                 aria-label="Duplicate template"
               >
@@ -337,7 +237,10 @@ export function TemplateCard({
               <button
                 type="button"
                 className={`${styles.actionButton} ${styles.dangerAction} ${styles.iconOnlyAction}`}
-                onClick={handleDeleteClick}
+                onClick={(e: MouseEvent) => {
+                  e.stopPropagation();
+                  setConfirmDeleteOpen(true);
+                }}
                 disabled={isAnyLoading}
                 aria-label="Delete template"
               >
@@ -402,10 +305,6 @@ export function TemplateCard({
   );
 }
 
-// ============================================================================
-// Skeleton Component
-// ============================================================================
-
 export function TemplateCardSkeleton({ animationDelay = 0 }: { animationDelay?: number }) {
   return (
     <div
@@ -432,7 +331,3 @@ export function TemplateCardSkeleton({ animationDelay = 0 }: { animationDelay?: 
     </div>
   );
 }
-
-// Re-export list item components for convenience
-export { TemplateListItem, TemplateListItemSkeleton } from "./template-list-item";
-export type { TemplateListItemData } from "./template-list-item";

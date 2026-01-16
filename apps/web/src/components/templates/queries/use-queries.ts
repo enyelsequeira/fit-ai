@@ -1,8 +1,3 @@
-/**
- * Query hooks for template-related data fetching
- * Uses queryOptions pattern from TanStack Query v5
- */
-
 import { useQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@mantine/hooks";
 import {

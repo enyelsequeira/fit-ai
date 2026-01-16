@@ -1,17 +1,4 @@
-/**
- * ExerciseItem - Individual exercise row in the template detail modal
- * Handles display and actions for a single exercise
- */
-
-import {
-  ActionIcon,
-  Box,
-  Flex,
-  Menu,
-  Stack,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Box, Flex, Menu, Stack, Text, Tooltip } from "@mantine/core";
 import {
   IconBarbell,
   IconChevronDown,
@@ -26,7 +13,7 @@ import {
 } from "@tabler/icons-react";
 import { useRemoveExercise, useReorderExercises } from "../hooks/use-mutations";
 import type { TemplateExercise } from "../types";
-import styles from "./template-detail-modal.module.css";
+import styles from "./template-detail/template-detail-modal.module.css";
 
 interface ExerciseItemProps {
   exercise: TemplateExercise;

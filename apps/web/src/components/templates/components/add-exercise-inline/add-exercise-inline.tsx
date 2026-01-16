@@ -32,8 +32,8 @@ import {
 } from "@tabler/icons-react";
 
 import { ExerciseImageThumbnail } from "@/components/exercise";
-import { useExerciseSearch } from "../queries/use-queries";
-import { useAddExercise } from "../hooks/use-mutations";
+import { useExerciseSearch } from "../../queries/use-queries.ts";
+import { useAddExercise } from "../../hooks/use-mutations.ts";
 import styles from "./add-exercise-inline.module.css";
 
 interface AddExerciseInlineProps {

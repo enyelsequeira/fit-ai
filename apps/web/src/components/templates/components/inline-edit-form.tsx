@@ -17,16 +17,10 @@ import {
   TextInput,
   Tooltip,
 } from "@mantine/core";
-import {
-  IconBarbell,
-  IconClock,
-  IconEdit,
-  IconRepeat,
-  IconWeight,
-} from "@tabler/icons-react";
+import { IconBarbell, IconClock, IconEdit, IconRepeat, IconWeight } from "@tabler/icons-react";
 import { useUpdateExercise } from "../hooks/use-mutations";
 import type { TemplateExercise } from "../types";
-import styles from "./template-detail-modal.module.css";
+import styles from "./template-detail/template-detail-modal.module.css";
 
 interface ExerciseUpdateData {
   targetSets?: number;

@@ -15,7 +15,7 @@
     box-shadow 150ms ease;
   animation: listItemEntrance 300ms ease backwards;
 
-  &:hover {
+  @mixin hover {
     background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
     border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
     box-shadow: 0 2px 8px light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.2));
@@ -120,7 +120,7 @@
     color 150ms ease,
     transform 150ms ease;
 
-  &:hover {
+  @mixin hover {
     transform: scale(1.05);
   }
 
@@ -139,15 +139,19 @@
   background: light-dark(var(--mantine-color-teal-1), var(--mantine-color-teal-9));
   color: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-4));
 
-  &:hover:not(:disabled) {
-    background: light-dark(var(--mantine-color-teal-2), var(--mantine-color-teal-8));
+  @mixin hover {
+    &:not(:disabled) {
+      background: light-dark(var(--mantine-color-teal-2), var(--mantine-color-teal-8));
+    }
   }
 }
 
 .dangerListAction {
-  &:hover:not(:disabled) {
-    background: light-dark(var(--mantine-color-red-1), var(--mantine-color-red-9));
-    color: light-dark(var(--mantine-color-red-6), var(--mantine-color-red-4));
+  @mixin hover {
+    &:not(:disabled) {
+      background: light-dark(var(--mantine-color-red-1), var(--mantine-color-red-9));
+      color: light-dark(var(--mantine-color-red-6), var(--mantine-color-red-4));
+    }
   }
 }
 

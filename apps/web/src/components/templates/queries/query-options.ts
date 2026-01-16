@@ -55,7 +55,7 @@ export function templatesListOptions(params: {
     queryFn: () =>
       orpc.template.list.call({
         folderId: params.folderId ?? undefined,
-        includeNoFolder: params.includeNoFolder ?? true,
+        includeNoFolder: params.includeNoFolder ?? (params.folderId === undefined || params.folderId === null),
         includePublic: params.includePublic ?? false,
         limit: params.limit ?? 100,
         offset: params.offset ?? 0,

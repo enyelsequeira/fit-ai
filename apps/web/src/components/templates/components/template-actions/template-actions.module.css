@@ -276,7 +276,7 @@
    Responsive Adjustments
    ============================================================================ */
 
-@media (max-width: 576px) {
+@mixin smaller-than 576px {
   .modal {
     flex-direction: column;
 

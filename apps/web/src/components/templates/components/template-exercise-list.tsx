@@ -2,12 +2,12 @@
  * TemplateExerciseList - Displays list of exercises in a template with reordering and editing
  */
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { ScrollArea, Stack, Text } from "@mantine/core";
 import type { TemplateExercise } from "../types";
 import { TemplateExerciseItem } from "./template-exercise-item";
 import { EditExerciseForm, type ExerciseUpdateData } from "./edit-exercise-form";
-import styles from "./template-detail-modal.module.css";
+import styles from "./template-detail/template-detail-modal.module.css";
 
 interface TemplateExerciseListProps {
   exercises: TemplateExercise[];
@@ -24,38 +24,25 @@ export function TemplateExerciseList({
 }: TemplateExerciseListProps) {
   const [editingExercise, setEditingExercise] = useState<TemplateExercise | null>(null);
 
-  const handleMoveExercise = useCallback(
-    async (fromIndex: number, toIndex: number) => {
-      if (toIndex < 0 || toIndex >= exercises.length) return;
+  const handleMoveExercise = async (fromIndex: number, toIndex: number) => {
+    if (toIndex < 0 || toIndex >= exercises.length) return;
 
-      const items = Array.from(exercises);
-      const movedItem = items[fromIndex];
-      if (movedItem) {
-        items.splice(fromIndex, 1);
-        items.splice(toIndex, 0, movedItem);
-      }
+    const items = Array.from(exercises);
+    const movedItem = items[fromIndex];
+    if (movedItem) {
+      items.splice(fromIndex, 1);
+      items.splice(toIndex, 0, movedItem);
+    }
 
-      const exerciseIds = items.map((item) => item.id);
-      await onReorderExercises(exerciseIds);
-    },
-    [exercises, onReorderExercises],
-  );
+    const exerciseIds = items.map((item) => item.id);
+    await onReorderExercises(exerciseIds);
+  };
 
-  const handleSaveExercise = useCallback(
-    async (data: ExerciseUpdateData) => {
-      if (!editingExercise) return;
-      await onUpdateExercise(editingExercise.id, data);
-      setEditingExercise(null);
-    },
-    [editingExercise, onUpdateExercise],
-  );
-
-  const handleRemove = useCallback(
-    async (exerciseId: number) => {
-      await onRemoveExercise(exerciseId);
-    },
-    [onRemoveExercise],
-  );
+  const handleSaveExercise = async (data: ExerciseUpdateData) => {
+    if (!editingExercise) return;
+    await onUpdateExercise(editingExercise.id, data);
+    setEditingExercise(null);
+  };
 
   if (exercises?.length === 0) {
     return (
@@ -86,7 +73,7 @@ export function TemplateExerciseList({
               index={index}
               totalCount={exercises.length}
               onEdit={setEditingExercise}
-              onRemove={handleRemove}
+              onRemove={onRemoveExercise}
               onMoveUp={() => handleMoveExercise(index, index - 1)}
               onMoveDown={() => handleMoveExercise(index, index + 1)}
             />

@@ -27,17 +27,17 @@
   grid-template-columns: 1fr;
   gap: var(--mantine-spacing-lg);
 
-  @media (min-width: 640px) {
+  @mixin larger-than 640px {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--mantine-spacing-md);
   }
 
-  @media (min-width: 1024px) {
+  @mixin larger-than 1024px {
     grid-template-columns: repeat(3, 1fr);
     gap: var(--mantine-spacing-lg);
   }
 
-  @media (min-width: 1400px) {
+  @mixin larger-than 1400px {
     grid-template-columns: repeat(4, 1fr);
   }
 }
@@ -179,17 +179,17 @@
   grid-template-columns: 1fr;
   gap: var(--mantine-spacing-lg);
 
-  @media (min-width: 640px) {
+  @mixin larger-than 640px {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--mantine-spacing-md);
   }
 
-  @media (min-width: 1024px) {
+  @mixin larger-than 1024px {
     grid-template-columns: repeat(3, 1fr);
     gap: var(--mantine-spacing-lg);
   }
 
-  @media (min-width: 1400px) {
+  @mixin larger-than 1400px {
     grid-template-columns: repeat(4, 1fr);
   }
 }

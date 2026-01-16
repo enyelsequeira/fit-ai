@@ -1,24 +1,9 @@
-/**
- * TemplatesList - Grid of template cards with loading, empty, and error states
- * Fetches its own data using query hooks
- */
-
 import { useMemo } from "react";
 import { Button, Group, Tooltip } from "@mantine/core";
-import {
-  IconPlus,
-  IconTemplate,
-  IconSearch,
-  IconMoodSad,
-  IconRefresh,
-} from "@tabler/icons-react";
-import { useTemplatesList, useTemplateFolders } from "../queries/use-queries";
-import { TemplateCard, TemplateCardSkeleton } from "./template-card";
+import { IconPlus, IconTemplate, IconSearch, IconMoodSad, IconRefresh } from "@tabler/icons-react";
+import { useTemplatesList } from "../../queries/use-queries.ts";
+import { TemplateCard, TemplateCardSkeleton } from "../template-card/template-card.tsx";
 import styles from "./templates-list.module.css";
-
-// ============================================================================
-// Types
-// ============================================================================
 
 interface TemplatesListProps {
   /** Optional folder ID to filter templates */
@@ -31,10 +16,6 @@ interface TemplatesListProps {
   onCreateTemplate: () => void;
 }
 
-// ============================================================================
-// Loading State
-// ============================================================================
-
 function LoadingState() {
   return (
     <div className={styles.skeletonGrid}>
@@ -44,10 +25,6 @@ function LoadingState() {
     </div>
   );
 }
-
-// ============================================================================
-// Empty States
-// ============================================================================
 
 function SearchEmptyState({
   searchQuery,
@@ -123,31 +100,19 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
   );
 }
 
-// ============================================================================
-// Main Component
-// ============================================================================
-
 export function TemplatesList({
   folderId,
   searchQuery,
   onTemplateClick,
   onCreateTemplate,
 }: TemplatesListProps) {
-  // Fetch templates and folders using hooks
+  // Fetch templates using hook
   const {
     data: templatesData,
-    isLoading: isTemplatesLoading,
+    isLoading,
     isError: isTemplatesError,
     refetch: refetchTemplates,
   } = useTemplatesList({ folderId });
-
-  const { data: foldersData, isLoading: isFoldersLoading } = useTemplateFolders();
-
-  // Create a folder lookup map for efficient name resolution
-  const folderMap = useMemo(() => {
-    const folders = foldersData ?? [];
-    return new Map(folders.map((f) => [f.id, f.name]));
-  }, [foldersData]);
 
   // Filter templates by search query (client-side filtering)
   const filteredTemplates = useMemo(() => {
@@ -162,8 +127,6 @@ export function TemplatesList({
         template.description?.toLowerCase().includes(query),
     );
   }, [templatesData, searchQuery]);
-
-  const isLoading = isTemplatesLoading || isFoldersLoading;
 
   if (isLoading) {
     return <LoadingState />;
@@ -195,17 +158,7 @@ export function TemplatesList({
         {filteredTemplates.map((template, index) => (
           <TemplateCard
             key={template.id}
-            template={{
-              id: template.id,
-              name: template.name,
-              description: template.description,
-              estimatedDurationMinutes: template.estimatedDurationMinutes,
-              isPublic: template.isPublic,
-              usageCount: template.timesUsed,
-              exerciseCount: template.exercises?.length,
-              exercises: template.exercises,
-            }}
-            folderName={template.folderId ? folderMap.get(template.folderId) : undefined}
+            templateId={template.id}
             onClick={onTemplateClick}
             animationDelay={index * 50}
           />

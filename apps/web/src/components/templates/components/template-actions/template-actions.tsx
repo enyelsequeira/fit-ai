@@ -16,7 +16,7 @@ import {
   useDeleteTemplate,
   useDuplicateTemplate,
   useStartWorkout,
-} from "@/components/templates/hooks/use-mutations";
+} from "@/components/templates/hooks/use-mutations.ts";
 import styles from "./template-actions.module.css";
 
 export type TemplateActionsVariant = "modal" | "card" | "compact";
@@ -83,10 +83,7 @@ export function TemplateActions({
   }, [templateId, startWorkoutMutation, navigate, onClose, onActionComplete]);
 
   const handleDuplicate = useCallback(() => {
-    duplicateTemplateMutation.mutate(
-      { id: templateId },
-      { onSuccess: () => onActionComplete?.() },
-    );
+    duplicateTemplateMutation.mutate({ id: templateId }, { onSuccess: () => onActionComplete?.() });
   }, [templateId, duplicateTemplateMutation, onActionComplete]);
 
   const handleEdit = useCallback(() => {
@@ -122,18 +119,38 @@ export function TemplateActions({
   }, []);
 
   const confirmationModal = (
-    <Modal opened={confirmation.isOpen} onClose={closeConfirmation} title={null} centered size="sm" withCloseButton={false}>
+    <Modal
+      opened={confirmation.isOpen}
+      onClose={closeConfirmation}
+      title={null}
+      centered
+      size="sm"
+      withCloseButton={false}
+    >
       <Stack gap="md" className={styles.confirmationContent}>
         <div className={styles.confirmationIconDanger}>
           <IconAlertTriangle size={32} stroke={1.5} />
         </div>
-        <Text size="lg" className={styles.confirmationTitle}>{confirmation.title}</Text>
-        <Text size="sm" className={styles.confirmationMessage}>{confirmation.message}</Text>
+        <Text size="lg" className={styles.confirmationTitle}>
+          {confirmation.title}
+        </Text>
+        <Text size="sm" className={styles.confirmationMessage}>
+          {confirmation.message}
+        </Text>
         <div className={styles.confirmationActions}>
-          <Button variant="default" onClick={closeConfirmation} disabled={deleteTemplateMutation.isPending}>
+          <Button
+            variant="default"
+            onClick={closeConfirmation}
+            disabled={deleteTemplateMutation.isPending}
+          >
             Cancel
           </Button>
-          <Button color="red" onClick={handleConfirmDelete} loading={deleteTemplateMutation.isPending} leftSection={<IconTrash size={16} />}>
+          <Button
+            color="red"
+            onClick={handleConfirmDelete}
+            loading={deleteTemplateMutation.isPending}
+            leftSection={<IconTrash size={16} />}
+          >
             Delete Template
           </Button>
         </div>
@@ -145,26 +162,61 @@ export function TemplateActions({
   if (variant === "compact") {
     return (
       <>
-        <div className={`${styles.actionsContainer} ${styles.compact} ${className ?? ""}`} data-loading={isAnyLoading}>
+        <div
+          className={`${styles.actionsContainer} ${styles.compact} ${className ?? ""}`}
+          data-loading={isAnyLoading}
+        >
           <Tooltip label="Start Workout" position="top" withArrow>
-            <ActionIcon variant="subtle" color="green" size="sm" onClick={handleStartWorkout} loading={startWorkoutMutation.isPending} disabled={isAnyLoading} className={styles.actionIconStart} aria-label="Start workout from template">
+            <ActionIcon
+              variant="subtle"
+              color="green"
+              size="sm"
+              onClick={handleStartWorkout}
+              loading={startWorkoutMutation.isPending}
+              disabled={isAnyLoading}
+              className={styles.actionIconStart}
+              aria-label="Start workout from template"
+            >
               <IconPlayerPlay size={iconSize} />
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Duplicate" position="top" withArrow>
-            <ActionIcon variant="subtle" size="sm" onClick={handleDuplicate} loading={duplicateTemplateMutation.isPending} disabled={isAnyLoading} className={styles.actionIconDuplicate} aria-label="Duplicate template">
+            <ActionIcon
+              variant="subtle"
+              size="sm"
+              onClick={handleDuplicate}
+              loading={duplicateTemplateMutation.isPending}
+              disabled={isAnyLoading}
+              className={styles.actionIconDuplicate}
+              aria-label="Duplicate template"
+            >
               <IconCopy size={iconSize} />
             </ActionIcon>
           </Tooltip>
           {showEdit && (
             <Tooltip label="Edit" position="top" withArrow>
-              <ActionIcon variant="subtle" size="sm" onClick={handleEdit} disabled={isAnyLoading} className={styles.actionIconEdit} aria-label="Edit template">
+              <ActionIcon
+                variant="subtle"
+                size="sm"
+                onClick={handleEdit}
+                disabled={isAnyLoading}
+                className={styles.actionIconEdit}
+                aria-label="Edit template"
+              >
                 <IconEdit size={iconSize} />
               </ActionIcon>
             </Tooltip>
           )}
           <Tooltip label="Delete" position="top" withArrow>
-            <ActionIcon variant="subtle" color="red" size="sm" onClick={openDeleteConfirmation} disabled={isAnyLoading} className={styles.actionIconDelete} aria-label="Delete template">
+            <ActionIcon
+              variant="subtle"
+              color="red"
+              size="sm"
+              onClick={openDeleteConfirmation}
+              disabled={isAnyLoading}
+              className={styles.actionIconDelete}
+              aria-label="Delete template"
+            >
               <IconTrash size={iconSize} />
             </ActionIcon>
           </Tooltip>
@@ -178,31 +230,62 @@ export function TemplateActions({
   if (shouldUseDropdown) {
     return (
       <>
-        <div className={`${styles.actionsContainer} ${styles.card} ${className ?? ""}`} data-loading={isAnyLoading}>
+        <div
+          className={`${styles.actionsContainer} ${styles.card} ${className ?? ""}`}
+          data-loading={isAnyLoading}
+        >
           <Tooltip label="Start a workout from this template" position="top" withArrow>
-            <Button size="xs" color="green" leftSection={<IconPlayerPlay size={14} />} onClick={handleStartWorkout} loading={startWorkoutMutation.isPending} disabled={isAnyLoading && !startWorkoutMutation.isPending} className={styles.primaryAction}>
+            <Button
+              size="xs"
+              color="green"
+              leftSection={<IconPlayerPlay size={14} />}
+              onClick={handleStartWorkout}
+              loading={startWorkoutMutation.isPending}
+              disabled={isAnyLoading && !startWorkoutMutation.isPending}
+              className={styles.primaryAction}
+            >
               {showLabels && "Start"}
             </Button>
           </Tooltip>
           <Menu shadow="md" position="bottom-end" withinPortal>
             <Menu.Target>
               <Tooltip label="More actions" position="top" withArrow>
-                <ActionIcon variant="subtle" size="sm" disabled={isAnyLoading} className={styles.moreActionsTrigger} aria-label="More actions">
+                <ActionIcon
+                  variant="subtle"
+                  size="sm"
+                  disabled={isAnyLoading}
+                  className={styles.moreActionsTrigger}
+                  aria-label="More actions"
+                >
                   <IconDotsVertical size={16} />
                 </ActionIcon>
               </Tooltip>
             </Menu.Target>
             <Menu.Dropdown className={styles.menuDropdown}>
-              <Menu.Item leftSection={<IconCopy size={14} />} onClick={handleDuplicate} disabled={duplicateTemplateMutation.isPending} className={styles.menuItem}>
+              <Menu.Item
+                leftSection={<IconCopy size={14} />}
+                onClick={handleDuplicate}
+                disabled={duplicateTemplateMutation.isPending}
+                className={styles.menuItem}
+              >
                 Duplicate
               </Menu.Item>
               {showEdit && (
-                <Menu.Item leftSection={<IconEdit size={14} />} onClick={handleEdit} className={styles.menuItem}>
+                <Menu.Item
+                  leftSection={<IconEdit size={14} />}
+                  onClick={handleEdit}
+                  className={styles.menuItem}
+                >
                   Edit
                 </Menu.Item>
               )}
               <Menu.Divider className={styles.menuDivider} />
-              <Menu.Item color="red" leftSection={<IconTrash size={14} />} onClick={openDeleteConfirmation} className={styles.menuItemDanger}>
+              <Menu.Item
+                color="red"
+                leftSection={<IconTrash size={14} />}
+                onClick={openDeleteConfirmation}
+                className={styles.menuItemDanger}
+              >
                 Delete
               </Menu.Item>
             </Menu.Dropdown>
@@ -216,26 +299,57 @@ export function TemplateActions({
   // Modal variant - full button group
   return (
     <>
-      <Group gap="sm" className={`${styles.actionsContainer} ${styles.modal} ${className ?? ""}`} data-loading={isAnyLoading}>
+      <Group
+        gap="sm"
+        className={`${styles.actionsContainer} ${styles.modal} ${className ?? ""}`}
+        data-loading={isAnyLoading}
+      >
         <Tooltip label="Start a workout from this template" position="top" withArrow>
-          <Button color="green" leftSection={<IconPlayerPlay size={iconSize} />} onClick={handleStartWorkout} loading={startWorkoutMutation.isPending} disabled={isAnyLoading && !startWorkoutMutation.isPending} className={styles.primaryAction}>
+          <Button
+            color="green"
+            leftSection={<IconPlayerPlay size={iconSize} />}
+            onClick={handleStartWorkout}
+            loading={startWorkoutMutation.isPending}
+            disabled={isAnyLoading && !startWorkoutMutation.isPending}
+            className={styles.primaryAction}
+          >
             Start Workout
           </Button>
         </Tooltip>
         <Tooltip label="Create a copy of this template" position="top" withArrow>
-          <Button variant="light" leftSection={<IconCopy size={iconSize} />} onClick={handleDuplicate} loading={duplicateTemplateMutation.isPending} disabled={isAnyLoading && !duplicateTemplateMutation.isPending} className={styles.secondaryAction}>
+          <Button
+            variant="light"
+            leftSection={<IconCopy size={iconSize} />}
+            onClick={handleDuplicate}
+            loading={duplicateTemplateMutation.isPending}
+            disabled={isAnyLoading && !duplicateTemplateMutation.isPending}
+            className={styles.secondaryAction}
+          >
             Duplicate
           </Button>
         </Tooltip>
         {showEdit && (
           <Tooltip label="Edit this template" position="top" withArrow>
-            <Button variant="light" leftSection={<IconEdit size={iconSize} />} onClick={handleEdit} disabled={isAnyLoading} className={styles.secondaryAction}>
+            <Button
+              variant="light"
+              leftSection={<IconEdit size={iconSize} />}
+              onClick={handleEdit}
+              disabled={isAnyLoading}
+              className={styles.secondaryAction}
+            >
               Edit
             </Button>
           </Tooltip>
         )}
         <Tooltip label="Permanently delete this template" position="top" withArrow>
-          <Button variant="light" color="red" leftSection={<IconTrash size={iconSize} />} onClick={openDeleteConfirmation} disabled={isAnyLoading} className={styles.secondaryAction}>
+          <Button
+            variant="light"
+            color="red"
+            leftSection={<IconTrash size={iconSize} />}
+            onClick={openDeleteConfirmation}
+            disabled={isAnyLoading}
+            className={styles.secondaryAction}
+          >
             Delete
           </Button>
         </Tooltip>

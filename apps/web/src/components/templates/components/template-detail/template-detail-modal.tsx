@@ -1,30 +1,12 @@
-/**
- * TemplateDetailModal - Modern redesigned template detail view
- * Focuses on exercise management with clean visual hierarchy
- */
-
 import { useCallback, useMemo, useState } from "react";
-import {
-  Box,
-  Loader,
-  Modal,
-  ScrollArea,
-  Stack,
-  Tabs,
-  Text,
-} from "@mantine/core";
-import {
-  IconBarbell,
-  IconLayoutList,
-  IconPlus,
-  IconTemplate,
-} from "@tabler/icons-react";
-import { useTemplateById } from "../queries/use-queries";
-import { AddExerciseInline } from "./add-exercise-inline";
-import { ExerciseItem } from "./exercise-item";
-import { InlineEditForm } from "./inline-edit-form";
-import { ModalHeader } from "./modal-header";
-import type { TemplateExercise } from "../types";
+import { Box, Loader, Modal, ScrollArea, Stack, Tabs, Text } from "@mantine/core";
+import { IconBarbell, IconLayoutList, IconPlus, IconTemplate } from "@tabler/icons-react";
+import { useTemplateById } from "../../queries/use-queries.ts";
+import { AddExerciseInline } from "../add-exercise-inline/add-exercise-inline.tsx";
+import { ExerciseItem } from "../exercise-item.tsx";
+import { InlineEditForm } from "../inline-edit-form.tsx";
+import { ModalHeader } from "../modal-header.tsx";
+import type { TemplateExercise } from "../../types.ts";
 import styles from "./template-detail-modal.module.css";
 
 interface TemplateDetailModalProps {

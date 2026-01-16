@@ -12,7 +12,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import type { TemplateExercise } from "../types";
-import styles from "./template-detail-modal.module.css";
+import styles from "./template-detail/template-detail-modal.module.css";
 
 interface TemplateExerciseItemProps {
   exercise: TemplateExercise;

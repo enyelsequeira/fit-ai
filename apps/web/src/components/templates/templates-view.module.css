@@ -1,19 +1,7 @@
-/* Templates View - Modern Layout with Sidebar */
-
-/* ============================================
-   Page Container - Sidebar + Main Layout
-   ============================================ */
-
 .pageContainer {
-  display: flex;
-  min-height: calc(100vh - 60px);
   background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
   animation: pageLoad 400ms ease-out;
 }
-
-/* ============================================
-   Sidebar
-   ============================================ */
 
 .sidebar {
   display: none;
@@ -27,7 +15,7 @@
   top: 60px;
   overflow: hidden;
 
-  @media (min-width: $mantine-breakpoint-lg) {
+  @mixin larger-than $mantine-breakpoint-lg {
     display: flex;
   }
 }
@@ -38,14 +26,7 @@
 }
 
 .logoIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--mantine-radius-md);
   background: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-7));
-  color: white;
 }
 
 .sidebarContent {
@@ -54,7 +35,6 @@
 }
 
 .sidebarFooter {
-  padding: var(--mantine-spacing-md);
   border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
 }
 
@@ -64,7 +44,7 @@
     transform 150ms ease,
     box-shadow 150ms ease;
 
-  &:hover {
+  @mixin hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px light-dark(rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.4));
   }
@@ -83,17 +63,7 @@
   }
 }
 
-/* ============================================
-   Main Content Area
-   ============================================ */
 
-.mainContent {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  overflow-x: hidden;
-}
 
 /* ============================================
    Header Section
@@ -104,51 +74,25 @@
   border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
   padding: var(--mantine-spacing-lg) var(--mantine-spacing-xl);
 
-  @media (max-width: $mantine-breakpoint-sm) {
+  @mixin smaller-than $mantine-breakpoint-sm {
     padding: var(--mantine-spacing-md);
   }
 }
 
-.headerTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--mantine-spacing-lg);
-  flex-wrap: wrap;
-  margin-bottom: var(--mantine-spacing-lg);
-}
-
-.headerTitleSection {
-  flex: 1;
-  min-width: 200px;
-}
 
 .breadcrumb {
   margin-bottom: var(--mantine-spacing-xs);
 }
 
 .pageTitle {
-  margin: 0;
-  font-size: 1.75rem;
-  font-weight: 700;
   color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
-  line-height: 1.2;
-
-  @media (max-width: $mantine-breakpoint-sm) {
-    font-size: 1.5rem;
-  }
 }
 
-.pageDescription {
-  margin-top: var(--mantine-spacing-xs);
-}
 
 .headerActions {
-  display: flex;
-  gap: var(--mantine-spacing-sm);
   flex-shrink: 0;
 
-  @media (max-width: $mantine-breakpoint-sm) {
+  @mixin smaller-than $mantine-breakpoint-sm {
     width: 100%;
 
     & > button {
@@ -160,7 +104,7 @@
 .secondaryButton {
   transition: transform 150ms ease;
 
-  &:hover {
+  @mixin hover {
     transform: translateY(-1px);
   }
 }
@@ -171,7 +115,7 @@
     transform 150ms ease,
     box-shadow 150ms ease;
 
-  &:hover {
+  @mixin hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px light-dark(rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.4));
   }
@@ -187,7 +131,7 @@
   gap: var(--mantine-spacing-md);
   margin-bottom: var(--mantine-spacing-lg);
 
-  @media (min-width: $mantine-breakpoint-sm) {
+  @mixin larger-than $mantine-breakpoint-sm {
     grid-template-columns: repeat(4, 1fr);
   }
 }
@@ -205,7 +149,7 @@
     box-shadow 200ms ease,
     border-color 200ms ease;
 
-  &:hover {
+  @mixin hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.3));
     border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
@@ -263,14 +207,13 @@
    Search Bar
    ============================================ */
 
-.searchFilterBar {
-  display: flex;
-  gap: var(--mantine-spacing-md);
-  align-items: center;
 
-  @media (max-width: $mantine-breakpoint-sm) {
-    flex-direction: column;
-    align-items: stretch;
+.mobileFolderSelect {
+  flex-shrink: 0;
+  min-width: 180px;
+
+  @mixin smaller-than $mantine-breakpoint-sm {
+    min-width: 100%;
   }
 }
 
@@ -278,38 +221,11 @@
   flex: 1;
   max-width: 480px;
 
-  @media (max-width: $mantine-breakpoint-sm) {
+  @mixin smaller-than $mantine-breakpoint-sm {
     max-width: none;
   }
 }
 
-.searchInput {
-  & input {
-    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
-    border: 2px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
-    border-radius: var(--mantine-radius-lg);
-    font-size: 0.9375rem;
-    transition:
-      border-color 200ms ease,
-      box-shadow 200ms ease,
-      background-color 200ms ease;
-
-    &::placeholder {
-      color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-gray-6));
-    }
-
-    &:focus {
-      background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-5));
-      border-color: var(--mantine-color-blue-5);
-      box-shadow: 0 0 0 3px light-dark(rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.2));
-    }
-  }
-}
-
-.searchKbd {
-  opacity: 0.6;
-  font-size: 0.6875rem;
-}
 
 /* ============================================
    Content Area
@@ -320,7 +236,7 @@
   padding: var(--mantine-spacing-xl);
   overflow-y: auto;
 
-  @media (max-width: $mantine-breakpoint-sm) {
+  @mixin smaller-than $mantine-breakpoint-sm {
     padding: var(--mantine-spacing-md);
   }
 }
@@ -331,10 +247,6 @@
   gap: var(--mantine-spacing-sm);
   margin-bottom: var(--mantine-spacing-md);
   flex-wrap: wrap;
-}
-
-.searchBadge {
-  padding-right: 4px;
 }
 
 .templatesContainer {
@@ -356,7 +268,7 @@
    Responsive Adjustments
    ============================================ */
 
-@media (max-width: $mantine-breakpoint-xs) {
+@mixin smaller-than $mantine-breakpoint-xs {
   .headerTop {
     flex-direction: column;
   }

@@ -1,8 +1,3 @@
-/**
- * Template mutation hooks for TanStack Query
- * Uses queryOptions pattern for consistent cache invalidation
- */
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { orpc } from "@/utils/orpc";
 import {
@@ -10,10 +5,6 @@ import {
   templateFoldersOptions,
   templateDetailOptions,
 } from "../queries/query-options";
-
-// ============================================================================
-// Template Mutations
-// ============================================================================
 
 /**
  * Hook for creating a new template
@@ -98,10 +89,6 @@ export function useStartWorkout() {
   });
 }
 
-// ============================================================================
-// Folder Mutations
-// ============================================================================
-
 /**
  * Hook for creating a new folder
  */
@@ -109,12 +96,32 @@ export function useCreateFolder() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.folder.create.call>[0]) =>
-      orpc.template.folder.create.call(input),
+    mutationFn: async (input: Parameters<typeof orpc.template.folder.create.call>[0]) => {
+      return orpc.template.folder.create.call(input);
+    },
+    onMutate: () => {
+      // toast.show({
+      //   id: "creating-folder",
+      //   message: "Creating folder...",
+      //   type: "loading",
+      // });
+    },
     onSuccess: () => {
+      // toast.update({
+      //   id: "creating-folder",
+      //   message: "Folder created successfully",
+      //   type: "success",
+      // });
       queryClient.invalidateQueries({
         queryKey: templateFoldersOptions().queryKey,
       });
+    },
+    onError: () => {
+      // toast.update({
+      //   id: "creating-folder",
+      //   message: error.message || "Failed to create folder",
+      //   type: "error",
+      // });
     },
   });
 }
@@ -211,6 +218,7 @@ export function useUpdateExercise(templateId: number) {
       queryClient.invalidateQueries({
         queryKey: templateDetailOptions(templateId).queryKey,
       });
+      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
     },
   });
 }

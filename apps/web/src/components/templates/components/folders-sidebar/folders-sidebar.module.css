@@ -38,7 +38,7 @@
   cursor: pointer;
   transition: all 150ms ease;
 
-  &:hover {
+  @mixin hover {
     background: light-dark(var(--mantine-color-blue-0), rgba(59, 130, 246, 0.12));
     border-color: var(--mantine-color-blue-5);
     border-style: solid;
@@ -65,7 +65,7 @@
   border: 1px solid light-dark(var(--mantine-color-gray-3), rgba(71, 85, 105, 0.2));
   transition: all 180ms ease;
 
-  &:hover {
+  @mixin hover {
     background: light-dark(var(--mantine-color-gray-1), rgba(71, 85, 105, 0.15));
     border-color: light-dark(var(--mantine-color-blue-3), rgba(59, 130, 246, 0.35));
   }
@@ -149,7 +149,7 @@
   border: 1px solid transparent;
   transition: all 150ms ease;
 
-  &:hover {
+  @mixin hover {
     background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
 
     & .folderActions {
@@ -242,7 +242,7 @@
   cursor: pointer;
   transition: all 120ms ease;
 
-  &:hover {
+  @mixin hover {
     background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
     color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
   }
@@ -296,7 +296,7 @@
   border-radius: var(--mantine-radius-sm);
   transition: background 150ms ease;
 
-  &:hover {
+  @mixin hover {
     background: light-dark(var(--mantine-color-blue-0), rgba(59, 130, 246, 0.12));
   }
 }
