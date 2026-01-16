@@ -1,0 +1,55 @@
+/* Log Measurement Modal Styles */
+
+.modal {
+  /* Ensure proper spacing in the form */
+  & :global(.mantine-Tabs-panel) {
+    padding-top: 0;
+  }
+
+  /* Style segmented controls */
+  & :global(.mantine-SegmentedControl-root) {
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  }
+
+  /* Date picker styling */
+  & :global(.mantine-DatePickerInput-input) {
+    cursor: pointer;
+
+    @mixin hover {
+      border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
+    }
+  }
+
+  /* Number input styling - tabular nums for better alignment */
+  & :global(.mantine-NumberInput-input) {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Smooth transitions for collapse */
+  & :global(.mantine-Collapse-content) {
+    transition: height 200ms ease;
+  }
+}
+
+.expandButton {
+  align-self: flex-start;
+  transition: color 150ms ease;
+
+  @mixin hover {
+    color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-4));
+  }
+}
+
+.submitButton {
+  &[data-submitting="true"] {
+    pointer-events: none;
+  }
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .modal {
+    & :global(.mantine-Modal-content) {
+      padding: var(--mantine-spacing-sm);
+    }
+  }
+}

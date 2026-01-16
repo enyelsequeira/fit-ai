@@ -7,7 +7,7 @@ import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
-import { theme } from "@/lib/theme";
+import { theme } from "@/theme/theme.ts";
 
 // CSS imports with ?url for SSR - these get added to head via links
 import mantineCoreStyles from "@mantine/core/styles.css?url";

@@ -4,11 +4,7 @@
  */
 
 import { Box, Text, UnstyledButton } from "@mantine/core";
-import {
-  IconClipboardList,
-  IconTemplate,
-  IconPlus,
-} from "@tabler/icons-react";
+import { IconClipboardList, IconTemplate, IconPlus } from "@tabler/icons-react";
 import { FitAiCard, FitAiCardContent } from "@/components/ui/card";
 import styles from "./workout-actions.module.css";
 
@@ -48,11 +44,7 @@ interface WorkoutActionsProps {
   onQuickLog: () => void;
 }
 
-export function WorkoutActions({
-  onStartWorkout,
-  onUseTemplate,
-  onQuickLog,
-}: WorkoutActionsProps) {
+export function WorkoutActions({ onStartWorkout, onUseTemplate, onQuickLog }: WorkoutActionsProps) {
   const handleClick = (actionId: string) => {
     switch (actionId) {
       case "start":
@@ -83,9 +75,7 @@ export function WorkoutActions({
               </Box>
               <Box>
                 <Text className={styles.actionLabel}>{action.label}</Text>
-                <Text className={styles.actionDescription}>
-                  {action.description}
-                </Text>
+                <Text className={styles.actionDescription}>{action.description}</Text>
               </Box>
             </UnstyledButton>
           ))}

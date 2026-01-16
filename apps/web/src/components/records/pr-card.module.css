@@ -1,0 +1,288 @@
+/* PR Card Shared Styles */
+
+.prCard {
+  border-radius: var(--mantine-radius-md);
+  background: transparent;
+  transition:
+    background 200ms ease,
+    transform 150ms ease;
+}
+
+.prCard[data-clickable="true"] {
+  cursor: pointer;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+    transform: translateX(4px);
+  }
+}
+
+.prCard[data-variant="full"] {
+  padding: var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+
+  @mixin hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mantine-shadow-sm);
+  }
+}
+
+/* Record type styling via data attribute */
+.prCard[data-record-type="one_rep_max"] {
+  border-left: 3px solid var(--mantine-color-violet-6);
+}
+
+.prCard[data-record-type="max_weight"] {
+  border-left: 3px solid var(--mantine-color-blue-6);
+}
+
+.prCard[data-record-type="max_reps"] {
+  border-left: 3px solid var(--mantine-color-green-6);
+}
+
+.prCard[data-record-type="max_volume"] {
+  border-left: 3px solid var(--mantine-color-orange-6);
+}
+
+.prCard[data-record-type="best_time"] {
+  border-left: 3px solid var(--mantine-color-red-6);
+}
+
+.prCard[data-record-type="longest_duration"] {
+  border-left: 3px solid var(--mantine-color-cyan-6);
+}
+
+.prCard[data-record-type="longest_distance"] {
+  border-left: 3px solid var(--mantine-color-pink-6);
+}
+
+/* Recent items styling */
+.prCard[data-is-recent="true"] {
+  @mixin light {
+    background: rgba(34, 197, 94, 0.05);
+  }
+  @mixin dark {
+    background: rgba(34, 197, 94, 0.08);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(34, 197, 94, 0.1);
+    }
+    @mixin dark {
+      background: rgba(34, 197, 94, 0.15);
+    }
+  }
+}
+
+/* New items with glow effect */
+.prCard[data-is-new="true"] {
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+  50% {
+    box-shadow: 0 0 8px 2px rgba(34, 197, 94, 0.3);
+  }
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-yellow-light);
+  color: var(--mantine-color-yellow-6);
+  transition: transform 200ms ease;
+}
+
+.prCard[data-clickable="true"]:hover .iconContainer {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.iconContainer[data-is-new="true"] {
+  background: linear-gradient(
+    135deg,
+    var(--mantine-color-green-light) 0%,
+    var(--mantine-color-yellow-light) 100%
+  );
+  color: var(--mantine-color-green-6);
+}
+
+.prValue {
+  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-white));
+}
+
+/* PR Card Value variant */
+.prCardValue {
+  border-radius: var(--mantine-radius-md);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  transition:
+    background 200ms ease,
+    transform 150ms ease;
+}
+
+.prCardValue[data-clickable="true"] {
+  cursor: pointer;
+
+  @mixin hover {
+    transform: translateX(4px);
+  }
+}
+
+/* Color variants for PR Card Value */
+.prCardValue[data-color="violet"] {
+  @mixin light {
+    background: rgba(139, 92, 246, 0.08);
+  }
+  @mixin dark {
+    background: rgba(139, 92, 246, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(139, 92, 246, 0.15);
+    }
+    @mixin dark {
+      background: rgba(139, 92, 246, 0.2);
+    }
+  }
+}
+
+.prCardValue[data-color="blue"] {
+  @mixin light {
+    background: rgba(59, 130, 246, 0.08);
+  }
+  @mixin dark {
+    background: rgba(59, 130, 246, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(59, 130, 246, 0.15);
+    }
+    @mixin dark {
+      background: rgba(59, 130, 246, 0.2);
+    }
+  }
+}
+
+.prCardValue[data-color="green"] {
+  @mixin light {
+    background: rgba(34, 197, 94, 0.08);
+  }
+  @mixin dark {
+    background: rgba(34, 197, 94, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(34, 197, 94, 0.15);
+    }
+    @mixin dark {
+      background: rgba(34, 197, 94, 0.2);
+    }
+  }
+}
+
+.prCardValue[data-color="orange"] {
+  @mixin light {
+    background: rgba(249, 115, 22, 0.08);
+  }
+  @mixin dark {
+    background: rgba(249, 115, 22, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(249, 115, 22, 0.15);
+    }
+    @mixin dark {
+      background: rgba(249, 115, 22, 0.2);
+    }
+  }
+}
+
+.prCardValue[data-color="red"] {
+  @mixin light {
+    background: rgba(239, 68, 68, 0.08);
+  }
+  @mixin dark {
+    background: rgba(239, 68, 68, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(239, 68, 68, 0.15);
+    }
+    @mixin dark {
+      background: rgba(239, 68, 68, 0.2);
+    }
+  }
+}
+
+.prCardValue[data-color="cyan"] {
+  @mixin light {
+    background: rgba(6, 182, 212, 0.08);
+  }
+  @mixin dark {
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(6, 182, 212, 0.15);
+    }
+    @mixin dark {
+      background: rgba(6, 182, 212, 0.2);
+    }
+  }
+}
+
+.prCardValue[data-color="pink"] {
+  @mixin light {
+    background: rgba(236, 72, 153, 0.08);
+  }
+  @mixin dark {
+    background: rgba(236, 72, 153, 0.12);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(236, 72, 153, 0.15);
+    }
+    @mixin dark {
+      background: rgba(236, 72, 153, 0.2);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prCard[data-is-new="true"] {
+    animation: none;
+  }
+
+  .prCard[data-clickable="true"] {
+    @mixin hover {
+      transform: none;
+    }
+  }
+
+  .prCard[data-clickable="true"]:hover .iconContainer {
+    transform: none;
+  }
+
+  .prCardValue[data-clickable="true"] {
+    @mixin hover {
+      transform: none;
+    }
+  }
+}

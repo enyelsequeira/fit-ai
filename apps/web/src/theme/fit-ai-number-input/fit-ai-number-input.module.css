@@ -1,0 +1,276 @@
+/* FitAi NumberInput - Clean, professional styling */
+
+.root {
+}
+
+.wrapper {
+  position: relative;
+}
+
+.input {
+  font-family: inherit;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 400;
+  background-color: var(--mantine-color-white);
+  border: 1px solid var(--mantine-color-gray-3);
+  border-radius: var(--mantine-radius-md);
+  color: var(--mantine-color-black);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+
+  &::placeholder {
+    color: var(--mantine-color-gray-5);
+  }
+
+  &:hover:not(:focus):not(:disabled):not([data-error]) {
+    border-color: var(--mantine-color-gray-5);
+  }
+
+  &:focus:not([data-error]) {
+    border-color: var(--mantine-color-gray-7);
+    box-shadow: 0 0 0 2px var(--mantine-color-gray-2);
+    outline: none;
+  }
+
+  &[data-error] {
+    border-color: var(--mantine-color-red-6);
+
+    &:focus {
+      box-shadow: 0 0 0 2px var(--mantine-color-red-1);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--mantine-color-gray-0);
+  }
+
+  &[data-with-left-section] {
+    padding-left: calc(var(--input-left-section-size) + var(--mantine-spacing-xs));
+  }
+
+  &[data-with-right-section] {
+    padding-right: calc(var(--input-right-section-size) + var(--mantine-spacing-xs));
+  }
+}
+
+/* Dark mode - input */
+[data-mantine-color-scheme="dark"] .input {
+  background-color: var(--mantine-color-dark-6);
+  border-color: var(--mantine-color-dark-4);
+  color: var(--mantine-color-gray-0);
+
+  &::placeholder {
+    color: var(--mantine-color-dark-2);
+  }
+
+  &:hover:not(:focus):not(:disabled):not([data-error]) {
+    border-color: var(--mantine-color-dark-3);
+  }
+
+  &:focus:not([data-error]) {
+    border-color: var(--mantine-color-gray-5);
+    box-shadow: 0 0 0 2px var(--mantine-color-dark-5);
+  }
+
+  &[data-error] {
+    border-color: var(--mantine-color-red-5);
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15);
+    }
+  }
+
+  &:disabled {
+    background-color: var(--mantine-color-dark-7);
+    border-color: var(--mantine-color-dark-5);
+  }
+}
+
+.section {
+  color: var(--mantine-color-gray-5);
+}
+
+[data-mantine-color-scheme="dark"] .section {
+  color: var(--mantine-color-dark-2);
+}
+
+.label {
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 500;
+  color: var(--mantine-color-gray-7);
+  margin-bottom: 4px;
+}
+
+[data-mantine-color-scheme="dark"] .label {
+  color: var(--mantine-color-gray-3);
+}
+
+.description {
+  font-size: var(--mantine-font-size-xs);
+  color: var(--mantine-color-gray-6);
+  margin-top: 4px;
+}
+
+[data-mantine-color-scheme="dark"] .description {
+  color: var(--mantine-color-dark-2);
+}
+
+.error {
+  font-size: var(--mantine-font-size-xs);
+  color: var(--mantine-color-red-6);
+  margin-top: 4px;
+}
+
+[data-mantine-color-scheme="dark"] .error {
+  color: var(--mantine-color-red-5);
+}
+
+.required {
+  color: var(--mantine-color-red-6);
+}
+
+[data-mantine-color-scheme="dark"] .required {
+  color: var(--mantine-color-red-5);
+}
+
+/* Controls container (increment/decrement buttons) */
+.controls {
+  border-left: 1px solid var(--mantine-color-gray-3);
+}
+
+[data-mantine-color-scheme="dark"] .controls {
+  border-left-color: var(--mantine-color-dark-4);
+}
+
+/* Individual control button */
+.control {
+  color: var(--mantine-color-gray-6);
+  background-color: transparent;
+  border: none;
+  transition:
+    background-color 100ms ease,
+    color 100ms ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--mantine-color-gray-1);
+    color: var(--mantine-color-gray-8);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--mantine-color-gray-2);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Top control (increment) */
+  &[data-direction="up"] {
+    border-bottom: 1px solid var(--mantine-color-gray-3);
+  }
+}
+
+[data-mantine-color-scheme="dark"] .control {
+  color: var(--mantine-color-dark-1);
+
+  &:hover:not(:disabled) {
+    background-color: var(--mantine-color-dark-5);
+    color: var(--mantine-color-gray-0);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--mantine-color-dark-4);
+  }
+
+  &[data-direction="up"] {
+    border-bottom-color: var(--mantine-color-dark-4);
+  }
+}
+
+/* Size variants */
+.input[data-size="xs"] {
+  height: 28px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: var(--mantine-font-size-xs);
+}
+
+.input[data-size="sm"] {
+  height: 32px;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: var(--mantine-font-size-sm);
+}
+
+.input[data-size="md"] {
+  height: 38px;
+  padding-left: 14px;
+  padding-right: 14px;
+  font-size: var(--mantine-font-size-sm);
+}
+
+.input[data-size="lg"] {
+  height: 44px;
+  padding-left: 16px;
+  padding-right: 16px;
+  font-size: var(--mantine-font-size-md);
+}
+
+.input[data-size="xl"] {
+  height: 52px;
+  padding-left: 18px;
+  padding-right: 18px;
+  font-size: var(--mantine-font-size-md);
+}
+
+/* Filled variant */
+.input[data-variant="filled"] {
+  background-color: var(--mantine-color-gray-1);
+  border-color: transparent;
+
+  &:hover:not(:focus):not(:disabled):not([data-error]) {
+    background-color: var(--mantine-color-gray-2);
+  }
+
+  &:focus:not([data-error]) {
+    background-color: var(--mantine-color-white);
+    border-color: var(--mantine-color-gray-7);
+  }
+}
+
+[data-mantine-color-scheme="dark"] .input[data-variant="filled"] {
+  background-color: var(--mantine-color-dark-5);
+
+  &:hover:not(:focus):not(:disabled):not([data-error]) {
+    background-color: var(--mantine-color-dark-4);
+  }
+
+  &:focus:not([data-error]) {
+    background-color: var(--mantine-color-dark-6);
+    border-color: var(--mantine-color-gray-5);
+  }
+}
+
+/* Unstyled variant */
+.input[data-variant="unstyled"] {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .control {
+    transition: none;
+  }
+}

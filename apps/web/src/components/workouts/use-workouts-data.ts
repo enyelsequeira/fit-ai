@@ -76,11 +76,13 @@ export function useWorkoutsData() {
   // Fetch workouts for the selected date range
   const workoutsQuery = useQuery(
     orpc.workout.list.queryOptions({
-      startDate,
-      endDate,
-      limit: 100,
-      offset: 0,
-    })
+      input: {
+        startDate,
+        endDate,
+        limit: 100,
+        offset: 0,
+      },
+    }),
   );
 
   // Calculate stats from workouts data
@@ -115,7 +117,7 @@ export function useWorkoutsData() {
           workoutDate.setHours(0, 0, 0, 0);
 
           const diffDays = Math.floor(
-            (currentDate.getTime() - workoutDate.getTime()) / (1000 * 60 * 60 * 24)
+            (currentDate.getTime() - workoutDate.getTime()) / (1000 * 60 * 60 * 24),
           );
 
           if (diffDays <= 1) {

@@ -1,7 +1,7 @@
 import type { ExerciseCategory } from "./category-badge";
 import type { EquipmentType } from "./equipment-icon";
 
-import { ActionIcon, Badge, Button, Checkbox, Group, Menu, Text } from "@mantine/core";
+import { ActionIcon, Badge, Button, Checkbox, Group, Menu } from "@mantine/core";
 import { IconFilter, IconLayoutGrid, IconList, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 

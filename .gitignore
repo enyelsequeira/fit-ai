@@ -64,6 +64,8 @@ PROMPT.md
 .claude_settings.json
 .agent
 scripts
-templates
 claude-progress.txt
 autonomous-coding/
+
+# Playwright MCP screenshots
+.playwright-mcp/

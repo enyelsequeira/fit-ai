@@ -1,0 +1,72 @@
+/* Records Filters Styles */
+
+.container {
+  animation: fadeIn 200ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.searchInput {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+
+  &:focus {
+    border-color: var(--mantine-color-blue-5);
+    box-shadow: 0 0 0 2px light-dark(rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.2));
+  }
+}
+
+.segmentedRoot {
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+}
+
+.segmentedIndicator {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-4));
+  box-shadow: var(--mantine-shadow-xs);
+}
+
+.clearButton {
+  transition:
+    opacity 200ms ease,
+    background 200ms ease;
+
+  @mixin hover {
+    opacity: 0.9;
+    background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+  }
+}
+
+/* Data attribute for active filter state */
+.container[data-has-filters="true"] {
+  @mixin light {
+    background: rgba(59, 130, 246, 0.02);
+  }
+  @mixin dark {
+    background: rgba(59, 130, 246, 0.05);
+  }
+  border-radius: var(--mantine-radius-md);
+  padding: var(--mantine-spacing-sm);
+  margin: calc(var(--mantine-spacing-sm) * -1);
+}
+
+@media (max-width: 576px) {
+  .segmentedRoot {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    animation: none;
+  }
+}

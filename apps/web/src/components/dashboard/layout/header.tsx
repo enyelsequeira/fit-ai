@@ -97,16 +97,8 @@ const DashboardHeader = ({
       </Flex>
 
       <Flex align={"center"} gap={"xs"}>
-        <Tooltip
-          label={colorScheme === "dark" ? "Light mode" : "Dark mode"}
-          position="bottom"
-        >
-          <FitAiActionIcon
-            variant={"ghost"}
-            size={"sm"}
-            c={"blue"}
-            onClick={toggleColorScheme}
-          >
+        <Tooltip label={colorScheme === "dark" ? "Light mode" : "Dark mode"} position="bottom">
+          <FitAiActionIcon variant={"ghost"} size={"sm"} c={"blue"} onClick={toggleColorScheme}>
             {colorScheme === "dark" ? (
               <IconSun size={20} stroke={1.5} />
             ) : (
@@ -114,21 +106,10 @@ const DashboardHeader = ({
             )}
           </FitAiActionIcon>
         </Tooltip>
-        <Menu
-          shadow="md"
-          width={220}
-          position="bottom-end"
-          withArrow
-          arrowPosition="center"
-        >
+        <Menu shadow="md" width={220} position="bottom-end" withArrow arrowPosition="center">
           <Menu.Target>
             <UnstyledButton className={styles.userMenuButton}>
-              <Avatar
-                size="sm"
-                radius="xl"
-                color="blue"
-                alt={session?.userName}
-              >
+              <Avatar size="sm" radius="xl" color="blue" alt={session?.userName}>
                 {session?.userInitials || ""}
               </Avatar>
               <Text fw={500} fz={"sm"} className={"mantine-visible-from-md"}>

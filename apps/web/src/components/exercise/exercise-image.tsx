@@ -1,35 +1,32 @@
+import { Box, Center } from "@mantine/core";
 import { IconBarbell } from "@tabler/icons-react";
 import { useState } from "react";
-
-import { cn } from "@/lib/utils";
 
 interface ExerciseImageProps {
   src: string | null | undefined;
   alt: string;
   size?: "sm" | "md" | "lg" | "xl";
-  className?: string;
   aspectRatio?: "square" | "video";
 }
 
-const sizeClasses = {
-  sm: "size-10",
-  md: "h-32 w-full",
-  lg: "h-48 w-full",
-  xl: "h-64 w-full",
-};
+const sizeStyles = {
+  sm: { width: 40, height: 40 },
+  md: { width: "100%", height: 128 },
+  lg: { width: "100%", height: 192 },
+  xl: { width: "100%", height: 256 },
+} as const;
 
-const iconSizeClasses = {
-  sm: "size-5",
-  md: "size-8",
-  lg: "size-12",
-  xl: "size-16",
-};
+const iconSizes = {
+  sm: 20,
+  md: 32,
+  lg: 48,
+  xl: 64,
+} as const;
 
 export function ExerciseImage({
   src,
   alt,
   size = "md",
-  className,
   aspectRatio = "video",
 }: ExerciseImageProps) {
   const [hasError, setHasError] = useState(false);
@@ -37,34 +34,58 @@ export function ExerciseImage({
 
   const showFallback = !src || hasError;
 
+  const aspectRatioValue =
+    aspectRatio === "square" ? "1 / 1" : size !== "sm" ? "16 / 9" : undefined;
+
   return (
-    <div
-      className={cn(
-        "relative overflow-hidden bg-muted flex items-center justify-center",
-        sizeClasses[size],
-        aspectRatio === "square" && "aspect-square",
-        aspectRatio === "video" && size !== "sm" && "aspect-video",
-        className,
-      )}
+    <Box
+      pos="relative"
+      style={{
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        aspectRatio: aspectRatioValue,
+        ...sizeStyles[size],
+      }}
+      bg="var(--mantine-color-default)"
     >
       {showFallback ? (
-        <div className="flex items-center justify-center size-full bg-muted">
-          <IconBarbell className={cn("text-muted-foreground/50", iconSizeClasses[size])} />
-        </div>
+        <Center w="100%" h="100%" bg="var(--mantine-color-default)">
+          <IconBarbell
+            size={iconSizes[size]}
+            style={{ opacity: 0.5, color: "var(--mantine-color-dimmed)" }}
+          />
+        </Center>
       ) : (
         <>
           {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
-              <IconBarbell className={cn("text-muted-foreground/30", iconSizeClasses[size])} />
-            </div>
+            <Center
+              pos="absolute"
+              top={0}
+              left={0}
+              right={0}
+              bottom={0}
+              bg="var(--mantine-color-default)"
+              style={{ animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite" }}
+            >
+              <IconBarbell
+                size={iconSizes[size]}
+                style={{ opacity: 0.3, color: "var(--mantine-color-dimmed)" }}
+              />
+            </Center>
           )}
-          <img
+          <Box
+            component="img"
             src={src}
             alt={alt}
-            className={cn(
-              "object-cover size-full transition-opacity duration-200",
-              isLoading ? "opacity-0" : "opacity-100",
-            )}
+            w="100%"
+            h="100%"
+            style={{
+              objectFit: "cover",
+              transition: "opacity 200ms",
+              opacity: isLoading ? 0 : 1,
+            }}
             onLoad={() => setIsLoading(false)}
             onError={() => {
               setHasError(true);
@@ -73,38 +94,45 @@ export function ExerciseImage({
           />
         </>
       )}
-    </div>
+    </Box>
   );
 }
 
 interface ExerciseImageThumbnailProps {
   src: string | null | undefined;
   alt: string;
-  className?: string;
 }
 
-export function ExerciseImageThumbnail({ src, alt, className }: ExerciseImageThumbnailProps) {
+export function ExerciseImageThumbnail({ src, alt }: ExerciseImageThumbnailProps) {
   const [hasError, setHasError] = useState(false);
 
   const showFallback = !src || hasError;
 
   return (
-    <div
-      className={cn(
-        "relative size-12 shrink-0 overflow-hidden rounded-md bg-muted flex items-center justify-center",
-        className,
-      )}
+    <Center
+      pos="relative"
+      w={48}
+      h={48}
+      style={{
+        flexShrink: 0,
+        overflow: "hidden",
+        borderRadius: "var(--mantine-radius-md)",
+      }}
+      bg="var(--mantine-color-default)"
     >
       {showFallback ? (
-        <IconBarbell className="size-5 text-muted-foreground/50" />
+        <IconBarbell size={20} style={{ opacity: 0.5, color: "var(--mantine-color-dimmed)" }} />
       ) : (
-        <img
+        <Box
+          component="img"
           src={src}
           alt={alt}
-          className="object-cover size-full"
+          w="100%"
+          h="100%"
+          style={{ objectFit: "cover" }}
           onError={() => setHasError(true)}
         />
       )}
-    </div>
+    </Center>
   );
 }

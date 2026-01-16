@@ -49,9 +49,7 @@ function formatDate(dateValue: unknown): string {
   if (!date) return "-";
 
   const now = new Date();
-  const diffDays = Math.floor(
-    (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) return "Today";
   if (diffDays === 1) return "Yesterday";
@@ -125,32 +123,21 @@ export function WorkoutCard({
       <FitAiCardContent>
         <Box className={styles.cardHeader}>
           <Box className={styles.cardHeaderLeft}>
-            <Box
-              className={styles.workoutIcon}
-              data-completed={isCompleted}
-            >
+            <Box className={styles.workoutIcon} data-completed={isCompleted}>
               <IconBarbell size={20} />
             </Box>
             <Box className={styles.workoutInfo}>
-              <Text className={styles.workoutName}>
-                {name ?? "Workout"}
-              </Text>
+              <Text className={styles.workoutName}>{name ?? "Workout"}</Text>
               <Flex className={styles.metaRow}>
                 <Box className={styles.metaItem}>
-                  <IconCalendar
-                    size={12}
-                    style={{ color: "var(--mantine-color-dimmed)" }}
-                  />
+                  <IconCalendar size={12} style={{ color: "var(--mantine-color-dimmed)" }} />
                   <Text size="xs" c="dimmed">
                     {formatDate(date)}
                   </Text>
                 </Box>
                 {duration && (
                   <Box className={styles.metaItem}>
-                    <IconClock
-                      size={12}
-                      style={{ color: "var(--mantine-color-dimmed)" }}
-                    />
+                    <IconClock size={12} style={{ color: "var(--mantine-color-dimmed)" }} />
                     <Text size="xs" c="dimmed">
                       {formatDuration(duration)}
                     </Text>
@@ -160,10 +147,7 @@ export function WorkoutCard({
             </Box>
           </Box>
 
-          <Box
-            className={styles.statusBadge}
-            data-status={statusInfo.status}
-          >
+          <Box className={styles.statusBadge} data-status={statusInfo.status}>
             <StatusIcon size={12} />
             {statusInfo.label}
           </Box>
@@ -195,11 +179,7 @@ export function WorkoutCard({
                   </Text>
                 </Flex>
               )}
-              {mood && (
-                <Box className={styles.moodBadge}>
-                  {getMoodEmoji(mood)}
-                </Box>
-              )}
+              {mood && <Box className={styles.moodBadge}>{getMoodEmoji(mood)}</Box>}
             </Box>
           )}
         </Flex>

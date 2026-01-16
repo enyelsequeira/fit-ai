@@ -1,4 +1,4 @@
-import { Box, Card, Flex, Group, SimpleGrid, Skeleton, Stack, Text, Title } from "@mantine/core";
+import { Box, Card, Flex, Group, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { IconTrendingUp, IconTrophy } from "@tabler/icons-react";
 

@@ -20,11 +20,10 @@
   @mixin hover {
     transform: translateY(-2px);
     box-shadow:
-            0 4px 6px -1px rgba(0, 0, 0, 0.1),
-            0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 }
-
 
 .iconWrapper {
   display: flex;
@@ -50,13 +49,10 @@
     background: var(--mantine-color-yellow-light);
     color: var(--mantine-color-yellow-6);
   }
-
 }
 .statCard:hover .iconWrapper {
   transform: scale(1.1);
 }
-
-
 
 .trendPositive {
   color: var(--mantine-color-teal-6);

@@ -1,0 +1,318 @@
+/* Template Actions Styles */
+
+/* ============================================================================
+   Container Variants
+   ============================================================================ */
+
+.actionsContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+}
+
+/* Modal variant - full width button group */
+.modal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* Card variant - compact inline actions */
+.card {
+  flex-direction: row;
+  gap: var(--mantine-spacing-xs);
+}
+
+/* Compact variant - icon-only actions */
+.compact {
+  flex-direction: row;
+  gap: 4px;
+}
+
+/* ============================================================================
+   Primary Action Button
+   ============================================================================ */
+
+.primaryAction {
+  position: relative;
+  font-weight: 600;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+
+  @mixin hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(var(--mantine-color-green-6-rgb, 0, 128, 0), 0.25);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================================
+   Secondary Action Buttons
+   ============================================================================ */
+
+.secondaryAction {
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease;
+
+  @mixin hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================================
+   Action Icon Buttons
+   ============================================================================ */
+
+.actionIcon {
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease;
+
+  @mixin hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Start workout icon - green accent */
+.actionIconStart {
+  composes: actionIcon;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-green-1), var(--mantine-color-green-9));
+    color: light-dark(var(--mantine-color-green-7), var(--mantine-color-green-4));
+  }
+}
+
+/* Duplicate icon - blue accent */
+.actionIconDuplicate {
+  composes: actionIcon;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-blue-1), var(--mantine-color-blue-9));
+    color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-4));
+  }
+}
+
+/* Edit icon - yellow accent */
+.actionIconEdit {
+  composes: actionIcon;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-yellow-1), var(--mantine-color-yellow-9));
+    color: light-dark(var(--mantine-color-yellow-7), var(--mantine-color-yellow-4));
+  }
+}
+
+/* Delete icon - red accent */
+.actionIconDelete {
+  composes: actionIcon;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-red-1), var(--mantine-color-red-9));
+    color: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4));
+  }
+}
+
+/* ============================================================================
+   More Actions Menu Trigger
+   ============================================================================ */
+
+.moreActionsTrigger {
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+    transform: rotate(90deg);
+  }
+}
+
+/* ============================================================================
+   Confirmation Modal
+   ============================================================================ */
+
+.confirmationContent {
+  text-align: center;
+}
+
+.confirmationIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-bottom: var(--mantine-spacing-md);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.confirmationIconDanger {
+  composes: confirmationIcon;
+  background: light-dark(var(--mantine-color-red-1), rgba(255, 0, 0, 0.15));
+  color: var(--mantine-color-red-6);
+}
+
+.confirmationIconWarning {
+  composes: confirmationIcon;
+  background: light-dark(var(--mantine-color-yellow-1), rgba(250, 176, 5, 0.15));
+  color: var(--mantine-color-yellow-6);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.confirmationTitle {
+  font-weight: 600;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+}
+
+.confirmationMessage {
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+  line-height: 1.6;
+}
+
+.confirmationActions {
+  display: flex;
+  gap: var(--mantine-spacing-sm);
+  justify-content: center;
+  margin-top: var(--mantine-spacing-lg);
+}
+
+/* ============================================================================
+   Loading States
+   ============================================================================ */
+
+.loadingOverlay {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: light-dark(rgba(255, 255, 255, 0.6), rgba(0, 0, 0, 0.4));
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+
+  &[data-loading="true"]::after {
+    opacity: 1;
+  }
+}
+
+/* ============================================================================
+   Tooltip Styles
+   ============================================================================ */
+
+.tooltip {
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 500;
+}
+
+/* ============================================================================
+   Menu Styles
+   ============================================================================ */
+
+.menuDropdown {
+  animation: menuSlideIn 150ms ease-out;
+}
+
+@keyframes menuSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.menuItem {
+  transition:
+    background-color 100ms ease,
+    color 100ms ease;
+}
+
+.menuItemDanger {
+  composes: menuItem;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-red-1), rgba(255, 0, 0, 0.15));
+  }
+}
+
+.menuDivider {
+  margin: var(--mantine-spacing-xs) 0;
+}
+
+/* ============================================================================
+   Responsive Adjustments
+   ============================================================================ */
+
+@mixin smaller-than 576px {
+  .modal {
+    flex-direction: column;
+
+    & .primaryAction {
+      width: 100%;
+    }
+  }
+
+  .confirmationActions {
+    flex-direction: column;
+    width: 100%;
+
+    & button {
+      width: 100%;
+    }
+  }
+}
+
+/* ============================================================================
+   Reduced Motion
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryAction,
+  .secondaryAction,
+  .actionIcon,
+  .actionIconStart,
+  .actionIconDuplicate,
+  .actionIconEdit,
+  .actionIconDelete,
+  .moreActionsTrigger,
+  .confirmationIcon,
+  .confirmationIconDanger,
+  .confirmationIconWarning,
+  .menuDropdown {
+    animation: none;
+    transition: none;
+  }
+}

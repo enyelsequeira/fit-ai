@@ -1,9 +1,11 @@
-import { IconCheck, IconMinus, IconPlus, IconTrash } from "@tabler/icons-react";
-import { useCallback } from "react";
+import type { SetType, WeightUnit } from "./set-row-utils";
 
-import { ActionIcon, Box, Checkbox, Flex, Group, NumberInput, Select, Text } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 
-type SetType = "normal" | "warmup" | "failure" | "drop";
+import { CompactSetActions, SetActions } from "./set-actions";
+import { RepsInput, SetInputs, WeightInput } from "./set-inputs";
+import { PreviousPerformance, SetNumberIndicator, SetTypeSelect } from "./set-indicators";
+import { SET_TYPE_LABELS } from "./set-row-utils";
 
 interface SetRowProps {
   setNumber: number;
@@ -14,7 +16,7 @@ interface SetRowProps {
   isCompleted: boolean;
   previousWeight?: number | null;
   previousReps?: number | null;
-  weightUnit?: "kg" | "lb";
+  weightUnit?: WeightUnit;
   onWeightChange: (value: number | null) => void;
   onRepsChange: (value: number | null) => void;
   onRpeChange: (value: number | null) => void;
@@ -25,22 +27,9 @@ interface SetRowProps {
   className?: string;
 }
 
-const SET_TYPE_LABELS: Record<SetType, string> = {
-  normal: "Working",
-  warmup: "Warmup",
-  failure: "Failure",
-  drop: "Drop",
-};
-
-const SET_TYPE_COLORS: Record<SetType, string> = {
-  normal: "",
-  warmup: "var(--mantine-color-yellow-5)",
-  failure: "var(--mantine-color-red-5)",
-  drop: "var(--mantine-color-blue-5)",
-};
+type SetRowCompactProps = Omit<SetRowProps, "rpe" | "onRpeChange" | "onSetTypeChange">;
 
 function SetRow({
-  setNumber,
   weight,
   reps,
   rpe,
@@ -58,27 +47,14 @@ function SetRow({
   disabled = false,
 }: SetRowProps) {
   const showRpe = rpe !== null;
-
-  const handleWeightIncrement = useCallback(
-    (increment: number) => {
-      const newWeight = (weight ?? 0) + increment;
-      onWeightChange(Math.max(0, newWeight));
-    },
-    [weight, onWeightChange],
-  );
-
-  const handleRepsIncrement = useCallback(
-    (increment: number) => {
-      const newReps = (reps ?? 0) + increment;
-      onRepsChange(Math.max(0, newReps));
-    },
-    [reps, onRepsChange],
-  );
+  const canComplete = Boolean(weight || reps);
+  const isDisabled = disabled || isCompleted;
 
   return (
     <Box
       py="xs"
       px={4}
+      data-completed={isCompleted || undefined}
       style={{
         display: "grid",
         gridTemplateColumns: "auto 1fr 1fr auto auto",
@@ -88,179 +64,37 @@ function SetRow({
         opacity: isCompleted ? 0.6 : 1,
       }}
     >
-      {/* Set number / type */}
-      <Box style={{ minWidth: 60 }}>
-        <Select
-          value={setType}
-          onChange={(value) => value && onSetTypeChange(value as SetType)}
-          disabled={disabled || isCompleted}
-          data={Object.entries(SET_TYPE_LABELS).map(([value, label]) => ({
-            value,
-            label,
-          }))}
-          size="xs"
-          w={64}
-          styles={{
-            input: {
-              height: 28,
-              minHeight: 28,
-              paddingLeft: 6,
-              paddingRight: 6,
-              color: SET_TYPE_COLORS[setType] || undefined,
-            },
-          }}
-          comboboxProps={{ withinPortal: true }}
-        />
-      </Box>
+      <SetTypeSelect setType={setType} disabled={isDisabled} onSetTypeChange={onSetTypeChange} />
 
-      {/* Previous performance hint */}
-      <Text fz="xs" c="dimmed" ta="center" style={{ minWidth: 70 }}>
-        {previousWeight && previousReps ? (
-          <span>
-            {previousWeight}
-            {weightUnit} x {previousReps}
-          </span>
-        ) : (
-          <span style={{ opacity: 0.5 }}>-</span>
-        )}
-      </Text>
+      <PreviousPerformance
+        previousWeight={previousWeight}
+        previousReps={previousReps}
+        weightUnit={weightUnit}
+      />
 
-      {/* Weight input */}
-      <Flex align="center" gap={2}>
-        <ActionIcon
-          variant="subtle"
-          size="xs"
-          onClick={() => handleWeightIncrement(-2.5)}
-          disabled={disabled || isCompleted}
-          aria-label="Decrease weight"
-        >
-          <IconMinus style={{ width: 12, height: 12 }} />
-        </ActionIcon>
-        <NumberInput
-          value={weight ?? ""}
-          onChange={(value) => onWeightChange(typeof value === "number" ? value : null)}
-          disabled={disabled || isCompleted}
-          size="xs"
-          w={64}
-          hideControls
-          placeholder={weightUnit}
-          styles={{
-            input: {
-              height: 28,
-              minHeight: 28,
-              textAlign: "center",
-              paddingLeft: 4,
-              paddingRight: 4,
-            },
-          }}
-        />
-        <ActionIcon
-          variant="subtle"
-          size="xs"
-          onClick={() => handleWeightIncrement(2.5)}
-          disabled={disabled || isCompleted}
-          aria-label="Increase weight"
-        >
-          <IconPlus style={{ width: 12, height: 12 }} />
-        </ActionIcon>
-      </Flex>
+      <SetInputs
+        weight={weight}
+        reps={reps}
+        weightUnit={weightUnit}
+        disabled={isDisabled}
+        onWeightChange={onWeightChange}
+        onRepsChange={onRepsChange}
+      />
 
-      {/* Reps input */}
-      <Flex align="center" gap={2}>
-        <ActionIcon
-          variant="subtle"
-          size="xs"
-          onClick={() => handleRepsIncrement(-1)}
-          disabled={disabled || isCompleted}
-          aria-label="Decrease reps"
-        >
-          <IconMinus style={{ width: 12, height: 12 }} />
-        </ActionIcon>
-        <NumberInput
-          value={reps ?? ""}
-          onChange={(value) => onRepsChange(typeof value === "number" ? value : null)}
-          disabled={disabled || isCompleted}
-          size="xs"
-          w={48}
-          hideControls
-          placeholder="reps"
-          styles={{
-            input: {
-              height: 28,
-              minHeight: 28,
-              textAlign: "center",
-              paddingLeft: 4,
-              paddingRight: 4,
-            },
-          }}
-        />
-        <ActionIcon
-          variant="subtle"
-          size="xs"
-          onClick={() => handleRepsIncrement(1)}
-          disabled={disabled || isCompleted}
-          aria-label="Increase reps"
-        >
-          <IconPlus style={{ width: 12, height: 12 }} />
-        </ActionIcon>
-      </Flex>
-
-      {/* Complete checkbox and actions */}
-      <Group gap={4}>
-        {showRpe && (
-          <Select
-            value={rpe?.toString() ?? ""}
-            onChange={(value) => onRpeChange(value ? Number(value) : null)}
-            disabled={disabled || isCompleted}
-            data={[6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10].map((v) => ({
-              value: v.toString(),
-              label: v.toString(),
-            }))}
-            size="xs"
-            w={48}
-            styles={{
-              input: {
-                height: 28,
-                minHeight: 28,
-                paddingLeft: 4,
-                paddingRight: 4,
-              },
-            }}
-            comboboxProps={{ withinPortal: true }}
-          />
-        )}
-
-        <Checkbox
-          checked={isCompleted}
-          onChange={() => onComplete()}
-          disabled={disabled || (!weight && !reps)}
-          size="md"
-          color="green"
-          styles={{
-            input: {
-              width: 24,
-              height: 24,
-              cursor: "pointer",
-            },
-          }}
-        />
-
-        <ActionIcon
-          variant="subtle"
-          size="xs"
-          onClick={onDelete}
-          disabled={disabled}
-          c="dimmed"
-          aria-label="Delete set"
-        >
-          <IconTrash style={{ width: 12, height: 12 }} />
-        </ActionIcon>
-      </Group>
+      <SetActions
+        isCompleted={isCompleted}
+        disabled={disabled}
+        canComplete={canComplete}
+        rpe={rpe}
+        showRpe={showRpe}
+        onComplete={onComplete}
+        onDelete={onDelete}
+        onRpeChange={onRpeChange}
+      />
     </Box>
   );
 }
 
-// Compact version for mobile
 function SetRowCompact({
   setNumber,
   weight,
@@ -275,81 +109,52 @@ function SetRowCompact({
   onComplete,
   onDelete,
   disabled = false,
-}: Omit<SetRowProps, "rpe" | "onRpeChange" | "onSetTypeChange">) {
+}: SetRowCompactProps) {
+  const canComplete = Boolean(weight || reps);
+  const isDisabled = disabled || isCompleted;
+
   return (
-    <Flex align="center" gap="xs" py="xs" style={{ opacity: isCompleted ? 0.6 : 1 }}>
-      <Text
-        w={24}
-        ta="center"
-        fz="xs"
-        fw={500}
-        c={
-          setType === "warmup"
-            ? "yellow"
-            : setType === "failure"
-              ? "red"
-              : setType === "drop"
-                ? "blue"
-                : undefined
-        }
-      >
-        {setNumber}
-      </Text>
+    <Flex
+      align="center"
+      gap="xs"
+      py="xs"
+      data-completed={isCompleted || undefined}
+      style={{ opacity: isCompleted ? 0.6 : 1 }}
+    >
+      <SetNumberIndicator setNumber={setNumber} setType={setType} />
 
-      <Text fz="xs" c="dimmed" style={{ minWidth: 50 }}>
-        {previousWeight && previousReps ? `${previousWeight}x${previousReps}` : "-"}
-      </Text>
-
-      <NumberInput
-        value={weight ?? ""}
-        onChange={(value) => onWeightChange(typeof value === "number" ? value : null)}
-        disabled={disabled || isCompleted}
-        size="xs"
-        w={64}
-        hideControls
-        placeholder={weightUnit}
-        styles={{
-          input: {
-            height: 32,
-            minHeight: 32,
-            textAlign: "center",
-          },
-        }}
+      <PreviousPerformance
+        previousWeight={previousWeight}
+        previousReps={previousReps}
+        weightUnit={weightUnit}
+        compact
       />
 
-      <NumberInput
-        value={reps ?? ""}
-        onChange={(value) => onRepsChange(typeof value === "number" ? value : null)}
-        disabled={disabled || isCompleted}
-        size="xs"
-        w={48}
-        hideControls
-        placeholder="reps"
-        styles={{
-          input: {
-            height: 32,
-            minHeight: 32,
-            textAlign: "center",
-          },
-        }}
+      <WeightInput
+        weight={weight}
+        weightUnit={weightUnit}
+        disabled={isDisabled}
+        onWeightChange={onWeightChange}
+        showControls={false}
       />
 
-      <ActionIcon
-        variant={isCompleted ? "filled" : "outline"}
-        size="sm"
-        onClick={onComplete}
-        disabled={disabled || (!weight && !reps)}
-        color={isCompleted ? "green" : undefined}
-      >
-        <IconCheck style={{ width: 16, height: 16 }} />
-      </ActionIcon>
+      <RepsInput
+        reps={reps}
+        disabled={isDisabled}
+        onRepsChange={onRepsChange}
+        showControls={false}
+      />
 
-      <ActionIcon variant="subtle" size="sm" onClick={onDelete} disabled={disabled} c="dimmed">
-        <IconTrash style={{ width: 12, height: 12 }} />
-      </ActionIcon>
+      <CompactSetActions
+        isCompleted={isCompleted}
+        disabled={disabled}
+        canComplete={canComplete}
+        onComplete={onComplete}
+        onDelete={onDelete}
+      />
     </Flex>
   );
 }
 
 export { SetRow, SetRowCompact, SET_TYPE_LABELS };
-export type { SetType };
+export type { SetType, WeightUnit };

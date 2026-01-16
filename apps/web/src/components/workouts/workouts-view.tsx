@@ -49,7 +49,7 @@ export function WorkoutsView() {
     (workoutId: number) => {
       navigate({ to: `/dashboard/workouts/${workoutId}` as string });
     },
-    [navigate]
+    [navigate],
   );
 
   return (

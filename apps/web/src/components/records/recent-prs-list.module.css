@@ -1,0 +1,221 @@
+/* Recent PRs List Styles */
+
+.card {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  border: 1px solid var(--mantine-color-default-border);
+  animation: fadeSlideUp 400ms ease-out backwards;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.trophyIcon {
+  color: var(--mantine-color-yellow-5);
+}
+
+.prList {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.prList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.prList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.prList::-webkit-scrollbar-thumb {
+  background: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
+  border-radius: 2px;
+}
+
+.prItem {
+  border-radius: var(--mantine-radius-md);
+  cursor: pointer;
+  background: transparent;
+  transition:
+    background 200ms ease,
+    transform 150ms ease;
+  animation: slideIn 400ms ease-out backwards;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+    transform: translateX(4px);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Data attribute styling for recent items */
+.prItem[data-recent="true"] {
+  @mixin light {
+    background: rgba(34, 197, 94, 0.05);
+  }
+  @mixin dark {
+    background: rgba(34, 197, 94, 0.08);
+  }
+
+  @mixin hover {
+    @mixin light {
+      background: rgba(34, 197, 94, 0.1);
+    }
+    @mixin dark {
+      background: rgba(34, 197, 94, 0.15);
+    }
+  }
+}
+
+/* Record type styling via data attribute */
+.prItem[data-record-type="one_rep_max"] {
+  border-left: 3px solid var(--mantine-color-violet-6);
+}
+
+.prItem[data-record-type="max_weight"] {
+  border-left: 3px solid var(--mantine-color-blue-6);
+}
+
+.prItem[data-record-type="max_reps"] {
+  border-left: 3px solid var(--mantine-color-green-6);
+}
+
+.prItem[data-record-type="max_volume"] {
+  border-left: 3px solid var(--mantine-color-orange-6);
+}
+
+.prItem[data-record-type="best_time"] {
+  border-left: 3px solid var(--mantine-color-red-6);
+}
+
+.prItem[data-record-type="longest_duration"] {
+  border-left: 3px solid var(--mantine-color-cyan-6);
+}
+
+.prItem[data-record-type="longest_distance"] {
+  border-left: 3px solid var(--mantine-color-pink-6);
+}
+
+/* Glow animation for very recent items */
+.prItem[data-is-new="true"] {
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+  50% {
+    box-shadow: 0 0 8px 2px rgba(34, 197, 94, 0.3);
+  }
+}
+
+.medalIcon {
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-yellow-light);
+  color: var(--mantine-color-yellow-6);
+  transition: transform 200ms ease;
+}
+
+.prItem:hover .medalIcon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.medalIcon[data-today="true"] {
+  background: linear-gradient(
+    135deg,
+    var(--mantine-color-green-light) 0%,
+    var(--mantine-color-yellow-light) 100%
+  );
+  color: var(--mantine-color-green-6);
+}
+
+.sparkleIcon {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(10deg);
+  }
+}
+
+.prValue {
+  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-white));
+}
+
+.emptyState {
+  animation: fadeSlideUp 400ms ease-out;
+}
+
+.emptyIcon {
+  color: var(--mantine-color-dimmed);
+  padding: var(--mantine-spacing-md);
+  background: var(--mantine-color-yellow-light);
+  border-radius: 50%;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .prItem,
+  .emptyState {
+    animation: none;
+  }
+
+  .sparkleIcon {
+    animation: none;
+  }
+
+  .emptyIcon {
+    animation: none;
+  }
+
+  .prItem {
+    @mixin hover {
+      transform: none;
+    }
+  }
+
+  .prItem:hover .medalIcon {
+    transform: none;
+  }
+
+  .prItem[data-is-new="true"] {
+    animation: none;
+  }
+}

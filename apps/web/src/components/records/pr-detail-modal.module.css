@@ -1,0 +1,106 @@
+/* PR Detail Modal Styles */
+
+.modalContent {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border: 1px solid var(--mantine-color-default-border);
+}
+
+.modalHeader {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.trophyIcon {
+  color: var(--mantine-color-yellow-5);
+}
+
+.recordCard {
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  border: 1px solid var(--mantine-color-default-border);
+}
+
+/* Data attribute styling for record types */
+.recordCard[data-record-type="one_rep_max"] {
+  border-left: 4px solid var(--mantine-color-violet-6);
+}
+
+.recordCard[data-record-type="max_weight"] {
+  border-left: 4px solid var(--mantine-color-blue-6);
+}
+
+.recordCard[data-record-type="max_reps"] {
+  border-left: 4px solid var(--mantine-color-green-6);
+}
+
+.recordCard[data-record-type="max_volume"] {
+  border-left: 4px solid var(--mantine-color-orange-6);
+}
+
+.recordCard[data-record-type="best_time"] {
+  border-left: 4px solid var(--mantine-color-red-6);
+}
+
+.recordCard[data-record-type="longest_duration"] {
+  border-left: 4px solid var(--mantine-color-cyan-6);
+}
+
+.recordCard[data-record-type="longest_distance"] {
+  border-left: 4px solid var(--mantine-color-pink-6);
+}
+
+.notesCard {
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  border: none;
+}
+
+.timelineItem {
+  padding-bottom: var(--mantine-spacing-md);
+}
+
+.timelineBullet {
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Animation for modal content */
+.modalContent[data-entering] {
+  animation: modalSlideIn 200ms ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* History item styling */
+.historyItem {
+  transition: background 150ms ease;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin: -4px -8px;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  }
+}
+
+.historyItem[data-is-latest="true"] {
+  @mixin light {
+    background: rgba(34, 197, 94, 0.05);
+  }
+  @mixin dark {
+    background: rgba(34, 197, 94, 0.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modalContent[data-entering] {
+    animation: none;
+  }
+}

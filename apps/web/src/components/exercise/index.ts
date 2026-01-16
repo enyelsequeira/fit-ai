@@ -19,8 +19,6 @@ export { ExerciseHistory } from "./exercise-history";
 
 export { ExerciseImage, ExerciseImageThumbnail } from "./exercise-image";
 
-export { ExerciseImageGallery } from "./exercise-image-gallery";
-
 export {
   ExerciseLevelBadge,
   ExerciseForceBadge,

@@ -1,80 +1,17 @@
-import {
-  IconChevronDown,
-  IconChevronUp,
-  IconDotsVertical,
-  IconPlus,
-  IconTrash,
-} from "@tabler/icons-react";
 import { useState } from "react";
 
-import {
-  ActionIcon,
-  Badge,
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Group,
-  Menu,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Box, Flex, Text } from "@mantine/core";
 
-import { RestTimer } from "./rest-timer";
-import type { SetType } from "./set-row";
-import { SetRow } from "./set-row";
+import { ExerciseBlockHeader } from "./exercise-block-header";
+import type {
+  Exercise,
+  ExerciseBlockProps,
+  ExerciseSet,
+  PreviousPerformance,
+} from "./exercise-block.types";
 import { SimplePreviousPerformance } from "./previous-performance";
-
-interface ExerciseSet {
-  id: number | string;
-  setNumber: number;
-  weight: number | null;
-  reps: number | null;
-  rpe: number | null;
-  setType: SetType;
-  isCompleted: boolean;
-  targetWeight?: number | null;
-  targetReps?: number | null;
-}
-
-interface Exercise {
-  id: number;
-  name: string;
-  category: string;
-  muscleGroups?: string[];
-  equipment?: string | null;
-}
-
-interface PreviousPerformance {
-  topSet: { weight: number; reps: number } | null;
-  sets: Array<{
-    setNumber: number;
-    weight: number | null;
-    reps: number | null;
-    rpe: number | null;
-  }>;
-}
-
-interface ExerciseBlockProps {
-  workoutExerciseId: number;
-  exercise: Exercise;
-  sets: ExerciseSet[];
-  previousPerformance?: PreviousPerformance | null;
-  supersetGroupId?: number | null;
-  notes?: string | null;
-  isExpanded?: boolean;
-  showRestTimer?: boolean;
-  restTimerSeconds?: number;
-  weightUnit?: "kg" | "lb";
-  onAddSet: () => void;
-  onUpdateSet: (setId: number | string, data: Partial<ExerciseSet>) => void;
-  onDeleteSet: (setId: number | string) => void;
-  onCompleteSet: (setId: number | string) => void;
-  onRemoveExercise: () => void;
-  onMoveUp?: () => void;
-  onMoveDown?: () => void;
-  className?: string;
-}
+import { RestTimer } from "./rest-timer";
+import { SetsList } from "./sets-list";
 
 function ExerciseBlock({
   workoutExerciseId: _workoutExerciseId,
@@ -106,6 +43,10 @@ function ExerciseBlock({
     setActiveRestTimer(true);
   };
 
+  const handleToggleExpanded = () => {
+    setIsExpanded((prev) => !prev);
+  };
+
   return (
     <Box
       style={{
@@ -114,109 +55,20 @@ function ExerciseBlock({
         overflow: "hidden",
       }}
     >
-      {/* Header */}
-      <Flex
-        align="center"
-        justify="space-between"
-        gap="xs"
-        px="sm"
-        py="xs"
-        style={{
-          backgroundColor: "var(--mantine-color-default-hover)",
-          cursor: "pointer",
-        }}
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <Group gap="xs" style={{ minWidth: 0 }}>
-          <ActionIcon
-            variant="subtle"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsExpanded(!isExpanded);
-            }}
-          >
-            {isExpanded ? (
-              <IconChevronUp style={{ width: 16, height: 16 }} />
-            ) : (
-              <IconChevronDown style={{ width: 16, height: 16 }} />
-            )}
-          </ActionIcon>
+      <ExerciseBlockHeader
+        exercise={exercise}
+        completedSets={completedSets}
+        totalSets={totalSets}
+        supersetGroupId={supersetGroupId}
+        isExpanded={isExpanded}
+        onToggleExpanded={handleToggleExpanded}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
+        onRemoveExercise={onRemoveExercise}
+      />
 
-          <Box style={{ minWidth: 0 }}>
-            <Group gap="xs">
-              <Text fz="sm" fw={500} truncate>
-                {exercise.name}
-              </Text>
-              {supersetGroupId && (
-                <Badge variant="outline" size="xs">
-                  Superset
-                </Badge>
-              )}
-            </Group>
-            <Group gap="xs">
-              <Text fz="xs" c="dimmed" tt="capitalize">
-                {exercise.category}
-              </Text>
-              {exercise.equipment && (
-                <>
-                  <Text fz="xs" c="dimmed">
-                    -
-                  </Text>
-                  <Text fz="xs" c="dimmed">
-                    {exercise.equipment}
-                  </Text>
-                </>
-              )}
-            </Group>
-          </Box>
-        </Group>
-
-        <Group gap="xs">
-          <Badge color={completedSets === totalSets ? "green" : "gray"} variant="light" size="xs">
-            {completedSets}/{totalSets}
-          </Badge>
-
-          <Menu position="bottom-end" withinPortal>
-            <Menu.Target>
-              <ActionIcon variant="subtle" size="sm" onClick={(e) => e.stopPropagation()}>
-                <IconDotsVertical style={{ width: 16, height: 16 }} />
-              </ActionIcon>
-            </Menu.Target>
-            <Menu.Dropdown>
-              {onMoveUp && (
-                <Menu.Item
-                  onClick={onMoveUp}
-                  leftSection={<IconChevronUp style={{ width: 16, height: 16 }} />}
-                >
-                  Move Up
-                </Menu.Item>
-              )}
-              {onMoveDown && (
-                <Menu.Item
-                  onClick={onMoveDown}
-                  leftSection={<IconChevronDown style={{ width: 16, height: 16 }} />}
-                >
-                  Move Down
-                </Menu.Item>
-              )}
-              {(onMoveUp || onMoveDown) && <Menu.Divider />}
-              <Menu.Item
-                onClick={onRemoveExercise}
-                color="red"
-                leftSection={<IconTrash style={{ width: 16, height: 16 }} />}
-              >
-                Remove Exercise
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </Group>
-      </Flex>
-
-      {/* Content */}
       {isExpanded && (
         <Box p="sm">
-          {/* Previous Performance */}
           {previousPerformance?.topSet && (
             <Box mb="sm">
               <SimplePreviousPerformance
@@ -227,7 +79,6 @@ function ExerciseBlock({
             </Box>
           )}
 
-          {/* Notes */}
           {notes && (
             <Text
               fz="xs"
@@ -241,73 +92,16 @@ function ExerciseBlock({
             </Text>
           )}
 
-          {/* Sets Header */}
-          <Box
-            px={4}
-            pb="xs"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "auto 1fr 1fr auto auto",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <Text fz="xs" c="dimmed" fw={500} style={{ minWidth: 60 }}>
-              Set
-            </Text>
-            <Text fz="xs" c="dimmed" fw={500} ta="center" style={{ minWidth: 70 }}>
-              Previous
-            </Text>
-            <Text fz="xs" c="dimmed" fw={500} ta="center">
-              {weightUnit.toUpperCase()}
-            </Text>
-            <Text fz="xs" c="dimmed" fw={500} ta="center">
-              Reps
-            </Text>
-            <Box style={{ minWidth: 100 }} />
-          </Box>
+          <SetsList
+            sets={sets}
+            previousPerformance={previousPerformance}
+            weightUnit={weightUnit}
+            onUpdateSet={onUpdateSet}
+            onDeleteSet={onDeleteSet}
+            onCompleteSet={handleCompleteSet}
+            onAddSet={onAddSet}
+          />
 
-          {/* Sets */}
-          <Stack gap={0}>
-            {sets.map((set) => {
-              const prevSet = previousPerformance?.sets.find((s) => s.setNumber === set.setNumber);
-              return (
-                <SetRow
-                  key={set.id}
-                  setNumber={set.setNumber}
-                  weight={set.weight}
-                  reps={set.reps}
-                  rpe={set.rpe}
-                  setType={set.setType}
-                  isCompleted={set.isCompleted ?? false}
-                  previousWeight={prevSet?.weight ?? set.targetWeight}
-                  previousReps={prevSet?.reps ?? set.targetReps}
-                  weightUnit={weightUnit}
-                  onWeightChange={(value) => onUpdateSet(set.id, { weight: value })}
-                  onRepsChange={(value) => onUpdateSet(set.id, { reps: value })}
-                  onRpeChange={(value) => onUpdateSet(set.id, { rpe: value })}
-                  onSetTypeChange={(value) => onUpdateSet(set.id, { setType: value })}
-                  onComplete={() => handleCompleteSet(set.id)}
-                  onDelete={() => onDeleteSet(set.id)}
-                />
-              );
-            })}
-          </Stack>
-
-          {/* Add Set Button */}
-          <Button
-            variant="subtle"
-            size="sm"
-            fullWidth
-            mt="xs"
-            c="dimmed"
-            onClick={onAddSet}
-            leftSection={<IconPlus style={{ width: 16, height: 16 }} />}
-          >
-            Add Set
-          </Button>
-
-          {/* Rest Timer */}
           {showRestTimer && activeRestTimer && (
             <Box
               mt="sm"
@@ -330,4 +124,4 @@ function ExerciseBlock({
 }
 
 export { ExerciseBlock };
-export type { ExerciseSet, Exercise, PreviousPerformance };
+export type { Exercise, ExerciseSet, PreviousPerformance };

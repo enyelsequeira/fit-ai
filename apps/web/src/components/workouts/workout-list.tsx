@@ -151,7 +151,7 @@ export function WorkoutList({
               ? Math.round(
                   (new Date(workout.completedAt).getTime() -
                     new Date(workout.startedAt).getTime()) /
-                    (1000 * 60)
+                    (1000 * 60),
                 )
               : null;
 

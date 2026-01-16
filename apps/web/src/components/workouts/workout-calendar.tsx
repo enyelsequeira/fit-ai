@@ -95,7 +95,7 @@ export function WorkoutCalendar({
         onDateSelect(date);
       }
     },
-    [selectedDate, onDateSelect]
+    [selectedDate, onDateSelect],
   );
 
   // Custom day renderer to show workout indicators
@@ -127,7 +127,7 @@ export function WorkoutCalendar({
         onClick: () => handleDateClick(date),
       };
     },
-    [workoutDatesMap, selectedDate, handleDateClick]
+    [workoutDatesMap, selectedDate, handleDateClick],
   );
 
   return (
@@ -136,10 +136,12 @@ export function WorkoutCalendar({
         <FitAiCardTitle>Workout Calendar</FitAiCardTitle>
         <FitAiCardDescription>
           {selectedDate
-            ? `Showing workouts for ${ensureDate(selectedDate)?.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              }) ?? "selected date"}`
+            ? `Showing workouts for ${
+                ensureDate(selectedDate)?.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                }) ?? "selected date"
+              }`
             : "Click a date to filter workouts"}
         </FitAiCardDescription>
       </FitAiCardHeader>
@@ -188,10 +190,7 @@ export function WorkoutCalendar({
 
           {/* Selected date summary */}
           {selectedDate && (
-            <UnstyledButton
-              onClick={() => onDateSelect(null)}
-              style={{ textAlign: "center" }}
-            >
+            <UnstyledButton onClick={() => onDateSelect(null)} style={{ textAlign: "center" }}>
               <Text size="xs" c="blue" td="underline">
                 Clear date filter
               </Text>

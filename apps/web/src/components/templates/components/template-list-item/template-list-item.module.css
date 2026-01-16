@@ -1,0 +1,248 @@
+/* Template List Item Styles - Neutral Color Scheme */
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  border-radius: var(--mantine-radius-md);
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+  animation: listItemEntrance 300ms ease backwards;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+    border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    box-shadow: 0 2px 8px light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.2));
+
+    & .listItemActions {
+      opacity: 1;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes listItemEntrance {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.listItemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: var(--mantine-radius-md);
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+}
+
+.listItemContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.listItemTitle {
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listItemDescription {
+  font-size: var(--mantine-font-size-xs);
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.listItemMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+  flex-shrink: 0;
+}
+
+.listItemPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: var(--mantine-radius-xl);
+  font-size: 11px;
+  font-weight: 500;
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+}
+
+.listItemActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.listActionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--mantine-radius-md);
+  border: none;
+  cursor: pointer;
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+
+  @mixin hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.primaryListAction {
+  background: light-dark(var(--mantine-color-teal-1), var(--mantine-color-teal-9));
+  color: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-4));
+
+  @mixin hover {
+    &:not(:disabled) {
+      background: light-dark(var(--mantine-color-teal-2), var(--mantine-color-teal-8));
+    }
+  }
+}
+
+.dangerListAction {
+  @mixin hover {
+    &:not(:disabled) {
+      background: light-dark(var(--mantine-color-red-1), var(--mantine-color-red-9));
+      color: light-dark(var(--mantine-color-red-6), var(--mantine-color-red-4));
+    }
+  }
+}
+
+/* Skeleton styles */
+.skeleton {
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  border-radius: var(--mantine-radius-md);
+}
+
+@keyframes skeletonPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.listItemSkeleton {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  border-radius: var(--mantine-radius-md);
+}
+
+.listItemSkeletonIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--mantine-radius-md);
+}
+
+.listItemSkeletonContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.listItemSkeletonTitle {
+  height: 14px;
+  width: 60%;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.listItemSkeletonDesc {
+  height: 12px;
+  width: 40%;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.listItemSkeletonMeta {
+  display: flex;
+  gap: var(--mantine-spacing-xs);
+}
+
+.listItemSkeletonPill {
+  height: 22px;
+  width: 50px;
+  border-radius: var(--mantine-radius-xl);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .listItem {
+    animation: none;
+    transition: none;
+
+    & .listItemActions {
+      opacity: 1;
+    }
+  }
+
+  .listActionButton {
+    transition: none;
+
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+
+  .listItemSkeleton {
+    animation: none;
+  }
+
+  .skeleton {
+    animation: none;
+  }
+}
