@@ -68,7 +68,7 @@ export function SignupForm() {
             type="email"
             leftSection={<IconMail size={18} />}
             size="md"
-            {...mantineForm.getInputProps("password")}
+            {...mantineForm.getInputProps("email")}
           />
           <PasswordInput
             label="Password"
@@ -87,7 +87,7 @@ export function SignupForm() {
             ) : (
               "Start Your Journey"
             )}
-          </button>{" "}
+          </button>
         </Stack>
       </form>
 
