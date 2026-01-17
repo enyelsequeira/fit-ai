@@ -1,109 +1,124 @@
 /**
  * WorkoutsView - Main workouts page component
- * Split layout with calendar on left, workout list on right
- * Responsive: stacks vertically on mobile
+ * Sidebar layout with time-based filters on left, workout list on right
+ * Following the templates pattern structure
  */
 
-import { useCallback } from "react";
-import { Box, Stack, Text, Title } from "@mantine/core";
-import { useNavigate } from "@tanstack/react-router";
-import { WorkoutStats } from "./workout-stats";
-import { WorkoutCalendar } from "./workout-calendar";
-import { WorkoutList } from "./workout-list";
-import { WorkoutActions } from "./workout-actions";
-import { useWorkoutsData } from "./use-workouts-data";
+import { useState } from "react";
+import { Box, Text, Group, Button, Tooltip, Flex } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconPlus, IconBarbell } from "@tabler/icons-react";
+import { WorkoutsSidebar } from "./components/workouts-sidebar/workouts-sidebar.tsx";
+import { WorkoutList } from "./components/workout-list/workout-list.tsx";
+import { WorkoutsHeader } from "./components/workouts-header/workouts-header.tsx";
+import { CreateWorkoutModal } from "./components/create-workout-modal/create-workout-modal.tsx";
+import { WorkoutDetailModal } from "./components/workout-detail-modal/workout-detail-modal.tsx";
+import type { TimePeriodFilter } from "./types";
+import { TIME_PERIOD_LABELS } from "./types";
 import styles from "./workouts-view.module.css";
 
 export function WorkoutsView() {
-  const navigate = useNavigate();
-  const {
-    workouts,
-    stats,
-    calendarDays,
-    dateRange,
-    setDateRange,
-    selectedDate,
-    setSelectedDate,
-    isLoading,
-    isError,
-    refetch,
-  } = useWorkoutsData();
+  // Local state
+  const [selectedPeriod, setSelectedPeriod] = useState<TimePeriodFilter>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Navigation handlers
-  const handleStartWorkout = useCallback(() => {
-    // Navigate to new workout page
-    navigate({ to: "/dashboard/workouts/new" as string });
-  }, [navigate]);
+  // Modal states
+  const [createModalOpened, { open: openCreateModal, close: closeCreateModal }] =
+    useDisclosure(false);
+  const [detailModalOpened, { open: openDetailModal, close: closeDetailModal }] =
+    useDisclosure(false);
+  const [selectedWorkoutId, setSelectedWorkoutId] = useState<number | null>(null);
 
-  const handleUseTemplate = useCallback(() => {
-    // Navigate to templates page
-    navigate({ to: "/dashboard/templates" as string });
-  }, [navigate]);
+  // Get current period label
+  const currentPeriodLabel = TIME_PERIOD_LABELS[selectedPeriod];
 
-  const handleQuickLog = useCallback(() => {
-    // Navigate to quick log page
-    navigate({ to: "/dashboard/workouts/log" as string });
-  }, [navigate]);
-
-  const handleWorkoutClick = useCallback(
-    (workoutId: number) => {
-      navigate({ to: `/dashboard/workouts/${workoutId}` as string });
-    },
-    [navigate],
-  );
+  // Handler for workout card click
+  const handleWorkoutClick = (workoutId: number) => {
+    setSelectedWorkoutId(workoutId);
+    openDetailModal();
+  };
 
   return (
-    <Box p={{ base: "sm", md: "md" }} className={styles.workoutsContainer}>
-      <Stack gap="md">
-        {/* Page header */}
-        <Box className={styles.pageHeader}>
-          <Title order={2} className={styles.pageTitle}>
-            Workouts
-          </Title>
-          <Text size="sm" className={styles.pageDescription}>
-            Track your training sessions and monitor your progress
-          </Text>
+    <Flex className={styles.pageContainer}>
+      {/* Sidebar */}
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>
+          <Group gap="xs" align="center">
+            <Tooltip label="Workouts">
+              <Flex
+                align="center"
+                justify="center"
+                w={36}
+                h={36}
+                style={{ borderRadius: "var(--mantine-radius-md)" }}
+                c="white"
+                className={styles.logoIcon}
+              >
+                <IconBarbell size={20} />
+              </Flex>
+            </Tooltip>
+            <Text fw={600} size="lg">
+              Workouts
+            </Text>
+          </Group>
+        </div>
+
+        <div className={styles.sidebarContent}>
+          <WorkoutsSidebar
+            selectedPeriod={selectedPeriod}
+            onSelectPeriod={setSelectedPeriod}
+          />
+        </div>
+
+        <Box p="md" className={styles.sidebarFooter}>
+          <Tooltip label="Start a new workout session">
+            <Button
+              fullWidth
+              leftSection={<IconPlus size={16} />}
+              onClick={openCreateModal}
+              className={styles.createButton}
+            >
+              New Workout
+            </Button>
+          </Tooltip>
         </Box>
+      </div>
 
-        {/* Stats overview */}
-        <WorkoutStats stats={stats} />
-
-        {/* Action buttons */}
-        <WorkoutActions
-          onStartWorkout={handleStartWorkout}
-          onUseTemplate={handleUseTemplate}
-          onQuickLog={handleQuickLog}
+      {/* Main Content */}
+      <Flex direction="column" flex={1} miw={0}>
+        <WorkoutsHeader
+          currentPeriodLabel={currentPeriodLabel}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onCreateWorkout={openCreateModal}
+          selectedPeriod={selectedPeriod}
+          onPeriodChange={setSelectedPeriod}
         />
 
-        {/* Main content: Calendar + List */}
-        <Box className={styles.mainContent}>
-          {/* Left column: Calendar */}
-          <Box className={styles.leftColumn}>
-            <WorkoutCalendar
-              calendarDays={calendarDays}
-              dateRange={dateRange}
-              onDateRangeChange={setDateRange}
-              selectedDate={selectedDate}
-              onDateSelect={setSelectedDate}
-              isLoading={isLoading}
-            />
-          </Box>
-
-          {/* Right column: Workout list */}
-          <Box className={styles.rightColumn}>
+        {/* Content Area */}
+        <div className={styles.contentArea}>
+          <div className={styles.workoutsContainer}>
             <WorkoutList
-              workouts={workouts}
-              selectedDate={selectedDate}
-              isLoading={isLoading}
-              isError={isError}
-              onRetry={refetch}
+              timePeriod={selectedPeriod}
+              searchQuery={searchQuery}
               onWorkoutClick={handleWorkoutClick}
-              onStartWorkout={handleStartWorkout}
-              onUseTemplate={handleUseTemplate}
+              onCreateWorkout={openCreateModal}
             />
-          </Box>
-        </Box>
-      </Stack>
-    </Box>
+          </div>
+        </div>
+      </Flex>
+
+      {/* Modals */}
+      <CreateWorkoutModal
+        opened={createModalOpened}
+        onClose={closeCreateModal}
+      />
+
+      <WorkoutDetailModal
+        opened={detailModalOpened}
+        onClose={closeDetailModal}
+        workoutId={selectedWorkoutId}
+      />
+    </Flex>
   );
 }

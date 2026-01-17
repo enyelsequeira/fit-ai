@@ -1,5 +1,4 @@
 import { Box, Flex, Loader, PasswordInput, Stack, Text, TextInput, Title } from "@mantine/core";
-import { useForm } from "@tanstack/react-form";
 import {
   IconActivity,
   IconChartBar,
@@ -11,43 +10,24 @@ import {
   IconTrendingUp,
   IconBolt,
 } from "@tabler/icons-react";
-import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
 import { toast } from "@/components/ui/sonner";
 import styles from "./sign-in.module.css";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { isEmail, isNotEmpty, useForm } from "@mantine/form";
 
 function SignInPage() {
   const navigate = useNavigate({ from: "/sign-in" });
 
-  const form = useForm({
-    defaultValues: {
+  const mantineForm = useForm({
+    initialValues: {
       email: "",
       password: "",
     },
-    onSubmit: async ({ value }) => {
-      await authClient.signIn.email(
-        {
-          email: value.email,
-          password: value.password,
-        },
-        {
-          onSuccess: () => {
-            navigate({ to: "/dashboard" });
-            toast.success("Welcome back! Let's crush your goals.");
-          },
-          onError: (error) => {
-            toast.error(error.error.message || error.error.statusText);
-          },
-        },
-      );
-    },
-    validators: {
-      onSubmit: z.object({
-        email: z.email("Invalid email address"),
-        password: z.string().min(8, "Password must be at least 8 characters"),
-      }),
+    validate: {
+      email: isEmail("Please enter a valid email address"),
+      password: isNotEmpty("Please enter a valid password"),
     },
   });
 
@@ -76,89 +56,72 @@ function SignInPage() {
 
           {/* Sign in form */}
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
+            onSubmit={mantineForm.onSubmit(async (e) => {
+              await authClient.signIn.email(
+                {
+                  email: e.email,
+                  password: e.password,
+                },
+                {
+                  onSuccess: () => {
+                    navigate({ to: "/dashboard" });
+                    toast.success("Welcome back! Let's crush your goals.");
+                  },
+                  onError: (error) => {
+                    toast.error(error.error.message || error.error.statusText);
+                  },
+                },
+              );
+            })}
           >
             <Stack gap={"md"}>
-              <form.Field name="email">
-                {(field) => (
-                  <TextInput
-                    label="Email address"
-                    placeholder="you@example.com"
-                    id={field.name}
-                    name={field.name}
-                    type="email"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    error={field.state.meta.errors[0]?.message}
-                    size="md"
-                    radius="md"
-                    styles={{
-                      input: {
-                        transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-                      },
-                    }}
-                  />
-                )}
-              </form.Field>
+              <TextInput
+                label="Email address"
+                placeholder="you@example.com"
+                type="email"
+                size="md"
+                radius="md"
+                {...mantineForm.getInputProps("email")}
+              />
 
-              <form.Field name="password">
-                {(field) => (
-                  <PasswordInput
-                    label="Password"
-                    placeholder="Enter your password"
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    error={field.state.meta.errors[0]?.message}
-                    size="md"
-                    radius="md"
-                    styles={{
-                      input: {
-                        transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-                      },
-                    }}
-                  />
-                )}
-              </form.Field>
+              <PasswordInput
+                label="Password"
+                placeholder="Enter your password"
+                size="md"
+                radius="md"
+                styles={{
+                  input: {
+                    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+                  },
+                }}
+                {...mantineForm.getInputProps("password")}
+              />
 
-              <form.Subscribe>
-                {(state) => (
-                  <button
-                    type="submit"
-                    disabled={!state.canSubmit || state.isSubmitting}
-                    className={styles.submitButton}
-                    style={{
-                      width: "100%",
-                      borderRadius: "var(--mantine-radius-md)",
-                      cursor: state.canSubmit && !state.isSubmitting ? "pointer" : "not-allowed",
-                      fontSize: "1rem",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    {state.isSubmitting ? (
-                      <>
-                        <Loader size="xs" color="white" />
-                        Signing in...
-                      </>
-                    ) : (
-                      <>
-                        <IconBolt size={18} />
-                        Sign In
-                      </>
-                    )}
-                  </button>
+              <button
+                type="submit"
+                className={styles.submitButton}
+                style={{
+                  width: "100%",
+                  borderRadius: "var(--mantine-radius-md)",
+                  fontSize: "1rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                }}
+              >
+                {mantineForm.submitting ? (
+                  <>
+                    <Loader size="xs" color="white" />
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                    <IconBolt size={18} />
+                    Sign In
+                  </>
                 )}
-              </form.Subscribe>
+              </button>
             </Stack>
           </form>
 

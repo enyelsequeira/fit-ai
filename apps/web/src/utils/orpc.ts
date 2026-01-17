@@ -10,12 +10,9 @@ import { notifications } from "@mantine/notifications";
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
-    onError: (error, query) => {
-      notifications.show(`Error: ${error.message}`, {
-        action: {
-          label: "retry",
-          onClick: query.invalidate,
-        },
+    onError: (error) => {
+      notifications.show({
+        message: `Error: ${error.message}`,
       });
     },
   }),

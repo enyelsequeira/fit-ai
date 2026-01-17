@@ -1,0 +1,9 @@
+/* Create Workout Modal Styles */
+
+.modalIcon {
+  color: var(--mantine-color-blue-6);
+}
+
+.modalActions {
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}

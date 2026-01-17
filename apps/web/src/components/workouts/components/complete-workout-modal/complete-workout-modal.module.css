@@ -1,0 +1,14 @@
+/* Complete Workout Modal Styles */
+
+.modalIcon {
+  color: var(--mantine-color-green-6);
+}
+
+.sectionIcon {
+  color: var(--mantine-color-blue-6);
+  opacity: 0.8;
+}
+
+.modalActions {
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
