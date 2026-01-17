@@ -359,7 +359,8 @@ export const duplicateTemplateHandler: DuplicateTemplateRouteHandler = async ({
 }) => {
   const userId = context.session.user.id;
 
-  const template = await verifyTemplateOwnership(input.id, userId);
+  // Use verifyTemplateAccess to allow duplicating both owned and public templates
+  const template = await verifyTemplateAccess(input.id, userId);
 
   // Generate smart copy name: "Template Copy 1", "Template Copy 2", etc.
   // First, strip any existing copy suffixes to get the base name
