@@ -1,4 +1,4 @@
-import { publicProcedure } from "../../index";
+import { protectedProcedure } from "../../index";
 import {
   createTodoSchema,
   deleteResultSchema,
@@ -13,57 +13,58 @@ import {
 // ============================================================================
 // Define route contracts (procedure + route config + input/output schemas)
 // Handler types are inferred from these contracts
+// All routes use protectedProcedure to ensure user authentication and data isolation
 
 /**
- * Get all todos
+ * Get all todos for the authenticated user
  */
-export const getAllRouteContract = publicProcedure
+export const getAllRouteContract = protectedProcedure
   .route({
     method: "GET",
     path: "/todos",
     summary: "Get all todos",
-    description: "Retrieves a list of all todo items",
+    description: "Retrieves a list of all todo items for the authenticated user",
     tags: ["Todos"],
   })
   .output(todoListOutputSchema);
 
 /**
- * Create a new todo
+ * Create a new todo for the authenticated user
  */
-export const createRouteContract = publicProcedure
+export const createRouteContract = protectedProcedure
   .route({
     method: "POST",
     path: "/todos",
     summary: "Create a todo",
-    description: "Creates a new todo item",
+    description: "Creates a new todo item for the authenticated user",
     tags: ["Todos"],
   })
   .input(createTodoSchema)
   .output(todoOutputSchema.partial());
 
 /**
- * Toggle todo completion status
+ * Toggle todo completion status (must own the todo)
  */
-export const toggleRouteContract = publicProcedure
+export const toggleRouteContract = protectedProcedure
   .route({
     method: "PATCH",
     path: "/todos/{id}",
     summary: "Toggle todo completion",
-    description: "Updates the completion status of a todo item",
+    description: "Updates the completion status of a todo item owned by the authenticated user",
     tags: ["Todos"],
   })
   .input(toggleTodoSchema)
   .output(todoOutputSchema.partial());
 
 /**
- * Delete a todo
+ * Delete a todo (must own the todo)
  */
-export const deleteRouteContract = publicProcedure
+export const deleteRouteContract = protectedProcedure
   .route({
     method: "DELETE",
     path: "/todos/{id}",
     summary: "Delete a todo",
-    description: "Permanently deletes a todo item",
+    description: "Permanently deletes a todo item owned by the authenticated user",
     tags: ["Todos"],
   })
   .input(deleteTodoSchema)
