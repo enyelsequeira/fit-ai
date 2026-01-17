@@ -4,12 +4,7 @@
  */
 
 import { Skeleton, Tooltip } from "@mantine/core";
-import {
-  IconBarbell,
-  IconCheck,
-  IconPlayerPlay,
-  IconCalendarWeek,
-} from "@tabler/icons-react";
+import { IconBarbell, IconCheck, IconPlayerPlay, IconCalendarWeek } from "@tabler/icons-react";
 import styles from "./workouts-stats-row.module.css";
 
 interface WorkoutsStatsRowProps {

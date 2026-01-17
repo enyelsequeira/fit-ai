@@ -20,13 +20,7 @@ import {
   ActionIcon,
   Select,
 } from "@mantine/core";
-import {
-  IconPlus,
-  IconSearch,
-  IconX,
-  IconBarbell,
-  IconCheck,
-} from "@tabler/icons-react";
+import { IconPlus, IconSearch, IconX, IconBarbell, IconCheck } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@mantine/hooks";
 import { orpc } from "@/utils/orpc.ts";
@@ -65,7 +59,7 @@ export function AddExerciseModal({
         limit: 50,
         offset: 0,
       },
-    })
+    }),
   );
 
   const exercises = exercisesQuery.data?.exercises ?? [];
@@ -88,7 +82,7 @@ export function AddExerciseModal({
     (exerciseId: number) => {
       return existingExerciseIds.includes(exerciseId) || addedExerciseIds.has(exerciseId);
     },
-    [existingExerciseIds, addedExerciseIds]
+    [existingExerciseIds, addedExerciseIds],
   );
 
   const handleAddExercise = useCallback(
@@ -106,10 +100,10 @@ export function AddExerciseModal({
           onSuccess: () => {
             setAddedExerciseIds((prev) => new Set(prev).add(exerciseId));
           },
-        }
+        },
       );
     },
-    [addExerciseMutation, workoutId, existingExerciseIds.length, addedExerciseIds.size]
+    [addExerciseMutation, workoutId, existingExerciseIds.length, addedExerciseIds.size],
   );
 
   const handleClose = useCallback(() => {

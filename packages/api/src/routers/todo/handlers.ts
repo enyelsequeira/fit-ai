@@ -42,11 +42,7 @@ async function getTodoWithOwnershipCheck(todoId: number, userId: string) {
 export const getAllTodosHandler: GetAllRouteHandler = async ({ context }) => {
   const userId = context.session.user.id;
 
-  return await db
-    .select()
-    .from(todo)
-    .where(eq(todo.userId, userId))
-    .orderBy(todo.createdAt);
+  return await db.select().from(todo).where(eq(todo.userId, userId)).orderBy(todo.createdAt);
 };
 
 // ============================================================================

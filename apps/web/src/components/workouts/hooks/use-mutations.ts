@@ -8,6 +8,25 @@ import { orpc } from "@/utils/orpc";
 import { workoutKeys, workoutDetailOptions } from "../queries/query-options";
 
 // ============================================================================
+// Template-based Workout Mutations
+// ============================================================================
+
+/**
+ * Hook for starting a workout from a template
+ * Uses the existing template.startWorkout API endpoint
+ */
+export function useStartWorkoutFromTemplate() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: { id: number; dayId?: number }) => orpc.template.startWorkout.call(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
+    },
+  });
+}
+
+// ============================================================================
 // Workout Session Mutations
 // ============================================================================
 

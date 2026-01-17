@@ -49,13 +49,15 @@ export function formatDuration(minutes: number | null | undefined): string {
  */
 export function calculateWorkoutDuration(
   startedAt: string | Date | null,
-  completedAt: string | Date | null
+  completedAt: string | Date | null,
 ): number | null {
   if (!startedAt) return null;
 
   const start = typeof startedAt === "string" ? new Date(startedAt) : startedAt;
   const end = completedAt
-    ? (typeof completedAt === "string" ? new Date(completedAt) : completedAt)
+    ? typeof completedAt === "string"
+      ? new Date(completedAt)
+      : completedAt
     : new Date();
 
   const diffMs = end.getTime() - start.getTime();
@@ -113,7 +115,7 @@ export function formatTime(date: Date | string | null): string {
   return d.toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
-    hour12: true
+    hour12: true,
   });
 }
 
@@ -135,7 +137,7 @@ export function getExerciseSummary(exerciseCount: number, setCount: number): str
  * @returns Object with total sets and completed sets
  */
 export function countSets(
-  workoutExercises: Array<{ sets?: Array<{ completedAt: string | Date | null }> }> | undefined
+  workoutExercises: Array<{ sets?: Array<{ completedAt: string | Date | null }> }> | undefined,
 ): { total: number; completed: number } {
   if (!workoutExercises) return { total: 0, completed: 0 };
 
@@ -145,7 +147,7 @@ export function countSets(
   for (const exercise of workoutExercises) {
     if (exercise.sets) {
       total += exercise.sets.length;
-      completed += exercise.sets.filter(s => s.completedAt !== null).length;
+      completed += exercise.sets.filter((s) => s.completedAt !== null).length;
     }
   }
 

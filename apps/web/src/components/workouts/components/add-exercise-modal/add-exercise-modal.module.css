@@ -5,7 +5,9 @@
 }
 
 .exerciseItem {
-  transition: background 150ms ease, opacity 150ms ease;
+  transition:
+    background 150ms ease,
+    opacity 150ms ease;
 
   @mixin hover {
     background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));

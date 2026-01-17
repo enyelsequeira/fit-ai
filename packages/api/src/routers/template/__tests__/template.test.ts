@@ -622,7 +622,9 @@ describe("Template Router", () => {
       const user2Id = "user-2";
 
       // Only check folders belonging to user2
-      const isDuplicate = user1Folders.some((f) => f.userId === user2Id && f.name === user2FolderName);
+      const isDuplicate = user1Folders.some(
+        (f) => f.userId === user2Id && f.name === user2FolderName,
+      );
       expect(isDuplicate).toBe(false);
       // User2 can create a folder with the same name
     });

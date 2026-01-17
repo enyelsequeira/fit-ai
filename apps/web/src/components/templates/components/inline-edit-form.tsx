@@ -33,11 +33,18 @@ interface ExerciseUpdateData {
 interface InlineEditFormProps {
   exercise: TemplateExercise;
   templateId: number;
+  dayId: number;
   onCancel: () => void;
   onSuccess: () => void;
 }
 
-export function InlineEditForm({ exercise, templateId, onCancel, onSuccess }: InlineEditFormProps) {
+export function InlineEditForm({
+  exercise,
+  templateId,
+  dayId,
+  onCancel,
+  onSuccess,
+}: InlineEditFormProps) {
   const [targetSets, setTargetSets] = useState<number | string>(exercise.targetSets ?? "");
   const [targetReps, setTargetReps] = useState(exercise.targetReps ?? "");
   const [targetWeight, setTargetWeight] = useState<number | string>(exercise.targetWeight ?? "");
@@ -45,7 +52,7 @@ export function InlineEditForm({ exercise, templateId, onCancel, onSuccess }: In
   const [notes, setNotes] = useState(exercise.notes ?? "");
   const [isSaving, setIsSaving] = useState(false);
 
-  const updateExerciseMutation = useUpdateExercise(templateId);
+  const updateExerciseMutation = useUpdateExercise(templateId, dayId);
 
   const handleSubmit = async () => {
     setIsSaving(true);

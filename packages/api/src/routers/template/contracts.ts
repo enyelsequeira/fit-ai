@@ -3,22 +3,30 @@ import z from "zod";
 import { protectedProcedure } from "../../index";
 import {
   addExerciseSchema,
+  createDaySchema,
   createFolderSchema,
   createTemplateSchema,
+  deleteDaySchema,
   deleteFolderSchema,
   deleteTemplateSchema,
   duplicateTemplateSchema,
   folderOutputSchema,
+  getDayByIdSchema,
   getTemplateByIdSchema,
+  listDaysSchema,
   listTemplatesSchema,
   removeExerciseSchema,
+  reorderDaysSchema,
   reorderExercisesSchema,
   reorderFoldersSchema,
   startWorkoutSchema,
   successResultSchema,
+  templateDayBaseOutputSchema,
+  templateDayOutputSchema,
   templateExerciseOutputSchema,
   templateOutputSchema,
-  templateWithExercisesOutputSchema,
+  templateWithDaysOutputSchema,
+  updateDaySchema,
   updateExerciseSchema,
   updateFolderSchema,
   updateTemplateSchema,
@@ -127,18 +135,19 @@ export const listTemplatesRouteContract = protectedProcedure
   .output(z.array(templateOutputSchema));
 
 /**
- * Get a template by ID with all exercises
+ * Get a template by ID with all days and exercises
  */
 export const getTemplateByIdRouteContract = protectedProcedure
   .route({
     method: "GET",
     path: "/templates/{id}",
     summary: "Get template by ID",
-    description: "Retrieves a single template with all its exercises and exercise details",
+    description:
+      "Retrieves a single template with all its days, exercises, and exercise details. For multi-day templates, exercises are nested within days.",
     tags: ["Templates"],
   })
   .input(getTemplateByIdSchema)
-  .output(templateWithExercisesOutputSchema);
+  .output(templateWithDaysOutputSchema);
 
 /**
  * Create a new template
@@ -190,11 +199,11 @@ export const duplicateTemplateRouteContract = protectedProcedure
     method: "POST",
     path: "/templates/{id}/duplicate",
     summary: "Duplicate template",
-    description: "Creates a copy of an existing template with all its exercises",
+    description: "Creates a copy of an existing template with all its days and exercises",
     tags: ["Templates"],
   })
   .input(duplicateTemplateSchema)
-  .output(templateWithExercisesOutputSchema);
+  .output(templateWithDaysOutputSchema);
 
 /**
  * Start a workout from a template
@@ -273,6 +282,95 @@ export const reorderExercisesRouteContract = protectedProcedure
   .output(successResultSchema);
 
 // ============================================================================
+// Template Day Route Contracts
+// ============================================================================
+
+/**
+ * List all days for a template
+ */
+export const listDaysRouteContract = protectedProcedure
+  .route({
+    method: "GET",
+    path: "/templates/{templateId}/days",
+    summary: "List template days",
+    description: "Retrieves all workout days for a template, ordered by their sort order",
+    tags: ["Templates"],
+  })
+  .input(listDaysSchema)
+  .output(z.array(templateDayBaseOutputSchema));
+
+/**
+ * Get a day by ID with all exercises
+ */
+export const getDayByIdRouteContract = protectedProcedure
+  .route({
+    method: "GET",
+    path: "/templates/{templateId}/days/{dayId}",
+    summary: "Get template day by ID",
+    description: "Retrieves a single template day with all its exercises and exercise details",
+    tags: ["Templates"],
+  })
+  .input(getDayByIdSchema)
+  .output(templateDayOutputSchema);
+
+/**
+ * Create a new day in a template
+ */
+export const createDayRouteContract = protectedProcedure
+  .route({
+    method: "POST",
+    path: "/templates/{templateId}/days",
+    summary: "Create template day",
+    description: "Creates a new workout day in a template",
+    tags: ["Templates"],
+  })
+  .input(createDaySchema)
+  .output(templateDayBaseOutputSchema);
+
+/**
+ * Update a day in a template
+ */
+export const updateDayRouteContract = protectedProcedure
+  .route({
+    method: "PATCH",
+    path: "/templates/{templateId}/days/{dayId}",
+    summary: "Update template day",
+    description: "Updates an existing workout day in a template. Only the owner can update.",
+    tags: ["Templates"],
+  })
+  .input(updateDaySchema)
+  .output(templateDayBaseOutputSchema.optional());
+
+/**
+ * Delete a day from a template
+ */
+export const deleteDayRouteContract = protectedProcedure
+  .route({
+    method: "DELETE",
+    path: "/templates/{templateId}/days/{dayId}",
+    summary: "Delete template day",
+    description: "Deletes a workout day and all its exercises from a template",
+    tags: ["Templates"],
+  })
+  .input(deleteDaySchema)
+  .output(successResultSchema);
+
+/**
+ * Reorder days in a template
+ */
+export const reorderDaysRouteContract = protectedProcedure
+  .route({
+    method: "PATCH",
+    path: "/templates/{templateId}/days/reorder",
+    summary: "Reorder template days",
+    description:
+      "Updates the sort order of workout days within a template based on the provided array of day IDs",
+    tags: ["Templates"],
+  })
+  .input(reorderDaysSchema)
+  .output(successResultSchema);
+
+// ============================================================================
 // Handler Types (inferred from contracts)
 // ============================================================================
 // These types can be used in handlers.ts for full type inference
@@ -304,3 +402,11 @@ export type RemoveExerciseRouteHandler = Parameters<typeof removeExerciseRouteCo
 export type ReorderExercisesRouteHandler = Parameters<
   typeof reorderExercisesRouteContract.handler
 >[0];
+
+// Template day handler types
+export type ListDaysRouteHandler = Parameters<typeof listDaysRouteContract.handler>[0];
+export type GetDayByIdRouteHandler = Parameters<typeof getDayByIdRouteContract.handler>[0];
+export type CreateDayRouteHandler = Parameters<typeof createDayRouteContract.handler>[0];
+export type UpdateDayRouteHandler = Parameters<typeof updateDayRouteContract.handler>[0];
+export type DeleteDayRouteHandler = Parameters<typeof deleteDayRouteContract.handler>[0];
+export type ReorderDaysRouteHandler = Parameters<typeof reorderDaysRouteContract.handler>[0];

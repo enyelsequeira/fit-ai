@@ -13,14 +13,22 @@ import {
   IconFlame,
   IconFolder,
   IconAlertTriangle,
+  IconCalendarWeek,
+  IconStarFilled,
+  IconStar,
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import {
   useDeleteTemplate,
   useDuplicateTemplate,
   useStartWorkout,
+  useSetActiveTemplate,
 } from "@/components/templates/hooks/use-mutations.ts";
-import { useTemplateById, useTemplateFolders } from "../../queries/use-queries.ts";
+import {
+  useTemplateById,
+  useTemplateFolders,
+  useActiveTemplate,
+} from "../../queries/use-queries.ts";
 import styles from "./template-card.module.css";
 import { formatDuration } from "@/components/templates/utils.ts";
 
@@ -34,6 +42,10 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
   // Fetch template data using hook
   const { data: template, isLoading } = useTemplateById(templateId);
   const { data: folders } = useTemplateFolders();
+  const { data: activeTemplateData } = useActiveTemplate();
+
+  // Check if this template is the active one
+  const isActive = activeTemplateData?.activeTemplateId === templateId;
 
   // Get folder name from folders data
   const folderName = useMemo(() => {
@@ -47,13 +59,15 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
   const startWorkoutMutation = useStartWorkout();
   const deleteTemplateMutation = useDeleteTemplate();
   const duplicateTemplateMutation = useDuplicateTemplate();
+  const setActiveTemplateMutation = useSetActiveTemplate();
 
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const isAnyLoading =
     startWorkoutMutation.isPending ||
     deleteTemplateMutation.isPending ||
-    duplicateTemplateMutation.isPending;
+    duplicateTemplateMutation.isPending ||
+    setActiveTemplateMutation.isPending;
 
   const handleStartWorkout = (e: MouseEvent) => {
     e.stopPropagation();
@@ -78,6 +92,13 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
     );
   };
 
+  const handleSetActive = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (!isActive) {
+      setActiveTemplateMutation.mutate({ templateId });
+    }
+  };
+
   if (isLoading || !template) {
     return <TemplateCardSkeleton animationDelay={animationDelay} />;
   }
@@ -90,6 +111,11 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
     timesUsed,
     exercises = [],
   } = template;
+
+  // Check for multi-day template support
+  const days = (template as { days?: unknown[] }).days;
+  const dayCount = days?.length ?? 0;
+  const hasMultipleDays = dayCount > 0;
 
   const isHighUsage = (timesUsed ?? 0) > 10;
 
@@ -107,20 +133,19 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
         }}
         data-is-public={isPublic}
         data-high-usage={isHighUsage}
+        data-is-active={isActive}
         role="button"
         tabIndex={0}
-        aria-label={`Template: ${name}`}
+        aria-label={`Template: ${name}${isActive ? " (Active)" : ""}`}
       >
         {/* Subtle glow effect */}
         <div className={styles.cardGlow} aria-hidden="true" />
 
-        {/* Header with icon and title */}
+        {/* ZONE 1: Header with icon and title */}
         <div className={styles.cardHeader}>
-          <Tooltip label="Workout template" position="top" withArrow>
-            <div className={styles.iconWrapper}>
-              <IconTemplate size={22} stroke={1.5} />
-            </div>
-          </Tooltip>
+          <div className={styles.iconWrapper}>
+            <IconTemplate size={18} stroke={1.5} />
+          </div>
           <div className={styles.headerContent}>
             <h3 className={styles.templateName} title={name}>
               {name}
@@ -133,93 +158,90 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
           </div>
         </div>
 
-        {/* Meta pills section */}
+        {/* ZONE 2: Meta badges - compact inline */}
         <div className={styles.metaSection}>
-          {estimatedDurationMinutes && (
-            <Tooltip label="Estimated workout duration" position="top" withArrow>
-              <span className={styles.metaPill}>
-                <IconClock size={12} className={styles.metaPillIcon} />
-                {formatDuration(estimatedDurationMinutes)}
+          {isActive && (
+            <Tooltip label="Active workout template" position="top" withArrow>
+              <span className={`${styles.metaPill} ${styles.activeBadge}`}>
+                <IconStarFilled size={11} className={styles.metaPillIcon} />
+                Active
               </span>
             </Tooltip>
           )}
+          <Tooltip label={isPublic ? "Public" : "Private"} position="top" withArrow>
+            <span
+              className={`${styles.metaPill} ${isPublic ? styles.publicBadge : styles.privateBadge}`}
+            >
+              {isPublic ? <IconWorld size={11} /> : <IconLock size={11} />}
+            </span>
+          </Tooltip>
           {folderName && (
-            <Tooltip label="Folder" position="top" withArrow>
+            <Tooltip label={`Folder: ${folderName}`} position="top" withArrow>
               <span className={`${styles.metaPill} ${styles.folderBadge}`}>
-                <IconFolder size={12} className={styles.metaPillIcon} />
+                <IconFolder size={11} className={styles.metaPillIcon} />
                 {folderName}
               </span>
             </Tooltip>
           )}
-          <Tooltip
-            label={isPublic ? "Visible to everyone" : "Only visible to you"}
-            position="top"
-            withArrow
-          >
-            <span
-              className={`${styles.metaPill} ${isPublic ? styles.publicBadge : styles.privateBadge}`}
-            >
-              {isPublic ? (
-                <>
-                  <IconWorld size={12} className={styles.metaPillIcon} />
-                  Public
-                </>
-              ) : (
-                <>
-                  <IconLock size={12} className={styles.metaPillIcon} />
-                  Private
-                </>
-              )}
-            </span>
-          </Tooltip>
           {(timesUsed ?? 0) > 0 && (
-            <Tooltip label="Number of times this template has been used" position="top" withArrow>
+            <Tooltip label={`Used ${timesUsed} times`} position="top" withArrow>
               <span className={`${styles.metaPill} ${styles.usageBadge}`}>
-                <IconFlame size={12} className={styles.metaPillIcon} />
-                {timesUsed} uses
+                <IconFlame size={11} className={styles.metaPillIcon} />
+                {timesUsed}
               </span>
             </Tooltip>
           )}
         </div>
 
-        {/* Stats row */}
+        {/* Stats row - key metrics */}
         <div className={styles.statsRow}>
-          <Tooltip label="Total exercises in template" position="top" withArrow>
+          {hasMultipleDays && (
             <div className={styles.statItem}>
-              <IconBarbell size={14} className={styles.statIcon} />
-              <span className={styles.statValue}>{exercises.length}</span>
-              <span className={styles.statLabel}>exercises</span>
+              <IconCalendarWeek size={12} className={styles.statIcon} />
+              <span className={styles.statValue}>{dayCount}</span>
+              <span className={styles.statLabel}>{dayCount === 1 ? "day" : "days"}</span>
             </div>
-          </Tooltip>
+          )}
+          <div className={styles.statItem}>
+            <IconBarbell size={12} className={styles.statIcon} />
+            <span className={styles.statValue}>{exercises.length}</span>
+            <span className={styles.statLabel}>exercises</span>
+          </div>
           {estimatedDurationMinutes && (
-            <Tooltip label="Estimated completion time" position="top" withArrow>
-              <div className={styles.statItem}>
-                <IconClock size={14} className={styles.statIcon} />
-                <span className={styles.statValue}>{formatDuration(estimatedDurationMinutes)}</span>
-                <span className={styles.statLabel}>duration</span>
-              </div>
-            </Tooltip>
+            <div className={styles.statItem}>
+              <IconClock size={12} className={styles.statIcon} />
+              <span className={styles.statValue}>{formatDuration(estimatedDurationMinutes)}</span>
+            </div>
           )}
         </div>
 
-        {/* Actions bar - visible on hover */}
+        {/* ZONE 3: Actions bar - visible on hover */}
         <div className={styles.actionsBar}>
           <div className={styles.actionsLeft}>
-            <Tooltip label="Start a workout using this template" position="top" withArrow>
-              <button
-                type="button"
-                className={`${styles.actionButton} ${styles.primaryAction}`}
-                onClick={handleStartWorkout}
-                disabled={isAnyLoading}
-                aria-label="Start workout"
-              >
-                <IconPlayerPlay size={14} />
-                Start Workout
-              </button>
-            </Tooltip>
+            <button
+              type="button"
+              className={`${styles.actionButton} ${styles.primaryAction}`}
+              onClick={handleStartWorkout}
+              disabled={isAnyLoading}
+              aria-label="Start workout"
+            >
+              <IconPlayerPlay size={12} />
+              Start
+            </button>
           </div>
           <div className={styles.actionsRight}>
-            <Tooltip label="Create a copy of this template" position="top" withArrow>
+            <Tooltip label={isActive ? "Active" : "Set as active"} position="top" withArrow>
+              <button
+                type="button"
+                className={`${styles.actionButton} ${isActive ? styles.activeAction : styles.secondaryAction} ${styles.iconOnlyAction}`}
+                onClick={handleSetActive}
+                disabled={isAnyLoading || isActive}
+                aria-label={isActive ? "Active template" : "Set as active"}
+              >
+                {isActive ? <IconStarFilled size={12} /> : <IconStar size={12} />}
+              </button>
+            </Tooltip>
+            <Tooltip label="Duplicate" position="top" withArrow>
               <button
                 type="button"
                 className={`${styles.actionButton} ${styles.secondaryAction} ${styles.iconOnlyAction}`}
@@ -230,10 +252,10 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
                 disabled={isAnyLoading}
                 aria-label="Duplicate template"
               >
-                <IconCopy size={14} />
+                <IconCopy size={12} />
               </button>
             </Tooltip>
-            <Tooltip label="Permanently delete this template" position="top" withArrow>
+            <Tooltip label="Delete" position="top" withArrow>
               <button
                 type="button"
                 className={`${styles.actionButton} ${styles.dangerAction} ${styles.iconOnlyAction}`}
@@ -244,7 +266,7 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
                 disabled={isAnyLoading}
                 aria-label="Delete template"
               >
-                <IconTrash size={14} />
+                <IconTrash size={12} />
               </button>
             </Tooltip>
           </div>

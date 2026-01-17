@@ -38,7 +38,9 @@ import styles from "./add-exercise-inline.module.css";
 
 interface AddExerciseInlineProps {
   templateId: number;
+  dayId: number;
   excludeExerciseIds: number[];
+  onClose?: () => void;
 }
 
 interface Exercise {
@@ -69,8 +71,13 @@ interface FormValues {
   notes: string;
 }
 
-export function AddExerciseInline({ templateId, excludeExerciseIds }: AddExerciseInlineProps) {
-  const addExerciseMutation = useAddExercise(templateId);
+export function AddExerciseInline({
+  templateId,
+  dayId,
+  excludeExerciseIds,
+  onClose,
+}: AddExerciseInlineProps) {
+  const addExerciseMutation = useAddExercise(templateId, dayId);
 
   // Form controls everything including selected exercise
   const form = useForm<FormValues>({
@@ -146,12 +153,18 @@ export function AddExerciseInline({ templateId, excludeExerciseIds }: AddExercis
         notes: values.notes.trim() || null,
       },
       {
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+          form.reset();
+          onClose?.();
+        },
       },
     );
   });
 
-  const handleReset = () => form.reset();
+  const handleReset = () => {
+    form.reset();
+    onClose?.();
+  };
 
   // Render option with exercise image
   const renderOption: SelectProps["renderOption"] = ({ option }: { option: ComboboxItem }) => {

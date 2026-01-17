@@ -7,6 +7,15 @@
 import { orpc } from "@/utils/orpc";
 
 /**
+ * Query keys factory for settings-related queries
+ * Used for cache invalidation where oRPC doesn't have direct routes
+ */
+export const settingsKeys = {
+  all: ["settings"] as const,
+  activeTemplate: () => [...settingsKeys.all, "activeTemplate"] as const,
+};
+
+/**
  * Query options for fetching all template folders
  * Uses orpc.*.queryOptions() for automatic key generation
  */
@@ -63,5 +72,16 @@ export function exercisesSearchOptions(params: {
       limit: params.limit ?? 20,
       offset: params.offset ?? 0,
     },
+  });
+}
+
+/**
+ * Query options for fetching the user's settings (including activeTemplateId)
+ * Used to determine which template is currently active
+ */
+export function activeTemplateOptions() {
+  return orpc.settings.get.queryOptions({
+    input: undefined,
+    queryKey: settingsKeys.activeTemplate(),
   });
 }

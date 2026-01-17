@@ -63,8 +63,6 @@
   }
 }
 
-
-
 /* ============================================
    Header Section
    ============================================ */
@@ -79,7 +77,6 @@
   }
 }
 
-
 .breadcrumb {
   margin-bottom: var(--mantine-spacing-xs);
 }
@@ -87,7 +84,6 @@
 .pageTitle {
   color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
 }
-
 
 .headerActions {
   flex-shrink: 0;
@@ -207,7 +203,6 @@
    Search Bar
    ============================================ */
 
-
 .mobileFolderSelect {
   flex-shrink: 0;
   min-width: 180px;
@@ -225,7 +220,6 @@
     max-width: none;
   }
 }
-
 
 /* ============================================
    Content Area

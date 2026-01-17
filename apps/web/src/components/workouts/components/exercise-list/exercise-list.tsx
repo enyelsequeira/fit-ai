@@ -24,10 +24,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import type { WorkoutExercise } from "../../types.ts";
-import {
-  useRemoveExerciseFromWorkout,
-  useAddSet,
-} from "../../hooks/use-mutations.ts";
+import { useRemoveExerciseFromWorkout, useAddSet } from "../../hooks/use-mutations.ts";
 import { SetRow } from "../set-row/set-row.tsx";
 import styles from "./exercise-list.module.css";
 
@@ -40,14 +37,12 @@ interface ExerciseListProps {
 export function ExerciseList({ workoutId, exercises, isWorkoutCompleted }: ExerciseListProps) {
   // Track which exercises are expanded
   const [expandedExercises, setExpandedExercises] = useState<string[]>(
-    exercises.map((_, index) => String(index))
+    exercises.map((_, index) => String(index)),
   );
 
   const toggleExercise = useCallback((value: string) => {
     setExpandedExercises((prev) =>
-      prev.includes(value)
-        ? prev.filter((v) => v !== value)
-        : [...prev, value]
+      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value],
     );
   }, []);
 
@@ -171,7 +166,9 @@ function ExerciseItem({
             {/* Sets Progress */}
             <Badge
               size="md"
-              variant={completedSetsCount === totalSetsCount && totalSetsCount > 0 ? "filled" : "light"}
+              variant={
+                completedSetsCount === totalSetsCount && totalSetsCount > 0 ? "filled" : "light"
+              }
               color={completedSetsCount === totalSetsCount && totalSetsCount > 0 ? "green" : "gray"}
             >
               {completedSetsCount}/{totalSetsCount} sets

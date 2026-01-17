@@ -1,5 +1,7 @@
 import { protectedProcedure } from "../../index";
 import {
+  activeTemplateOutputSchema,
+  setActiveTemplateSchema,
   settingsOutputSchema,
   updateDisplayPreferencesSchema,
   updateNotificationPreferencesSchema,
@@ -127,6 +129,52 @@ export const resetRouteContract = protectedProcedure
   .output(settingsOutputSchema);
 
 // ============================================================================
+// Active Template Route Contracts
+// ============================================================================
+
+/**
+ * Get user's active template
+ */
+export const getActiveTemplateRouteContract = protectedProcedure
+  .route({
+    method: "GET",
+    path: "/settings/active-template",
+    summary: "Get active template",
+    description:
+      "Retrieves the user's currently active workout template. Returns null if no template is set as active.",
+    tags: ["Settings"],
+  })
+  .output(activeTemplateOutputSchema);
+
+/**
+ * Set active template
+ */
+export const setActiveTemplateRouteContract = protectedProcedure
+  .route({
+    method: "POST",
+    path: "/settings/active-template",
+    summary: "Set active template",
+    description:
+      "Sets a workout template as the user's active template. The template must exist and belong to the user.",
+    tags: ["Settings"],
+  })
+  .input(setActiveTemplateSchema)
+  .output(settingsOutputSchema);
+
+/**
+ * Clear active template
+ */
+export const clearActiveTemplateRouteContract = protectedProcedure
+  .route({
+    method: "DELETE",
+    path: "/settings/active-template",
+    summary: "Clear active template",
+    description: "Removes the user's active template setting.",
+    tags: ["Settings"],
+  })
+  .output(settingsOutputSchema);
+
+// ============================================================================
 // Handler Types (inferred from contracts)
 // ============================================================================
 // These types can be used in handlers.ts for full type inference
@@ -147,3 +195,12 @@ export type UpdatePrivacyPreferencesRouteHandler = Parameters<
   typeof updatePrivacyPreferencesRouteContract.handler
 >[0];
 export type ResetRouteHandler = Parameters<typeof resetRouteContract.handler>[0];
+export type GetActiveTemplateRouteHandler = Parameters<
+  typeof getActiveTemplateRouteContract.handler
+>[0];
+export type SetActiveTemplateRouteHandler = Parameters<
+  typeof setActiveTemplateRouteContract.handler
+>[0];
+export type ClearActiveTemplateRouteHandler = Parameters<
+  typeof clearActiveTemplateRouteContract.handler
+>[0];

@@ -21,6 +21,7 @@ interface ExerciseItemProps {
   totalCount: number;
   isEditing: boolean;
   templateId: number;
+  dayId: number;
   exercises: TemplateExercise[];
   onEdit: () => void;
 }
@@ -31,11 +32,12 @@ export function ExerciseItem({
   totalCount,
   isEditing,
   templateId,
+  dayId,
   exercises,
   onEdit,
 }: ExerciseItemProps) {
-  const removeExerciseMutation = useRemoveExercise(templateId);
-  const reorderExercisesMutation = useReorderExercises(templateId);
+  const removeExerciseMutation = useRemoveExercise(templateId, dayId);
+  const reorderExercisesMutation = useReorderExercises(templateId, dayId);
 
   const hasTargets =
     exercise.targetSets || exercise.targetReps || exercise.targetWeight || exercise.restSeconds;

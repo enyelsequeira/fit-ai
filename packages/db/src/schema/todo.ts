@@ -22,7 +22,7 @@ export const todo = sqliteTable(
       .$onUpdate(() => new Date())
       .notNull(),
   },
-  (table) => [index("todo_user_id_idx").on(table.userId)]
+  (table) => [index("todo_user_id_idx").on(table.userId)],
 );
 
 // ============================================================================

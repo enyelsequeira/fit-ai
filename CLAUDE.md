@@ -124,6 +124,15 @@ if (item) { /* use item */ }
 
 ## Conventions
 
+**File size:**
+
+- Maximum 350 lines per file to maintain readability and modularity
+- If a file exceeds this limit, refactor by:
+  - Extracting helper functions to separate utility files
+  - Splitting large components into smaller, focused components
+  - Moving types/interfaces to dedicated `.types.ts` files
+  - Separating constants and configuration to dedicated files
+
 **Import order:**
 
 1. Type-only imports (`import type`)

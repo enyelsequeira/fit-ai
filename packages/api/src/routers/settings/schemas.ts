@@ -122,3 +122,37 @@ export const updatePrivacyPreferencesSchema = z.object({
 });
 
 export type UpdatePrivacyPreferencesInput = z.infer<typeof updatePrivacyPreferencesSchema>;
+
+// ============================================================================
+// Active Template Schemas
+// ============================================================================
+
+/**
+ * Set active template input schema
+ */
+export const setActiveTemplateSchema = z.object({
+  templateId: z.coerce.number().describe("ID of the template to set as active"),
+});
+
+export type SetActiveTemplateInput = z.infer<typeof setActiveTemplateSchema>;
+
+/**
+ * Active template output schema - full template object if set, null if not
+ */
+export const activeTemplateOutputSchema = z
+  .object({
+    id: z.number().describe("Unique identifier for the template"),
+    userId: z.string().describe("ID of the template owner"),
+    folderId: z.number().nullable().describe("ID of the folder containing the template"),
+    name: z.string().describe("Name of the template"),
+    description: z.string().nullable().describe("Description of the template"),
+    estimatedDurationMinutes: z.number().nullable().describe("Estimated duration in minutes"),
+    isPublic: z.boolean().describe("Whether the template is publicly visible"),
+    timesUsed: z.number().describe("Number of times this template has been used"),
+    createdAt: z.date().describe("When the template was created"),
+    updatedAt: z.date().describe("When the template was last updated"),
+  })
+  .nullable()
+  .describe("The active template if set, or null if no active template");
+
+export type ActiveTemplateOutput = z.infer<typeof activeTemplateOutputSchema>;
