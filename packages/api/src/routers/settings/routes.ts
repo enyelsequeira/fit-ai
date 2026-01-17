@@ -4,8 +4,11 @@
 // Import contracts and handlers, then attach handlers to contracts
 
 import {
+  clearActiveTemplateRouteContract,
+  getActiveTemplateRouteContract,
   getRouteContract,
   resetRouteContract,
+  setActiveTemplateRouteContract,
   updateDisplayPreferencesRouteContract,
   updateNotificationPreferencesRouteContract,
   updatePrivacyPreferencesRouteContract,
@@ -14,8 +17,11 @@ import {
   updateWorkoutPreferencesRouteContract,
 } from "./contracts";
 import {
+  clearActiveTemplateHandler,
+  getActiveTemplateHandler,
   getSettingsHandler,
   resetSettingsHandler,
+  setActiveTemplateHandler,
   updateDisplayPreferencesHandler,
   updateNotificationPreferencesHandler,
   updatePrivacyPreferencesHandler,
@@ -26,8 +32,11 @@ import {
 
 // Re-export handler types for convenience
 export type {
+  ClearActiveTemplateRouteHandler,
+  GetActiveTemplateRouteHandler,
   GetRouteHandler,
   ResetRouteHandler,
+  SetActiveTemplateRouteHandler,
   UpdateDisplayPreferencesRouteHandler,
   UpdateNotificationPreferencesRouteHandler,
   UpdatePrivacyPreferencesRouteHandler,
@@ -55,3 +64,12 @@ export const updatePrivacyPreferencesRoute = updatePrivacyPreferencesRouteContra
   updatePrivacyPreferencesHandler,
 );
 export const resetRoute = resetRouteContract.handler(resetSettingsHandler);
+
+// Active template routes
+export const getActiveTemplateRoute =
+  getActiveTemplateRouteContract.handler(getActiveTemplateHandler);
+export const setActiveTemplateRoute =
+  setActiveTemplateRouteContract.handler(setActiveTemplateHandler);
+export const clearActiveTemplateRoute = clearActiveTemplateRouteContract.handler(
+  clearActiveTemplateHandler,
+);

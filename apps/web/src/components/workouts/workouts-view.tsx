@@ -1,11 +1,12 @@
 /**
  * WorkoutsView - Main workouts page component
  * Sidebar layout with time-based filters on left, workout list on right
+ * Features an active template card at the top for quick workout starts
  * Following the templates pattern structure
  */
 
 import { useState } from "react";
-import { Box, Text, Group, Button, Tooltip, Flex } from "@mantine/core";
+import { Box, Text, Group, Button, Tooltip, Flex, Stack, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconBarbell } from "@tabler/icons-react";
 import { WorkoutsSidebar } from "./components/workouts-sidebar/workouts-sidebar.tsx";
@@ -13,6 +14,7 @@ import { WorkoutList } from "./components/workout-list/workout-list.tsx";
 import { WorkoutsHeader } from "./components/workouts-header/workouts-header.tsx";
 import { CreateWorkoutModal } from "./components/create-workout-modal/create-workout-modal.tsx";
 import { WorkoutDetailModal } from "./components/workout-detail-modal/workout-detail-modal.tsx";
+import { ActiveTemplateCard } from "./components/active-template-card/index.ts";
 import type { TimePeriodFilter } from "./types";
 import { TIME_PERIOD_LABELS } from "./types";
 import styles from "./workouts-view.module.css";
@@ -64,10 +66,7 @@ export function WorkoutsView() {
         </div>
 
         <div className={styles.sidebarContent}>
-          <WorkoutsSidebar
-            selectedPeriod={selectedPeriod}
-            onSelectPeriod={setSelectedPeriod}
-          />
+          <WorkoutsSidebar selectedPeriod={selectedPeriod} onSelectPeriod={setSelectedPeriod} />
         </div>
 
         <Box p="md" className={styles.sidebarFooter}>
@@ -97,22 +96,33 @@ export function WorkoutsView() {
 
         {/* Content Area */}
         <div className={styles.contentArea}>
-          <div className={styles.workoutsContainer}>
-            <WorkoutList
-              timePeriod={selectedPeriod}
-              searchQuery={searchQuery}
-              onWorkoutClick={handleWorkoutClick}
-              onCreateWorkout={openCreateModal}
-            />
-          </div>
+          <Stack gap="xl" className={styles.workoutsContainer}>
+            {/* Active Template Section */}
+            <section>
+              <Title order={4} mb="md" c="dimmed" className={styles.sectionTitle}>
+                Current Program
+              </Title>
+              <ActiveTemplateCard />
+            </section>
+
+            {/* Recent Workouts Section */}
+            <section>
+              <Title order={4} mb="md" c="dimmed" className={styles.sectionTitle}>
+                Recent Workouts
+              </Title>
+              <WorkoutList
+                timePeriod={selectedPeriod}
+                searchQuery={searchQuery}
+                onWorkoutClick={handleWorkoutClick}
+                onCreateWorkout={openCreateModal}
+              />
+            </section>
+          </Stack>
         </div>
       </Flex>
 
       {/* Modals */}
-      <CreateWorkoutModal
-        opened={createModalOpened}
-        onClose={closeCreateModal}
-      />
+      <CreateWorkoutModal opened={createModalOpened} onClose={closeCreateModal} />
 
       <WorkoutDetailModal
         opened={detailModalOpened}

@@ -3,12 +3,7 @@
  */
 
 import { Text, Skeleton } from "@mantine/core";
-import {
-  IconTemplate,
-  IconFolder,
-  IconTrendingUp,
-  IconSparkles,
-} from "@tabler/icons-react";
+import { IconTemplate, IconFolder, IconTrendingUp, IconSparkles } from "@tabler/icons-react";
 import styles from "../templates-view.module.css";
 
 interface TemplatesStats {
@@ -25,7 +20,13 @@ interface TemplatesStatsRowProps {
 }
 
 const STAT_CARDS = [
-  { key: "templates", color: "blue", icon: IconTemplate, label: "Templates", field: "totalTemplates" },
+  {
+    key: "templates",
+    color: "blue",
+    icon: IconTemplate,
+    label: "Templates",
+    field: "totalTemplates",
+  },
   { key: "folders", color: "gray", icon: IconFolder, label: "Folders", field: "totalFolders" },
   { key: "usage", color: "teal", icon: IconTrendingUp, label: "Total Uses", field: "totalUsage" },
   { key: "public", color: "orange", icon: IconSparkles, label: "Public", field: "publicTemplates" },

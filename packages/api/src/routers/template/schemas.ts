@@ -2,6 +2,7 @@ import {
   insertTemplateFolderSchema,
   insertWorkoutTemplateExerciseSchema,
   insertWorkoutTemplateSchema,
+  selectTemplateDaySchema,
   selectTemplateFolderSchema,
   selectWorkoutTemplateExerciseSchema,
   selectWorkoutTemplateSchema,
@@ -46,6 +47,24 @@ export const templateExerciseOutputSchema = templateExerciseBaseOutputSchema.ext
 export type TemplateExerciseOutput = z.infer<typeof templateExerciseOutputSchema>;
 
 // ============================================================================
+// Template Day Output Schemas (from DB select schema)
+// ============================================================================
+
+/**
+ * Template day base output schema (from drizzle-zod)
+ */
+export const templateDayBaseOutputSchema = selectTemplateDaySchema;
+
+/**
+ * Template day output schema (with nested exercises)
+ */
+export const templateDayOutputSchema = templateDayBaseOutputSchema.extend({
+  exercises: z.array(templateExerciseOutputSchema).describe("Exercises in this day"),
+});
+
+export type TemplateDayOutput = z.infer<typeof templateDayOutputSchema>;
+
+// ============================================================================
 // Template Output Schemas (from DB select schema)
 // ============================================================================
 
@@ -57,13 +76,27 @@ export const templateOutputSchema = selectWorkoutTemplateSchema;
 export type TemplateOutput = z.infer<typeof templateOutputSchema>;
 
 /**
- * Template with exercises output schema
+ * Template with exercises output schema (for backward compatibility)
+ * Contains flat exercises list for legacy templates
  */
 export const templateWithExercisesOutputSchema = templateOutputSchema.extend({
   exercises: z.array(templateExerciseOutputSchema).describe("Exercises in this template"),
 });
 
 export type TemplateWithExercisesOutput = z.infer<typeof templateWithExercisesOutputSchema>;
+
+/**
+ * Template with days output schema (for multi-day templates)
+ * Contains hierarchical days with exercises
+ */
+export const templateWithDaysOutputSchema = templateOutputSchema.extend({
+  days: z.array(templateDayOutputSchema).describe("Workout days in this template"),
+  exercises: z
+    .array(templateExerciseOutputSchema)
+    .describe("Legacy exercises without day assignment"),
+});
+
+export type TemplateWithDaysOutput = z.infer<typeof templateWithDaysOutputSchema>;
 
 /**
  * Workout output schema (for startWorkout)
@@ -202,9 +235,15 @@ export type DuplicateTemplateInput = z.infer<typeof duplicateTemplateSchema>;
 
 /**
  * Start workout from template input schema
+ * For multi-day templates, dayId is required to specify which day to start
+ * For single-day or legacy templates, dayId is optional
  */
 export const startWorkoutSchema = z.object({
   id: z.coerce.number().describe("ID of the template to start"),
+  dayId: z.coerce
+    .number()
+    .optional()
+    .describe("ID of the template day to start (required for multi-day templates)"),
 });
 
 export type StartWorkoutInput = z.infer<typeof startWorkoutSchema>;
@@ -217,17 +256,19 @@ export type StartWorkoutInput = z.infer<typeof startWorkoutSchema>;
  * Add exercise to template input schema (based on drizzle-zod insert schema)
  * Note: order, targetSets, and restSeconds are optional here because they have
  * defaults (order is auto-calculated, others have DB defaults)
+ * dayId is required for multi-day templates, used to specify which day to add the exercise to
  */
 export const addExerciseSchema = insertWorkoutTemplateExerciseSchema
-  .omit({ templateId: true })
+  .omit({ templateId: true, templateDayId: true })
   .extend({
     id: z.coerce.number().describe("ID of the template to add exercise to"),
+    dayId: z.coerce.number().describe("ID of the template day to add exercise to"),
     // Make these optional since they have defaults or are auto-calculated
     order: z
       .number()
       .min(1)
       .optional()
-      .describe("Order of exercise in template (auto-calculated if not provided)"),
+      .describe("Order of exercise in day (auto-calculated if not provided)"),
     targetSets: z.number().min(1).max(20).optional().default(3).describe("Target number of sets"),
     restSeconds: z
       .number()
@@ -245,6 +286,7 @@ export type AddExerciseInput = z.infer<typeof addExerciseSchema>;
  */
 export const updateExerciseSchema = z.object({
   templateId: z.coerce.number().describe("ID of the template"),
+  dayId: z.coerce.number().describe("ID of the template day"),
   exerciseId: z.coerce.number().describe("ID of the template exercise entry to update"),
   order: z.number().optional().describe("New order"),
   supersetGroupId: z.number().nullable().optional().describe("New superset group ID"),
@@ -262,6 +304,7 @@ export type UpdateExerciseInput = z.infer<typeof updateExerciseSchema>;
  */
 export const removeExerciseSchema = z.object({
   templateId: z.coerce.number().describe("ID of the template"),
+  dayId: z.coerce.number().describe("ID of the template day"),
   exerciseId: z.coerce.number().describe("ID of the template exercise entry to remove"),
 });
 
@@ -272,7 +315,89 @@ export type RemoveExerciseInput = z.infer<typeof removeExerciseSchema>;
  */
 export const reorderExercisesSchema = z.object({
   id: z.coerce.number().describe("ID of the template"),
+  dayId: z.coerce.number().describe("ID of the template day"),
   exerciseIds: z.array(z.number()).describe("Array of template exercise IDs in the desired order"),
 });
 
 export type ReorderExercisesInput = z.infer<typeof reorderExercisesSchema>;
+
+// ============================================================================
+// Template Day Input Schemas
+// ============================================================================
+
+/**
+ * List days for a template input schema
+ */
+export const listDaysSchema = z.object({
+  templateId: z.coerce.number().describe("ID of the template to list days for"),
+});
+
+export type ListDaysInput = z.infer<typeof listDaysSchema>;
+
+/**
+ * Get day by ID input schema
+ */
+export const getDayByIdSchema = z.object({
+  templateId: z.coerce.number().describe("ID of the template"),
+  dayId: z.coerce.number().describe("ID of the day"),
+});
+
+export type GetDayByIdInput = z.infer<typeof getDayByIdSchema>;
+
+/**
+ * Create day input schema
+ */
+export const createDaySchema = z.object({
+  templateId: z.coerce.number().describe("ID of the template to add day to"),
+  name: z.string().min(1).max(100).describe("Name of the day"),
+  description: z.string().max(500).optional().describe("Description of the day"),
+  isRestDay: z.boolean().default(false).describe("Whether this is a rest day"),
+  estimatedDurationMinutes: z
+    .number()
+    .min(1)
+    .max(600)
+    .optional()
+    .describe("Estimated duration in minutes"),
+});
+
+export type CreateDayInput = z.infer<typeof createDaySchema>;
+
+/**
+ * Update day input schema
+ */
+export const updateDaySchema = z.object({
+  templateId: z.coerce.number().describe("ID of the template"),
+  dayId: z.coerce.number().describe("ID of the day to update"),
+  name: z.string().min(1).max(100).optional().describe("New name for the day"),
+  description: z.string().max(500).optional().describe("New description"),
+  order: z.number().min(1).optional().describe("New order position"),
+  isRestDay: z.boolean().optional().describe("Whether this is a rest day"),
+  estimatedDurationMinutes: z
+    .number()
+    .min(1)
+    .max(600)
+    .optional()
+    .describe("New estimated duration"),
+});
+
+export type UpdateDayInput = z.infer<typeof updateDaySchema>;
+
+/**
+ * Delete day input schema
+ */
+export const deleteDaySchema = z.object({
+  templateId: z.coerce.number().describe("ID of the template"),
+  dayId: z.coerce.number().describe("ID of the day to delete"),
+});
+
+export type DeleteDayInput = z.infer<typeof deleteDaySchema>;
+
+/**
+ * Reorder days input schema
+ */
+export const reorderDaysSchema = z.object({
+  templateId: z.coerce.number().describe("ID of the template"),
+  dayIds: z.array(z.number()).describe("Array of day IDs in the desired order"),
+});
+
+export type ReorderDaysInput = z.infer<typeof reorderDaysSchema>;

@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "98ac076a-7e34-41cc-bd6d-45f9d4d1e3c6",
-  "prevId": "ad44172a-0e63-44ff-addb-f3894ca09b1d",
+  "id": "f31e4d83-afad-42ee-a94f-c8e08f265629",
+  "prevId": "1d4713d6-89c0-408a-96c5-58e39fc9d5b9",
   "tables": {
     "ai_generated_workout": {
       "name": "ai_generated_workout",
@@ -2097,6 +2097,103 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
+    "template_day": {
+      "name": "template_day",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "template_id": {
+          "name": "template_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "is_rest_day": {
+          "name": "is_rest_day",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "estimated_duration_minutes": {
+          "name": "estimated_duration_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(cast(unixepoch('subsecond') * 1000 as integer))"
+        }
+      },
+      "indexes": {
+        "template_day_template_id_idx": {
+          "name": "template_day_template_id_idx",
+          "columns": ["template_id"],
+          "isUnique": false
+        },
+        "template_day_template_order_idx": {
+          "name": "template_day_template_order_idx",
+          "columns": ["template_id", "order"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "template_day_template_id_workout_template_id_fk": {
+          "name": "template_day_template_id_workout_template_id_fk",
+          "tableFrom": "template_day",
+          "tableTo": "workout_template",
+          "columnsFrom": ["template_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "template_folder": {
       "name": "template_folder",
       "columns": {
@@ -2309,6 +2406,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "template_day_id": {
+          "name": "template_day_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "exercise_id": {
           "name": "exercise_id",
           "type": "integer",
@@ -2390,6 +2494,11 @@
           "columns": ["template_id"],
           "isUnique": false
         },
+        "workout_template_exercise_template_day_id_idx": {
+          "name": "workout_template_exercise_template_day_id_idx",
+          "columns": ["template_day_id"],
+          "isUnique": false
+        },
         "workout_template_exercise_exercise_id_idx": {
           "name": "workout_template_exercise_exercise_id_idx",
           "columns": ["exercise_id"],
@@ -2412,6 +2521,15 @@
           "tableFrom": "workout_template_exercise",
           "tableTo": "workout_template",
           "columnsFrom": ["template_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "workout_template_exercise_template_day_id_template_day_id_fk": {
+          "name": "workout_template_exercise_template_day_id_template_day_id_fk",
+          "tableFrom": "workout_template_exercise",
+          "tableTo": "template_day",
+          "columnsFrom": ["template_day_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -3037,6 +3155,13 @@
           "autoincrement": false,
           "default": "'celsius'"
         },
+        "active_template_id": {
+          "name": "active_template_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "default_rest_timer_seconds": {
           "name": "default_rest_timer_seconds",
           "type": "integer",
@@ -3228,6 +3353,15 @@
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_settings_active_template_id_workout_template_id_fk": {
+          "name": "user_settings_active_template_id_workout_template_id_fk",
+          "tableFrom": "user_settings",
+          "tableTo": "workout_template",
+          "columnsFrom": ["active_template_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },

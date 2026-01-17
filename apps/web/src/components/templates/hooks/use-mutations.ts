@@ -4,6 +4,7 @@ import {
   templateKeys,
   templateFoldersOptions,
   templateDetailOptions,
+  settingsKeys,
 } from "../queries/query-options";
 
 /**
@@ -188,14 +189,16 @@ export function useReorderFolders() {
 // ============================================================================
 
 /**
- * Hook for adding an exercise to a template
+ * Hook for adding an exercise to a template day
+ * @param templateId - The template ID
+ * @param dayId - The day ID (required for multi-day templates)
  */
-export function useAddExercise(templateId: number) {
+export function useAddExercise(templateId: number, dayId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.addExercise.call>[0]) =>
-      orpc.template.addExercise.call(input),
+    mutationFn: (input: Omit<Parameters<typeof orpc.template.addExercise.call>[0], "dayId">) =>
+      orpc.template.addExercise.call({ ...input, dayId }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: templateDetailOptions(templateId).queryKey,
@@ -207,13 +210,15 @@ export function useAddExercise(templateId: number) {
 
 /**
  * Hook for updating an exercise in a template
+ * @param templateId - The template ID
+ * @param dayId - The day ID (required for multi-day templates)
  */
-export function useUpdateExercise(templateId: number) {
+export function useUpdateExercise(templateId: number, dayId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.updateExercise.call>[0]) =>
-      orpc.template.updateExercise.call(input),
+    mutationFn: (input: Omit<Parameters<typeof orpc.template.updateExercise.call>[0], "dayId">) =>
+      orpc.template.updateExercise.call({ ...input, dayId }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: templateDetailOptions(templateId).queryKey,
@@ -225,13 +230,15 @@ export function useUpdateExercise(templateId: number) {
 
 /**
  * Hook for removing an exercise from a template
+ * @param templateId - The template ID
+ * @param dayId - The day ID (required for multi-day templates)
  */
-export function useRemoveExercise(templateId: number) {
+export function useRemoveExercise(templateId: number, dayId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.removeExercise.call>[0]) =>
-      orpc.template.removeExercise.call(input),
+    mutationFn: (input: Omit<Parameters<typeof orpc.template.removeExercise.call>[0], "dayId">) =>
+      orpc.template.removeExercise.call({ ...input, dayId }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: templateDetailOptions(templateId).queryKey,
@@ -242,14 +249,16 @@ export function useRemoveExercise(templateId: number) {
 }
 
 /**
- * Hook for reordering exercises in a template
+ * Hook for reordering exercises in a template day
+ * @param templateId - The template ID
+ * @param dayId - The day ID (required for multi-day templates)
  */
-export function useReorderExercises(templateId: number) {
+export function useReorderExercises(templateId: number, dayId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.reorderExercises.call>[0]) =>
-      orpc.template.reorderExercises.call(input),
+    mutationFn: (input: Omit<Parameters<typeof orpc.template.reorderExercises.call>[0], "dayId">) =>
+      orpc.template.reorderExercises.call({ ...input, dayId }),
     onMutate: async () => {
       await queryClient.cancelQueries({
         queryKey: templateDetailOptions(templateId).queryKey,
@@ -258,6 +267,123 @@ export function useReorderExercises(templateId: number) {
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: templateDetailOptions(templateId).queryKey,
+      });
+    },
+  });
+}
+
+// ============================================================================
+// Template Day Mutations
+// ============================================================================
+
+// Type aliases for day mutation inputs
+type CreateDayInput = Parameters<typeof orpc.template.day.create.call>[0];
+type UpdateDayInput = Parameters<typeof orpc.template.day.update.call>[0];
+type DeleteDayInput = Parameters<typeof orpc.template.day.delete.call>[0];
+type ReorderDaysInput = Parameters<typeof orpc.template.day.reorder.call>[0];
+
+/**
+ * Hook for creating a new day in a template
+ */
+export function useCreateDay() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: CreateDayInput) => orpc.template.day.create.call(input),
+    onSuccess: (_, variables: CreateDayInput) => {
+      queryClient.invalidateQueries({
+        queryKey: templateDetailOptions(variables.templateId as number).queryKey,
+      });
+      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+    },
+  });
+}
+
+/**
+ * Hook for updating a day in a template
+ */
+export function useUpdateDay() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: UpdateDayInput) => orpc.template.day.update.call(input),
+    onSuccess: (_, variables: UpdateDayInput) => {
+      queryClient.invalidateQueries({
+        queryKey: templateDetailOptions(variables.templateId as number).queryKey,
+      });
+    },
+  });
+}
+
+/**
+ * Hook for deleting a day from a template
+ */
+export function useDeleteDay() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: DeleteDayInput) => orpc.template.day.delete.call(input),
+    onSuccess: (_, variables: DeleteDayInput) => {
+      queryClient.invalidateQueries({
+        queryKey: templateDetailOptions(variables.templateId as number).queryKey,
+      });
+      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+    },
+  });
+}
+
+/**
+ * Hook for reordering days in a template
+ */
+export function useReorderDays() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: ReorderDaysInput) => orpc.template.day.reorder.call(input),
+    onMutate: async (variables: ReorderDaysInput) => {
+      await queryClient.cancelQueries({
+        queryKey: templateDetailOptions(variables.templateId as number).queryKey,
+      });
+    },
+    onSettled: (_, __, variables: ReorderDaysInput) => {
+      queryClient.invalidateQueries({
+        queryKey: templateDetailOptions(variables.templateId as number).queryKey,
+      });
+    },
+  });
+}
+
+// ============================================================================
+// Active Template Mutations
+// ============================================================================
+
+/**
+ * Hook for setting a template as active
+ */
+export function useSetActiveTemplate() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: { templateId: number }) => orpc.settings.setActiveTemplate.call(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: settingsKeys.activeTemplate(),
+      });
+    },
+  });
+}
+
+/**
+ * Hook for clearing the active template
+ */
+export function useClearActiveTemplate() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => orpc.settings.clearActiveTemplate.call(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: settingsKeys.activeTemplate(),
       });
     },
   });

@@ -34,11 +34,7 @@ interface CompleteWorkoutModalProps {
   workoutId: number;
 }
 
-export function CompleteWorkoutModal({
-  opened,
-  onClose,
-  workoutId,
-}: CompleteWorkoutModalProps) {
+export function CompleteWorkoutModal({ opened, onClose, workoutId }: CompleteWorkoutModalProps) {
   const completeWorkoutMutation = useCompleteWorkout();
 
   // Form state
@@ -62,7 +58,7 @@ export function CompleteWorkoutModal({
           setMood(null);
           setNotes("");
         },
-      }
+      },
     );
   }, [completeWorkoutMutation, workoutId, rating, mood, notes, onClose]);
 
@@ -96,15 +92,8 @@ export function CompleteWorkoutModal({
     >
       <Stack gap="lg" py="xs">
         {/* Success Message */}
-        <Alert
-          icon={<IconCheck size={16} />}
-          title="Great job!"
-          color="green"
-          variant="light"
-        >
-          <Text size="sm">
-            Take a moment to rate your workout and track how you felt.
-          </Text>
+        <Alert icon={<IconCheck size={16} />} title="Great job!" color="green" variant="light">
+          <Text size="sm">Take a moment to rate your workout and track how you felt.</Text>
         </Alert>
 
         {/* Rating */}
@@ -114,12 +103,7 @@ export function CompleteWorkoutModal({
             <Text fw={500}>How was your workout?</Text>
           </Group>
           <Center>
-            <Rating
-              value={rating}
-              onChange={setRating}
-              size="xl"
-              count={5}
-            />
+            <Rating value={rating} onChange={setRating} size="xl" count={5} />
           </Center>
           {rating > 0 && (
             <Text size="sm" c="dimmed" ta="center" mt="xs">
@@ -136,7 +120,7 @@ export function CompleteWorkoutModal({
           </Group>
           <SegmentedControl
             value={mood ?? ""}
-            onChange={(value) => setMood(value as WorkoutMood || null)}
+            onChange={(value) => setMood((value as WorkoutMood) || null)}
             data={moodOptions}
             fullWidth
             size="sm"
@@ -160,14 +144,10 @@ export function CompleteWorkoutModal({
 
         {/* Error State */}
         {completeWorkoutMutation.isError && (
-          <Alert
-            icon={<IconAlertCircle size={16} />}
-            title="Error"
-            color="red"
-            variant="light"
-          >
+          <Alert icon={<IconAlertCircle size={16} />} title="Error" color="red" variant="light">
             <Text size="sm">
-              {completeWorkoutMutation.error?.message ?? "Failed to complete workout. Please try again."}
+              {completeWorkoutMutation.error?.message ??
+                "Failed to complete workout. Please try again."}
             </Text>
           </Alert>
         )}

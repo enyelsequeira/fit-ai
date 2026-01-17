@@ -4,27 +4,10 @@
  */
 
 import { useState, useCallback, useEffect } from "react";
-import {
-  ActionIcon,
-  Badge,
-  Box,
-  Group,
-  NumberInput,
-  Text,
-  Tooltip,
-  Menu,
-} from "@mantine/core";
-import {
-  IconCheck,
-  IconTrash,
-  IconDotsVertical,
-} from "@tabler/icons-react";
+import { ActionIcon, Badge, Box, Group, NumberInput, Text, Tooltip, Menu } from "@mantine/core";
+import { IconCheck, IconTrash, IconDotsVertical } from "@tabler/icons-react";
 import type { ExerciseSet } from "../../types.ts";
-import {
-  useUpdateSet,
-  useDeleteSet,
-  useCompleteSet,
-} from "../../hooks/use-mutations.ts";
+import { useUpdateSet, useDeleteSet, useCompleteSet } from "../../hooks/use-mutations.ts";
 import styles from "./set-row.module.css";
 
 interface SetRowProps {
@@ -35,13 +18,7 @@ interface SetRowProps {
   isWorkoutCompleted: boolean;
 }
 
-export function SetRow({
-  workoutId,
-  set,
-  setIndex,
-  previousSet,
-  isWorkoutCompleted,
-}: SetRowProps) {
+export function SetRow({ workoutId, set, setIndex, previousSet, isWorkoutCompleted }: SetRowProps) {
   const updateSetMutation = useUpdateSet(workoutId);
   const deleteSetMutation = useDeleteSet(workoutId);
   const completeSetMutation = useCompleteSet(workoutId);
@@ -141,12 +118,7 @@ export function SetRow({
   };
 
   return (
-    <Group
-      gap="xs"
-      className={styles.setRow}
-      data-completed={isCompleted}
-      wrap="nowrap"
-    >
+    <Group gap="xs" className={styles.setRow} data-completed={isCompleted} wrap="nowrap">
       {/* Set Number */}
       <Box w={40} ta="center">
         <Group gap={4} justify="center">
@@ -168,7 +140,8 @@ export function SetRow({
       <Box w={70}>
         {isWorkoutCompleted || isCompleted ? (
           <Text size="sm" ta="center">
-            {set.weight ?? "-"}{set.weight ? (set.weightUnit === "lb" ? "lb" : "kg") : ""}
+            {set.weight ?? "-"}
+            {set.weight ? (set.weightUnit === "lb" ? "lb" : "kg") : ""}
           </Text>
         ) : (
           <NumberInput
@@ -261,12 +234,7 @@ export function SetRow({
 
                 <Menu position="bottom-end" withinPortal>
                   <Menu.Target>
-                    <ActionIcon
-                      variant="subtle"
-                      color="gray"
-                      size="sm"
-                      aria-label="Set options"
-                    >
+                    <ActionIcon variant="subtle" color="gray" size="sm" aria-label="Set options">
                       <IconDotsVertical size={14} />
                     </ActionIcon>
                   </Menu.Target>

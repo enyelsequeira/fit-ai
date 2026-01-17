@@ -10,18 +10,24 @@
 
 import {
   addExerciseRoute,
+  createDayRoute,
   createFolderRoute,
   createTemplateRoute,
+  deleteDayRoute,
   deleteFolderRoute,
   deleteTemplateRoute,
   duplicateTemplateRoute,
+  getDayByIdRoute,
   getTemplateByIdRoute,
+  listDaysRoute,
   listFoldersRoute,
   listTemplatesRoute,
   removeExerciseRoute,
+  reorderDaysRoute,
   reorderExercisesRoute,
   reorderFoldersRoute,
   startWorkoutRoute,
+  updateDayRoute,
   updateExerciseRoute,
   updateFolderRoute,
   updateTemplateRoute,
@@ -52,6 +58,33 @@ const folderRouter = {
 };
 
 // ============================================================================
+// Day Router
+// ============================================================================
+
+/**
+ * Day router for multi-day template management
+ */
+const dayRouter = {
+  /** List all days in a template */
+  list: listDaysRoute,
+
+  /** Get a day by ID with exercises */
+  getById: getDayByIdRoute,
+
+  /** Create a new day in a template */
+  create: createDayRoute,
+
+  /** Update a day */
+  update: updateDayRoute,
+
+  /** Delete a day */
+  delete: deleteDayRoute,
+
+  /** Reorder days in a template */
+  reorder: reorderDaysRoute,
+};
+
+// ============================================================================
 // Template Router
 // ============================================================================
 
@@ -61,6 +94,9 @@ const folderRouter = {
 export const templateRouter = {
   /** Folder management */
   folder: folderRouter,
+
+  /** Day management for multi-day templates */
+  day: dayRouter,
 
   /** List all templates */
   list: listTemplatesRoute,
@@ -83,7 +119,7 @@ export const templateRouter = {
   /** Start a workout from a template */
   startWorkout: startWorkoutRoute,
 
-  /** Add an exercise to a template */
+  /** Add an exercise to a template day */
   addExercise: addExerciseRoute,
 
   /** Update an exercise in a template */
@@ -92,7 +128,7 @@ export const templateRouter = {
   /** Remove an exercise from a template */
   removeExercise: removeExerciseRoute,
 
-  /** Reorder exercises in a template */
+  /** Reorder exercises in a template day */
   reorderExercises: reorderExercisesRoute,
 };
 
@@ -109,18 +145,24 @@ export * from "./handlers";
 // Export individual routes for custom router composition
 export {
   addExerciseRoute,
+  createDayRoute,
   createFolderRoute,
   createTemplateRoute,
+  deleteDayRoute,
   deleteFolderRoute,
   deleteTemplateRoute,
   duplicateTemplateRoute,
+  getDayByIdRoute,
   getTemplateByIdRoute,
+  listDaysRoute,
   listFoldersRoute,
   listTemplatesRoute,
   removeExerciseRoute,
+  reorderDaysRoute,
   reorderExercisesRoute,
   reorderFoldersRoute,
   startWorkoutRoute,
+  updateDayRoute,
   updateExerciseRoute,
   updateFolderRoute,
   updateTemplateRoute,

@@ -4,6 +4,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import z from "zod";
 
 import { user } from "./auth";
+import { workoutTemplate } from "./workout-template";
 
 // ============================================================================
 // Type Definitions (prefixed with Settings to avoid conflicts)
@@ -75,6 +76,10 @@ export const userSettings = sqliteTable("user_settings", {
   temperatureUnit: text("temperature_unit").$type<TemperatureUnit>().default("celsius").notNull(),
 
   // ========== Workout Preferences ==========
+  /** Currently active workout template for quick access */
+  activeTemplateId: integer("active_template_id").references(() => workoutTemplate.id, {
+    onDelete: "set null",
+  }),
   /** Default rest timer duration in seconds */
   defaultRestTimerSeconds: integer("default_rest_timer_seconds").default(90).notNull(),
   /** Auto-start rest timer after completing a set */
@@ -146,6 +151,10 @@ export const userSettingsRelations = relations(userSettings, ({ one }) => ({
   user: one(user, {
     fields: [userSettings.userId],
     references: [user.id],
+  }),
+  activeTemplate: one(workoutTemplate, {
+    fields: [userSettings.activeTemplateId],
+    references: [workoutTemplate.id],
   }),
 }));
 
@@ -233,6 +242,7 @@ export const insertUserSettingsSchema = createInsertSchema(userSettings, {
   defaultWarmupSets: z.number().int().min(0).max(10).default(2),
   defaultBodyWeight: z.number().positive().optional(),
   defaultBodyWeightUnit: settingsWeightUnitSchema.optional(),
+  activeTemplateId: z.number().int().positive().optional().nullable(),
 }).omit({
   id: true,
   userId: true,

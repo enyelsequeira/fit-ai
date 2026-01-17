@@ -20,7 +20,12 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { useDeleteWorkout } from "../../hooks/use-mutations.ts";
 import { useWorkoutById } from "../../queries/use-queries.ts";
-import { formatRelativeDate, formatDuration, calculateWorkoutDuration, countSets } from "../../utils";
+import {
+  formatRelativeDate,
+  formatDuration,
+  calculateWorkoutDuration,
+  countSets,
+} from "../../utils";
 import { MOOD_LABELS, MOOD_COLORS } from "../../types";
 import type { WorkoutMood } from "../../types";
 import styles from "./workout-card.module.css";
@@ -57,14 +62,7 @@ export function WorkoutCard({ workoutId, onClick, animationDelay = 0 }: WorkoutC
     return <WorkoutCardSkeleton animationDelay={animationDelay} />;
   }
 
-  const {
-    name,
-    startedAt,
-    completedAt,
-    rating,
-    mood,
-    workoutExercises,
-  } = workout;
+  const { name, startedAt, completedAt, rating, mood, workoutExercises } = workout;
 
   const isCompleted = completedAt !== null;
   const duration = calculateWorkoutDuration(startedAt, completedAt);
@@ -91,65 +89,46 @@ export function WorkoutCard({ workoutId, onClick, animationDelay = 0 }: WorkoutC
         {/* Subtle glow effect */}
         <div className={styles.cardGlow} aria-hidden="true" />
 
-        {/* Header with icon and title */}
+        {/* ZONE 1: Header with icon and title */}
         <div className={styles.cardHeader}>
-          <Tooltip label="Workout session" position="top" withArrow>
-            <div className={styles.iconWrapper} data-completed={isCompleted}>
-              <IconBarbell size={22} stroke={1.5} />
-            </div>
-          </Tooltip>
+          <div className={styles.iconWrapper} data-completed={isCompleted}>
+            <IconBarbell size={18} stroke={1.5} />
+          </div>
           <div className={styles.headerContent}>
             <h3 className={styles.workoutName} title={name ?? "Untitled Workout"}>
               {name ?? "Untitled Workout"}
             </h3>
             <div className={styles.metaRow}>
               <span className={styles.metaItem}>
-                <IconCalendar size={12} />
+                <IconCalendar size={11} />
                 {formatRelativeDate(startedAt)}
               </span>
-              {duration && (
-                <span className={styles.metaItem}>
-                  <IconClock size={12} />
-                  {formatDuration(duration)}
-                </span>
-              )}
             </div>
           </div>
         </div>
 
-        {/* Meta pills section */}
+        {/* ZONE 2: Meta badges - compact inline */}
         <div className={styles.metaSection}>
-          <Tooltip
-            label={isCompleted ? "Workout completed" : "Workout in progress"}
-            position="top"
-            withArrow
-          >
-            <span className={`${styles.metaPill} ${isCompleted ? styles.completedBadge : styles.inProgressBadge}`}>
-              {isCompleted ? (
-                <>
-                  <IconCheck size={12} className={styles.metaPillIcon} />
-                  Completed
-                </>
-              ) : (
-                <>
-                  <IconPlayerPlay size={12} className={styles.metaPillIcon} />
-                  In Progress
-                </>
-              )}
+          <Tooltip label={isCompleted ? "Completed" : "In Progress"} position="top" withArrow>
+            <span
+              className={`${styles.metaPill} ${isCompleted ? styles.completedBadge : styles.inProgressBadge}`}
+            >
+              {isCompleted ? <IconCheck size={11} /> : <IconPlayerPlay size={11} />}
+              {isCompleted ? "Done" : "Active"}
             </span>
           </Tooltip>
 
           {isCompleted && rating && (
-            <Tooltip label="Workout rating" position="top" withArrow>
+            <Tooltip label={`Rating: ${rating}/5`} position="top" withArrow>
               <span className={`${styles.metaPill} ${styles.ratingBadge}`}>
-                <IconStar size={12} className={styles.metaPillIcon} />
+                <IconStar size={11} className={styles.metaPillIcon} />
                 {rating}/5
               </span>
             </Tooltip>
           )}
 
           {isCompleted && mood && (
-            <Tooltip label={`Mood: ${MOOD_LABELS[mood as WorkoutMood] ?? mood}`} position="top" withArrow>
+            <Tooltip label={MOOD_LABELS[mood as WorkoutMood] ?? mood} position="top" withArrow>
               <span
                 className={styles.metaPill}
                 style={{
@@ -157,75 +136,63 @@ export function WorkoutCard({ workoutId, onClick, animationDelay = 0 }: WorkoutC
                   color: `var(--mantine-color-${MOOD_COLORS[mood as WorkoutMood] ?? "gray"}-7)`,
                 }}
               >
-                <IconMoodSmile size={12} className={styles.metaPillIcon} />
-                {MOOD_LABELS[mood as WorkoutMood] ?? mood}
+                <IconMoodSmile size={11} className={styles.metaPillIcon} />
               </span>
             </Tooltip>
           )}
         </div>
 
-        {/* Stats row */}
+        {/* Stats row - key metrics */}
         <div className={styles.statsRow}>
-          <Tooltip label="Total exercises in workout" position="top" withArrow>
-            <div className={styles.statItem}>
-              <IconBarbell size={14} className={styles.statIcon} />
-              <span className={styles.statValue}>{exerciseCount}</span>
-              <span className={styles.statLabel}>exercises</span>
-            </div>
-          </Tooltip>
-
-          <Tooltip label={`${completedSets} of ${setCount} sets completed`} position="top" withArrow>
-            <div className={styles.statItem}>
-              <IconCheck size={14} className={styles.statIcon} />
-              <span className={styles.statValue}>{completedSets}/{setCount}</span>
-              <span className={styles.statLabel}>sets</span>
-            </div>
-          </Tooltip>
-
+          <div className={styles.statItem}>
+            <IconBarbell size={12} className={styles.statIcon} />
+            <span className={styles.statValue}>{exerciseCount}</span>
+            <span className={styles.statLabel}>exercises</span>
+          </div>
+          <div className={styles.statItem}>
+            <IconCheck size={12} className={styles.statIcon} />
+            <span className={styles.statValue}>
+              {completedSets}/{setCount}
+            </span>
+            <span className={styles.statLabel}>sets</span>
+          </div>
           {duration && (
-            <Tooltip label="Workout duration" position="top" withArrow>
-              <div className={styles.statItem}>
-                <IconClock size={14} className={styles.statIcon} />
-                <span className={styles.statValue}>{formatDuration(duration)}</span>
-                <span className={styles.statLabel}>duration</span>
-              </div>
-            </Tooltip>
+            <div className={styles.statItem}>
+              <IconClock size={12} className={styles.statIcon} />
+              <span className={styles.statValue}>{formatDuration(duration)}</span>
+            </div>
           )}
         </div>
 
-        {/* Actions bar - visible on hover */}
+        {/* ZONE 3: Actions bar - visible on hover */}
         <div className={styles.actionsBar}>
           <div className={styles.actionsLeft}>
             {!isCompleted && (
-              <Tooltip label="Continue this workout" position="top" withArrow>
-                <button
-                  type="button"
-                  className={`${styles.actionButton} ${styles.primaryAction}`}
-                  onClick={handleContinueWorkout}
-                  disabled={deleteWorkoutMutation.isPending}
-                  aria-label="Continue workout"
-                >
-                  <IconPlayerPlay size={14} />
-                  Continue
-                </button>
-              </Tooltip>
+              <button
+                type="button"
+                className={`${styles.actionButton} ${styles.primaryAction}`}
+                onClick={handleContinueWorkout}
+                disabled={deleteWorkoutMutation.isPending}
+                aria-label="Continue workout"
+              >
+                <IconPlayerPlay size={12} />
+                Continue
+              </button>
             )}
             {isCompleted && (
-              <Tooltip label="View workout details" position="top" withArrow>
-                <button
-                  type="button"
-                  className={`${styles.actionButton} ${styles.secondaryAction}`}
-                  onClick={handleContinueWorkout}
-                  disabled={deleteWorkoutMutation.isPending}
-                  aria-label="View details"
-                >
-                  View Details
-                </button>
-              </Tooltip>
+              <button
+                type="button"
+                className={`${styles.actionButton} ${styles.secondaryAction}`}
+                onClick={handleContinueWorkout}
+                disabled={deleteWorkoutMutation.isPending}
+                aria-label="View details"
+              >
+                View
+              </button>
             )}
           </div>
           <div className={styles.actionsRight}>
-            <Tooltip label="Delete this workout" position="top" withArrow>
+            <Tooltip label="Delete" position="top" withArrow>
               <button
                 type="button"
                 className={`${styles.actionButton} ${styles.dangerAction} ${styles.iconOnlyAction}`}
@@ -236,7 +203,7 @@ export function WorkoutCard({ workoutId, onClick, animationDelay = 0 }: WorkoutC
                 disabled={deleteWorkoutMutation.isPending}
                 aria-label="Delete workout"
               >
-                <IconTrash size={14} />
+                <IconTrash size={12} />
               </button>
             </Tooltip>
           </div>
@@ -271,8 +238,8 @@ export function WorkoutCard({ workoutId, onClick, animationDelay = 0 }: WorkoutC
             Delete Workout
           </Text>
           <Text size="sm" c="dimmed">
-            Are you sure you want to delete &ldquo;{name ?? "this workout"}&rdquo;? This action cannot be undone and
-            all associated data will be permanently removed.
+            Are you sure you want to delete &ldquo;{name ?? "this workout"}&rdquo;? This action
+            cannot be undone and all associated data will be permanently removed.
           </Text>
           <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
             <Button

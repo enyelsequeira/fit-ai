@@ -31,6 +31,14 @@ export const exerciseKeys = {
 };
 
 /**
+ * Query keys factory for settings-related queries
+ */
+export const settingsKeys = {
+  all: ["settings"] as const,
+  activeTemplate: () => [...settingsKeys.all, "activeTemplate"] as const,
+};
+
+/**
  * Query options for fetching all template folders
  */
 export function templateFoldersOptions() {
@@ -55,7 +63,8 @@ export function templatesListOptions(params: {
     queryFn: () =>
       orpc.template.list.call({
         folderId: params.folderId ?? undefined,
-        includeNoFolder: params.includeNoFolder ?? (params.folderId === undefined || params.folderId === null),
+        includeNoFolder:
+          params.includeNoFolder ?? (params.folderId === undefined || params.folderId === null),
         includePublic: params.includePublic ?? false,
         limit: params.limit ?? 100,
         offset: params.offset ?? 0,
@@ -96,5 +105,16 @@ export function exercisesSearchOptions(params: {
         limit: params.limit ?? 20,
         offset: params.offset ?? 0,
       }),
+  });
+}
+
+/**
+ * Query options for fetching the user's settings (including activeTemplateId)
+ * Used to determine which template is currently active
+ */
+export function activeTemplateOptions() {
+  return queryOptions({
+    queryKey: settingsKeys.activeTemplate(),
+    queryFn: () => orpc.settings.get.call(),
   });
 }

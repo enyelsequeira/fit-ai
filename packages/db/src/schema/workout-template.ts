@@ -71,6 +71,39 @@ export const workoutTemplate = sqliteTable(
 );
 
 /**
+ * Template Day table - Individual workout days within a multi-day template/routine
+ * A template can have multiple days (e.g., "Push Day", "Pull Day", "Leg Day")
+ */
+export const templateDay = sqliteTable(
+  "template_day",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    templateId: integer("template_id")
+      .notNull()
+      .references(() => workoutTemplate.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    description: text("description"),
+    /** Order of day in the template (1-based) */
+    order: integer("order").notNull(),
+    /** Whether this is a rest day (no exercises) */
+    isRestDay: integer("is_rest_day", { mode: "boolean" }).default(false).notNull(),
+    /** Estimated duration for this day in minutes */
+    estimatedDurationMinutes: integer("estimated_duration_minutes"),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("template_day_template_id_idx").on(table.templateId),
+    index("template_day_template_order_idx").on(table.templateId, table.order),
+  ],
+);
+
+/**
  * Workout Template Exercise table - Exercises within a template
  * Includes target sets, reps, weight, and superset grouping
  */
@@ -81,6 +114,10 @@ export const workoutTemplateExercise = sqliteTable(
     templateId: integer("template_id")
       .notNull()
       .references(() => workoutTemplate.id, { onDelete: "cascade" }),
+    /** Optional reference to template day (for multi-day templates) */
+    templateDayId: integer("template_day_id").references(() => templateDay.id, {
+      onDelete: "cascade",
+    }),
     exerciseId: integer("exercise_id")
       .notNull()
       .references(() => exercise.id, { onDelete: "restrict" }),
@@ -107,6 +144,7 @@ export const workoutTemplateExercise = sqliteTable(
   },
   (table) => [
     index("workout_template_exercise_template_id_idx").on(table.templateId),
+    index("workout_template_exercise_template_day_id_idx").on(table.templateDayId),
     index("workout_template_exercise_exercise_id_idx").on(table.exerciseId),
     index("workout_template_exercise_order_idx").on(table.order),
     index("workout_template_exercise_superset_idx").on(table.supersetGroupId),
@@ -131,6 +169,15 @@ export const workoutTemplateRelations = relations(workoutTemplate, ({ one, many 
     fields: [workoutTemplate.folderId],
     references: [templateFolder.id],
   }),
+  days: many(templateDay),
+  exercises: many(workoutTemplateExercise),
+}));
+
+export const templateDayRelations = relations(templateDay, ({ one, many }) => ({
+  template: one(workoutTemplate, {
+    fields: [templateDay.templateId],
+    references: [workoutTemplate.id],
+  }),
   exercises: many(workoutTemplateExercise),
 }));
 
@@ -138,6 +185,10 @@ export const workoutTemplateExerciseRelations = relations(workoutTemplateExercis
   template: one(workoutTemplate, {
     fields: [workoutTemplateExercise.templateId],
     references: [workoutTemplate.id],
+  }),
+  templateDay: one(templateDay, {
+    fields: [workoutTemplateExercise.templateDayId],
+    references: [templateDay.id],
   }),
   exercise: one(exercise, {
     fields: [workoutTemplateExercise.exerciseId],
@@ -229,6 +280,41 @@ export const updateWorkoutTemplateSchema = insertWorkoutTemplateSchema.partial()
 export type SelectWorkoutTemplate = z.infer<typeof selectWorkoutTemplateSchema>;
 export type InsertWorkoutTemplate = z.infer<typeof insertWorkoutTemplateSchema>;
 export type UpdateWorkoutTemplate = z.infer<typeof updateWorkoutTemplateSchema>;
+
+// ============================================================================
+// Template Day Schemas
+// ============================================================================
+
+/**
+ * Select schema - for validating data returned from the database
+ */
+export const selectTemplateDaySchema = createSelectSchema(templateDay);
+
+/**
+ * Insert schema - for validating data before insertion
+ */
+export const insertTemplateDaySchema = createInsertSchema(templateDay, {
+  name: (schema) => schema.min(1).max(100),
+  description: (schema) => schema.max(500),
+  order: (schema) => schema.min(1),
+  estimatedDurationMinutes: (schema) => schema.min(1).max(600),
+}).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+/**
+ * Update schema - for validating partial updates
+ */
+export const updateTemplateDaySchema = insertTemplateDaySchema.partial().extend({
+  id: z.number(),
+});
+
+// Type exports
+export type SelectTemplateDay = z.infer<typeof selectTemplateDaySchema>;
+export type InsertTemplateDay = z.infer<typeof insertTemplateDaySchema>;
+export type UpdateTemplateDay = z.infer<typeof updateTemplateDaySchema>;
 
 // ============================================================================
 // Workout Template Exercise Schemas

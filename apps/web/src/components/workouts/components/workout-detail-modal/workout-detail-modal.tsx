@@ -28,7 +28,12 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useWorkoutById } from "../../queries/use-queries.ts";
-import { formatRelativeDate, formatDuration, calculateWorkoutDuration, countSets } from "../../utils";
+import {
+  formatRelativeDate,
+  formatDuration,
+  calculateWorkoutDuration,
+  countSets,
+} from "../../utils";
 import { MOOD_LABELS, MOOD_COLORS } from "../../types";
 import type { WorkoutMood } from "../../types";
 import styles from "./workout-detail-modal.module.css";
@@ -77,15 +82,7 @@ export function WorkoutDetailModal({ opened, onClose, workoutId }: WorkoutDetail
     );
   }
 
-  const {
-    name,
-    notes,
-    startedAt,
-    completedAt,
-    rating,
-    mood,
-    workoutExercises,
-  } = workout;
+  const { name, notes, startedAt, completedAt, rating, mood, workoutExercises } = workout;
 
   const isCompleted = completedAt !== null;
   const duration = calculateWorkoutDuration(startedAt, completedAt);
@@ -199,7 +196,9 @@ export function WorkoutDetailModal({ opened, onClose, workoutId }: WorkoutDetail
                 <Group gap="xs">
                   <IconMoodSmile
                     size={18}
-                    style={{ color: `var(--mantine-color-${MOOD_COLORS[mood as WorkoutMood] ?? "gray"}-6)` }}
+                    style={{
+                      color: `var(--mantine-color-${MOOD_COLORS[mood as WorkoutMood] ?? "gray"}-6)`,
+                    }}
                   />
                   <Text fw={500}>Mood: {MOOD_LABELS[mood as WorkoutMood] ?? mood}</Text>
                 </Group>

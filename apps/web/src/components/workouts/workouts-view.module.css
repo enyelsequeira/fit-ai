@@ -91,6 +91,14 @@
   }
 }
 
+/* Section title styling */
+.sectionTitle {
+  font-size: var(--mantine-font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   .pageContainer,

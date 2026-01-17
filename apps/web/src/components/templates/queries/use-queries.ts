@@ -5,6 +5,7 @@ import {
   templatesListOptions,
   templateDetailOptions,
   exercisesSearchOptions,
+  activeTemplateOptions,
 } from "./query-options";
 
 /**
@@ -55,4 +56,11 @@ export function useExerciseSearch(params?: { search?: string; limit?: number; of
       offset: params?.offset,
     }),
   );
+}
+
+/**
+ * Hook for fetching the active template
+ */
+export function useActiveTemplate() {
+  return useQuery(activeTemplateOptions());
 }

@@ -19,20 +19,16 @@
 .workoutsGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--mantine-spacing-lg);
+  gap: var(--mantine-spacing-md);
 
   @mixin larger-than 640px {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--mantine-spacing-md);
+    gap: var(--mantine-spacing-lg);
   }
 
   @mixin larger-than 1024px {
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--mantine-spacing-lg);
-  }
-
-  @mixin larger-than 1400px {
-    grid-template-columns: repeat(4, 1fr);
+    gap: var(--mantine-spacing-xl);
   }
 }
 
@@ -154,20 +150,16 @@
 .skeletonGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--mantine-spacing-lg);
+  gap: var(--mantine-spacing-md);
 
   @mixin larger-than 640px {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--mantine-spacing-md);
+    gap: var(--mantine-spacing-lg);
   }
 
   @mixin larger-than 1024px {
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--mantine-spacing-lg);
-  }
-
-  @mixin larger-than 1400px {
-    grid-template-columns: repeat(4, 1fr);
+    gap: var(--mantine-spacing-xl);
   }
 }
 

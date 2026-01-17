@@ -5,13 +5,7 @@
 
 import { useMemo } from "react";
 import { Button, Group, Tooltip } from "@mantine/core";
-import {
-  IconPlus,
-  IconBarbell,
-  IconSearch,
-  IconMoodSad,
-  IconRefresh,
-} from "@tabler/icons-react";
+import { IconPlus, IconBarbell, IconSearch, IconMoodSad, IconRefresh } from "@tabler/icons-react";
 import { useWorkoutsList } from "../../queries/use-queries.ts";
 import { WorkoutCard, WorkoutCardSkeleton } from "../workout-card/workout-card.tsx";
 import type { TimePeriodFilter } from "../../types";
@@ -75,8 +69,8 @@ function NoWorkoutsEmptyState({ onCreateWorkout }: { onCreateWorkout: () => void
       </div>
       <h3 className={styles.emptyStateTitle}>Start Your Fitness Journey</h3>
       <p className={styles.emptyStateMessage}>
-        Track your workouts, monitor your progress, and achieve your fitness goals.
-        Start by creating your first workout session.
+        Track your workouts, monitor your progress, and achieve your fitness goals. Start by
+        creating your first workout session.
       </p>
 
       <Tooltip label="Start your first workout" position="bottom" withArrow>
@@ -102,8 +96,8 @@ function PeriodEmptyState({
       </div>
       <h3 className={styles.emptyStateTitle}>No workouts for {periodLabel}</h3>
       <p className={styles.emptyStateMessage}>
-        You haven&apos;t logged any workouts for this time period yet.
-        Start a new workout to get going!
+        You haven&apos;t logged any workouts for this time period yet. Start a new workout to get
+        going!
       </p>
 
       <Tooltip label="Start a new workout" position="bottom" withArrow>
@@ -174,9 +168,7 @@ export function WorkoutList({
       return workouts;
     }
     const query = searchQuery.toLowerCase();
-    return workouts.filter((workout) =>
-      workout.name?.toLowerCase().includes(query)
-    );
+    return workouts.filter((workout) => workout.name?.toLowerCase().includes(query));
   }, [workoutsData?.workouts, searchQuery]);
 
   if (isLoading) {
@@ -199,10 +191,7 @@ export function WorkoutList({
       return <SearchEmptyState searchQuery={searchQuery} onCreateWorkout={onCreateWorkout} />;
     }
     return (
-      <PeriodEmptyState
-        periodLabel={PERIOD_LABELS[timePeriod]}
-        onCreateWorkout={onCreateWorkout}
-      />
+      <PeriodEmptyState periodLabel={PERIOD_LABELS[timePeriod]} onCreateWorkout={onCreateWorkout} />
     );
   }
 

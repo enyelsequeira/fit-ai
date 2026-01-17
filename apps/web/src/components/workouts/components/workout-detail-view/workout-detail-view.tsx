@@ -104,7 +104,7 @@ export function WorkoutDetailView({ workoutId }: WorkoutDetailViewProps) {
         onSuccess: () => {
           setIsEditingName(false);
         },
-      }
+      },
     );
   }, [editedName, workout?.name, workoutId, updateWorkoutMutation]);
 
@@ -121,7 +121,7 @@ export function WorkoutDetailView({ workoutId }: WorkoutDetailViewProps) {
         handleCancelEdit();
       }
     },
-    [handleSaveName, handleCancelEdit]
+    [handleSaveName, handleCancelEdit],
   );
 
   // Loading state
@@ -150,7 +150,8 @@ export function WorkoutDetailView({ workoutId }: WorkoutDetailViewProps) {
         >
           <Stack gap="md">
             <Text size="sm">
-              {error?.message ?? "Unable to load workout details. The workout may not exist or you may not have access."}
+              {error?.message ??
+                "Unable to load workout details. The workout may not exist or you may not have access."}
             </Text>
             <Group>
               <Button
@@ -168,18 +169,10 @@ export function WorkoutDetailView({ workoutId }: WorkoutDetailViewProps) {
     );
   }
 
-  const {
-    name,
-    notes,
-    startedAt,
-    completedAt,
-    workoutExercises,
-  } = workout;
+  const { name, notes, startedAt, completedAt, workoutExercises } = workout;
 
   const isCompleted = completedAt !== null;
-  const duration = isCompleted
-    ? calculateWorkoutDuration(startedAt, completedAt)
-    : liveDuration;
+  const duration = isCompleted ? calculateWorkoutDuration(startedAt, completedAt) : liveDuration;
   const exerciseCount = workoutExercises?.length ?? 0;
   const { total: setCount, completed: completedSets } = countSets(workoutExercises);
 

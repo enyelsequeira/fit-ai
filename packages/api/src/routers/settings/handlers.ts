@@ -1,10 +1,15 @@
 import { db } from "@fit-ai/db";
 import { userSettings } from "@fit-ai/db/schema/user-settings";
-import { eq } from "drizzle-orm";
+import { workoutTemplate } from "@fit-ai/db/schema/workout-template";
+import { ORPCError } from "@orpc/server";
+import { and, eq, or } from "drizzle-orm";
 
 import type {
+  ClearActiveTemplateRouteHandler,
+  GetActiveTemplateRouteHandler,
   GetRouteHandler,
   ResetRouteHandler,
+  SetActiveTemplateRouteHandler,
   UpdateDisplayPreferencesRouteHandler,
   UpdateNotificationPreferencesRouteHandler,
   UpdatePrivacyPreferencesRouteHandler,
@@ -186,4 +191,106 @@ export const resetSettingsHandler: ResetRouteHandler = async ({ context }) => {
 
   // Create new defaults
   return getOrCreateSettings(userId);
+};
+
+// ============================================================================
+// Active Template Handlers
+// ============================================================================
+
+/**
+ * Get user's active template
+ * Returns the full template object if set, null if not
+ */
+export const getActiveTemplateHandler: GetActiveTemplateRouteHandler = async ({ context }) => {
+  const userId = context.session.user.id;
+
+  // Get user settings
+  const settings = await getOrCreateSettings(userId);
+
+  // If no active template is set, return null
+  if (!settings.activeTemplateId) {
+    return null;
+  }
+
+  // Fetch the active template
+  const result = await db
+    .select()
+    .from(workoutTemplate)
+    .where(eq(workoutTemplate.id, settings.activeTemplateId))
+    .limit(1);
+
+  const template = result[0];
+
+  // If template doesn't exist (was deleted), clear the active template setting and return null
+  if (!template) {
+    await db
+      .update(userSettings)
+      .set({ activeTemplateId: null })
+      .where(eq(userSettings.userId, userId));
+    return null;
+  }
+
+  return template;
+};
+
+/**
+ * Set active template
+ * Validates that the template exists and belongs to the user (or is public)
+ */
+export const setActiveTemplateHandler: SetActiveTemplateRouteHandler = async ({
+  input,
+  context,
+}) => {
+  const userId = context.session.user.id;
+
+  // Verify template exists and user has access (owner or public)
+  const templateResult = await db
+    .select()
+    .from(workoutTemplate)
+    .where(
+      and(
+        eq(workoutTemplate.id, input.templateId),
+        or(eq(workoutTemplate.userId, userId), eq(workoutTemplate.isPublic, true)),
+      ),
+    )
+    .limit(1);
+
+  const template = templateResult[0];
+  if (!template) {
+    throw new ORPCError("NOT_FOUND", {
+      message: "Template not found or you don't have access to it",
+    });
+  }
+
+  // Ensure settings exist
+  await getOrCreateSettings(userId);
+
+  // Update the active template
+  const result = await db
+    .update(userSettings)
+    .set({ activeTemplateId: input.templateId })
+    .where(eq(userSettings.userId, userId))
+    .returning();
+
+  return result[0]!;
+};
+
+/**
+ * Clear active template
+ * Sets activeTemplateId to null
+ */
+export const clearActiveTemplateHandler: ClearActiveTemplateRouteHandler = async ({ context }) => {
+  const userId = context.session.user.id;
+
+  // Ensure settings exist
+  await getOrCreateSettings(userId);
+
+  // Clear the active template
+  const result = await db
+    .update(userSettings)
+    .set({ activeTemplateId: null })
+    .where(eq(userSettings.userId, userId))
+    .returning();
+
+  return result[0]!;
 };

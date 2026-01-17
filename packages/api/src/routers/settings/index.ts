@@ -7,11 +7,15 @@
  * - Display preferences (theme, date/time format, timezone)
  * - Notification preferences
  * - Privacy preferences
+ * - Active template management
  */
 
 import {
+  clearActiveTemplateRoute,
+  getActiveTemplateRoute,
   getRoute,
   resetRoute,
+  setActiveTemplateRoute,
   updateDisplayPreferencesRoute,
   updateNotificationPreferencesRoute,
   updatePrivacyPreferencesRoute,
@@ -51,6 +55,15 @@ export const settingsRouter = {
 
   /** Reset all settings to defaults */
   reset: resetRoute,
+
+  /** Get user's active template */
+  getActiveTemplate: getActiveTemplateRoute,
+
+  /** Set user's active template */
+  setActiveTemplate: setActiveTemplateRoute,
+
+  /** Clear user's active template */
+  clearActiveTemplate: clearActiveTemplateRoute,
 };
 
 // ============================================================================
@@ -60,8 +73,11 @@ export const settingsRouter = {
 export * from "./schemas";
 export * from "./handlers";
 export {
+  clearActiveTemplateRoute,
+  getActiveTemplateRoute,
   getRoute,
   resetRoute,
+  setActiveTemplateRoute,
   updateDisplayPreferencesRoute,
   updateNotificationPreferencesRoute,
   updatePrivacyPreferencesRoute,
