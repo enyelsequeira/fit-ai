@@ -1,29 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { orpc } from "@/utils/orpc";
-import {
-  templateKeys,
-  templateFoldersOptions,
-  templateDetailOptions,
-  settingsKeys,
-} from "../queries/query-options";
+import { settingsKeys } from "../queries/query-options";
 
 /**
  * Hook for creating a new template
+ * Uses orpc.*.mutationOptions() with orpc.*.key() for cache invalidation
  */
 export function useCreateTemplate() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.create.call>[0]) =>
-      orpc.template.create.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: templateKeys.folders() });
-    },
-  });
+  return useMutation(
+    orpc.template.create.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
+        queryClient.invalidateQueries({ queryKey: orpc.template.folder.list.key() });
+      },
+    }),
+  );
 }
-
-type UpdateTemplateInput = Parameters<typeof orpc.template.update.call>[0];
 
 /**
  * Hook for updating an existing template
@@ -31,15 +25,16 @@ type UpdateTemplateInput = Parameters<typeof orpc.template.update.call>[0];
 export function useUpdateTemplate() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: UpdateTemplateInput) => orpc.template.update.call(input),
-    onSuccess: (_, variables: UpdateTemplateInput) => {
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
-      queryClient.invalidateQueries({
-        queryKey: templateDetailOptions(variables.id as number).queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.template.update.mutationOptions({
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
+        queryClient.invalidateQueries({
+          queryKey: orpc.template.getById.key({ input: { id: variables.id as number } }),
+        });
+      },
+    }),
+  );
 }
 
 /**
@@ -48,14 +43,14 @@ export function useUpdateTemplate() {
 export function useDeleteTemplate() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.delete.call>[0]) =>
-      orpc.template.delete.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: templateKeys.folders() });
-    },
-  });
+  return useMutation(
+    orpc.template.delete.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
+        queryClient.invalidateQueries({ queryKey: orpc.template.folder.list.key() });
+      },
+    }),
+  );
 }
 
 /**
@@ -64,14 +59,14 @@ export function useDeleteTemplate() {
 export function useDuplicateTemplate() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.duplicate.call>[0]) =>
-      orpc.template.duplicate.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: templateKeys.folders() });
-    },
-  });
+  return useMutation(
+    orpc.template.duplicate.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
+        queryClient.invalidateQueries({ queryKey: orpc.template.folder.list.key() });
+      },
+    }),
+  );
 }
 
 /**
@@ -80,14 +75,14 @@ export function useDuplicateTemplate() {
 export function useStartWorkout() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.startWorkout.call>[0]) =>
-      orpc.template.startWorkout.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workout"] });
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
-    },
-  });
+  return useMutation(
+    orpc.template.startWorkout.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.workout.key() });
+        queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
+      },
+    }),
+  );
 }
 
 /**
@@ -96,35 +91,13 @@ export function useStartWorkout() {
 export function useCreateFolder() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (input: Parameters<typeof orpc.template.folder.create.call>[0]) => {
-      return orpc.template.folder.create.call(input);
-    },
-    onMutate: () => {
-      // toast.show({
-      //   id: "creating-folder",
-      //   message: "Creating folder...",
-      //   type: "loading",
-      // });
-    },
-    onSuccess: () => {
-      // toast.update({
-      //   id: "creating-folder",
-      //   message: "Folder created successfully",
-      //   type: "success",
-      // });
-      queryClient.invalidateQueries({
-        queryKey: templateFoldersOptions().queryKey,
-      });
-    },
-    onError: () => {
-      // toast.update({
-      //   id: "creating-folder",
-      //   message: error.message || "Failed to create folder",
-      //   type: "error",
-      // });
-    },
-  });
+  return useMutation(
+    orpc.template.folder.create.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.template.folder.list.key() });
+      },
+    }),
+  );
 }
 
 /**
@@ -133,15 +106,13 @@ export function useCreateFolder() {
 export function useUpdateFolder() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.folder.update.call>[0]) =>
-      orpc.template.folder.update.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: templateFoldersOptions().queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.template.folder.update.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.template.folder.list.key() });
+      },
+    }),
+  );
 }
 
 /**
@@ -150,16 +121,14 @@ export function useUpdateFolder() {
 export function useDeleteFolder() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.folder.delete.call>[0]) =>
-      orpc.template.folder.delete.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: templateFoldersOptions().queryKey,
-      });
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
-    },
-  });
+  return useMutation(
+    orpc.template.folder.delete.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.template.folder.list.key() });
+        queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
+      },
+    }),
+  );
 }
 
 /**
@@ -168,20 +137,16 @@ export function useDeleteFolder() {
 export function useReorderFolders() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.template.folder.reorder.call>[0]) =>
-      orpc.template.folder.reorder.call(input),
-    onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey: templateFoldersOptions().queryKey,
-      });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: templateFoldersOptions().queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.template.folder.reorder.mutationOptions({
+      onMutate: async () => {
+        await queryClient.cancelQueries({ queryKey: orpc.template.folder.list.key() });
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.template.folder.list.key() });
+      },
+    }),
+  );
 }
 
 // ============================================================================
@@ -190,6 +155,7 @@ export function useReorderFolders() {
 
 /**
  * Hook for adding an exercise to a template day
+ * Uses custom mutationFn to inject dayId into each call
  * @param templateId - The template ID
  * @param dayId - The day ID (required for multi-day templates)
  */
@@ -201,15 +167,16 @@ export function useAddExercise(templateId: number, dayId: number) {
       orpc.template.addExercise.call({ ...input, dayId }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: templateDetailOptions(templateId).queryKey,
+        queryKey: orpc.template.getById.key({ input: { id: templateId } }),
       });
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
     },
   });
 }
 
 /**
  * Hook for updating an exercise in a template
+ * Uses custom mutationFn to inject dayId into each call
  * @param templateId - The template ID
  * @param dayId - The day ID (required for multi-day templates)
  */
@@ -221,15 +188,16 @@ export function useUpdateExercise(templateId: number, dayId: number) {
       orpc.template.updateExercise.call({ ...input, dayId }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: templateDetailOptions(templateId).queryKey,
+        queryKey: orpc.template.getById.key({ input: { id: templateId } }),
       });
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
     },
   });
 }
 
 /**
  * Hook for removing an exercise from a template
+ * Uses custom mutationFn to inject dayId into each call
  * @param templateId - The template ID
  * @param dayId - The day ID (required for multi-day templates)
  */
@@ -241,15 +209,16 @@ export function useRemoveExercise(templateId: number, dayId: number) {
       orpc.template.removeExercise.call({ ...input, dayId }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: templateDetailOptions(templateId).queryKey,
+        queryKey: orpc.template.getById.key({ input: { id: templateId } }),
       });
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
     },
   });
 }
 
 /**
  * Hook for reordering exercises in a template day
+ * Uses custom mutationFn to inject dayId into each call
  * @param templateId - The template ID
  * @param dayId - The day ID (required for multi-day templates)
  */
@@ -261,12 +230,12 @@ export function useReorderExercises(templateId: number, dayId: number) {
       orpc.template.reorderExercises.call({ ...input, dayId }),
     onMutate: async () => {
       await queryClient.cancelQueries({
-        queryKey: templateDetailOptions(templateId).queryKey,
+        queryKey: orpc.template.getById.key({ input: { id: templateId } }),
       });
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: templateDetailOptions(templateId).queryKey,
+        queryKey: orpc.template.getById.key({ input: { id: templateId } }),
       });
     },
   });
@@ -292,9 +261,9 @@ export function useCreateDay() {
     mutationFn: (input: CreateDayInput) => orpc.template.day.create.call(input),
     onSuccess: (_, variables: CreateDayInput) => {
       queryClient.invalidateQueries({
-        queryKey: templateDetailOptions(variables.templateId as number).queryKey,
+        queryKey: orpc.template.getById.key({ input: { id: variables.templateId as number } }),
       });
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
     },
   });
 }
@@ -309,7 +278,7 @@ export function useUpdateDay() {
     mutationFn: (input: UpdateDayInput) => orpc.template.day.update.call(input),
     onSuccess: (_, variables: UpdateDayInput) => {
       queryClient.invalidateQueries({
-        queryKey: templateDetailOptions(variables.templateId as number).queryKey,
+        queryKey: orpc.template.getById.key({ input: { id: variables.templateId as number } }),
       });
     },
   });
@@ -325,9 +294,9 @@ export function useDeleteDay() {
     mutationFn: (input: DeleteDayInput) => orpc.template.day.delete.call(input),
     onSuccess: (_, variables: DeleteDayInput) => {
       queryClient.invalidateQueries({
-        queryKey: templateDetailOptions(variables.templateId as number).queryKey,
+        queryKey: orpc.template.getById.key({ input: { id: variables.templateId as number } }),
       });
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: orpc.template.list.key() });
     },
   });
 }
@@ -342,12 +311,12 @@ export function useReorderDays() {
     mutationFn: (input: ReorderDaysInput) => orpc.template.day.reorder.call(input),
     onMutate: async (variables: ReorderDaysInput) => {
       await queryClient.cancelQueries({
-        queryKey: templateDetailOptions(variables.templateId as number).queryKey,
+        queryKey: orpc.template.getById.key({ input: { id: variables.templateId as number } }),
       });
     },
     onSettled: (_, __, variables: ReorderDaysInput) => {
       queryClient.invalidateQueries({
-        queryKey: templateDetailOptions(variables.templateId as number).queryKey,
+        queryKey: orpc.template.getById.key({ input: { id: variables.templateId as number } }),
       });
     },
   });
