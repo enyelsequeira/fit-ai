@@ -1,0 +1,90 @@
+/* Workouts Stats Row Styles */
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--mantine-spacing-md);
+  margin-bottom: var(--mantine-spacing-lg);
+
+  @mixin larger-than $mantine-breakpoint-sm {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  border-radius: var(--mantine-radius-lg);
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    border-color 200ms ease;
+
+  @mixin hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.3));
+    border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  }
+}
+
+.statIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--mantine-radius-md);
+  flex-shrink: 0;
+
+  &[data-color="green"] {
+    background: light-dark(var(--mantine-color-green-1), rgba(34, 197, 94, 0.15));
+    color: light-dark(var(--mantine-color-green-6), var(--mantine-color-green-4));
+  }
+
+  &[data-color="orange"] {
+    background: light-dark(var(--mantine-color-orange-1), rgba(249, 115, 22, 0.15));
+    color: light-dark(var(--mantine-color-orange-6), var(--mantine-color-orange-4));
+  }
+
+  &[data-color="blue"] {
+    background: light-dark(var(--mantine-color-blue-1), rgba(59, 130, 246, 0.15));
+    color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-4));
+  }
+
+  &[data-color="gray"] {
+    background: light-dark(var(--mantine-color-gray-1), rgba(107, 114, 128, 0.15));
+    color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+  }
+}
+
+.statContent {
+  min-width: 0;
+}
+
+.statValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-5));
+  white-space: nowrap;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .statCard {
+    transition: none;
+  }
+
+  .statCard:hover {
+    transform: none;
+  }
+}

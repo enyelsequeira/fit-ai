@@ -1,0 +1,262 @@
+/* Workouts Sidebar Styles */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.headerTitle {
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-5));
+  margin: 0;
+}
+
+/* Navigation Section */
+.navSection {
+  flex: 1;
+  padding: var(--mantine-spacing-sm);
+  overflow-y: auto;
+}
+
+/* All Workouts Item */
+.allWorkoutsItem {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  cursor: pointer;
+  background: light-dark(var(--mantine-color-gray-0), rgba(71, 85, 105, 0.08));
+  border: 1px solid light-dark(var(--mantine-color-gray-3), rgba(71, 85, 105, 0.2));
+  transition: all 180ms ease;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-1), rgba(71, 85, 105, 0.15));
+    border-color: light-dark(var(--mantine-color-blue-3), rgba(59, 130, 246, 0.35));
+  }
+
+  &[data-active="true"] {
+    background: light-dark(var(--mantine-color-blue-0), rgba(59, 130, 246, 0.18));
+    border-color: var(--mantine-color-blue-5);
+  }
+}
+
+.allWorkoutsIcon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mantine-radius-md);
+  background: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-7));
+  color: white;
+  flex-shrink: 0;
+}
+
+.allWorkoutsContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.allWorkoutsLabel {
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
+  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-1));
+  margin: 0;
+}
+
+.allWorkoutsSubtext {
+  font-size: 11px;
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-gray-6));
+  margin: 0;
+}
+
+.allWorkoutsCount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  background: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-8));
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 12px;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  margin: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+}
+
+.sectionLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-gray-6));
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  display: block;
+}
+
+/* Period Items */
+.periodItem {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  padding: 10px var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 150ms ease;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  }
+
+  &[data-active="true"] {
+    background: light-dark(var(--mantine-color-blue-0), rgba(59, 130, 246, 0.1));
+    border-color: light-dark(var(--mantine-color-blue-2), rgba(59, 130, 246, 0.25));
+
+    & .periodIcon {
+      color: var(--mantine-color-blue-6);
+    }
+
+    & .periodName {
+      color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-4));
+      font-weight: 600;
+    }
+  }
+}
+
+.periodIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mantine-radius-sm);
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-5));
+  flex-shrink: 0;
+  transition: all 150ms ease;
+}
+
+.periodContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.periodName {
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 500;
+  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-2));
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.periodCount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-5));
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: opacity 150ms ease;
+}
+
+/* Stats Section */
+.statsSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mantine-spacing-xs);
+  padding: var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-md);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.statValue {
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 700;
+  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-1));
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-gray-6));
+  margin-top: 2px;
+}
+
+/* Skeleton */
+.skeletonItem {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  padding: 10px var(--mantine-spacing-md);
+}
+
+.skeleton {
+  background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  border-radius: var(--mantine-radius-sm);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeletonIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.skeletonText {
+  flex: 1;
+  height: 14px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,30 @@
+/* Workout Detail View Styles */
+
+.headerPaper {
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+}
+
+.notesBox {
+  padding: var(--mantine-spacing-sm);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+  border-radius: var(--mantine-radius-sm);
+  border-left: 3px solid var(--mantine-color-blue-5);
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+}
+
+.statIcon {
+  color: var(--mantine-color-blue-6);
+  opacity: 0.8;
+}
+
+.completeSection {
+  background: light-dark(
+    color-mix(in srgb, var(--mantine-color-green-0) 50%, transparent),
+    color-mix(in srgb, var(--mantine-color-green-9) 20%, var(--mantine-color-dark-7))
+  );
+  border-color: var(--mantine-color-green-4);
+}

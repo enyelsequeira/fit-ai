@@ -1,0 +1,39 @@
+/* Workout Detail Modal Styles */
+
+.modalIcon {
+  color: var(--mantine-color-blue-6);
+}
+
+.workoutHeader {
+  padding: var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  border-radius: var(--mantine-radius-md);
+}
+
+.notesSection {
+  padding: var(--mantine-spacing-sm);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  border-radius: var(--mantine-radius-md);
+  border-left: 3px solid var(--mantine-color-blue-5);
+}
+
+.statsSection {
+  padding: var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  border-radius: var(--mantine-radius-md);
+}
+
+.statItem {
+  text-align: center;
+}
+
+.exerciseItem {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  border-radius: var(--mantine-radius-sm);
+  transition: background 150ms ease;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+  }
+}

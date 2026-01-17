@@ -1,0 +1,25 @@
+/* Add Exercise Modal Styles */
+
+.modalIcon {
+  color: var(--mantine-color-blue-6);
+}
+
+.exerciseItem {
+  transition: background 150ms ease, opacity 150ms ease;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  }
+
+  &[data-disabled="true"] {
+    opacity: 0.6;
+    background: light-dark(
+      color-mix(in srgb, var(--mantine-color-green-0) 30%, transparent),
+      color-mix(in srgb, var(--mantine-color-green-9) 10%, transparent)
+    );
+  }
+}
+
+.modalFooter {
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}

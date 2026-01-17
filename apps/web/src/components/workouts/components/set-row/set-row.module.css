@@ -1,0 +1,28 @@
+/* Set Row Styles */
+
+.setRow {
+  padding: var(--mantine-spacing-xs) 0;
+  border-radius: var(--mantine-radius-sm);
+  transition: background 150ms ease;
+
+  @mixin hover {
+    background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+  }
+
+  &[data-completed="true"] {
+    background: light-dark(
+      color-mix(in srgb, var(--mantine-color-green-0) 50%, transparent),
+      color-mix(in srgb, var(--mantine-color-green-9) 15%, transparent)
+    );
+  }
+}
+
+.numberInput {
+  text-align: center;
+  padding-left: var(--mantine-spacing-xs);
+  padding-right: var(--mantine-spacing-xs);
+
+  &::placeholder {
+    text-align: center;
+  }
+}
