@@ -2,6 +2,33 @@
 
 .exerciseCard {
   overflow: hidden;
+  transition:
+    box-shadow 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease;
+
+  &[data-active="true"] {
+    border-color: var(--mantine-color-blue-4);
+    box-shadow:
+      0 0 0 2px var(--mantine-color-blue-2),
+      0 4px 12px color-mix(in srgb, var(--mantine-color-blue-5) 15%, transparent);
+    animation: activeExercisePulse 3s ease-in-out infinite;
+  }
+}
+
+/* Subtle pulse for active exercise card */
+@keyframes activeExercisePulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px var(--mantine-color-blue-2),
+      0 4px 12px color-mix(in srgb, var(--mantine-color-blue-5) 15%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px var(--mantine-color-blue-3),
+      0 4px 16px color-mix(in srgb, var(--mantine-color-blue-5) 25%, transparent);
+  }
 }
 
 .exerciseHeader {
@@ -23,6 +50,13 @@
   background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
   border-radius: var(--mantine-radius-sm);
   flex-shrink: 0;
+  transition: background 150ms ease;
+}
+
+/* Active exercise order number has blue background */
+[data-active="true"] .orderNumber {
+  background: var(--mantine-color-blue-6);
+  color: white;
 }
 
 .exerciseNotes {
@@ -41,4 +75,70 @@
 .setsHeader {
   padding-bottom: var(--mantine-spacing-xs);
   border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+/* Smooth scroll behavior for the container */
+:global(html) {
+  scroll-behavior: smooth;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .exerciseHeader {
+    padding: var(--mantine-spacing-sm);
+  }
+
+  .exerciseNotes {
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+    padding-left: calc(var(--mantine-spacing-sm) + 28px + var(--mantine-spacing-xs));
+  }
+
+  .setsContainer {
+    padding: var(--mantine-spacing-sm);
+  }
+
+  .setsHeader {
+    /* Adjust column widths for mobile */
+    font-size: var(--mantine-font-size-xs);
+  }
+}
+
+/* Small mobile (375px - iPhone SE) */
+@media (max-width: 375px) {
+  .orderNumber {
+    width: 24px;
+    height: 24px;
+    font-size: var(--mantine-font-size-xs);
+  }
+
+  .exerciseHeader {
+    padding: var(--mantine-spacing-xs);
+  }
+
+  .setsContainer {
+    padding: var(--mantine-spacing-xs);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  :global(html) {
+    scroll-behavior: auto;
+  }
+
+  .exerciseCard {
+    transition: none;
+    animation: none !important;
+  }
+
+  .exerciseCard[data-active="true"] {
+    animation: none;
+  }
+
+  .exerciseHeader,
+  .orderNumber {
+    transition: none;
+  }
 }

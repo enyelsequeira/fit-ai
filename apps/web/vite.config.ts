@@ -13,7 +13,10 @@ const hasAlchemyConfig = existsSync(alchemyConfigPath);
 
 export default defineConfig(async () => {
   const plugins: PluginOption[] = [
-    devtools(),
+    devtools({
+      // Disable source tooltips that appear on hover in dev mode
+      injectSource: { enabled: false },
+    }),
     tsconfigPaths(),
     tanstackStart(),
     viteReact(),

@@ -16,9 +16,21 @@ interface SetRowProps {
   setIndex: number;
   previousSet?: ExerciseSet;
   isWorkoutCompleted: boolean;
+  /** Whether this is the current/next set to complete */
+  isCurrent?: boolean;
+  /** Callback when set is completed - can be used to trigger rest timer */
+  onSetCompleteWithTimer?: (setId: number) => void;
 }
 
-export function SetRow({ workoutId, set, setIndex, previousSet, isWorkoutCompleted }: SetRowProps) {
+export function SetRow({
+  workoutId,
+  set,
+  setIndex,
+  previousSet,
+  isWorkoutCompleted,
+  isCurrent = false,
+  onSetCompleteWithTimer,
+}: SetRowProps) {
   const updateSetMutation = useUpdateSet(workoutId);
   const deleteSetMutation = useDeleteSet(workoutId);
   const completeSetMutation = useCompleteSet(workoutId);
@@ -72,11 +84,19 @@ export function SetRow({ workoutId, set, setIndex, previousSet, isWorkoutComplet
   }, [localRpe, set.rpe, set.id, workoutId, updateSetMutation]);
 
   const handleCompleteSet = useCallback(() => {
-    completeSetMutation.mutate({
-      workoutId,
-      setId: set.id,
-    });
-  }, [completeSetMutation, workoutId, set.id]);
+    completeSetMutation.mutate(
+      {
+        workoutId,
+        setId: set.id,
+      },
+      {
+        onSuccess: () => {
+          // Trigger rest timer callback if provided
+          onSetCompleteWithTimer?.(set.id);
+        },
+      },
+    );
+  }, [completeSetMutation, workoutId, set.id, onSetCompleteWithTimer]);
 
   const handleDeleteSet = useCallback(() => {
     if (window.confirm("Are you sure you want to delete this set?")) {
@@ -118,7 +138,13 @@ export function SetRow({ workoutId, set, setIndex, previousSet, isWorkoutComplet
   };
 
   return (
-    <Group gap="xs" className={styles.setRow} data-completed={isCompleted} wrap="nowrap">
+    <Group
+      gap="xs"
+      className={styles.setRow}
+      data-completed={isCompleted}
+      data-current={isCurrent && !isCompleted}
+      wrap="nowrap"
+    >
       {/* Set Number */}
       <Box w={40} ta="center">
         <Group gap={4} justify="center">

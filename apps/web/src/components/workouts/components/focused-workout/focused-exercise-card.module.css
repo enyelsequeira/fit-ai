@@ -1,0 +1,78 @@
+/* FocusedExerciseCard - Gym Mode styling */
+
+.card {
+  padding: var(--mantine-spacing-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.exerciseHeader {
+  margin-bottom: var(--mantine-spacing-lg);
+}
+
+.exerciseName {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--mantine-color-white);
+  margin-bottom: 8px;
+}
+
+.badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+}
+
+.badgeEquipment {
+  composes: badge;
+  background: rgba(76, 201, 240, 0.15);
+  color: var(--mantine-color-cyan-4);
+}
+
+.badgeMuscle {
+  composes: badge;
+  background: rgba(167, 139, 250, 0.15);
+  color: var(--mantine-color-violet-4);
+}
+
+.setEntry {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.completedSets {
+  margin-top: var(--mantine-spacing-lg);
+  padding-top: var(--mantine-spacing-md);
+}
+
+.completedLabel {
+  font-size: 14px;
+  color: var(--mantine-color-dimmed);
+  margin-bottom: 12px;
+}
+
+.completedSetsScroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.addSetButton {
+  margin-top: var(--mantine-spacing-md);
+  background: var(--mantine-color-dark-6);
+  border: none;
+}
+
+.addSetButton:hover {
+  background: var(--mantine-color-dark-5);
+}

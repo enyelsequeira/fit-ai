@@ -1,0 +1,95 @@
+/* FocusedWorkoutHeader - Gym Mode sticky header */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: var(--mantine-color-dark-7);
+  border-bottom: 1px solid var(--mantine-color-dark-5);
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: var(--mantine-color-cyan-4);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.backButton:hover {
+  background: var(--mantine-color-dark-6);
+}
+
+.centerContent {
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.workoutName {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--mantine-color-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.elapsedTime {
+  font-size: 12px;
+  color: var(--mantine-color-dimmed);
+  font-variant-numeric: tabular-nums;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--mantine-color-dark-4);
+  transition: all 0.2s ease;
+}
+
+.dot[data-completed="true"] {
+  background: var(--mantine-color-green-6);
+}
+
+.dot[data-current="true"] {
+  background: var(--mantine-color-cyan-5);
+  width: 12px;
+  height: 12px;
+}
+
+/* Legacy styles for backward compatibility */
+.nameButton {
+  max-width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.progressWrapper {
+  min-width: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

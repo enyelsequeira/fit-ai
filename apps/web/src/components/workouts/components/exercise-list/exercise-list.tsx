@@ -3,10 +3,11 @@
  * Supports inline set editing and management
  */
 
-import { useState, useCallback } from "react";
+import type { RefObject } from "react";
+
+import { useState, useCallback, useRef, useEffect, forwardRef } from "react";
 import {
   ActionIcon,
-  Badge,
   Box,
   Button,
   Group,
@@ -15,6 +16,7 @@ import {
   Text,
   Collapse,
   Paper,
+  Badge,
 } from "@mantine/core";
 import {
   IconChevronDown,
@@ -23,22 +25,43 @@ import {
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
+
 import type { WorkoutExercise } from "../../types.ts";
-import { useRemoveExerciseFromWorkout, useAddSet } from "../../hooks/use-mutations.ts";
 import { SetRow } from "../set-row/set-row.tsx";
+import { ExerciseProgressIndicator } from "../workout-progress";
+import { useExerciseItem } from "./use-exercise-item.ts";
 import styles from "./exercise-list.module.css";
 
 interface ExerciseListProps {
   workoutId: number;
   exercises: WorkoutExercise[];
   isWorkoutCompleted: boolean;
+  /** Index of the currently active exercise */
+  currentExerciseIndex?: number;
+  /** Index of the current set within the current exercise */
+  currentSetIndex?: number;
+  /** Callback when a set is completed - for rest timer integration */
+  onSetCompleteWithTimer?: (setId: number) => void;
+  /** Ref to expose scroll functions to parent */
+  scrollRef?: RefObject<{ scrollToExercise: (index: number) => void } | null>;
 }
 
-export function ExerciseList({ workoutId, exercises, isWorkoutCompleted }: ExerciseListProps) {
+export function ExerciseList({
+  workoutId,
+  exercises,
+  isWorkoutCompleted,
+  currentExerciseIndex,
+  currentSetIndex,
+  onSetCompleteWithTimer,
+  scrollRef,
+}: ExerciseListProps) {
   // Track which exercises are expanded
   const [expandedExercises, setExpandedExercises] = useState<string[]>(
     exercises.map((_, index) => String(index)),
   );
+
+  // Refs for scrolling to exercises
+  const exerciseRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
   const toggleExercise = useCallback((value: string) => {
     setExpandedExercises((prev) =>
@@ -46,17 +69,45 @@ export function ExerciseList({ workoutId, exercises, isWorkoutCompleted }: Exerc
     );
   }, []);
 
+  // Scroll to exercise function
+  const scrollToExercise = useCallback((index: number) => {
+    const element = exerciseRefs.current.get(index);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
+      // Ensure the exercise is expanded
+      setExpandedExercises((prev) =>
+        prev.includes(String(index)) ? prev : [...prev, String(index)],
+      );
+    }
+  }, []);
+
+  // Expose scroll function to parent via ref
+  useEffect(() => {
+    if (scrollRef && "current" in scrollRef) {
+      (scrollRef as { current: { scrollToExercise: (index: number) => void } | null }).current = {
+        scrollToExercise,
+      };
+    }
+  }, [scrollRef, scrollToExercise]);
+
   return (
     <Stack gap="sm">
       {exercises.map((workoutExercise, index) => (
         <ExerciseItem
           key={workoutExercise.id}
+          ref={(el) => {
+            if (el) exerciseRefs.current.set(index, el);
+            else exerciseRefs.current.delete(index);
+          }}
           workoutId={workoutId}
           workoutExercise={workoutExercise}
           index={index}
           isExpanded={expandedExercises.includes(String(index))}
           onToggle={() => toggleExercise(String(index))}
           isWorkoutCompleted={isWorkoutCompleted}
+          isActive={currentExerciseIndex === index}
+          currentSetIndex={currentExerciseIndex === index ? currentSetIndex : undefined}
+          onSetCompleteWithTimer={onSetCompleteWithTimer}
         />
       ))}
     </Stack>
@@ -70,58 +121,41 @@ interface ExerciseItemProps {
   isExpanded: boolean;
   onToggle: () => void;
   isWorkoutCompleted: boolean;
+  /** Whether this exercise is the currently active one */
+  isActive?: boolean;
+  /** Current set index within this exercise (if active) */
+  currentSetIndex?: number;
+  /** Callback when a set is completed */
+  onSetCompleteWithTimer?: (setId: number) => void;
 }
 
-function ExerciseItem({
-  workoutId,
-  workoutExercise,
-  index,
-  isExpanded,
-  onToggle,
-  isWorkoutCompleted,
-}: ExerciseItemProps) {
-  const removeExerciseMutation = useRemoveExerciseFromWorkout(workoutId);
-  const addSetMutation = useAddSet(workoutId);
-
+const ExerciseItem = forwardRef<HTMLDivElement, ExerciseItemProps>(function ExerciseItem(
+  {
+    workoutId,
+    workoutExercise,
+    index,
+    isExpanded,
+    onToggle,
+    isWorkoutCompleted,
+    isActive = false,
+    currentSetIndex,
+    onSetCompleteWithTimer,
+  },
+  ref,
+) {
   const exercise = workoutExercise.exercise;
   const sets = workoutExercise.sets ?? [];
   const completedSetsCount = sets.filter((s) => s.completedAt !== null).length;
   const totalSetsCount = sets.length;
 
-  const handleRemoveExercise = useCallback(() => {
-    if (window.confirm("Are you sure you want to remove this exercise and all its sets?")) {
-      removeExerciseMutation.mutate({
-        workoutId,
-        workoutExerciseId: workoutExercise.id,
-      });
-    }
-  }, [removeExerciseMutation, workoutId, workoutExercise.id]);
-
-  const handleAddSet = useCallback(() => {
-    addSetMutation.mutate({
-      workoutId,
-      workoutExerciseId: workoutExercise.id,
-      setNumber: sets.length + 1,
-      // Required nullable fields
-      reps: null,
-      weight: null,
-      weightUnit: "kg",
-      durationSeconds: null,
-      distance: null,
-      distanceUnit: "km",
-      holdTimeSeconds: null,
-      setType: "normal",
-      rpe: null,
-      rir: null,
-      targetReps: null,
-      targetWeight: null,
-      restTimeSeconds: null,
-      notes: null,
-    });
-  }, [addSetMutation, workoutId, workoutExercise.id, sets]);
+  const { handleRemoveExercise, handleAddSet, isAddingSet } = useExerciseItem({
+    workoutId,
+    workoutExerciseId: workoutExercise.id,
+    setsCount: sets.length,
+  });
 
   return (
-    <Paper withBorder radius="md" className={styles.exerciseCard}>
+    <Paper ref={ref} withBorder radius="md" className={styles.exerciseCard} data-active={isActive}>
       {/* Exercise Header */}
       <Box
         className={styles.exerciseHeader}
@@ -163,16 +197,11 @@ function ExerciseItem({
           </Group>
 
           <Group gap="sm" wrap="nowrap">
-            {/* Sets Progress */}
-            <Badge
-              size="md"
-              variant={
-                completedSetsCount === totalSetsCount && totalSetsCount > 0 ? "filled" : "light"
-              }
-              color={completedSetsCount === totalSetsCount && totalSetsCount > 0 ? "green" : "gray"}
-            >
-              {completedSetsCount}/{totalSetsCount} sets
-            </Badge>
+            {/* Sets Progress - Using ExerciseProgressIndicator */}
+            <ExerciseProgressIndicator
+              completedSets={completedSetsCount}
+              totalSets={totalSetsCount}
+            />
 
             {/* Actions Menu */}
             {!isWorkoutCompleted && (
@@ -257,6 +286,8 @@ function ExerciseItem({
                   setIndex={setIndex}
                   previousSet={setIndex > 0 ? sets[setIndex - 1] : undefined}
                   isWorkoutCompleted={isWorkoutCompleted}
+                  isCurrent={currentSetIndex === setIndex}
+                  onSetCompleteWithTimer={onSetCompleteWithTimer}
                 />
               ))}
             </Stack>
@@ -275,7 +306,7 @@ function ExerciseItem({
               size="sm"
               leftSection={<IconPlus size={14} />}
               onClick={handleAddSet}
-              loading={addSetMutation.isPending}
+              loading={isAddingSet}
               fullWidth
               mt="sm"
             >
@@ -286,4 +317,4 @@ function ExerciseItem({
       </Collapse>
     </Paper>
   );
-}
+});

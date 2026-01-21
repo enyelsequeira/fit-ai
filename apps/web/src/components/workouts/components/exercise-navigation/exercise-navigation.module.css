@@ -1,0 +1,143 @@
+/**
+ * ExerciseNavigation Styles
+ * Horizontal scrollable navigation with exercise pills
+ */
+
+.container {
+  width: 100%;
+  min-height: 44px;
+  background: var(--mantine-color-body);
+}
+
+.scrollArea {
+  width: 100%;
+}
+
+/* Pill container with horizontal scroll and snap */
+.pillContainer {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  scroll-snap-type: x mandatory;
+  scroll-padding: var(--mantine-spacing-sm);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Individual exercise pill */
+.pill {
+  flex-shrink: 0;
+  cursor: pointer;
+  scroll-snap-align: center;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+  border: none;
+  font-family: inherit;
+}
+
+.pill:hover {
+  transform: translateY(-1px);
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--mantine-color-blue-filled);
+  outline-offset: 2px;
+}
+
+.pill:active {
+  transform: translateY(0);
+}
+
+/* Current exercise pill - emphasized styling */
+.pill[data-current="true"] {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
+}
+
+.pill[data-current="true"]:hover {
+  transform: scale(1.02) translateY(-1px);
+}
+
+/* Pill content layout */
+.pillContent {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.exerciseName {
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.setCount {
+  opacity: 0.8;
+  font-size: 10px;
+}
+
+/* Status-specific styles for better visibility */
+.pill[data-status="not_started"] {
+  border-color: var(--mantine-color-gray-4);
+}
+
+.pill[data-status="in_progress"][data-current="false"] {
+  background-color: var(--mantine-color-blue-0);
+  border-color: var(--mantine-color-blue-4);
+}
+
+.pill[data-status="complete"] .setCount {
+  display: none;
+}
+
+/* Dark mode adjustments */
+[data-mantine-color-scheme="dark"] .pill[data-status="in_progress"][data-current="false"] {
+  background-color: var(--mantine-color-blue-9);
+}
+
+[data-mantine-color-scheme="dark"] .pill[data-status="not_started"] {
+  border-color: var(--mantine-color-gray-7);
+}
+
+/* Scrollbar styling */
+.scrollArea :global(.mantine-ScrollArea-scrollbar) {
+  background: transparent;
+  padding: 2px;
+}
+
+.scrollArea :global(.mantine-ScrollArea-thumb) {
+  background-color: var(--mantine-color-gray-4);
+  border-radius: 4px;
+}
+
+[data-mantine-color-scheme="dark"] .scrollArea :global(.mantine-ScrollArea-thumb) {
+  background-color: var(--mantine-color-gray-7);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .container {
+    min-height: 48px;
+  }
+
+  .pillContainer {
+    padding: var(--mantine-spacing-xs);
+    gap: var(--mantine-spacing-xs);
+  }
+
+  /* Hide scrollbar on mobile for cleaner look */
+  .scrollArea :global(.mantine-ScrollArea-scrollbar) {
+    display: none;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .pill {
+    transition: none;
+  }
+
+  .pill:hover,
+  .pill[data-current="true"],
+  .pill[data-current="true"]:hover {
+    transform: none;
+  }
+}

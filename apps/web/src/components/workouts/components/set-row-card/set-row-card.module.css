@@ -1,0 +1,263 @@
+/* SetRowCard Styles */
+
+.card {
+  transition:
+    border-color 200ms ease,
+    background-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 150ms ease;
+}
+
+/* Completed state - green background/border */
+.card[data-completed="true"] {
+  background: light-dark(var(--mantine-color-green-0), rgba(34, 197, 94, 0.08));
+  border-color: light-dark(var(--mantine-color-green-4), var(--mantine-color-green-8));
+}
+
+/* Current state - highlighted border with slight scale */
+.card[data-current="true"] {
+  border-color: var(--mantine-primary-color-filled);
+  box-shadow: 0 0 0 2px
+    light-dark(
+      var(--mantine-primary-color-light),
+      rgba(var(--mantine-primary-color-filled-rgb), 0.2)
+    );
+  transform: scale(1.01);
+}
+
+/* Current + Completed state */
+.card[data-current="true"][data-completed="true"] {
+  border-color: var(--mantine-color-green-5);
+  box-shadow: 0 0 0 2px light-dark(var(--mantine-color-green-1), rgba(34, 197, 94, 0.15));
+}
+
+/* Main row layout */
+.mainRow {
+  min-height: 60px;
+}
+
+/* Set number container */
+.setNumberContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 50px;
+}
+
+/* Circular set number badge */
+.setNumberBadge {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+  border: 2px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+
+.setNumberBadge[data-completed="true"] {
+  background: light-dark(var(--mantine-color-green-1), rgba(34, 197, 94, 0.15));
+  border-color: var(--mantine-color-green-5);
+}
+
+.setNumberBadge[data-current="true"] {
+  background: light-dark(
+    var(--mantine-primary-color-light),
+    rgba(var(--mantine-primary-color-filled-rgb), 0.15)
+  );
+  border-color: var(--mantine-primary-color-filled);
+}
+
+.setNumberText {
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
+}
+
+.setNumberBadge[data-completed="true"] .setNumberText {
+  color: var(--mantine-color-green-7);
+}
+
+.setNumberBadge[data-current="true"] .setNumberText {
+  color: var(--mantine-primary-color-filled);
+}
+
+/* Set type badge */
+.setTypeBadge {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Inputs section */
+.inputsSection {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Input wrapper with suffix */
+.inputWrapper {
+  position: relative;
+}
+
+.inputSuffix {
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Number inputs - touch-friendly with minimum 44px height */
+.numberInput {
+  text-align: center;
+  font-weight: 500;
+  min-height: 44px;
+  padding-left: var(--mantine-spacing-xs);
+  padding-right: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-md);
+  font-size: var(--mantine-font-size-md);
+
+  &::placeholder {
+    text-align: center;
+    color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3));
+  }
+
+  &:focus {
+    border-color: var(--mantine-primary-color-filled);
+  }
+
+  &:disabled {
+    background: transparent;
+    border-color: transparent;
+    opacity: 1;
+    cursor: default;
+  }
+}
+
+/* RPE input - smaller variant */
+.rpeInput {
+  text-align: center;
+  font-weight: 500;
+  min-height: 36px;
+  padding-left: var(--mantine-spacing-xs);
+  padding-right: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-md);
+  font-size: var(--mantine-font-size-sm);
+
+  &::placeholder {
+    text-align: center;
+    color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3));
+  }
+
+  &:focus {
+    border-color: var(--mantine-primary-color-filled);
+  }
+
+  &:disabled {
+    background: transparent;
+    border-color: transparent;
+    opacity: 1;
+    cursor: default;
+  }
+}
+
+/* Previous set reference */
+.previousSet {
+  padding-left: 2px;
+  font-style: italic;
+}
+
+/* Actions section */
+.actionsSection {
+  flex-shrink: 0;
+}
+
+/* Complete button - large touch target (minimum 44px) */
+.completeButton {
+  min-width: 48px;
+  min-height: 48px;
+  transition:
+    background-color 150ms ease,
+    transform 100ms ease;
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+}
+
+/* Delete button - adequate touch target */
+.deleteButton {
+  min-width: 44px;
+  min-height: 44px;
+  opacity: 0.6;
+  transition: opacity 150ms ease;
+
+  &:hover:not(:disabled) {
+    opacity: 1;
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 480px) {
+  .mainRow {
+    gap: var(--mantine-spacing-xs);
+  }
+
+  .setNumberContainer {
+    min-width: 44px;
+  }
+
+  .setNumberBadge {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+  }
+
+  .inputsSection {
+    gap: 2px;
+  }
+
+  .numberInput {
+    min-height: 44px;
+    font-size: var(--mantine-font-size-sm);
+  }
+
+  .completeButton {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .deleteButton {
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .setTypeBadge {
+    font-size: 9px;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .setNumberBadge {
+    transition: none;
+  }
+
+  .completeButton {
+    transition: none;
+
+    &:active:not(:disabled) {
+      transform: none;
+    }
+  }
+
+  .deleteButton {
+    transition: none;
+  }
+}

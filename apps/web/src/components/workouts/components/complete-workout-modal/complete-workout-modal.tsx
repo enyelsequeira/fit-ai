@@ -32,9 +32,13 @@ interface CompleteWorkoutModalProps {
   opened: boolean;
   onClose: () => void;
   workoutId: number;
+  /** Whether the workout is already completed */
+  isAlreadyCompleted?: boolean;
+  /** Callback when workout is successfully completed */
+  onSuccess?: () => void;
 }
 
-export function CompleteWorkoutModal({ opened, onClose, workoutId }: CompleteWorkoutModalProps) {
+export function CompleteWorkoutModal({ opened, onClose, workoutId, isAlreadyCompleted = false, onSuccess }: CompleteWorkoutModalProps) {
   const completeWorkoutMutation = useCompleteWorkout();
 
   // Form state
@@ -52,15 +56,17 @@ export function CompleteWorkoutModal({ opened, onClose, workoutId }: CompleteWor
       },
       {
         onSuccess: () => {
-          onClose();
           // Reset form state
           setRating(0);
           setMood(null);
           setNotes("");
+          onClose();
+          // Call success callback (e.g., to navigate away)
+          onSuccess?.();
         },
       },
     );
-  }, [completeWorkoutMutation, workoutId, rating, mood, notes, onClose]);
+  }, [completeWorkoutMutation, workoutId, rating, mood, notes, onClose, onSuccess]);
 
   const handleClose = useCallback(() => {
     // Reset form state on close
@@ -85,11 +91,24 @@ export function CompleteWorkoutModal({ opened, onClose, workoutId }: CompleteWor
           <Center w={24} h={24} className={styles.modalIcon}>
             <IconCheck size={20} />
           </Center>
-          <Text fw={600}>Complete Workout</Text>
+          <Text fw={600}>{isAlreadyCompleted ? "Workout Completed" : "Complete Workout"}</Text>
         </Group>
       }
       size="md"
     >
+      {/* Already completed state */}
+      {isAlreadyCompleted ? (
+        <Stack gap="lg" py="xs">
+          <Alert icon={<IconCheck size={16} />} title="Already completed!" color="green" variant="light">
+            <Text size="sm">This workout has already been marked as complete. Great work!</Text>
+          </Alert>
+          <Group justify="flex-end" pt="md">
+            <Button color="green" onClick={handleClose}>
+              Close
+            </Button>
+          </Group>
+        </Stack>
+      ) : (
       <Stack gap="lg" py="xs">
         {/* Success Message */}
         <Alert icon={<IconCheck size={16} />} title="Great job!" color="green" variant="light">
@@ -167,6 +186,7 @@ export function CompleteWorkoutModal({ opened, onClose, workoutId }: CompleteWor
           </Button>
         </Group>
       </Stack>
+      )}
     </Modal>
   );
 }

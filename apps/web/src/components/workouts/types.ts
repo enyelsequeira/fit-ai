@@ -28,6 +28,11 @@ export type WorkoutExercise = NonNullable<WorkoutFull["workoutExercises"]>[numbe
  */
 export type ExerciseSet = NonNullable<WorkoutExercise["sets"]>[number];
 
+/**
+ * Workout set type (alias for ExerciseSet for clarity in workout context)
+ */
+export type WorkoutSet = ExerciseSet;
+
 // ============================================================================
 // Filter Types
 // ============================================================================

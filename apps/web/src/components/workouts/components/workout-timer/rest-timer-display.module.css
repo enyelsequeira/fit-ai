@@ -1,0 +1,94 @@
+/* RestTimerDisplay Styles */
+
+/* Container for the ring progress when critical */
+.timerContainer {
+  position: relative;
+}
+
+.timerContainer[data-critical="true"] {
+  animation: timerPulse 1s ease-in-out infinite;
+}
+
+/* Pulse animation for critical countdown (<10s) */
+@keyframes timerPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}
+
+/* Time display styling */
+.timeText {
+  font-variant-numeric: tabular-nums;
+  transition: color 200ms ease;
+}
+
+/* Control buttons */
+.controlButton {
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease;
+}
+
+.controlButton:active {
+  transform: scale(0.95);
+}
+
+/* Compact variant adjustments */
+.compactContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compactRing {
+  transition: transform 150ms ease;
+}
+
+/* Status text fade animation */
+.statusText {
+  animation: fadeIn 200ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .controlButton {
+    min-width: 48px;
+    min-height: 48px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .timerContainer[data-critical="true"] {
+    animation: none;
+  }
+
+  .timeText,
+  .controlButton,
+  .compactRing {
+    transition: none;
+  }
+
+  .controlButton:active {
+    transform: none;
+  }
+
+  .statusText {
+    animation: none;
+  }
+}
