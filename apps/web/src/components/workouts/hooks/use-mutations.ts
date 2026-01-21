@@ -5,7 +5,6 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { orpc } from "@/utils/orpc";
-import { workoutKeys, workoutDetailOptions } from "../queries/query-options";
 
 // ============================================================================
 // Template-based Workout Mutations
@@ -18,12 +17,13 @@ import { workoutKeys, workoutDetailOptions } from "../queries/query-options";
 export function useStartWorkoutFromTemplate() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: { id: number; dayId?: number }) => orpc.template.startWorkout.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
-    },
-  });
+  return useMutation(
+    orpc.template.startWorkout.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.workout.list.key() });
+      },
+    }),
+  );
 }
 
 // ============================================================================
@@ -36,13 +36,13 @@ export function useStartWorkoutFromTemplate() {
 export function useCreateWorkout() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.create.call>[0]) =>
-      orpc.workout.create.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
-    },
-  });
+  return useMutation(
+    orpc.workout.create.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.workout.list.key() });
+      },
+    }),
+  );
 }
 
 /**
@@ -51,16 +51,16 @@ export function useCreateWorkout() {
 export function useUpdateWorkout() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.update.call>[0]) =>
-      orpc.workout.update.call(input),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
-      queryClient.invalidateQueries({
-        queryKey: workoutDetailOptions(variables.workoutId).queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.workout.update.mutationOptions({
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries({ queryKey: orpc.workout.list.key() });
+        queryClient.invalidateQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId: variables.workoutId } }),
+        });
+      },
+    }),
+  );
 }
 
 /**
@@ -69,13 +69,13 @@ export function useUpdateWorkout() {
 export function useDeleteWorkout() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.delete.call>[0]) =>
-      orpc.workout.delete.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
-    },
-  });
+  return useMutation(
+    orpc.workout.delete.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.workout.list.key() });
+      },
+    }),
+  );
 }
 
 /**
@@ -84,16 +84,16 @@ export function useDeleteWorkout() {
 export function useCompleteWorkout() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.complete.call>[0]) =>
-      orpc.workout.complete.call(input),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
-      queryClient.invalidateQueries({
-        queryKey: workoutDetailOptions(variables.workoutId).queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.workout.complete.mutationOptions({
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries({ queryKey: orpc.workout.list.key() });
+        queryClient.invalidateQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId: variables.workoutId } }),
+        });
+      },
+    }),
+  );
 }
 
 // ============================================================================
@@ -106,16 +106,16 @@ export function useCompleteWorkout() {
 export function useAddExerciseToWorkout(workoutId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.addExercise.call>[0]) =>
-      orpc.workout.addExercise.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: workoutDetailOptions(workoutId).queryKey,
-      });
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
-    },
-  });
+  return useMutation(
+    orpc.workout.addExercise.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
+        });
+        queryClient.invalidateQueries({ queryKey: orpc.workout.list.key() });
+      },
+    }),
+  );
 }
 
 /**
@@ -124,15 +124,15 @@ export function useAddExerciseToWorkout(workoutId: number) {
 export function useUpdateWorkoutExercise(workoutId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.updateExercise.call>[0]) =>
-      orpc.workout.updateExercise.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: workoutDetailOptions(workoutId).queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.workout.updateExercise.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
+        });
+      },
+    }),
+  );
 }
 
 /**
@@ -141,16 +141,16 @@ export function useUpdateWorkoutExercise(workoutId: number) {
 export function useRemoveExerciseFromWorkout(workoutId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.removeExercise.call>[0]) =>
-      orpc.workout.removeExercise.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: workoutDetailOptions(workoutId).queryKey,
-      });
-      queryClient.invalidateQueries({ queryKey: workoutKeys.lists() });
-    },
-  });
+  return useMutation(
+    orpc.workout.removeExercise.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
+        });
+        queryClient.invalidateQueries({ queryKey: orpc.workout.list.key() });
+      },
+    }),
+  );
 }
 
 /**
@@ -159,20 +159,20 @@ export function useRemoveExerciseFromWorkout(workoutId: number) {
 export function useReorderWorkoutExercises(workoutId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.reorderExercises.call>[0]) =>
-      orpc.workout.reorderExercises.call(input),
-    onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey: workoutDetailOptions(workoutId).queryKey,
-      });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: workoutDetailOptions(workoutId).queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.workout.reorderExercises.mutationOptions({
+      onMutate: async () => {
+        await queryClient.cancelQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
+        });
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
+        });
+      },
+    }),
+  );
 }
 
 // ============================================================================
@@ -185,15 +185,15 @@ export function useReorderWorkoutExercises(workoutId: number) {
 export function useAddSet(workoutId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.addSet.call>[0]) =>
-      orpc.workout.addSet.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: workoutDetailOptions(workoutId).queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.workout.addSet.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
+        });
+      },
+    }),
+  );
 }
 
 /**
@@ -202,15 +202,15 @@ export function useAddSet(workoutId: number) {
 export function useUpdateSet(workoutId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.updateSet.call>[0]) =>
-      orpc.workout.updateSet.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: workoutDetailOptions(workoutId).queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.workout.updateSet.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
+        });
+      },
+    }),
+  );
 }
 
 /**
@@ -219,15 +219,15 @@ export function useUpdateSet(workoutId: number) {
 export function useDeleteSet(workoutId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.deleteSet.call>[0]) =>
-      orpc.workout.deleteSet.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: workoutDetailOptions(workoutId).queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.workout.deleteSet.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
+        });
+      },
+    }),
+  );
 }
 
 /**
@@ -236,13 +236,13 @@ export function useDeleteSet(workoutId: number) {
 export function useCompleteSet(workoutId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (input: Parameters<typeof orpc.workout.completeSet.call>[0]) =>
-      orpc.workout.completeSet.call(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: workoutDetailOptions(workoutId).queryKey,
-      });
-    },
-  });
+  return useMutation(
+    orpc.workout.completeSet.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
+        });
+      },
+    }),
+  );
 }

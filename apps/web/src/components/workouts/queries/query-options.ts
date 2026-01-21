@@ -1,32 +1,14 @@
 /**
  * Query options for workout-related data fetching
- * Following TanStack Query v5 queryOptions pattern
- * @see https://tanstack.com/query/v5/docs/framework/react/guides/query-options
+ * Using oRPC TanStack Query integration with automatic key generation
+ * @see https://orpc.dev/docs/integrations/tanstack-query
  */
 
-import { queryOptions } from "@tanstack/react-query";
 import { orpc } from "@/utils/orpc";
 
 /**
- * Query keys factory for workout-related queries
- * Used for cache invalidation and query identification
- */
-export const workoutKeys = {
-  all: ["workout"] as const,
-  lists: () => [...workoutKeys.all, "list"] as const,
-  list: (filters: {
-    startDate?: Date;
-    endDate?: Date;
-    completed?: boolean;
-    limit?: number;
-    offset?: number;
-  }) => [...workoutKeys.lists(), filters] as const,
-  details: () => [...workoutKeys.all, "detail"] as const,
-  detail: (id: number) => [...workoutKeys.details(), id] as const,
-};
-
-/**
  * Query options for fetching workouts list with optional filtering
+ * Uses orpc.*.queryOptions() for automatic key generation
  */
 export function workoutsListOptions(params?: {
   startDate?: Date;
@@ -35,22 +17,14 @@ export function workoutsListOptions(params?: {
   limit?: number;
   offset?: number;
 }) {
-  return queryOptions({
-    queryKey: workoutKeys.list({
+  return orpc.workout.list.queryOptions({
+    input: {
       startDate: params?.startDate,
       endDate: params?.endDate,
       completed: params?.completed,
-      limit: params?.limit,
-      offset: params?.offset,
-    }),
-    queryFn: () =>
-      orpc.workout.list.call({
-        startDate: params?.startDate,
-        endDate: params?.endDate,
-        completed: params?.completed,
-        limit: params?.limit ?? 100,
-        offset: params?.offset ?? 0,
-      }),
+      limit: params?.limit ?? 100,
+      offset: params?.offset ?? 0,
+    },
   });
 }
 
@@ -58,9 +32,8 @@ export function workoutsListOptions(params?: {
  * Query options for fetching a single workout by ID with all exercises and sets
  */
 export function workoutDetailOptions(workoutId: number | null) {
-  return queryOptions({
-    queryKey: workoutKeys.detail(workoutId ?? 0),
-    queryFn: () => orpc.workout.getById.call({ workoutId: workoutId! }),
+  return orpc.workout.getById.queryOptions({
+    input: { workoutId: workoutId! },
     enabled: workoutId !== null,
   });
 }
