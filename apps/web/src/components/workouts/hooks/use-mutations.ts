@@ -246,29 +246,3 @@ export function useCompleteSet(workoutId: number) {
     }),
   );
 }
-
-// ============================================================================
-// Bulk Operations
-// ============================================================================
-
-/**
- * Hook for canceling (deleting) all active workouts
- * Deletes workouts sequentially to avoid race conditions
- */
-export function useCancelAllActiveWorkouts() {
-  const queryClient = useQueryClient();
-  const deleteWorkout = useMutation(orpc.workout.delete.mutationOptions());
-
-  return useMutation({
-    mutationFn: async (workoutIds: number[]) => {
-      // Delete workouts sequentially
-      for (const workoutId of workoutIds) {
-        await deleteWorkout.mutateAsync({ workoutId });
-      }
-      return { deletedCount: workoutIds.length };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: orpc.workout.list.key() });
-    },
-  });
-}
