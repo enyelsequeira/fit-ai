@@ -28,7 +28,7 @@ import {
 
 import type { WorkoutExercise } from "../../types.ts";
 import { SetRow } from "../set-row/set-row.tsx";
-import { ExerciseProgressIndicator } from "../workout-progress";
+import { ExerciseProgressIndicator } from "../workout-progress/exercise-progress-indicator.tsx";
 import { useExerciseItem } from "./use-exercise-item.ts";
 import styles from "./exercise-list.module.css";
 

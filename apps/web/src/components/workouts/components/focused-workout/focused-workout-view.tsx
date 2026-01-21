@@ -160,7 +160,9 @@ export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
         <QuickActionsBar
           onAddExercise={state.modals.addExercise.open}
           onFinishWorkout={state.modals.completeWorkout.open}
-          canFinish={state.workoutSession.stats.completedSets > 0 && state.workout.completedAt === null}
+          canFinish={
+            state.workoutSession.stats.completedSets > 0 && state.workout.completedAt === null
+          }
         />
       </Box>
 

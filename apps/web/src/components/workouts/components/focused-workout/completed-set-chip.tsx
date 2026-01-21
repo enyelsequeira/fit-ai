@@ -10,7 +10,12 @@ interface CompletedSetChipProps {
   onClick?: () => void;
 }
 
-export function CompletedSetChip({ setNumber: _setNumber, weight, reps, onClick }: CompletedSetChipProps) {
+export function CompletedSetChip({
+  setNumber: _setNumber,
+  weight,
+  reps,
+  onClick,
+}: CompletedSetChipProps) {
   void _setNumber; // Keep for backward compatibility but not displayed
   // BUG FIX: Don't render chip if weight or reps are null
   // This prevents showing "- × -" for incomplete sets

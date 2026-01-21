@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 import { IconClock, IconSettings } from "@tabler/icons-react";
 
-import { WorkoutProgressBar } from "../workout-progress";
+import { WorkoutProgressBar } from "../workout-progress/workout-progress-bar.tsx";
 import styles from "./workout-header.module.css";
 
 interface WorkoutHeaderProps {

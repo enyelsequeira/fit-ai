@@ -9,7 +9,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useWorkoutById } from "../../queries/use-queries.ts";
 import { useUpdateWorkout, useCompleteSet } from "../../hooks/use-mutations.ts";
 import { useWorkoutSession } from "../../hooks/use-workout-session.ts";
-import { useRestTimer } from "../workout-timer";
+import { useRestTimer } from "../workout-timer/use-rest-timer.ts";
 
 export function useWorkoutDetailState(workoutId: number) {
   // Data fetching

@@ -4,9 +4,27 @@
  */
 
 import { useCallback } from "react";
-import { TextInput, Button, Text, Tooltip, Select, Box, Flex, Title, Modal, Group, Alert } from "@mantine/core";
+import {
+  TextInput,
+  Button,
+  Text,
+  Tooltip,
+  Select,
+  Box,
+  Flex,
+  Title,
+  Modal,
+  Group,
+  Alert,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconSearch, IconPlus, IconCalendar, IconTrash, IconAlertTriangle } from "@tabler/icons-react";
+import {
+  IconSearch,
+  IconPlus,
+  IconCalendar,
+  IconTrash,
+  IconAlertTriangle,
+} from "@tabler/icons-react";
 import type { TimePeriodFilter } from "../../types";
 import { TIME_PERIOD_LABELS } from "../../types";
 import { useWorkoutsList } from "../../queries/use-queries.ts";
@@ -36,7 +54,8 @@ export function WorkoutsHeader({
   const { data: workoutsData, isLoading } = useWorkoutsList();
   const workouts = workoutsData?.workouts ?? [];
   const cancelAllMutation = useCancelAllActiveWorkouts();
-  const [cancelModalOpened, { open: openCancelModal, close: closeCancelModal }] = useDisclosure(false);
+  const [cancelModalOpened, { open: openCancelModal, close: closeCancelModal }] =
+    useDisclosure(false);
 
   // Get active (in-progress) workouts
   const activeWorkouts = workouts.filter((w) => w.completedAt === null);
@@ -89,7 +108,9 @@ export function WorkoutsHeader({
 
           <Flex gap="sm" className={styles.headerActions}>
             {hasActiveWorkouts && (
-              <Tooltip label={`Cancel ${activeWorkouts.length} active workout${activeWorkouts.length > 1 ? "s" : ""}`}>
+              <Tooltip
+                label={`Cancel ${activeWorkouts.length} active workout${activeWorkouts.length > 1 ? "s" : ""}`}
+              >
                 <Button
                   leftSection={<IconTrash size={16} />}
                   onClick={openCancelModal}

@@ -24,7 +24,8 @@ export function SetEntryCard({
 
   // FIX: Button is enabled when weight and reps have actual values (not null)
   // This includes pre-filled values from previous sets
-  const canComplete = weight != null && weight > 0 && reps != null && reps > 0 && !isLoading && !disabled;
+  const canComplete =
+    weight != null && weight > 0 && reps != null && reps > 0 && !isLoading && !disabled;
 
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -106,11 +107,7 @@ export function SetEntryCard({
         onClick={onComplete}
         aria-label={isLoading ? "Completing set..." : "Complete set"}
       >
-        {isLoading ? (
-          <IconLoader2 size={20} className="animate-spin" />
-        ) : (
-          <IconCheck size={20} />
-        )}
+        {isLoading ? <IconLoader2 size={20} className="animate-spin" /> : <IconCheck size={20} />}
         <span>{isLoading ? "COMPLETING..." : "COMPLETE SET"}</span>
       </button>
     </div>

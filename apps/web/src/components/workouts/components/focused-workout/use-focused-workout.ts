@@ -57,10 +57,7 @@ export function useFocusedWorkout(workoutId: number) {
         {
           onSuccess: () => {
             setShowRestTimer(true);
-            detailState.restTimer.startTimer(
-              detailState.restTimer.settings.defaultRestTime,
-              setId,
-            );
+            detailState.restTimer.startTimer(detailState.restTimer.settings.defaultRestTime, setId);
           },
         },
       );

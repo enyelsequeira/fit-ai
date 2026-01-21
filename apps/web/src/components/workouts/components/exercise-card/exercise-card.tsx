@@ -17,7 +17,7 @@ import {
   Menu,
 } from "@mantine/core";
 import { IconChevronDown, IconPlus, IconTrash, IconNote, IconHistory } from "@tabler/icons-react";
-import { ExerciseProgressIndicator } from "../workout-progress";
+import { ExerciseProgressIndicator } from "../workout-progress/exercise-progress-indicator.tsx";
 import styles from "./exercise-card.module.css";
 
 interface PreviousBest {

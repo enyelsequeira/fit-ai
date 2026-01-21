@@ -45,7 +45,7 @@ export function ExerciseQueue({
 
   // Count remaining exercises (not including current)
   const remainingCount = exercises.filter(
-    (e) => e.status === "pending" || e.status === "current"
+    (e) => e.status === "pending" || e.status === "current",
   ).length;
 
   const pendingOnly = remainingCount - 1; // Exclude current from "more" count
@@ -67,7 +67,10 @@ export function ExerciseQueue({
         aria-controls="exercise-queue-list"
       >
         <span className={styles.headerText}>
-          {isExpanded ? "▲" : "▼"} {pendingOnly > 0 ? `${pendingOnly} more exercise${pendingOnly !== 1 ? "s" : ""}` : "All exercises"}
+          {isExpanded ? "▲" : "▼"}{" "}
+          {pendingOnly > 0
+            ? `${pendingOnly} more exercise${pendingOnly !== 1 ? "s" : ""}`
+            : "All exercises"}
         </span>
         <span className={styles.toggleText}>{isExpanded ? "Collapse" : "Expand"}</span>
       </div>

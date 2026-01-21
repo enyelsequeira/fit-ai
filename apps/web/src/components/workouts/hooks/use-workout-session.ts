@@ -5,7 +5,7 @@
 
 import { useMemo, useCallback, useState, useEffect } from "react";
 
-import type { UseRestTimerReturn } from "../components/workout-timer";
+import type { UseRestTimerReturn } from "../components/workout-timer/use-rest-timer.ts";
 
 /**
  * Represents an exercise set from the workout data
