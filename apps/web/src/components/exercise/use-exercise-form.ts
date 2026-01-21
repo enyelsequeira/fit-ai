@@ -1,10 +1,10 @@
 import type { ExerciseFormValues } from "./exercise-form-validation";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useDebouncedValue } from "@mantine/hooks";
 import { useState } from "react";
 
 import { toast } from "@/components/ui/sonner";
-import { useDebounce } from "@/hooks/use-debounce";
 import { orpc } from "@/utils/orpc";
 
 import {
@@ -36,7 +36,7 @@ export function useExerciseForm({
 
   const queryClient = useQueryClient();
   const isEditing = exerciseId !== undefined;
-  const debouncedName = useDebounce(formData.name.trim(), 400);
+  const [debouncedName] = useDebouncedValue(formData.name.trim(), 400);
 
   const nameCheck = useQuery({
     ...orpc.exercise.checkNameAvailability.queryOptions({
