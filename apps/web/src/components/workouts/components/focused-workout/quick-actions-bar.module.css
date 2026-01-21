@@ -1,0 +1,66 @@
+/**
+ * QuickActionsBar Styles - Gym Mode
+ * Fixed bottom navigation bar for workout quick actions
+ */
+
+.container {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+}
+
+.actionButton {
+  flex: 1;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+
+.secondaryButton {
+  composes: actionButton;
+  background: var(--mantine-color-dark-5);
+  color: var(--mantine-color-white);
+}
+
+.secondaryButton:hover {
+  background: var(--mantine-color-dark-4);
+}
+
+.primaryButton {
+  composes: actionButton;
+  background: var(--mantine-color-cyan-6);
+  color: var(--mantine-color-dark-9);
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: var(--mantine-color-cyan-5);
+}
+
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Legacy styles for backward compatibility */
+.finishButton {
+  min-width: 100px;
+  transition:
+    background-color 150ms ease,
+    opacity 150ms ease;
+}
+
+.finishButton:disabled {
+  opacity: 0.5;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .actionButton,
+  .finishButton {
+    transition: none;
+  }
+}

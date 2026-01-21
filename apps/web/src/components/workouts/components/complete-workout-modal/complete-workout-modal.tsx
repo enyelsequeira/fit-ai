@@ -32,9 +32,19 @@ interface CompleteWorkoutModalProps {
   opened: boolean;
   onClose: () => void;
   workoutId: number;
+  /** Whether the workout is already completed */
+  isAlreadyCompleted?: boolean;
+  /** Callback when workout is successfully completed */
+  onSuccess?: () => void;
 }
 
-export function CompleteWorkoutModal({ opened, onClose, workoutId }: CompleteWorkoutModalProps) {
+export function CompleteWorkoutModal({
+  opened,
+  onClose,
+  workoutId,
+  isAlreadyCompleted = false,
+  onSuccess,
+}: CompleteWorkoutModalProps) {
   const completeWorkoutMutation = useCompleteWorkout();
 
   // Form state
@@ -52,15 +62,17 @@ export function CompleteWorkoutModal({ opened, onClose, workoutId }: CompleteWor
       },
       {
         onSuccess: () => {
-          onClose();
           // Reset form state
           setRating(0);
           setMood(null);
           setNotes("");
+          onClose();
+          // Call success callback (e.g., to navigate away)
+          onSuccess?.();
         },
       },
     );
-  }, [completeWorkoutMutation, workoutId, rating, mood, notes, onClose]);
+  }, [completeWorkoutMutation, workoutId, rating, mood, notes, onClose, onSuccess]);
 
   const handleClose = useCallback(() => {
     // Reset form state on close
@@ -85,88 +97,107 @@ export function CompleteWorkoutModal({ opened, onClose, workoutId }: CompleteWor
           <Center w={24} h={24} className={styles.modalIcon}>
             <IconCheck size={20} />
           </Center>
-          <Text fw={600}>Complete Workout</Text>
+          <Text fw={600}>{isAlreadyCompleted ? "Workout Completed" : "Complete Workout"}</Text>
         </Group>
       }
       size="md"
     >
-      <Stack gap="lg" py="xs">
-        {/* Success Message */}
-        <Alert icon={<IconCheck size={16} />} title="Great job!" color="green" variant="light">
-          <Text size="sm">Take a moment to rate your workout and track how you felt.</Text>
-        </Alert>
-
-        {/* Rating */}
-        <Box>
-          <Group gap="xs" mb="xs">
-            <IconStar size={18} className={styles.sectionIcon} />
-            <Text fw={500}>How was your workout?</Text>
-          </Group>
-          <Center>
-            <Rating value={rating} onChange={setRating} size="xl" count={5} />
-          </Center>
-          {rating > 0 && (
-            <Text size="sm" c="dimmed" ta="center" mt="xs">
-              {getRatingLabel(rating)}
-            </Text>
-          )}
-        </Box>
-
-        {/* Mood */}
-        <Box>
-          <Group gap="xs" mb="xs">
-            <IconMoodSmile size={18} className={styles.sectionIcon} />
-            <Text fw={500}>How do you feel?</Text>
-          </Group>
-          <SegmentedControl
-            value={mood ?? ""}
-            onChange={(value) => setMood((value as WorkoutMood) || null)}
-            data={moodOptions}
-            fullWidth
-            size="sm"
-          />
-        </Box>
-
-        {/* Notes */}
-        <Box>
-          <Group gap="xs" mb="xs">
-            <IconNotes size={18} className={styles.sectionIcon} />
-            <Text fw={500}>Final notes (optional)</Text>
-          </Group>
-          <Textarea
-            value={notes}
-            onChange={(e) => setNotes(e.currentTarget.value)}
-            placeholder="Any thoughts about this session..."
-            minRows={2}
-            maxRows={4}
-          />
-        </Box>
-
-        {/* Error State */}
-        {completeWorkoutMutation.isError && (
-          <Alert icon={<IconAlertCircle size={16} />} title="Error" color="red" variant="light">
-            <Text size="sm">
-              {completeWorkoutMutation.error?.message ??
-                "Failed to complete workout. Please try again."}
-            </Text>
-          </Alert>
-        )}
-
-        {/* Actions */}
-        <Group justify="flex-end" gap="sm" pt="md" className={styles.modalActions}>
-          <Button variant="subtle" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
+      {/* Already completed state */}
+      {isAlreadyCompleted ? (
+        <Stack gap="lg" py="xs">
+          <Alert
+            icon={<IconCheck size={16} />}
+            title="Already completed!"
             color="green"
-            leftSection={<IconCheck size={16} />}
-            onClick={handleComplete}
-            loading={completeWorkoutMutation.isPending}
+            variant="light"
           >
-            Complete Workout
-          </Button>
-        </Group>
-      </Stack>
+            <Text size="sm">This workout has already been marked as complete. Great work!</Text>
+          </Alert>
+          <Group justify="flex-end" pt="md">
+            <Button color="green" onClick={handleClose}>
+              Close
+            </Button>
+          </Group>
+        </Stack>
+      ) : (
+        <Stack gap="lg" py="xs">
+          {/* Success Message */}
+          <Alert icon={<IconCheck size={16} />} title="Great job!" color="green" variant="light">
+            <Text size="sm">Take a moment to rate your workout and track how you felt.</Text>
+          </Alert>
+
+          {/* Rating */}
+          <Box>
+            <Group gap="xs" mb="xs">
+              <IconStar size={18} className={styles.sectionIcon} />
+              <Text fw={500}>How was your workout?</Text>
+            </Group>
+            <Center>
+              <Rating value={rating} onChange={setRating} size="xl" count={5} />
+            </Center>
+            {rating > 0 && (
+              <Text size="sm" c="dimmed" ta="center" mt="xs">
+                {getRatingLabel(rating)}
+              </Text>
+            )}
+          </Box>
+
+          {/* Mood */}
+          <Box>
+            <Group gap="xs" mb="xs">
+              <IconMoodSmile size={18} className={styles.sectionIcon} />
+              <Text fw={500}>How do you feel?</Text>
+            </Group>
+            <SegmentedControl
+              value={mood ?? ""}
+              onChange={(value) => setMood((value as WorkoutMood) || null)}
+              data={moodOptions}
+              fullWidth
+              size="sm"
+            />
+          </Box>
+
+          {/* Notes */}
+          <Box>
+            <Group gap="xs" mb="xs">
+              <IconNotes size={18} className={styles.sectionIcon} />
+              <Text fw={500}>Final notes (optional)</Text>
+            </Group>
+            <Textarea
+              value={notes}
+              onChange={(e) => setNotes(e.currentTarget.value)}
+              placeholder="Any thoughts about this session..."
+              minRows={2}
+              maxRows={4}
+            />
+          </Box>
+
+          {/* Error State */}
+          {completeWorkoutMutation.isError && (
+            <Alert icon={<IconAlertCircle size={16} />} title="Error" color="red" variant="light">
+              <Text size="sm">
+                {completeWorkoutMutation.error?.message ??
+                  "Failed to complete workout. Please try again."}
+              </Text>
+            </Alert>
+          )}
+
+          {/* Actions */}
+          <Group justify="flex-end" gap="sm" pt="md" className={styles.modalActions}>
+            <Button variant="subtle" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button
+              color="green"
+              leftSection={<IconCheck size={16} />}
+              onClick={handleComplete}
+              loading={completeWorkoutMutation.isPending}
+            >
+              Complete Workout
+            </Button>
+          </Group>
+        </Stack>
+      )}
     </Modal>
   );
 }

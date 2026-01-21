@@ -1,180 +1,76 @@
 /**
  * WorkoutDetailView - Full page component for viewing and editing a workout
  * Shows workout header, exercises with sets, and completion controls
+ * Integrates rest timer, workout session tracking, and exercise navigation
  */
 
-import { useState, useEffect, useCallback } from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Group,
-  Paper,
-  Stack,
-  Text,
-  Badge,
-  ActionIcon,
-  TextInput,
-  Loader,
-  Center,
-  Divider,
-  Alert,
-} from "@mantine/core";
-import {
-  IconArrowLeft,
-  IconBarbell,
-  IconCheck,
-  IconPlayerPlay,
-  IconClock,
-  IconCalendar,
-  IconPlus,
-  IconEdit,
-  IconDeviceFloppy,
-  IconX,
-  IconAlertCircle,
-} from "@tabler/icons-react";
+import type { RefObject } from "react";
+
+import { useCallback, useRef } from "react";
+import { Box, Button, Container, Paper, Stack } from "@mantine/core";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
-import { useWorkoutById } from "../../queries/use-queries.ts";
-import { useUpdateWorkout } from "../../hooks/use-mutations.ts";
-import {
-  formatRelativeDate,
-  formatDuration,
-  calculateWorkoutDuration,
-  countSets,
-  formatTime,
-} from "../../utils.ts";
+
+import { countSets } from "../../utils.ts";
 import { ExerciseList } from "../exercise-list/exercise-list.tsx";
 import { AddExerciseModal } from "../add-exercise-modal/add-exercise-modal.tsx";
 import { CompleteWorkoutModal } from "../complete-workout-modal/complete-workout-modal.tsx";
-import styles from "./workout-detail-view.module.css";
+import { RestTimerOverlay } from "../workout-timer/rest-timer-overlay.tsx";
+import { WorkoutHeader } from "../workout-header/workout-header.tsx";
+import { NextUpPrompt } from "../workout-guidance/next-up-prompt.tsx";
+import { ExerciseNavigation } from "../exercise-navigation/exercise-navigation.tsx";
+import { WorkoutLoadingState } from "./workout-loading-state.tsx";
+import { WorkoutErrorState } from "./workout-error-state.tsx";
+import { CompletedWorkoutHeader } from "./completed-workout-header.tsx";
+import { InlineNameEditor } from "./inline-name-editor.tsx";
+import { ExercisesSectionHeader } from "./exercises-section-header.tsx";
+import { EmptyExercisesState } from "./empty-exercises-state.tsx";
+import { CompleteWorkoutPrompt } from "./complete-workout-prompt.tsx";
+import { useWorkoutDetailState } from "./use-workout-detail-state.ts";
 
 interface WorkoutDetailViewProps {
   workoutId: number;
 }
 
+/** Ref interface for ExerciseList scroll functionality */
+interface ExerciseListRef {
+  scrollToExercise: (index: number) => void;
+}
+
 export function WorkoutDetailView({ workoutId }: WorkoutDetailViewProps) {
-  const { data: workout, isLoading, isError, error } = useWorkoutById(workoutId);
-  const updateWorkoutMutation = useUpdateWorkout();
+  const state = useWorkoutDetailState(workoutId);
+  const exerciseListRef = useRef<ExerciseListRef | null>(null);
 
-  // State for inline name editing
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [editedName, setEditedName] = useState("");
-
-  // State for modals
-  const [addExerciseModalOpen, setAddExerciseModalOpen] = useState(false);
-  const [completeWorkoutModalOpen, setCompleteWorkoutModalOpen] = useState(false);
-
-  // State for live duration timer
-  const [liveDuration, setLiveDuration] = useState<number | null>(null);
-
-  // Update edited name when workout loads
-  useEffect(() => {
-    if (workout?.name) {
-      setEditedName(workout.name);
-    }
-  }, [workout?.name]);
-
-  // Live duration timer for in-progress workouts
-  useEffect(() => {
-    if (!workout?.startedAt || workout?.completedAt) {
-      setLiveDuration(null);
-      return;
-    }
-
-    const updateDuration = () => {
-      setLiveDuration(calculateWorkoutDuration(workout.startedAt, null));
-    };
-
-    updateDuration();
-    const interval = setInterval(updateDuration, 60000); // Update every minute
-
-    return () => clearInterval(interval);
-  }, [workout?.startedAt, workout?.completedAt]);
-
-  const handleSaveName = useCallback(() => {
-    if (!editedName.trim() || editedName === workout?.name) {
-      setIsEditingName(false);
-      setEditedName(workout?.name ?? "");
-      return;
-    }
-
-    updateWorkoutMutation.mutate(
-      { workoutId, name: editedName.trim() },
-      {
-        onSuccess: () => {
-          setIsEditingName(false);
-        },
-      },
-    );
-  }, [editedName, workout?.name, workoutId, updateWorkoutMutation]);
-
-  const handleCancelEdit = useCallback(() => {
-    setIsEditingName(false);
-    setEditedName(workout?.name ?? "");
-  }, [workout?.name]);
-
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === "Enter") {
-        handleSaveName();
-      } else if (event.key === "Escape") {
-        handleCancelEdit();
-      }
+  // Handle exercise navigation click - scroll to exercise
+  const handleExerciseNavClick = useCallback(
+    (index: number) => {
+      state.workoutSession.goToExercise(index);
+      exerciseListRef.current?.scrollToExercise(index);
     },
-    [handleSaveName, handleCancelEdit],
+    [state.workoutSession],
   );
 
+  // Handle mark complete from NextUpPrompt
+  const handleMarkComplete = useCallback(() => {
+    if (state.workoutSession.nextSetInfo) {
+      state.workoutSession.handleSetComplete(state.workoutSession.nextSetInfo.setId);
+    }
+  }, [state.workoutSession]);
+
   // Loading state
-  if (isLoading) {
-    return (
-      <Container size="lg" py="xl">
-        <Center py="xl">
-          <Stack align="center" gap="md">
-            <Loader size="lg" />
-            <Text c="dimmed">Loading workout...</Text>
-          </Stack>
-        </Center>
-      </Container>
-    );
+  if (state.isLoading) {
+    return <WorkoutLoadingState />;
   }
 
   // Error state
-  if (isError || !workout) {
-    return (
-      <Container size="lg" py="xl">
-        <Alert
-          icon={<IconAlertCircle size={16} />}
-          title="Error Loading Workout"
-          color="red"
-          variant="light"
-        >
-          <Stack gap="md">
-            <Text size="sm">
-              {error?.message ??
-                "Unable to load workout details. The workout may not exist or you may not have access."}
-            </Text>
-            <Group>
-              <Button
-                component={Link}
-                to="/dashboard/workouts"
-                variant="light"
-                leftSection={<IconArrowLeft size={16} />}
-              >
-                Back to Workouts
-              </Button>
-            </Group>
-          </Stack>
-        </Alert>
-      </Container>
-    );
+  if (state.isError || !state.workout) {
+    return <WorkoutErrorState errorMessage={state.error?.message} />;
   }
 
-  const { name, notes, startedAt, completedAt, workoutExercises } = workout;
-
+  const { name, notes, startedAt, completedAt, workoutExercises } = state.workout;
   const isCompleted = completedAt !== null;
-  const duration = isCompleted ? calculateWorkoutDuration(startedAt, completedAt) : liveDuration;
   const exerciseCount = workoutExercises?.length ?? 0;
-  const { total: setCount, completed: completedSets } = countSets(workoutExercises);
+  const { total: totalSets, completed: completedSets } = countSets(workoutExercises);
 
   return (
     <Container size="lg" py="md">
@@ -193,216 +89,125 @@ export function WorkoutDetailView({ workoutId }: WorkoutDetailViewProps) {
           </Button>
         </Box>
 
-        {/* Workout Header */}
-        <Paper withBorder p="lg" radius="md" className={styles.headerPaper}>
-          <Stack gap="md">
-            {/* Title Row */}
-            <Group justify="space-between" align="flex-start" wrap="wrap">
-              <Box flex={1} miw={200}>
-                {isEditingName ? (
-                  <Group gap="xs">
-                    <TextInput
-                      value={editedName}
-                      onChange={(e) => setEditedName(e.currentTarget.value)}
-                      onKeyDown={handleKeyDown}
-                      size="lg"
-                      fw={700}
-                      autoFocus
-                      style={{ flex: 1 }}
-                    />
-                    <ActionIcon
-                      variant="filled"
-                      color="green"
-                      onClick={handleSaveName}
-                      loading={updateWorkoutMutation.isPending}
-                      aria-label="Save name"
-                    >
-                      <IconDeviceFloppy size={16} />
-                    </ActionIcon>
-                    <ActionIcon
-                      variant="subtle"
-                      color="gray"
-                      onClick={handleCancelEdit}
-                      aria-label="Cancel edit"
-                    >
-                      <IconX size={16} />
-                    </ActionIcon>
-                  </Group>
-                ) : (
-                  <Group gap="xs">
-                    <Text size="xl" fw={700}>
-                      {name ?? "Untitled Workout"}
-                    </Text>
-                    {!isCompleted && (
-                      <ActionIcon
-                        variant="subtle"
-                        color="gray"
-                        onClick={() => setIsEditingName(true)}
-                        aria-label="Edit name"
-                      >
-                        <IconEdit size={16} />
-                      </ActionIcon>
-                    )}
-                  </Group>
-                )}
-              </Box>
-
-              <Badge
-                size="lg"
-                color={isCompleted ? "green" : "orange"}
-                variant="light"
-                leftSection={isCompleted ? <IconCheck size={14} /> : <IconPlayerPlay size={14} />}
-              >
-                {isCompleted ? "Completed" : "In Progress"}
-              </Badge>
-            </Group>
-
-            {/* Metadata Row */}
-            <Group gap="lg" wrap="wrap">
-              <Group gap={6}>
-                <IconCalendar size={16} style={{ opacity: 0.6 }} />
-                <Text size="sm" c="dimmed">
-                  {formatRelativeDate(startedAt)} at {formatTime(startedAt)}
-                </Text>
-              </Group>
-              {duration !== null && (
-                <Group gap={6}>
-                  <IconClock size={16} style={{ opacity: 0.6 }} />
-                  <Text size="sm" c="dimmed">
-                    {formatDuration(duration)}
-                    {!isCompleted && " (in progress)"}
-                  </Text>
-                </Group>
-              )}
-            </Group>
-
-            {/* Notes */}
-            {notes && (
-              <Box className={styles.notesBox}>
-                <Text size="sm" c="dimmed">
-                  {notes}
-                </Text>
-              </Box>
+        {/* Workout Header - Different for in-progress vs completed */}
+        {!isCompleted ? (
+          <>
+            {state.nameEditing.isEditing ? (
+              <InlineNameEditor
+                value={state.nameEditing.value}
+                onChange={state.nameEditing.setValue}
+                onSave={state.nameEditing.save}
+                onCancel={state.nameEditing.cancel}
+                isSaving={state.nameEditing.isSaving}
+              />
+            ) : (
+              <WorkoutHeader
+                workoutName={name ?? "Untitled Workout"}
+                elapsedTime={state.workoutSession.stats.elapsedTime}
+                restTimerActive={state.restTimer.isRunning}
+                restTimeRemaining={state.restTimer.timeRemaining}
+                completedSets={state.workoutSession.stats.completedSets}
+                totalSets={state.workoutSession.stats.totalSets}
+                onNameClick={state.nameEditing.startEditing}
+              />
             )}
 
-            {/* Stats Row */}
-            <Divider />
-            <Group gap="xl">
-              <Box className={styles.statItem}>
-                <Group gap="xs">
-                  <IconBarbell size={20} className={styles.statIcon} />
-                  <Box>
-                    <Text size="lg" fw={600}>
-                      {exerciseCount}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {exerciseCount === 1 ? "Exercise" : "Exercises"}
-                    </Text>
-                  </Box>
-                </Group>
-              </Box>
-              <Box className={styles.statItem}>
-                <Group gap="xs">
-                  <IconCheck size={20} className={styles.statIcon} />
-                  <Box>
-                    <Text size="lg" fw={600}>
-                      {completedSets}/{setCount}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      Sets Completed
-                    </Text>
-                  </Box>
-                </Group>
-              </Box>
-            </Group>
-          </Stack>
-        </Paper>
+            {/* Next Up Prompt - Shows what set to do next */}
+            <NextUpPrompt
+              exerciseName={state.workoutSession.nextSetInfo?.exerciseName}
+              setNumber={state.workoutSession.nextSetInfo?.setNumber}
+              totalSets={state.workoutSession.nextSetInfo?.totalSets}
+              targetWeight={state.workoutSession.nextSetInfo?.targetWeight ?? undefined}
+              targetReps={state.workoutSession.nextSetInfo?.targetReps ?? undefined}
+              isWorkoutComplete={state.workoutSession.isWorkoutComplete}
+              onMarkComplete={handleMarkComplete}
+              loading={state.completeSetMutation.isPending}
+            />
+
+            {/* Exercise Navigation - Quick jump between exercises */}
+            {exerciseCount > 0 && (
+              <ExerciseNavigation
+                exercises={state.workoutSession.exercisesForNav}
+                currentExerciseIndex={state.workoutSession.currentExerciseIndex}
+                onExerciseClick={handleExerciseNavClick}
+              />
+            )}
+          </>
+        ) : (
+          <CompletedWorkoutHeader
+            summary={{
+              name,
+              notes,
+              startedAt,
+              completedAt,
+              exerciseCount,
+              completedSets,
+              totalSets,
+            }}
+          />
+        )}
 
         {/* Exercises Section */}
         <Paper withBorder p="lg" radius="md">
           <Stack gap="md">
-            <Group justify="space-between" align="center">
-              <Group gap="xs">
-                <IconBarbell size={20} />
-                <Text fw={600} size="lg">
-                  Exercises
-                </Text>
-              </Group>
-              {!isCompleted && (
-                <Button
-                  leftSection={<IconPlus size={16} />}
-                  variant="light"
-                  onClick={() => setAddExerciseModalOpen(true)}
-                >
-                  Add Exercise
-                </Button>
-              )}
-            </Group>
+            <ExercisesSectionHeader
+              isCompleted={isCompleted}
+              onAddExercise={state.modals.addExercise.open}
+            />
 
             {workoutExercises && workoutExercises.length > 0 ? (
               <ExerciseList
                 workoutId={workoutId}
                 exercises={workoutExercises}
                 isWorkoutCompleted={isCompleted}
+                currentExerciseIndex={state.workoutSession.currentExerciseIndex}
+                currentSetIndex={state.workoutSession.currentSetIndex}
+                onSetCompleteWithTimer={state.workoutSession.handleSetComplete}
+                scrollRef={exerciseListRef as RefObject<ExerciseListRef | null>}
               />
             ) : (
-              <Box py="xl">
-                <Center>
-                  <Stack align="center" gap="md">
-                    <IconBarbell size={48} style={{ opacity: 0.3 }} />
-                    <Text c="dimmed" ta="center">
-                      No exercises added yet.
-                      {!isCompleted && " Click the button above to add exercises."}
-                    </Text>
-                    {!isCompleted && (
-                      <Button
-                        leftSection={<IconPlus size={16} />}
-                        onClick={() => setAddExerciseModalOpen(true)}
-                      >
-                        Add Your First Exercise
-                      </Button>
-                    )}
-                  </Stack>
-                </Center>
-              </Box>
+              <EmptyExercisesState
+                isCompleted={isCompleted}
+                onAddExercise={state.modals.addExercise.open}
+              />
             )}
           </Stack>
         </Paper>
 
-        {/* Complete Workout Button (for in-progress workouts) */}
-        {!isCompleted && (
-          <Paper withBorder p="lg" radius="md" className={styles.completeSection}>
-            <Group justify="space-between" align="center" wrap="wrap">
-              <Box>
-                <Text fw={600}>Ready to finish?</Text>
-                <Text size="sm" c="dimmed">
-                  Complete your workout and rate how it went.
-                </Text>
-              </Box>
-              <Button
-                color="green"
-                leftSection={<IconCheck size={16} />}
-                onClick={() => setCompleteWorkoutModalOpen(true)}
-              >
-                Complete Workout
-              </Button>
-            </Group>
-          </Paper>
-        )}
+        {/* Complete Workout Prompt (for in-progress workouts) */}
+        {!isCompleted && <CompleteWorkoutPrompt onComplete={state.modals.completeWorkout.open} />}
       </Stack>
 
       {/* Modals */}
       <AddExerciseModal
-        opened={addExerciseModalOpen}
-        onClose={() => setAddExerciseModalOpen(false)}
+        opened={state.modals.addExercise.opened}
+        onClose={state.modals.addExercise.close}
         workoutId={workoutId}
         existingExerciseIds={workoutExercises?.map((we) => we.exerciseId) ?? []}
       />
 
       <CompleteWorkoutModal
-        opened={completeWorkoutModalOpen}
-        onClose={() => setCompleteWorkoutModalOpen(false)}
+        opened={state.modals.completeWorkout.opened}
+        onClose={state.modals.completeWorkout.close}
         workoutId={workoutId}
+      />
+
+      {/* Rest Timer Overlay */}
+      <RestTimerOverlay
+        isOpen={state.timerOverlay.isOpen && state.restTimer.isRunning}
+        onClose={state.timerOverlay.close}
+        timer={state.restTimer}
+        nextSetInfo={
+          state.workoutSession.nextSetInfo
+            ? {
+                exerciseName: state.workoutSession.nextSetInfo.exerciseName,
+                setNumber: state.workoutSession.nextSetInfo.setNumber,
+                totalSets: state.workoutSession.nextSetInfo.totalSets,
+                targetWeight: state.workoutSession.nextSetInfo.targetWeight ?? undefined,
+                targetReps: state.workoutSession.nextSetInfo.targetReps ?? undefined,
+              }
+            : undefined
+        }
       />
     </Container>
   );

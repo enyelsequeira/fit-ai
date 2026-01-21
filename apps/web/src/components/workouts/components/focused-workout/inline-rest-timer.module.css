@@ -1,0 +1,59 @@
+.container {
+  padding: var(--mantine-spacing-lg);
+  background: var(--mantine-color-body);
+  border-radius: var(--mantine-radius-lg) var(--mantine-radius-lg) 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.timeDisplay {
+  font-size: 3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.ringContainer {
+  display: flex;
+  justify-content: center;
+  margin: var(--mantine-spacing-lg) 0;
+}
+
+.nextUp {
+  text-align: center;
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-dimmed);
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--mantine-spacing-md);
+}
+
+.actionButton {
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.timeDisplay[data-urgent="true"] {
+  color: var(--mantine-color-red-6);
+  animation: pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}

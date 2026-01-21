@@ -1,0 +1,150 @@
+/* SetEntryCard - Gym Mode styling with large touch-friendly inputs */
+
+.card {
+  padding: 24px;
+  background: var(--mantine-color-dark-7);
+  border-radius: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.setNumber {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--mantine-color-cyan-4);
+}
+
+.previousHint {
+  font-size: 14px;
+  color: var(--mantine-color-dimmed);
+}
+
+.inputsRow {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.inputGroup {
+  flex: 1;
+  text-align: center;
+}
+
+.inputField {
+  width: 100%;
+  background: var(--mantine-color-dark-9);
+  border: 2px solid var(--mantine-color-dark-4);
+  border-radius: 16px;
+  padding: 24px;
+  min-height: 80px;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--mantine-color-white);
+  text-align: center;
+  margin-bottom: 8px;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+  -moz-appearance: textfield;
+  /* Better touch experience */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.inputField::-webkit-outer-spin-button,
+.inputField::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: var(--mantine-color-cyan-5);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+}
+
+.inputField::placeholder {
+  color: var(--mantine-color-dark-3);
+}
+
+.inputLabel {
+  font-size: 14px;
+  color: var(--mantine-color-dimmed);
+}
+
+.rpeGroup {
+  max-width: 100px;
+}
+
+.rpeField {
+  composes: inputField;
+  font-size: 24px;
+  padding: 16px;
+}
+
+.completeButton {
+  width: 100%;
+  padding: 20px;
+  min-height: 64px;
+  background: linear-gradient(135deg, var(--mantine-color-green-6), var(--mantine-color-green-7));
+  border: none;
+  border-radius: 16px;
+  color: var(--mantine-color-white);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 12px rgba(64, 192, 87, 0.3);
+}
+
+.completeButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--mantine-color-green-7), var(--mantine-color-green-8));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(64, 192, 87, 0.4);
+}
+
+.completeButton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.completeButton:disabled {
+  background: var(--mantine-color-dark-5);
+  color: var(--mantine-color-dimmed);
+  cursor: not-allowed;
+}
+
+.completeButton[data-loading="true"] {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Legacy styles for backward compatibility */
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  min-height: 64px;
+}
+
+.input {
+  flex: 1;
+}
+
+.input input {
+  font-size: 1.5rem !important;
+  font-weight: 600;
+  height: 56px;
+  text-align: center;
+}

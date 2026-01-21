@@ -1,0 +1,56 @@
+/* WorkoutStats Styles */
+
+.grid {
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  border-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease;
+  cursor: default;
+}
+
+.statCard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.25));
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.value {
+  line-height: 1;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .statCard {
+    transition: none;
+  }
+
+  .statCard:hover {
+    transform: none;
+  }
+}

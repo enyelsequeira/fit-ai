@@ -1,0 +1,21 @@
+.pager {
+  width: 100%;
+  overflow: hidden;
+}
+
+.viewport {
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  padding: var(--mantine-spacing-sm);
+}

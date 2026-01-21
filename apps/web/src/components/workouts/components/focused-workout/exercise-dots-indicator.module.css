@@ -1,0 +1,47 @@
+.container {
+  overflow-x: auto;
+  max-width: 100%;
+  scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.dotWrapper {
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: var(--mantine-radius-xl);
+  transition: background-color 150ms ease;
+}
+
+.dotWrapper:hover {
+  background-color: var(--mantine-color-gray-1);
+}
+
+.dot {
+  border-radius: 50%;
+  transition: all 150ms ease;
+}
+
+.dotCurrent {
+  width: 12px;
+  height: 12px;
+  background-color: var(--mantine-color-blue-6);
+}
+
+.dotCompleted {
+  width: 8px;
+  height: 8px;
+  background-color: var(--mantine-color-teal-6);
+}
+
+.dotIncomplete {
+  width: 8px;
+  height: 8px;
+  background-color: var(--mantine-color-gray-4);
+}

@@ -69,3 +69,4 @@ autonomous-coding/
 
 # Playwright MCP screenshots
 .playwright-mcp/
+.devcontainer

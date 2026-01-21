@@ -1,0 +1,24 @@
+/* CompletedSetChip - Gym Mode styling with green background */
+
+.chip {
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background-color: var(--mantine-color-green-6);
+  cursor: default;
+  transition: background-color 150ms ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chip:hover {
+  background-color: var(--mantine-color-green-7);
+}
+
+.chip[data-no-click] {
+  cursor: default;
+}
+
+.chip[data-no-click]:hover {
+  background-color: var(--mantine-color-green-6);
+}

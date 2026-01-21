@@ -1,0 +1,146 @@
+/* RestTimerModal - Full-screen modal overlay with blur background */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: var(--mantine-spacing-md);
+}
+
+.modal {
+  background: var(--mantine-color-dark-7);
+  border-radius: 24px;
+  padding: 40px 32px;
+  text-align: center;
+  max-width: 340px;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.timeDisplay {
+  font-size: 72px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--mantine-color-cyan-4);
+  line-height: 1;
+  margin-bottom: 24px;
+}
+
+.timeDisplay[data-urgent="true"] {
+  color: var(--mantine-color-red-5);
+  animation: pulse 1s ease-in-out infinite;
+  text-shadow: 0 0 20px rgba(255, 107, 107, 0.6);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.ringContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.nextSetInfo {
+  color: var(--mantine-color-dimmed);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+
+.nextSetInfo strong {
+  color: var(--mantine-color-white);
+  font-weight: 600;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.controlButton {
+  width: 68px;
+  height: 68px;
+  min-width: 68px;
+  min-height: 68px;
+  border-radius: 50%;
+  border: none;
+  background: var(--mantine-color-dark-5);
+  color: var(--mantine-color-white);
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  /* Ensure touch targets are large enough for sweaty hands */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.controlButton:hover {
+  background: var(--mantine-color-dark-4);
+}
+
+.controlButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.controlButton[data-primary="true"] {
+  background: var(--mantine-color-cyan-6);
+  color: var(--mantine-color-dark-9);
+}
+
+.controlButton[data-primary="true"]:hover {
+  background: var(--mantine-color-cyan-5);
+}
+
+.skipButton {
+  width: 100%;
+  background: transparent;
+  border: 2px solid var(--mantine-color-cyan-6);
+  color: var(--mantine-color-cyan-4);
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 56px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.skipButton:hover {
+  background: var(--mantine-color-cyan-6);
+  color: var(--mantine-color-dark-9);
+}
+
+.skipButton:active {
+  transform: scale(0.98);
+}

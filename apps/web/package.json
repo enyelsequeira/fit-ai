@@ -33,6 +33,7 @@
     "better-auth": "catalog:",
     "dayjs": "^1.11.19",
     "dotenv": "catalog:",
+    "embla-carousel-react": "^8.6.0",
     "libsql": "catalog:",
     "postcss": "^8.5.6",
     "postcss-preset-mantine": "^1.18.0",

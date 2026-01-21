@@ -1,0 +1,64 @@
+/* FocusedWorkoutView - Gym Mode container styles */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--mantine-color-dark-8);
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--mantine-spacing-md);
+  padding-bottom: 100px;
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--mantine-color-dark-7);
+  border-top: 1px solid var(--mantine-color-dark-5);
+  z-index: 300;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: var(--mantine-spacing-xl);
+  text-align: center;
+  min-height: 60vh;
+}
+
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  gap: var(--mantine-spacing-md);
+}
+
+/* Legacy styles - can be removed if not used */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--mantine-color-body);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.restTimerContainer {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 150;
+}

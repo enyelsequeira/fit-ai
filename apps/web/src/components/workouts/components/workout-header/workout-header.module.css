@@ -1,0 +1,133 @@
+/* WorkoutHeader Styles */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  backdrop-filter: blur(8px);
+}
+
+/* Name section */
+.nameSection {
+  flex: 1;
+  min-width: 0; /* Allows text truncation */
+  overflow: hidden;
+}
+
+.nameButton {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--mantine-spacing-xs);
+  margin: calc(var(--mantine-spacing-xs) * -1);
+  border-radius: var(--mantine-radius-sm);
+  transition: background-color 150ms ease;
+}
+
+.nameButton:hover {
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+}
+
+.workoutName {
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+}
+
+/* Right section alignment */
+.rightSection {
+  flex-shrink: 0;
+}
+
+/* Timer display container */
+.timerDisplay {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  border-radius: var(--mantine-radius-md);
+  min-width: 90px;
+  text-align: center;
+}
+
+/* Elapsed time styling - prominent monospace */
+.elapsedTime {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-1));
+}
+
+/* Rest timer badge */
+.restTimerBadge {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--mantine-font-family-monospace);
+  transition: background-color 200ms ease;
+}
+
+.restTimerBadge[data-critical="true"] {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Settings button */
+.settingsButton {
+  transition: transform 150ms ease;
+}
+
+.settingsButton:hover {
+  transform: rotate(30deg);
+}
+
+/* Progress bar container - override inner styles for header context */
+.progressContainer {
+  margin: 0 calc(var(--mantine-spacing-xs) * -1);
+}
+
+.progressContainer > div {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .header {
+    padding: var(--mantine-spacing-sm);
+  }
+
+  .timerDisplay {
+    min-width: 75px;
+    padding: var(--mantine-spacing-xs);
+  }
+
+  .elapsedTime {
+    font-size: var(--mantine-font-size-lg);
+  }
+
+  .restTimerBadge {
+    font-size: var(--mantine-font-size-xs);
+    padding-left: var(--mantine-spacing-xs);
+    padding-right: var(--mantine-spacing-xs);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .restTimerBadge[data-critical="true"] {
+    animation: none;
+  }
+
+  .nameButton,
+  .settingsButton,
+  .restTimerBadge {
+    transition: none;
+  }
+}

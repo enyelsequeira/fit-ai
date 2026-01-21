@@ -1,0 +1,21 @@
+/* ExerciseProgressIndicator Styles */
+
+.badge {
+  cursor: default;
+  transition: transform 150ms ease;
+}
+
+.badge:hover {
+  transform: scale(1.05);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    transition: none;
+  }
+
+  .badge:hover {
+    transform: none;
+  }
+}

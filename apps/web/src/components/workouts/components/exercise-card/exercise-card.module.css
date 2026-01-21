@@ -1,0 +1,146 @@
+/* ExerciseCard Styles */
+
+.card {
+  position: relative;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    background-color 200ms ease;
+}
+
+/* Active state - highlighted border for current exercise */
+.card[data-active="true"] {
+  border-color: var(--mantine-color-blue-5);
+  box-shadow: 0 0 0 2px light-dark(var(--mantine-color-blue-1), rgba(59, 130, 246, 0.15));
+}
+
+/* Completed state - subtle green tint */
+.card[data-complete="true"] {
+  background: light-dark(var(--mantine-color-green-0), rgba(34, 197, 94, 0.05));
+  border-color: light-dark(var(--mantine-color-green-3), var(--mantine-color-green-9));
+}
+
+/* Active + Completed state */
+.card[data-active="true"][data-complete="true"] {
+  border-color: var(--mantine-color-green-5);
+  box-shadow: 0 0 0 2px light-dark(var(--mantine-color-green-1), rgba(34, 197, 94, 0.15));
+}
+
+/* Header Section */
+.header {
+  cursor: pointer;
+  padding: var(--mantine-spacing-xs) 0;
+  margin: calc(-1 * var(--mantine-spacing-xs)) 0;
+  border-radius: var(--mantine-radius-sm);
+  transition: background-color 150ms ease;
+}
+
+.header:hover {
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.header:focus-visible {
+  outline: 2px solid var(--mantine-color-blue-5);
+  outline-offset: 2px;
+}
+
+/* Exercise name */
+.exerciseName {
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+  line-height: 1.4;
+}
+
+/* Muscle group badge */
+.muscleGroupBadge {
+  text-transform: capitalize;
+  flex-shrink: 0;
+}
+
+/* Previous best hint */
+.previousBest {
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-gray-6));
+}
+
+/* Chevron rotation */
+.chevron {
+  transition: transform 200ms ease;
+}
+
+.chevron[data-expanded="true"] {
+  transform: rotate(180deg);
+}
+
+/* Body Section */
+.body {
+  padding-top: var(--mantine-spacing-sm);
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  margin-top: var(--mantine-spacing-sm);
+}
+
+/* Sets container */
+.setsContainer {
+  /* Children (set rows) go here */
+}
+
+/* Notes Section */
+.notesSection {
+  margin-top: var(--mantine-spacing-sm);
+  padding-top: var(--mantine-spacing-sm);
+  border-top: 1px dashed light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+}
+
+.notesHeader {
+  cursor: pointer;
+  padding: var(--mantine-spacing-xs);
+  margin: calc(-1 * var(--mantine-spacing-xs));
+  border-radius: var(--mantine-radius-sm);
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-5));
+  transition: background-color 150ms ease;
+}
+
+.notesHeader:hover {
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.notesHeader:focus-visible {
+  outline: 2px solid var(--mantine-color-blue-5);
+  outline-offset: 2px;
+}
+
+.notesChevron {
+  transition: transform 200ms ease;
+}
+
+.notesChevron[data-expanded="true"] {
+  transform: rotate(180deg);
+}
+
+.notesContent {
+  padding: var(--mantine-spacing-xs);
+  padding-top: var(--mantine-spacing-sm);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .header {
+    transition: none;
+  }
+
+  .chevron {
+    transition: none;
+  }
+
+  .notesHeader {
+    transition: none;
+  }
+
+  .notesChevron {
+    transition: none;
+  }
+}

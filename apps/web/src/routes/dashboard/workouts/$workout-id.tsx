@@ -4,7 +4,7 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
-import { WorkoutDetailView } from "@/components/workouts/components/workout-detail-view/workout-detail-view.tsx";
+import { FocusedWorkoutView } from "@/components/workouts/components/focused-workout/focused-workout-view.tsx";
 
 export const Route = createFileRoute("/dashboard/workouts/$workout-id")({
   component: WorkoutDetailPage,
@@ -24,5 +24,5 @@ function WorkoutDetailPage() {
     );
   }
 
-  return <WorkoutDetailView workoutId={workoutId} />;
+  return <FocusedWorkoutView workoutId={workoutId} />;
 }
