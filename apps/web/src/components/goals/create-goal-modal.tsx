@@ -116,7 +116,7 @@ export function CreateGoalModal({
       <Group justify="space-between" mt="xl">
         {activeStep === 0 ? (
           <>
-            <FitAiButton variant="subtle" onClick={handleClose}>
+            <FitAiButton variant="ghost" onClick={handleClose}>
               Cancel
             </FitAiButton>
             <FitAiButton onClick={handleNext} disabled={!isStep1Valid}>
@@ -125,7 +125,7 @@ export function CreateGoalModal({
           </>
         ) : (
           <>
-            <FitAiButton variant="subtle" onClick={handleBack}>
+            <FitAiButton variant="ghost" onClick={handleBack}>
               Back
             </FitAiButton>
             <FitAiButton onClick={handleSubmit} loading={isLoading} disabled={!isStep2Valid()}>

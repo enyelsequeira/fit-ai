@@ -1,9 +1,12 @@
-/* RestTimerModal - Full-screen modal overlay with blur background */
+/**
+ * RestTimerModal - Full-screen modal overlay with blur background
+ * Uses Mantine CSS variables with light-dark() for theme support
+ */
 
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: light-dark(rgba(255, 255, 255, 0.85), rgba(0, 0, 0, 0.85));
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -13,36 +16,40 @@
 }
 
 .modal {
-  background: var(--mantine-color-dark-7);
-  border-radius: 24px;
-  padding: 40px 32px;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-radius: var(--mantine-radius-xl);
+  padding: var(--mantine-spacing-xl) var(--mantine-spacing-lg);
   text-align: center;
   max-width: 340px;
   width: 100%;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: light-dark(
+    0 25px 50px -12px rgba(0, 0, 0, 0.15),
+    0 25px 50px -12px rgba(0, 0, 0, 0.5)
+  );
 }
 
 .title {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
   color: var(--mantine-color-dimmed);
-  letter-spacing: 1px;
-  margin-bottom: 16px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: var(--mantine-spacing-md);
+  display: block;
 }
 
 .timeDisplay {
   font-size: 72px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: var(--mantine-color-cyan-4);
+  color: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-4));
   line-height: 1;
-  margin-bottom: 24px;
+  margin-bottom: var(--mantine-spacing-lg);
 }
 
 .timeDisplay[data-urgent="true"] {
   color: var(--mantine-color-red-5);
   animation: pulse 1s ease-in-out infinite;
-  text-shadow: 0 0 20px rgba(255, 107, 107, 0.6);
 }
 
 @keyframes pulse {
@@ -58,89 +65,98 @@
 .ringContainer {
   display: flex;
   justify-content: center;
-  margin-bottom: 24px;
+  margin-bottom: var(--mantine-spacing-lg);
 }
 
 .nextSetInfo {
-  color: var(--mantine-color-dimmed);
-  font-size: 14px;
-  line-height: 1.5;
-  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+  margin-bottom: var(--mantine-spacing-xl);
 }
 
 .nextSetInfo strong {
-  color: var(--mantine-color-white);
+  color: light-dark(var(--mantine-color-dark-8), var(--mantine-color-white));
   font-weight: 600;
+}
+
+.targetInfo {
+  display: block;
 }
 
 .controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: var(--mantine-spacing-md);
+  margin-bottom: var(--mantine-spacing-lg);
 }
 
-.controlButton {
-  width: 68px;
-  height: 68px;
-  min-width: 68px;
-  min-height: 68px;
-  border-radius: 50%;
-  border: none;
-  background: var(--mantine-color-dark-5);
-  color: var(--mantine-color-white);
-  font-size: 18px;
+/* Control buttons - circular override for FitAiButton */
+/* 68px touch targets for sweaty hands in gym mode */
+.controlButton,
+.controlButtonPrimary {
+  width: 68px !important;
+  height: 68px !important;
+  min-width: 68px !important;
+  min-height: 68px !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  font-size: var(--mantine-font-size-lg);
   font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s ease;
-  /* Ensure touch targets are large enough for sweaty hands */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
-.controlButton:hover {
-  background: var(--mantine-color-dark-4);
+.controlButton {
+  background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5)) !important;
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5)) !important;
+  color: light-dark(var(--mantine-color-dark-7), var(--mantine-color-white)) !important;
+}
+
+.controlButton:hover:not(:disabled) {
+  background: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)) !important;
+  border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4)) !important;
 }
 
 .controlButton:disabled {
   opacity: 0.4;
-  cursor: not-allowed;
 }
 
-.controlButton[data-primary="true"] {
-  background: var(--mantine-color-cyan-6);
-  color: var(--mantine-color-dark-9);
+.controlButtonPrimary {
+  background: var(--mantine-color-teal-6) !important;
+  border-color: var(--mantine-color-teal-6) !important;
+  color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-9)) !important;
 }
 
-.controlButton[data-primary="true"]:hover {
-  background: var(--mantine-color-cyan-5);
+.controlButtonPrimary:hover {
+  background: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-5)) !important;
+  border-color: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-5)) !important;
 }
 
+/* Skip button - styled outline FitAiButton */
+/* 56px minimum touch target for gym use */
 .skipButton {
-  width: 100%;
-  background: transparent;
-  border: 2px solid var(--mantine-color-cyan-6);
-  color: var(--mantine-color-cyan-4);
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  min-height: 56px;
+  min-height: 56px !important;
+  font-size: var(--mantine-font-size-lg) !important;
+  font-weight: 600 !important;
+  border-radius: var(--mantine-radius-md) !important;
+  border-width: 2px !important;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
-.skipButton:hover {
-  background: var(--mantine-color-cyan-6);
-  color: var(--mantine-color-dark-9);
-}
-
 .skipButton:active {
   transform: scale(0.98);
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .timeDisplay[data-urgent="true"] {
+    animation: none;
+  }
+
+  .skipButton:active {
+    transform: none;
+  }
 }

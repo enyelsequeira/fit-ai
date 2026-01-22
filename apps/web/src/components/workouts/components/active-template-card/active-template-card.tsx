@@ -1,16 +1,9 @@
-/**
- * ActiveTemplateCard - Displays the user's currently active workout template
- * Shows prominently at the top of the Workouts page with a "Start Workout" button
- */
-
 import { useState } from "react";
 import {
   Paper,
   Stack,
   Group,
   Text,
-  Button,
-  Tooltip,
   Skeleton,
   ThemeIcon,
   Badge,
@@ -36,6 +29,8 @@ import {
 } from "../../../templates/queries/query-options";
 import { useStartWorkoutFromTemplate } from "../../hooks/use-mutations";
 import styles from "./active-template-card.module.css";
+import { FitAiToolTip } from "@/components/ui/fit-ai-tooltip/fit-ai-tool-tip.tsx";
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button.tsx";
 
 export function ActiveTemplateCard() {
   const navigate = useNavigate();
@@ -75,9 +70,9 @@ export function ActiveTemplateCard() {
           <Text c="dimmed" ta="center">
             Failed to load active template settings.
           </Text>
-          <Button variant="light" onClick={() => activeTemplateQuery.refetch()}>
+          <FitAiButton variant="outline" onClick={() => activeTemplateQuery.refetch()}>
             Try Again
-          </Button>
+          </FitAiButton>
         </Stack>
       </Paper>
     );
@@ -99,14 +94,14 @@ export function ActiveTemplateCard() {
               Set a workout template as your active program to quickly start workouts from here.
             </Text>
           </Stack>
-          <Button
+          <FitAiButton
             component={Link}
             to="/dashboard/templates"
-            variant="light"
+            variant="outline"
             rightSection={<IconArrowRight size={16} />}
           >
             Browse Templates
-          </Button>
+          </FitAiButton>
         </Stack>
       </Paper>
     );
@@ -128,9 +123,9 @@ export function ActiveTemplateCard() {
           <Text c="dimmed" ta="center">
             Could not load template details. The template may have been deleted.
           </Text>
-          <Button component={Link} to="/dashboard/templates" variant="light">
+          <FitAiButton component={Link} to="/dashboard/templates" variant="outline">
             Choose New Template
-          </Button>
+          </FitAiButton>
         </Stack>
       </Paper>
     );
@@ -186,11 +181,9 @@ export function ActiveTemplateCard() {
           {/* Header */}
           <Group justify="space-between" align="flex-start" wrap="nowrap">
             <Group gap="md" align="flex-start" wrap="nowrap">
-              <Tooltip label="Active Program">
-                <ThemeIcon size={52} radius="md" className={styles.iconWrapper}>
-                  <IconTemplate size={26} />
-                </ThemeIcon>
-              </Tooltip>
+              <ThemeIcon size={52} radius="md" className={styles.iconWrapper}>
+                <IconTemplate size={26} />
+              </ThemeIcon>
               <Stack gap={4}>
                 <Group gap="xs">
                   <Badge size="xs" variant="light" color="teal" className={styles.badge}>
@@ -211,50 +204,61 @@ export function ActiveTemplateCard() {
 
           {/* Stats */}
           <Group gap="xl" mt="md" className={styles.stats}>
-            <Tooltip label="Workout days in this program">
+            <FitAiToolTip
+              toolTipProps={{
+                label: "Workout days in this program",
+              }}
+            >
               <Group gap="xs" className={styles.statItem}>
                 <IconCalendar size={18} className={styles.statIcon} />
                 <Text size="sm" fw={500}>
                   {days.length} {days.length === 1 ? "day" : "days"}
                 </Text>
               </Group>
-            </Tooltip>
+            </FitAiToolTip>
 
-            <Tooltip label="Total exercises across all days">
+            <FitAiToolTip
+              toolTipProps={{
+                label: "Total exercises across all days",
+              }}
+            >
               <Group gap="xs" className={styles.statItem}>
                 <IconBarbell size={18} className={styles.statIcon} />
                 <Text size="sm" fw={500}>
                   {totalExercises} {totalExercises === 1 ? "exercise" : "exercises"}
                 </Text>
               </Group>
-            </Tooltip>
+            </FitAiToolTip>
 
             {template.estimatedDurationMinutes && (
-              <Tooltip label="Estimated workout duration">
+              <FitAiToolTip
+                toolTipProps={{
+                  label: "Estimated workout duration",
+                }}
+              >
                 <Group gap="xs" className={styles.statItem}>
                   <IconClock size={18} className={styles.statIcon} />
                   <Text size="sm" fw={500}>
                     ~{template.estimatedDurationMinutes} min
                   </Text>
                 </Group>
-              </Tooltip>
+              </FitAiToolTip>
             )}
           </Group>
 
           {/* Actions */}
           <Group gap="md" mt="lg">
-            <Button
-              size="md"
+            <FitAiButton
+              variant={"outline"}
               leftSection={<IconPlayerPlay size={18} />}
               onClick={handleStartClick}
               loading={startWorkoutMutation.isPending}
-              className={styles.startButton}
             >
               {hasMultipleDays ? "Start Workout" : "Start Today's Workout"}
-            </Button>
-            <Button component={Link} to="/dashboard/templates" variant="light" size="md">
+            </FitAiButton>
+            <FitAiButton component={Link} to="/dashboard/templates" variant="secondary" size="md">
               Change Program
-            </Button>
+            </FitAiButton>
           </Group>
         </div>
       </Paper>
@@ -306,17 +310,18 @@ export function ActiveTemplateCard() {
             ))}
           </SimpleGrid>
           <Group justify="flex-end" mt="md">
-            <Button variant="default" onClick={closeDayModal}>
+            <FitAiButton variant="danger" onClick={closeDayModal}>
               Cancel
-            </Button>
-            <Button
+            </FitAiButton>
+            <FitAiButton
+              variant={"primary"}
               onClick={() => handleStartWorkout(selectedDayId ?? undefined)}
               loading={startWorkoutMutation.isPending}
               disabled={!selectedDayId}
               leftSection={<IconPlayerPlay size={16} />}
             >
               Start Workout
-            </Button>
+            </FitAiButton>
           </Group>
         </Stack>
       </Modal>

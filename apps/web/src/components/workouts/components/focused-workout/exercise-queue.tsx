@@ -6,6 +6,8 @@
 import { Collapse } from "@mantine/core";
 import { IconCheck, IconArrowRight } from "@tabler/icons-react";
 
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
+
 import styles from "./exercise-queue.module.css";
 
 export interface ExerciseQueueItem {
@@ -66,13 +68,15 @@ export function ExerciseQueue({
         aria-expanded={isExpanded}
         aria-controls="exercise-queue-list"
       >
-        <span className={styles.headerText}>
+        <FitAiText.Label className={styles.headerText}>
           {isExpanded ? "▲" : "▼"}{" "}
           {pendingOnly > 0
             ? `${pendingOnly} more exercise${pendingOnly !== 1 ? "s" : ""}`
             : "All exercises"}
-        </span>
-        <span className={styles.toggleText}>{isExpanded ? "Collapse" : "Expand"}</span>
+        </FitAiText.Label>
+        <FitAiText.Caption className={styles.toggleText}>
+          {isExpanded ? "Collapse" : "Expand"}
+        </FitAiText.Caption>
       </div>
 
       <Collapse in={isExpanded}>
@@ -94,10 +98,10 @@ export function ExerciseQueue({
               aria-label={`${exercise.name}, ${exercise.completedSets} of ${exercise.totalSets} sets completed`}
             >
               <StatusIcon status={exercise.status} />
-              <span className={styles.exerciseName}>{exercise.name}</span>
-              <span className={styles.exerciseProgress}>
+              <FitAiText.Body className={styles.exerciseName}>{exercise.name}</FitAiText.Body>
+              <FitAiText.Caption className={styles.exerciseProgress}>
                 {exercise.completedSets}/{exercise.totalSets} sets
-              </span>
+              </FitAiText.Caption>
             </div>
           ))}
         </div>

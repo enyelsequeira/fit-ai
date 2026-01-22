@@ -270,7 +270,7 @@ export function LogProgressModal({
 
         {/* Actions */}
         <Group justify="flex-end" mt="md">
-          <FitAiButton variant="subtle" onClick={handleClose}>
+          <FitAiButton variant="ghost" onClick={handleClose}>
             Cancel
           </FitAiButton>
           <FitAiButton

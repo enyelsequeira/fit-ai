@@ -51,23 +51,23 @@ const typeConfigs: Record<
   },
 };
 
-export interface ShowOptions {
+export type ShowOptions = {
   id?: string;
   title?: string;
   message: string;
   type?: ToastType;
   autoClose?: number | false;
   withCloseButton?: boolean;
-}
+};
 
-export interface UpdateOptions {
+export type UpdateOptions = {
   id: string;
   message?: string;
   title?: string;
   type?: ToastType;
   autoClose?: number | false;
   loading?: boolean;
-}
+};
 
 export const toast = {
   show: (options: ShowOptions): string => {

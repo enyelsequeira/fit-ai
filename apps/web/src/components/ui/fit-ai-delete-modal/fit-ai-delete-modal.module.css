@@ -1,0 +1,43 @@
+/* FitAi Delete Modal Styles */
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--mantine-spacing-xl) * 2.5);
+  height: calc(var(--mantine-spacing-xl) * 2.5);
+  border-radius: var(--mantine-radius-xl);
+  transition: background-color 200ms ease;
+
+  &[data-variant="danger"] {
+    background: light-dark(var(--mantine-color-red-1), var(--mantine-color-red-light));
+    color: var(--mantine-color-red-6);
+  }
+
+  &[data-variant="warning"] {
+    background: light-dark(var(--mantine-color-orange-1), var(--mantine-color-orange-light));
+    color: var(--mantine-color-orange-6);
+  }
+}
+
+.title {
+  margin: 0;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+}
+
+.message {
+  line-height: var(--mantine-line-height);
+}
+
+.actions {
+  display: flex;
+  gap: var(--mantine-spacing-sm);
+  margin-top: var(--mantine-spacing-xs);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .iconWrapper {
+    transition: none;
+  }
+}

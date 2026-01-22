@@ -1,0 +1,526 @@
+/* FitAi Entity Card Styles - Generic Three-Zone Design */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  border-radius: var(--mantine-radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 280ms ease,
+    border-color 200ms ease;
+  animation: cardEntrance 400ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+
+  @mixin hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 8px 20px -6px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.35)),
+      0 4px 8px -4px light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.25));
+    border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+
+    & .actionsBar {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    & .iconWrapper {
+      transform: scale(1.05);
+    }
+
+    & .cardGlow {
+      opacity: 0.5;
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: 2px;
+  }
+
+  /* Accent color variants - using Mantine's mod prop data attributes */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+
+  &[data-accent="blue"]::before {
+    opacity: 1;
+    background: var(--mantine-color-blue-5);
+  }
+
+  &[data-accent="green"]::before {
+    opacity: 1;
+    background: var(--mantine-color-green-5);
+  }
+
+  &[data-accent="orange"]::before {
+    opacity: 1;
+    background: var(--mantine-color-orange-5);
+  }
+
+  &[data-accent="red"]::before {
+    opacity: 1;
+    background: var(--mantine-color-red-5);
+  }
+
+  &[data-accent="teal"]::before {
+    opacity: 1;
+    background: var(--mantine-color-teal-5);
+  }
+
+  &[data-accent="yellow"]::before {
+    opacity: 1;
+    background: linear-gradient(
+      90deg,
+      var(--mantine-color-yellow-5),
+      var(--mantine-color-orange-5)
+    );
+  }
+
+  /* Highlighted state - boolean attribute (no value when true via mod prop) */
+  &[data-highlighted] {
+    border-color: light-dark(var(--mantine-color-yellow-3), var(--mantine-color-yellow-8));
+
+    &::before {
+      opacity: 1;
+      background: linear-gradient(
+        90deg,
+        var(--mantine-color-yellow-5),
+        var(--mantine-color-orange-5)
+      );
+    }
+  }
+}
+
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Subtle glow effect on hover */
+.cardGlow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: light-dark(
+    color-mix(in srgb, var(--mantine-color-teal-5) 6%, transparent),
+    color-mix(in srgb, var(--mantine-color-teal-5) 10%, transparent)
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+
+/* ============================================
+   ZONE 1: Card Header (Icon + Title)
+   ============================================ */
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-md);
+  padding-bottom: var(--mantine-spacing-xs);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: var(--mantine-radius-md);
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+  transition: transform 200ms ease;
+}
+
+.headerContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--mantine-spacing-xs) / 2);
+}
+
+.title {
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
+  line-height: 1.3;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.description {
+  font-size: var(--mantine-font-size-xs);
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-gray-5));
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* ============================================
+   ZONE 2: Content (Meta badges + stats)
+   ============================================ */
+.metaSection {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: calc(var(--mantine-spacing-xs) * 0.75);
+  padding: 0 var(--mantine-spacing-md);
+  padding-bottom: var(--mantine-spacing-sm);
+}
+
+.metaPill {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--mantine-spacing-xs) / 2);
+  padding: calc(var(--mantine-spacing-xs) / 3) var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-sm);
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 500;
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+}
+
+.metaPillIcon {
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+}
+
+.defaultBadge {
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+}
+
+.activeBadge {
+  background: light-dark(var(--mantine-color-yellow-1), var(--mantine-color-yellow-9));
+  color: light-dark(var(--mantine-color-yellow-7), var(--mantine-color-yellow-4));
+}
+
+.publicBadge {
+  background: light-dark(var(--mantine-color-blue-0), var(--mantine-color-blue-9));
+  color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-4));
+}
+
+.privateBadge {
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-gray-5));
+}
+
+.folderBadge {
+  background: light-dark(var(--mantine-color-orange-0), var(--mantine-color-orange-9));
+  color: light-dark(var(--mantine-color-orange-7), var(--mantine-color-orange-4));
+}
+
+.usageBadge {
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-4));
+}
+
+.successBadge {
+  background: light-dark(var(--mantine-color-green-0), var(--mantine-color-green-9));
+  color: light-dark(var(--mantine-color-green-7), var(--mantine-color-green-4));
+}
+
+.warningBadge {
+  background: light-dark(var(--mantine-color-yellow-0), var(--mantine-color-yellow-9));
+  color: light-dark(var(--mantine-color-yellow-8), var(--mantine-color-yellow-4));
+}
+
+.infoBadge {
+  background: light-dark(var(--mantine-color-cyan-0), var(--mantine-color-cyan-9));
+  color: light-dark(var(--mantine-color-cyan-7), var(--mantine-color-cyan-4));
+}
+
+/* Stats row - compact inline display */
+.statsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  margin-top: auto;
+  border-top: 1px solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--mantine-spacing-xs) / 2);
+}
+
+.statValue {
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-2));
+}
+
+.statLabel {
+  font-size: calc(var(--mantine-font-size-xs) * 0.9);
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-gray-5));
+}
+
+.statIcon {
+  display: flex;
+  align-items: center;
+  color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-gray-5));
+}
+
+/* ============================================
+   ZONE 3: Actions bar (visible on hover)
+   ============================================ */
+.actionsBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-xs);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.actionsLeft {
+  display: flex;
+  gap: var(--mantine-spacing-xs);
+}
+
+.actionsRight {
+  display: flex;
+  gap: var(--mantine-spacing-xs);
+}
+
+/* Action buttons */
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--mantine-spacing-xs) / 2);
+  padding: calc(var(--mantine-spacing-xs) * 0.75) var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-sm);
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition:
+    background 150ms ease,
+    transform 100ms ease;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.primaryAction {
+  background: var(--mantine-color-teal-6);
+  color: var(--mantine-color-white);
+
+  @mixin hover {
+    &:not(:disabled) {
+      background: var(--mantine-color-teal-7);
+    }
+  }
+}
+
+.secondaryAction {
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
+
+  @mixin hover {
+    &:not(:disabled) {
+      background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+    }
+  }
+}
+
+.dangerAction {
+  background: light-dark(var(--mantine-color-red-1), var(--mantine-color-red-9));
+  color: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-4));
+
+  @mixin hover {
+    &:not(:disabled) {
+      background: light-dark(var(--mantine-color-red-2), var(--mantine-color-red-8));
+    }
+  }
+}
+
+.activeAction {
+  background: light-dark(var(--mantine-color-yellow-1), var(--mantine-color-yellow-9));
+  color: light-dark(var(--mantine-color-yellow-7), var(--mantine-color-yellow-4));
+
+  @mixin hover {
+    &:not(:disabled) {
+      background: light-dark(var(--mantine-color-yellow-2), var(--mantine-color-yellow-8));
+    }
+  }
+
+  &:disabled {
+    opacity: 1;
+    cursor: default;
+  }
+}
+
+.iconOnlyAction {
+  padding: calc(var(--mantine-spacing-xs) * 0.75);
+}
+
+/* Skeleton styles */
+.skeleton {
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  border-radius: var(--mantine-radius-md);
+}
+
+@keyframes skeletonPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeletonCard {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  border-radius: var(--mantine-radius-lg);
+  overflow: hidden;
+  animation: cardEntrance 400ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.skeletonHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-md);
+  padding-bottom: var(--mantine-spacing-sm);
+}
+
+.skeletonIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--mantine-radius-md);
+}
+
+.skeletonContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+}
+
+.skeletonTitle {
+  height: 18px;
+  width: 70%;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.skeletonDesc {
+  height: 14px;
+  width: 90%;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.skeletonMeta {
+  display: flex;
+  gap: var(--mantine-spacing-xs);
+  padding: 0 var(--mantine-spacing-md);
+  padding-bottom: var(--mantine-spacing-sm);
+}
+
+.skeletonPill {
+  height: 22px;
+  width: 60px;
+  border-radius: var(--mantine-radius-xl);
+}
+
+.skeletonStats {
+  display: flex;
+  gap: var(--mantine-spacing-lg);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-top: 1px solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+}
+
+.skeletonStat {
+  height: 16px;
+  width: 50px;
+  border-radius: var(--mantine-radius-sm);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+
+    & .actionsBar {
+      opacity: 1;
+      transform: none;
+    }
+
+    & .iconWrapper {
+      transition: none;
+    }
+  }
+
+  .skeletonCard {
+    animation: none;
+  }
+
+  .skeleton {
+    animation: none;
+  }
+
+  .actionButton {
+    transition: none;
+
+    &:active {
+      transform: none;
+    }
+  }
+}

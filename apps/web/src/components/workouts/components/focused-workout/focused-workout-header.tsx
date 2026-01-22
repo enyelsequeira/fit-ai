@@ -5,6 +5,9 @@
 
 import { IconChevronLeft } from "@tabler/icons-react";
 
+import { FitAiActionIcon } from "@/components/ui/fit-ai-button/fit-ai-action-icon";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
+
 import styles from "./focused-workout-header.module.css";
 
 interface FocusedWorkoutHeaderProps {
@@ -44,18 +47,20 @@ export function FocusedWorkoutHeader({
 
   return (
     <header className={styles.header}>
-      <button
-        type="button"
+      <FitAiActionIcon
+        variant="ghost"
         className={styles.backButton}
         onClick={onBackClick}
         aria-label="Go back"
       >
         <IconChevronLeft size={24} />
-      </button>
+      </FitAiActionIcon>
 
       <div className={styles.centerContent}>
-        <div className={styles.workoutName}>{workoutName}</div>
-        <div className={styles.elapsedTime}>{formatElapsedTime(elapsedTime)}</div>
+        <FitAiText.Subheading className={styles.workoutName}>{workoutName}</FitAiText.Subheading>
+        <FitAiText.Caption className={styles.elapsedTime}>
+          {formatElapsedTime(elapsedTime)}
+        </FitAiText.Caption>
       </div>
 
       <div className={styles.dots}>

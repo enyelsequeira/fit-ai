@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Text, Group, Button, Tooltip, Flex } from "@mantine/core";
+import { Box, Group, Flex, Container } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconTemplate } from "@tabler/icons-react";
 import { FoldersSidebar } from "./components/folders-sidebar/folders-sidebar.tsx";
@@ -10,6 +10,9 @@ import { TemplateDetailModal } from "./components/template-detail/template-detai
 import { FolderManagerModal } from "./components/folder-manager-modal";
 import { useTemplateFolders } from "./queries/use-queries";
 import styles from "./templates-view.module.css";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text.tsx";
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button.tsx";
+import { FitAiContentArea } from "@/components/ui/fit-ai-content-area/fit-ai-content-area.tsx";
 
 export function TemplatesView() {
   // Local state
@@ -43,27 +46,23 @@ export function TemplatesView() {
       : (folders.find((f) => f.id === selectedFolderId)?.name ?? "Unknown Folder");
 
   return (
-    <Flex className={styles.pageContainer}>
+    <>
       {/* Sidebar */}
       <div className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <Group gap="xs" align="center">
-            <Tooltip label="Templates">
-              <Flex
-                align={"center"}
-                justify={"center"}
-                w={36}
-                h={36}
-                bdrs={"md"}
-                c={"white"}
-                className={styles.logoIcon}
-              >
-                <IconTemplate size={20} />
-              </Flex>
-            </Tooltip>
-            <Text fw={600} size="lg">
-              Templates
-            </Text>
+            <Flex
+              align={"center"}
+              justify={"center"}
+              w={36}
+              h={36}
+              bdrs={"md"}
+              c={"white"}
+              className={styles.logoIcon}
+            >
+              <IconTemplate size={20} />
+            </Flex>
+            <FitAiText variant={"subheading"}>Templates</FitAiText>
           </Group>
         </div>
 
@@ -77,21 +76,20 @@ export function TemplatesView() {
         </div>
 
         <Box p={"md"} className={styles.sidebarFooter}>
-          <Tooltip label="Create a new workout template">
-            <Button
-              fullWidth
-              leftSection={<IconPlus size={16} />}
-              onClick={openCreateModal}
-              className={styles.createButton}
-            >
-              New Template
-            </Button>
-          </Tooltip>
+          <FitAiButton
+            variant={"primary"}
+            fullWidth
+            leftSection={<IconPlus size={16} />}
+            onClick={openCreateModal}
+            className={styles.createButton}
+          >
+            New Template
+          </FitAiButton>
         </Box>
       </div>
 
       {/* Main Content */}
-      <Flex direction={"column"} flex={1} miw={0}>
+      <Container fluid flex={1}>
         <TemplatesHeader
           currentFolderName={currentFolderName}
           searchQuery={searchQuery}
@@ -104,20 +102,18 @@ export function TemplatesView() {
         />
 
         {/* Content Area */}
-        <div className={styles.contentArea}>
-          <div className={styles.templatesContainer}>
-            <TemplatesList
-              folderId={selectedFolderId}
-              searchQuery={searchQuery}
-              onTemplateClick={(id) => {
-                setSelectedTemplateId(id);
-                openDetailModal();
-              }}
-              onCreateTemplate={openCreateModal}
-            />
-          </div>
-        </div>
-      </Flex>
+        <FitAiContentArea>
+          <TemplatesList
+            folderId={selectedFolderId}
+            searchQuery={searchQuery}
+            onTemplateClick={(id) => {
+              setSelectedTemplateId(id);
+              openDetailModal();
+            }}
+            onCreateTemplate={openCreateModal}
+          />
+        </FitAiContentArea>
+      </Container>
 
       {/* Modals */}
       <CreateTemplateModal
@@ -142,6 +138,6 @@ export function TemplatesView() {
         onClose={closeDetailModal}
         templateId={selectedTemplateId}
       />
-    </Flex>
+    </>
   );
 }

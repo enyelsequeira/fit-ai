@@ -1,0 +1,94 @@
+/* FitAi Page Header Styles */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+.pageTitle {
+  font-size: var(--mantine-font-size-xl);
+  font-weight: 700;
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
+  line-height: 1.2;
+}
+
+.headerActions {
+  flex-shrink: 0;
+}
+
+/* Button styles */
+.primaryButton {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+
+  @mixin hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px -4px var(--mantine-primary-color-filled);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.secondaryButton {
+  transition:
+    transform 150ms ease,
+    background 150ms ease;
+
+  @mixin hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Mobile filter dropdown */
+.mobileFilter {
+  width: 100%;
+
+  @mixin larger-than $mantine-breakpoint-lg {
+    display: none;
+  }
+}
+
+/* Search input */
+.searchInput {
+  flex: 1;
+  min-width: rem(200px);
+}
+
+/* Responsive adjustments */
+@mixin smaller-than $mantine-breakpoint-sm {
+  .header {
+    gap: var(--mantine-spacing-sm);
+  }
+
+  .headerActions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    flex: 1;
+    min-width: rem(140px);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .primaryButton,
+  .secondaryButton {
+    transition: none;
+
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+}

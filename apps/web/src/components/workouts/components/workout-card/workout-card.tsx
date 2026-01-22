@@ -1,11 +1,6 @@
-/**
- * WorkoutCard - Individual workout card component
- * Displays workout summary with name, date, duration, exercises, status, and actions
- */
-
 import type { KeyboardEvent, MouseEvent } from "react";
 import { useState } from "react";
-import { Tooltip, Modal, Stack, Text, Button } from "@mantine/core";
+import { Modal, Stack } from "@mantine/core";
 import {
   IconBarbell,
   IconClock,
@@ -29,6 +24,9 @@ import {
 import { MOOD_LABELS, MOOD_COLORS } from "../../types";
 import type { WorkoutMood } from "../../types";
 import styles from "./workout-card.module.css";
+import { FitAiToolTip } from "@/components/ui/fit-ai-tooltip/fit-ai-tool-tip.tsx";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text.tsx";
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button.tsx";
 
 interface WorkoutCardProps {
   workoutId: number;
@@ -109,26 +107,26 @@ export function WorkoutCard({ workoutId, onClick, animationDelay = 0 }: WorkoutC
 
         {/* ZONE 2: Meta badges - compact inline */}
         <div className={styles.metaSection}>
-          <Tooltip label={isCompleted ? "Completed" : "In Progress"} position="top" withArrow>
-            <span
-              className={`${styles.metaPill} ${isCompleted ? styles.completedBadge : styles.inProgressBadge}`}
-            >
-              {isCompleted ? <IconCheck size={11} /> : <IconPlayerPlay size={11} />}
-              {isCompleted ? "Done" : "Active"}
-            </span>
-          </Tooltip>
+          <span
+            className={`${styles.metaPill} ${isCompleted ? styles.completedBadge : styles.inProgressBadge}`}
+          >
+            {isCompleted ? <IconCheck size={11} /> : <IconPlayerPlay size={11} />}
+            {isCompleted ? "Done" : "Active"}
+          </span>
 
           {isCompleted && rating && (
-            <Tooltip label={`Rating: ${rating}/5`} position="top" withArrow>
-              <span className={`${styles.metaPill} ${styles.ratingBadge}`}>
-                <IconStar size={11} className={styles.metaPillIcon} />
-                {rating}/5
-              </span>
-            </Tooltip>
+            <span className={`${styles.metaPill} ${styles.ratingBadge}`}>
+              <IconStar size={11} className={styles.metaPillIcon} />
+              {rating}/5
+            </span>
           )}
 
           {isCompleted && mood && (
-            <Tooltip label={MOOD_LABELS[mood as WorkoutMood] ?? mood} position="top" withArrow>
+            <FitAiToolTip
+              toolTipProps={{
+                label: MOOD_LABELS[mood as WorkoutMood] ?? mood,
+              }}
+            >
               <span
                 className={styles.metaPill}
                 style={{
@@ -138,7 +136,7 @@ export function WorkoutCard({ workoutId, onClick, animationDelay = 0 }: WorkoutC
               >
                 <IconMoodSmile size={11} className={styles.metaPillIcon} />
               </span>
-            </Tooltip>
+            </FitAiToolTip>
           )}
         </div>
 
@@ -192,7 +190,11 @@ export function WorkoutCard({ workoutId, onClick, animationDelay = 0 }: WorkoutC
             )}
           </div>
           <div className={styles.actionsRight}>
-            <Tooltip label="Delete" position="top" withArrow>
+            <FitAiToolTip
+              toolTipProps={{
+                label: "Delete",
+              }}
+            >
               <button
                 type="button"
                 className={`${styles.actionButton} ${styles.dangerAction} ${styles.iconOnlyAction}`}
@@ -205,7 +207,7 @@ export function WorkoutCard({ workoutId, onClick, animationDelay = 0 }: WorkoutC
               >
                 <IconTrash size={12} />
               </button>
-            </Tooltip>
+            </FitAiToolTip>
           </div>
         </div>
       </article>
@@ -234,29 +236,27 @@ export function WorkoutCard({ workoutId, onClick, animationDelay = 0 }: WorkoutC
           >
             <IconAlertTriangle size={32} stroke={1.5} />
           </div>
-          <Text size="lg" fw={600}>
-            Delete Workout
-          </Text>
-          <Text size="sm" c="dimmed">
+          <FitAiText variant={"muted"}>Delete Workout</FitAiText>
+          <FitAiText variant={"muted"}>
             Are you sure you want to delete &ldquo;{name ?? "this workout"}&rdquo;? This action
             cannot be undone and all associated data will be permanently removed.
-          </Text>
+          </FitAiText>
           <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
-            <Button
-              variant="default"
+            <FitAiButton
+              variant="primary"
               onClick={() => setConfirmDeleteOpen(false)}
               disabled={deleteWorkoutMutation.isPending}
             >
               Cancel
-            </Button>
-            <Button
-              color="red"
+            </FitAiButton>
+            <FitAiButton
+              variant={"danger"}
               onClick={handleConfirmDelete}
               loading={deleteWorkoutMutation.isPending}
               leftSection={<IconTrash size={16} />}
             >
               Delete Workout
-            </Button>
+            </FitAiButton>
           </div>
         </Stack>
       </Modal>

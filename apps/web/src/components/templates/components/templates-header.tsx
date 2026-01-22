@@ -1,15 +1,16 @@
-import { TextInput, Button, Text, Tooltip, Select, Box, Flex, Title } from "@mantine/core";
-import { IconSearch, IconPlus, IconFolderPlus, IconFolder } from "@tabler/icons-react";
-import { useTemplatesList, useTemplateFolders } from "../queries/use-queries";
-import { TemplatesStatsRow } from "./templates-stats-row";
-import styles from "../templates-view.module.css";
+import { IconFolder, IconFolderPlus, IconPlus } from "@tabler/icons-react";
 
-interface Folder {
+import { FitAiPageHeader } from "@/components/ui/fit-ai-page-header/fit-ai-page-header";
+
+import { useTemplateFolders, useTemplatesList } from "../queries/use-queries";
+import { TemplatesStatsRow } from "./templates-stats-row";
+
+type Folder = {
   id: number;
   name: string;
-}
+};
 
-interface TemplatesHeaderProps {
+type TemplatesHeaderProps = {
   currentFolderName: string;
   searchQuery: string;
   onSearchChange: (value: string) => void;
@@ -21,7 +22,7 @@ interface TemplatesHeaderProps {
   selectedFolderId?: number | null;
   /** Callback when folder selection changes */
   onFolderChange?: (folderId: number | null) => void;
-}
+};
 
 export function TemplatesHeader({
   currentFolderName,
@@ -36,12 +37,6 @@ export function TemplatesHeader({
   const { data: templatesData, isLoading: isTemplatesLoading } = useTemplatesList();
   const { data: foldersData, isLoading: isFoldersLoading } = useTemplateFolders();
 
-  // Build folder options for mobile Select
-  const folderOptions = [
-    { value: "all", label: "All Templates" },
-    ...folders.map((f) => ({ value: String(f.id), label: f.name })),
-  ];
-
   const isLoading = isTemplatesLoading || isFoldersLoading;
 
   const stats = {
@@ -52,73 +47,60 @@ export function TemplatesHeader({
     isLoading,
   };
 
+  // Build folder options for mobile Select
+  const folderOptions = [
+    { value: "all", label: "All Templates" },
+    ...folders.map((f) => ({ value: String(f.id), label: f.name })),
+  ];
+
   return (
-    <Box className={styles.header}>
-      <Flex justify={"space-between"} align={"flex-start"} gap={"lg"} wrap={"wrap"} mb={"lg"}>
-        <Flex flex={1} direction={"column"} miw={200}>
-          <Title order={2} m={0} className={styles.pageTitle}>
-            {currentFolderName}
-          </Title>
-          <Text c="dimmed" size="sm" mt={2}>
-            Create and manage workout templates for quick session starts
-          </Text>
-        </Flex>
+    <FitAiPageHeader>
+      <FitAiPageHeader.Title>{currentFolderName}</FitAiPageHeader.Title>
+      <FitAiPageHeader.Description>
+        Create and manage workout templates for quick session starts
+      </FitAiPageHeader.Description>
 
-        <Flex gap={"sm"} className={styles.headerActions}>
-          <Tooltip label="Create a new folder to organize templates">
-            <Button
-              variant="light"
-              leftSection={<IconFolderPlus size={16} />}
-              onClick={onCreateFolder}
-              className={styles.secondaryButton}
-            >
-              New Folder
-            </Button>
-          </Tooltip>
-          <Tooltip label="Create a new workout template">
-            <Button
-              leftSection={<IconPlus size={16} />}
-              onClick={onCreateTemplate}
-              className={styles.primaryButton}
-            >
-              New Template
-            </Button>
-          </Tooltip>
-        </Flex>
-      </Flex>
+      <FitAiPageHeader.Actions>
+        <FitAiPageHeader.Action
+          variant="secondary"
+          icon={<IconFolderPlus size={16} />}
+          onClick={onCreateFolder}
+          tooltip="Create a new folder to organize templates"
+        >
+          New Folder
+        </FitAiPageHeader.Action>
+        <FitAiPageHeader.Action
+          variant="primary"
+          icon={<IconPlus size={16} />}
+          onClick={onCreateTemplate}
+          tooltip="Create a new workout template"
+        >
+          New Template
+        </FitAiPageHeader.Action>
+      </FitAiPageHeader.Actions>
 
-      <TemplatesStatsRow stats={stats} isLoading={isLoading} />
+      <FitAiPageHeader.Stats>
+        <TemplatesStatsRow stats={stats} isLoading={isLoading} />
+      </FitAiPageHeader.Stats>
 
-      <Flex
-        gap={"md"}
-        align={{ base: "center", lg: "stretch" }}
-        direction={{ base: "column", lg: "row" }}
-      >
-        {/* Mobile folder selector - hidden on desktop where sidebar is visible */}
+      <FitAiPageHeader.SearchRow>
         {onFolderChange && (
-          <Box hiddenFrom="lg" className={styles.mobileFolderSelect}>
-            <Select
-              placeholder="Select folder"
-              leftSection={<IconFolder size={16} />}
-              data={folderOptions}
-              value={selectedFolderId === null ? "all" : String(selectedFolderId)}
-              onChange={(value) => {
-                onFolderChange(value === "all" || value === null ? null : Number(value));
-              }}
-              size="md"
-              comboboxProps={{ withinPortal: true }}
-            />
-          </Box>
+          <FitAiPageHeader.MobileFilter
+            value={selectedFolderId === null ? "all" : String(selectedFolderId)}
+            onChange={(value) => {
+              onFolderChange(value === "all" || value === null ? null : Number(value));
+            }}
+            options={folderOptions}
+            placeholder="Select folder"
+            icon={<IconFolder size={16} />}
+          />
         )}
-        <TextInput
-          id="template-search"
-          placeholder="Search templates..."
-          leftSection={<IconSearch size={18} />}
+        <FitAiPageHeader.Search
           value={searchQuery}
-          onChange={(e) => onSearchChange(e.currentTarget.value)}
-          size="md"
+          onChange={onSearchChange}
+          placeholder="Search templates..."
         />
-      </Flex>
-    </Box>
+      </FitAiPageHeader.SearchRow>
+    </FitAiPageHeader>
   );
 }

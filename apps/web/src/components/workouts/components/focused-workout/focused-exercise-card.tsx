@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { IconPlus } from "@tabler/icons-react";
-import { Badge, Box, Button, ScrollArea, Stack, Text } from "@mantine/core";
+import { Badge, Box, ScrollArea, Stack } from "@mantine/core";
 
 import type { FocusedExerciseCardProps } from "./focused-exercise-card.types";
+
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
 
 import { CompletedSetChip } from "./completed-set-chip";
 import { SetEntryCard } from "./set-entry-card";
@@ -30,9 +33,9 @@ export function FocusedExerciseCard({
   const [reps, setReps] = useState<number | null>(null);
   const [rpe, setRpe] = useState<number | null>(null);
 
-  // Reset form values when currentSet changes
-  // BUG FIX: Pre-fill with previous set values if current set has null values
-  // This ensures the Complete button is enabled immediately with pre-filled values
+  // useEffect required: Resetting form state when navigating between sets
+  // This cannot be derived state because we need local form state that users can edit
+  // The currentSet.id change triggers a reset to pre-fill values from previous workout
   useEffect(() => {
     if (currentSet) {
       // Use current set values, or fall back to previous set values
@@ -46,7 +49,10 @@ export function FocusedExerciseCard({
       setReps(null);
       setRpe(null);
     }
-  }, [currentSet?.id, previousSet?.weight, previousSet?.reps]);
+    // Only reset when set ID changes (navigating to different set)
+    // previousSet values are intentionally excluded to avoid re-renders during editing
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSet?.id]);
 
   const handleComplete = () => {
     if (weight !== null && reps !== null) {
@@ -60,15 +66,15 @@ export function FocusedExerciseCard({
   return (
     <Box className={styles.card}>
       <div className={styles.exerciseHeader}>
-        <Text className={styles.exerciseName}>{exerciseName}</Text>
+        <FitAiText.Heading className={styles.exerciseName}>{exerciseName}</FitAiText.Heading>
         <div className={styles.badges}>
           {exerciseCategory && (
-            <Badge variant="light" color="blue">
+            <Badge variant="light" color="teal" className={styles.badge}>
               {exerciseCategory}
             </Badge>
           )}
           {exerciseEquipment && (
-            <Badge variant="outline" color="gray">
+            <Badge variant="outline" color="gray" className={styles.badge}>
               {exerciseEquipment}
             </Badge>
           )}
@@ -96,21 +102,19 @@ export function FocusedExerciseCard({
           />
         ) : allSetsCompleted ? (
           <Stack align="center" justify="center" gap="md" py="xl">
-            <Text size="xl" fw={600} c="green">
+            <FitAiText.Heading className={styles.successText}>
               All sets completed!
-            </Text>
-            <Text size="sm" c="dimmed">
+            </FitAiText.Heading>
+            <FitAiText.Caption>
               {totalSets} sets finished for {exerciseName}
-            </Text>
+            </FitAiText.Caption>
           </Stack>
         ) : null}
       </div>
 
       {hasCompletedSets && (
         <div className={styles.completedSets}>
-          <Text size="sm" fw={500} mb="xs">
-            Completed Sets
-          </Text>
+          <FitAiText.Label className={styles.completedLabel}>Completed Sets</FitAiText.Label>
           <ScrollArea scrollbarSize={4} type="scroll">
             <div className={styles.completedSetsScroll}>
               {completedSets.map((set, index) => (
@@ -126,15 +130,15 @@ export function FocusedExerciseCard({
         </div>
       )}
 
-      <Button
+      <FitAiButton
         className={styles.addSetButton}
-        variant="light"
+        variant="secondary"
         leftSection={<IconPlus size={18} />}
         onClick={onAddSet}
         disabled={isLoading}
       >
         Add Set
-      </Button>
+      </FitAiButton>
     </Box>
   );
 }

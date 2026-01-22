@@ -1,38 +1,21 @@
-/**
- * WorkoutsHeader - Header section for workouts page
- * Shows title, search, time period selector (mobile), and action buttons
- */
-
 import { useCallback } from "react";
-import {
-  TextInput,
-  Button,
-  Text,
-  Tooltip,
-  Select,
-  Box,
-  Flex,
-  Title,
-  Modal,
-  Group,
-  Alert,
-} from "@mantine/core";
+
+import { Alert, Group, Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconSearch,
-  IconPlus,
-  IconCalendar,
-  IconTrash,
-  IconAlertTriangle,
-} from "@tabler/icons-react";
+import { IconAlertTriangle, IconCalendar, IconPlus, IconTrash } from "@tabler/icons-react";
+
+import { FitAiPageHeader } from "@/components/ui/fit-ai-page-header/fit-ai-page-header";
+
+import { useCancelAllActiveWorkouts } from "../../hooks/use-mutations";
+import { useWorkoutsList } from "../../queries/use-queries";
 import type { TimePeriodFilter } from "../../types";
 import { TIME_PERIOD_LABELS } from "../../types";
-import { useWorkoutsList } from "../../queries/use-queries.ts";
-import { useCancelAllActiveWorkouts } from "../../hooks/use-mutations.ts";
-import { WorkoutsStatsRow } from "../workouts-stats-row/workouts-stats-row.tsx";
-import styles from "./workouts-header.module.css";
+import { WorkoutsStatsRow } from "../workouts-stats-row/workouts-stats-row";
+import { FitAiToolTip } from "@/components/ui/fit-ai-tooltip/fit-ai-tool-tip.tsx";
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button.tsx";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text.tsx";
 
-interface WorkoutsHeaderProps {
+type WorkoutsHeaderProps = {
   currentPeriodLabel: string;
   searchQuery: string;
   onSearchChange: (value: string) => void;
@@ -41,7 +24,7 @@ interface WorkoutsHeaderProps {
   selectedPeriod?: TimePeriodFilter;
   /** Callback when time period changes (for mobile) */
   onPeriodChange?: (period: TimePeriodFilter) => void;
-}
+};
 
 export function WorkoutsHeader({
   currentPeriodLabel,
@@ -95,80 +78,63 @@ export function WorkoutsHeader({
 
   return (
     <>
-      <Box className={styles.header}>
-        <Flex justify="space-between" align="flex-start" gap="lg" wrap="wrap" mb="lg">
-          <Flex flex={1} direction="column" miw={200}>
-            <Title order={2} m={0} className={styles.pageTitle}>
-              {currentPeriodLabel}
-            </Title>
-            <Text c="dimmed" size="sm" mt={2}>
-              Track your training sessions and monitor your progress
-            </Text>
-          </Flex>
+      <FitAiPageHeader>
+        <FitAiPageHeader.Title>{currentPeriodLabel}</FitAiPageHeader.Title>
+        <FitAiPageHeader.Description>
+          Track your training sessions and monitor your progress
+        </FitAiPageHeader.Description>
 
-          <Flex gap="sm" className={styles.headerActions}>
-            {hasActiveWorkouts && (
-              <Tooltip
-                label={`Cancel ${activeWorkouts.length} active workout${activeWorkouts.length > 1 ? "s" : ""}`}
+        <FitAiPageHeader.Actions>
+          {hasActiveWorkouts && (
+            <FitAiToolTip
+              toolTipProps={{
+                label: `Cancel ${activeWorkouts.length} active workout${activeWorkouts.length > 1 ? "s" : ""}`,
+              }}
+            >
+              <FitAiButton
+                leftSection={<IconTrash size={16} />}
+                onClick={openCancelModal}
+                variant="danger"
               >
-                <Button
-                  leftSection={<IconTrash size={16} />}
-                  onClick={openCancelModal}
-                  color="red"
-                  variant="light"
-                >
-                  Cancel All ({activeWorkouts.length})
-                </Button>
-              </Tooltip>
-            )}
-            <Tooltip label="Start a new workout session">
-              <Button
-                leftSection={<IconPlus size={16} />}
-                onClick={onCreateWorkout}
-                className={styles.primaryButton}
-              >
-                New Workout
-              </Button>
-            </Tooltip>
-          </Flex>
-        </Flex>
-
-        <WorkoutsStatsRow stats={stats} isLoading={isLoading} />
-
-        <Flex
-          gap="md"
-          align={{ base: "center", lg: "stretch" }}
-          direction={{ base: "column", lg: "row" }}
-        >
-          {/* Mobile time period selector - hidden on desktop where sidebar is visible */}
-          {onPeriodChange && (
-            <Box hiddenFrom="lg" className={styles.mobilePeriodSelect}>
-              <Select
-                placeholder="Select time period"
-                leftSection={<IconCalendar size={16} />}
-                data={periodOptions}
-                value={selectedPeriod}
-                onChange={(value) => {
-                  if (value) {
-                    onPeriodChange(value as TimePeriodFilter);
-                  }
-                }}
-                size="md"
-                comboboxProps={{ withinPortal: true }}
-              />
-            </Box>
+                Cancel All ({activeWorkouts.length})
+              </FitAiButton>
+            </FitAiToolTip>
           )}
-          <TextInput
-            id="workout-search"
-            placeholder="Search workouts..."
-            leftSection={<IconSearch size={18} />}
+          <FitAiPageHeader.Action
+            variant="primary"
+            icon={<IconPlus size={16} />}
+            onClick={onCreateWorkout}
+            tooltip="Start a new workout session"
+          >
+            New Workout
+          </FitAiPageHeader.Action>
+        </FitAiPageHeader.Actions>
+
+        <FitAiPageHeader.Stats>
+          <WorkoutsStatsRow stats={stats} isLoading={isLoading} />
+        </FitAiPageHeader.Stats>
+
+        <FitAiPageHeader.SearchRow>
+          {onPeriodChange && (
+            <FitAiPageHeader.MobileFilter
+              value={selectedPeriod ?? null}
+              onChange={(value) => {
+                if (value) {
+                  onPeriodChange(value as TimePeriodFilter);
+                }
+              }}
+              options={periodOptions}
+              placeholder="Select time period"
+              icon={<IconCalendar size={16} />}
+            />
+          )}
+          <FitAiPageHeader.Search
             value={searchQuery}
-            onChange={(e) => onSearchChange(e.currentTarget.value)}
-            size="md"
-            className={styles.searchWrapper}
+            onChange={onSearchChange}
+            placeholder="Search workouts..."
           />
-        </Flex>
-      </Box>
+        </FitAiPageHeader.SearchRow>
+      </FitAiPageHeader>
 
       {/* Cancel All Active Workouts Confirmation Modal */}
       <Modal
@@ -177,7 +143,7 @@ export function WorkoutsHeader({
         title={
           <Group gap="xs">
             <IconAlertTriangle size={20} color="var(--mantine-color-red-6)" />
-            <Text fw={600}>Cancel All Active Workouts</Text>
+            <FitAiText variant={"body"}>Cancel All Active Workouts</FitAiText>
           </Group>
         }
         size="sm"
@@ -189,24 +155,24 @@ export function WorkoutsHeader({
           variant="light"
           mb="lg"
         >
-          <Text size="sm">
+          <FitAiText variant={"muted"}>
             You are about to permanently delete {activeWorkouts.length} active workout
             {activeWorkouts.length > 1 ? "s" : ""}. All progress will be lost.
-          </Text>
+          </FitAiText>
         </Alert>
 
         <Group justify="flex-end" gap="sm">
-          <Button variant="subtle" onClick={closeCancelModal}>
+          <FitAiButton variant="ghost" onClick={closeCancelModal}>
             Keep Workouts
-          </Button>
-          <Button
+          </FitAiButton>
+          <FitAiButton
             color="red"
             leftSection={<IconTrash size={16} />}
             onClick={handleCancelAll}
             loading={cancelAllMutation.isPending}
           >
             Cancel All
-          </Button>
+          </FitAiButton>
         </Group>
       </Modal>
     </>

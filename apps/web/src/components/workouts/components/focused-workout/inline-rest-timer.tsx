@@ -1,3 +1,14 @@
+/**
+ * @deprecated This component has been replaced by RestTimerModal.
+ * The RestTimerModal provides a better UX with a modal-based approach
+ * that doesn't interfere with the main workout UI.
+ *
+ * This file is kept for reference but is no longer used in the application.
+ * Consider removing this file and inline-rest-timer.module.css in a future cleanup.
+ *
+ * @see RestTimerModal in ./rest-timer-modal.tsx
+ */
+
 import { useEffect } from "react";
 
 import { ActionIcon, Box, Button, Group, RingProgress, Text, Transition } from "@mantine/core";
@@ -15,6 +26,7 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
+/** @deprecated Use RestTimerModal instead */
 export function InlineRestTimer({ timer, nextSetInfo, onDismiss }: InlineRestTimerProps) {
   const isVisible = timer.status === TimerStatus.RUNNING || timer.status === TimerStatus.PAUSED;
   const progress = timer.totalTime > 0 ? (timer.timeRemaining / timer.totalTime) * 100 : 0;

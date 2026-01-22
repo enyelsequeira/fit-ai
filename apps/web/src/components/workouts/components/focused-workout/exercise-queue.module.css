@@ -1,10 +1,11 @@
 /* ExerciseQueue - Collapsible exercise list */
 
 .container {
-  background: var(--mantine-color-dark-7);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
   border-radius: 12px;
   overflow: hidden;
   margin: var(--mantine-spacing-md);
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
 }
 
 .header {
@@ -12,38 +13,78 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
+  min-height: 48px;
   cursor: pointer;
   user-select: none;
-  transition: background 0.15s ease;
+  transition: background 0.2s ease;
+  /* Touch-friendly for gym use - meets 44px minimum */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .header:hover {
-  background: var(--mantine-color-dark-6);
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+}
+
+.header:active {
+  background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
 }
 
 .headerText {
   font-size: 14px;
   font-weight: 500;
-  color: var(--mantine-color-white);
+  color: light-dark(var(--mantine-color-dark-7), var(--mantine-color-white));
+}
+
+.toggleIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+  color: var(--mantine-color-teal-6);
+}
+
+.toggleIcon[data-expanded="true"] {
+  transform: rotate(180deg);
 }
 
 .toggleText {
   font-size: 14px;
-  color: var(--mantine-color-cyan-4);
+  color: var(--mantine-color-teal-6);
+  font-weight: 500;
+}
+
+/* Collapse animation container */
+.listWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.listWrapper[data-expanded="true"] {
+  grid-template-rows: 1fr;
 }
 
 .list {
-  border-top: 1px solid var(--mantine-color-dark-5);
+  overflow: hidden;
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
 }
 
 .exerciseItem {
   display: flex;
   align-items: center;
   padding: 14px 16px;
+  /* Touch target minimum 44px */
+  min-height: 48px;
   gap: 12px;
-  border-bottom: 1px solid var(--mantine-color-dark-6);
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease;
+  /* Touch-friendly for gym use */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .exerciseItem:last-child {
@@ -51,16 +92,34 @@
 }
 
 .exerciseItem:hover {
-  background: var(--mantine-color-dark-6);
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
 }
 
+.exerciseItem:active {
+  transform: scale(0.99);
+}
+
+/* Status: Current exercise */
 .exerciseItem[data-status="current"] {
-  background: rgba(76, 201, 240, 0.1);
+  background: light-dark(
+    color-mix(in srgb, var(--mantine-color-teal-6) 10%, transparent),
+    color-mix(in srgb, var(--mantine-color-teal-6) 15%, transparent)
+  );
+  border-left: 3px solid var(--mantine-color-teal-6);
+  padding-left: 13px;
+}
+
+/* Status: Completed exercise */
+.exerciseItem[data-status="completed"] {
+  background: light-dark(
+    color-mix(in srgb, var(--mantine-color-green-6) 5%, transparent),
+    color-mix(in srgb, var(--mantine-color-green-6) 8%, transparent)
+  );
 }
 
 .statusIcon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -68,34 +127,70 @@
   font-size: 12px;
   font-weight: 600;
   flex-shrink: 0;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
+/* Status indicator: Completed */
 .statusIcon[data-status="completed"] {
   background: var(--mantine-color-green-6);
   color: white;
 }
 
+/* Status indicator: Current */
 .statusIcon[data-status="current"] {
-  background: var(--mantine-color-cyan-6);
-  color: var(--mantine-color-dark-9);
+  background: var(--mantine-color-teal-6);
+  color: white;
+  box-shadow: 0 0 0 3px
+    light-dark(
+      color-mix(in srgb, var(--mantine-color-teal-6) 25%, transparent),
+      color-mix(in srgb, var(--mantine-color-teal-6) 30%, transparent)
+    );
 }
 
+/* Status indicator: Pending */
 .statusIcon[data-status="pending"] {
-  background: var(--mantine-color-dark-5);
-  color: var(--mantine-color-dimmed);
+  background: light-dark(var(--mantine-color-gray-3), var(--mantine-color-gray-5));
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-3));
 }
 
 .exerciseName {
   flex: 1;
   font-size: 14px;
-  color: var(--mantine-color-white);
+  color: light-dark(var(--mantine-color-dark-7), var(--mantine-color-white));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.exerciseName[data-status="completed"] {
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-5));
+  text-decoration: line-through;
+  text-decoration-color: var(--mantine-color-green-6);
 }
 
 .exerciseProgress {
   font-size: 12px;
-  color: var(--mantine-color-dimmed);
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dimmed));
   flex-shrink: 0;
+  font-weight: 500;
+}
+
+.exerciseProgress[data-status="current"] {
+  color: var(--mantine-color-teal-6);
+  font-weight: 600;
+}
+
+.exerciseProgress[data-status="completed"] {
+  color: var(--mantine-color-green-6);
+}
+
+/* Empty state */
+.emptyState {
+  padding: var(--mantine-spacing-xl);
+  text-align: center;
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dimmed));
+  font-size: 14px;
 }

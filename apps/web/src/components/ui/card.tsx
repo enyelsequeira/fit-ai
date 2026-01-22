@@ -12,13 +12,13 @@ import {
 } from "@mantine/core";
 import type { ReactNode } from "react";
 
-interface FitAiCardProps extends CardProps {
+type FitAiCardProps = CardProps & {
   onClick?: MouseEventHandler<HTMLDivElement>;
-}
-
-const FitAiCard = ({ onClick, ...props }: FitAiCardProps) => {
-  return <Card py={"md"} px={"sm"} withBorder onClick={onClick} {...props} />;
 };
+
+function FitAiCard({ onClick, ...props }: FitAiCardProps) {
+  return <Card py="md" px="sm" withBorder onClick={onClick} {...props} />;
+}
 
 function FitAiCardHeader({ children, ...props }: CardSectionProps & { children?: ReactNode }) {
   return (

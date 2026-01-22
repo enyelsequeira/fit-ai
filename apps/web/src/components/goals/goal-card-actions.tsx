@@ -64,7 +64,7 @@ export function GoalCardActions({
 
       <Group gap={8}>
         {isActive && (
-          <FitAiButton size="xs" variant="light" onClick={handleAction(onLogProgress)}>
+          <FitAiButton size="xs" variant="secondary" onClick={handleAction(onLogProgress)}>
             Log Progress
           </FitAiButton>
         )}
@@ -113,7 +113,7 @@ function GoalActionsMenu({
   return (
     <Menu position="bottom-end" withArrow shadow="md">
       <Menu.Target>
-        <FitAiButton size="xs" variant="subtle" px={6} onClick={stopPropagation}>
+        <FitAiButton size="xs" variant="ghost" px={6} onClick={stopPropagation}>
           <IconDotsVertical size={16} />
         </FitAiButton>
       </Menu.Target>

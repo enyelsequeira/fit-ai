@@ -4,9 +4,12 @@
  * Bug fix: Pre-filled values now enable the Complete button immediately
  */
 
-import { IconCheck, IconLoader2 } from "@tabler/icons-react";
+import { IconCheck } from "@tabler/icons-react";
 
 import type { SetEntryCardProps } from "./set-entry-card.types";
+
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
 
 import styles from "./set-entry-card.module.css";
 
@@ -55,11 +58,11 @@ export function SetEntryCard({
     <div className={styles.card}>
       {/* Header with set number and previous hint */}
       <div className={styles.header}>
-        <span className={styles.setNumber}>SET {setNumber}</span>
+        <FitAiText.Label className={styles.setNumber}>SET {setNumber}</FitAiText.Label>
         {hasPreviousData && (
-          <span className={styles.previousHint}>
-            Last: {previousWeight}kg × {previousReps}
-          </span>
+          <FitAiText.Caption>
+            Last: {previousWeight}kg x {previousReps}
+          </FitAiText.Caption>
         )}
       </div>
 
@@ -99,17 +102,19 @@ export function SetEntryCard({
       </div>
 
       {/* Complete Set button */}
-      <button
-        type="button"
-        className={styles.completeButton}
+      <FitAiButton
+        variant="success"
+        fullWidth
+        size="lg"
         disabled={!canComplete}
-        data-loading={isLoading ? "true" : undefined}
+        loading={isLoading}
         onClick={onComplete}
         aria-label={isLoading ? "Completing set..." : "Complete set"}
+        className={styles.completeButton}
+        leftSection={!isLoading && <IconCheck size={20} />}
       >
-        {isLoading ? <IconLoader2 size={20} className="animate-spin" /> : <IconCheck size={20} />}
-        <span>{isLoading ? "COMPLETING..." : "COMPLETE SET"}</span>
-      </button>
+        {isLoading ? "COMPLETING..." : "COMPLETE SET"}
+      </FitAiButton>
     </div>
   );
 }

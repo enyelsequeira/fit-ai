@@ -1,46 +1,43 @@
-/* FocusedExerciseCard - Gym Mode styling */
+/**
+ * FocusedExerciseCard - Gym Mode styling
+ * Uses Mantine CSS variables with light-dark() for theme support
+ */
 
 .card {
   padding: var(--mantine-spacing-md);
   display: flex;
   flex-direction: column;
+  gap: var(--mantine-spacing-md);
 }
 
+/* Exercise Header Section */
 .exerciseHeader {
-  margin-bottom: var(--mantine-spacing-lg);
+  margin-bottom: var(--mantine-spacing-sm);
 }
 
 .exerciseName {
   font-size: 28px;
   font-weight: 700;
-  color: var(--mantine-color-white);
-  margin-bottom: 8px;
+  color: light-dark(var(--mantine-color-dark-8), var(--mantine-color-white));
+  margin-bottom: var(--mantine-spacing-xs);
+  line-height: 1.2;
 }
 
+/* Badge Container */
 .badges {
   display: flex;
-  gap: 8px;
+  gap: var(--mantine-spacing-xs);
   flex-wrap: wrap;
+  margin-top: var(--mantine-spacing-xs);
 }
 
 .badge {
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 12px;
+  min-height: 28px;
+  font-size: var(--mantine-font-size-xs);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
 }
 
-.badgeEquipment {
-  composes: badge;
-  background: rgba(76, 201, 240, 0.15);
-  color: var(--mantine-color-cyan-4);
-}
-
-.badgeMuscle {
-  composes: badge;
-  background: rgba(167, 139, 250, 0.15);
-  color: var(--mantine-color-violet-4);
-}
-
+/* Set Entry Section */
 .setEntry {
   flex: 1;
   display: flex;
@@ -48,31 +45,50 @@
   justify-content: flex-start;
 }
 
+/* Success Message Styling */
+.successText {
+  color: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-5));
+  text-align: center;
+}
+
+/* Completed Sets Section */
 .completedSets {
-  margin-top: var(--mantine-spacing-lg);
+  margin-top: var(--mantine-spacing-md);
   padding-top: var(--mantine-spacing-md);
+  border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
 }
 
 .completedLabel {
-  font-size: 14px;
+  margin-bottom: var(--mantine-spacing-sm);
   color: var(--mantine-color-dimmed);
-  margin-bottom: 12px;
 }
 
 .completedSetsScroll {
   display: flex;
-  gap: 8px;
+  gap: var(--mantine-spacing-xs);
   overflow-x: auto;
-  padding: 4px 0;
+  padding: var(--mantine-spacing-xs) 0;
   -webkit-overflow-scrolling: touch;
 }
 
+/* Add Set Button - 44px minimum touch target for gym use */
 .addSetButton {
   margin-top: var(--mantine-spacing-md);
-  background: var(--mantine-color-dark-6);
-  border: none;
+  min-height: 44px;
 }
 
-.addSetButton:hover {
-  background: var(--mantine-color-dark-5);
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .card {
+    padding: var(--mantine-spacing-sm);
+  }
+
+  .exerciseName {
+    font-size: 24px;
+  }
+
+  .addSetButton {
+    min-height: 48px;
+    font-size: var(--mantine-font-size-md);
+  }
 }

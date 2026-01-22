@@ -4,14 +4,19 @@
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  background: var(--mantine-color-dark-8);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
+  transition: background-color 200ms var(--mantine-transition-timing-function);
 }
 
 .content {
   flex: 1;
-  overflow-y: auto;
+  /* ScrollArea needs these styles for proper behavior */
+  min-height: 0;
+}
+
+.content > div {
   padding: var(--mantine-spacing-md);
-  padding-bottom: 100px;
+  padding-bottom: 120px;
 }
 
 .bottomBar {
@@ -19,10 +24,15 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding-bottom: env(safe-area-inset-bottom);
-  background: var(--mantine-color-dark-7);
-  border-top: 1px solid var(--mantine-color-dark-5);
+  min-height: 64px;
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  padding-bottom: calc(var(--mantine-spacing-sm) + env(safe-area-inset-bottom));
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
   z-index: 300;
+  transition:
+    background-color 200ms var(--mantine-transition-timing-function),
+    border-color 200ms var(--mantine-transition-timing-function);
 }
 
 .emptyState {
@@ -34,6 +44,25 @@
   padding: var(--mantine-spacing-xl);
   text-align: center;
   min-height: 60vh;
+  gap: var(--mantine-spacing-md);
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-5));
+}
+
+.emptyStateIcon {
+  color: light-dark(var(--mantine-color-teal-6), var(--mantine-color-teal-5));
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.emptyStateTitle {
+  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-1));
+  font-weight: 600;
+  font-size: var(--mantine-font-size-lg);
+}
+
+.emptyStateDescription {
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-5));
+  font-size: var(--mantine-font-size-sm);
+  max-width: 320px;
 }
 
 .loadingState {
@@ -43,22 +72,55 @@
   justify-content: center;
   min-height: 100dvh;
   gap: var(--mantine-spacing-md);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
 }
 
-/* Legacy styles - can be removed if not used */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--mantine-color-body);
-  border-bottom: 1px solid var(--mantine-color-default-border);
+.loadingText {
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-gray-5));
+  font-size: var(--mantine-font-size-sm);
 }
 
 .restTimerContainer {
   position: fixed;
-  bottom: 60px;
+  bottom: 64px;
   left: 0;
   right: 0;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  padding-bottom: calc(var(--mantine-spacing-sm) + env(safe-area-inset-bottom));
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
   z-index: 150;
+  transition: background-color 200ms var(--mantine-transition-timing-function);
+}
+
+/* Touch target utilities for gym use */
+.touchTarget {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Success state styling */
+.successState {
+  color: light-dark(var(--mantine-color-green-7), var(--mantine-color-green-5));
+}
+
+/* Primary accent styling */
+.primaryAccent {
+  color: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-5));
+}
+
+/* Surface styling for cards and elevated elements */
+.surface {
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+  border-radius: var(--mantine-radius-md);
+  transition: background-color 200ms var(--mantine-transition-timing-function);
+}
+
+.surfaceElevated {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  border-radius: var(--mantine-radius-md);
+  transition:
+    background-color 200ms var(--mantine-transition-timing-function),
+    border-color 200ms var(--mantine-transition-timing-function);
 }

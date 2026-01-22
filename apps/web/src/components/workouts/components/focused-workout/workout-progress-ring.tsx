@@ -3,16 +3,18 @@
  * Displays completed sets out of total with color-coded feedback
  */
 
-import { RingProgress, Text } from "@mantine/core";
+import { RingProgress } from "@mantine/core";
+
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
 
 import styles from "./workout-progress-ring.module.css";
 
-interface WorkoutProgressRingProps {
+type WorkoutProgressRingProps = {
   completedSets: number;
   totalSets: number;
   size?: "sm" | "md";
   showLabel?: boolean;
-}
+};
 
 const SIZE_MAP = { sm: 40, md: 56 } as const;
 const THICKNESS_MAP = { sm: 4, md: 6 } as const;
@@ -46,13 +48,13 @@ export function WorkoutProgressRing({
       thickness={thickness}
       roundCaps
       sections={[{ value: percentage, color }]}
-      rootColor="var(--mantine-color-gray-2)"
+      rootColor="var(--ring-root-color)"
       className={styles.ring}
       label={
         showLabel ? (
-          <Text fz={size === "sm" ? 10 : 12} fw={700} ta="center" c="dimmed">
+          <FitAiText.Caption className={size === "sm" ? styles.labelSmall : styles.labelMedium}>
             {completedSets}/{totalSets}
-          </Text>
+          </FitAiText.Caption>
         ) : undefined
       }
     />

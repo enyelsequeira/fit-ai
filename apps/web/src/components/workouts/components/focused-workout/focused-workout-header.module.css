@@ -3,31 +3,37 @@
 .header {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 200;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
-  background-color: var(--mantine-color-dark-7);
-  border-bottom: 1px solid var(--mantine-color-dark-5);
+  padding: var(--mantine-spacing-md);
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+  box-shadow: light-dark(0 2px 8px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.3));
+  /* Ensure header stays visually above content when scrolling */
+  isolation: isolate;
 }
 
 .backButton {
   background: none;
   border: none;
-  color: var(--mantine-color-cyan-4);
-  font-size: 24px;
+  color: light-dark(var(--mantine-color-teal-6), var(--mantine-color-teal-4));
+  font-size: var(--mantine-font-size-xl);
   cursor: pointer;
-  padding: 8px;
+  padding: var(--mantine-spacing-xs);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  transition: background 0.15s ease;
+  border-radius: var(--mantine-radius-sm);
+  transition: background 150ms ease;
+  /* Ensure minimum 44px touch target for gym use */
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .backButton:hover {
-  background: var(--mantine-color-dark-6);
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
 }
 
 .centerContent {
@@ -37,24 +43,24 @@
 }
 
 .workoutName {
-  font-size: 16px;
+  font-size: var(--mantine-font-size-md);
   font-weight: 600;
-  color: var(--mantine-color-white);
+  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-white));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 2px;
+  margin-bottom: calc(var(--mantine-spacing-xs) / 4);
 }
 
 .elapsedTime {
-  font-size: 12px;
+  font-size: var(--mantine-font-size-xs);
   color: var(--mantine-color-dimmed);
   font-variant-numeric: tabular-nums;
 }
 
 .dots {
   display: flex;
-  gap: 6px;
+  gap: var(--mantine-spacing-xs);
   align-items: center;
 }
 
@@ -62,16 +68,19 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--mantine-color-dark-4);
-  transition: all 0.2s ease;
+  /* Pending state - gray */
+  background: var(--mantine-color-gray-4);
+  transition: all 200ms ease;
 }
 
 .dot[data-completed="true"] {
+  /* Completed state - green */
   background: var(--mantine-color-green-6);
 }
 
 .dot[data-current="true"] {
-  background: var(--mantine-color-cyan-5);
+  /* Current state - teal */
+  background: var(--mantine-color-teal-6);
   width: 12px;
   height: 12px;
 }

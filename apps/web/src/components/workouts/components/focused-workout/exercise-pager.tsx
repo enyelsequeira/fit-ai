@@ -5,7 +5,7 @@ import type { ExerciseCardData } from "./focused-exercise-card.types";
 import type { WorkoutExercise } from "../../types";
 import styles from "./exercise-pager.module.css";
 
-interface ExercisePagerProps {
+type ExercisePagerProps = {
   exercises: WorkoutExercise[];
   currentIndex: number;
   onIndexChange: (index: number) => void;
@@ -18,7 +18,7 @@ interface ExercisePagerProps {
   ) => void;
   onAddSet: (workoutExerciseId: number, setsCount: number) => void;
   isLoading?: boolean;
-}
+};
 
 function transformExerciseToCardData(exercise: WorkoutExercise): ExerciseCardData {
   const sets = exercise.sets ?? [];

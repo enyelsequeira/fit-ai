@@ -1,0 +1,30 @@
+.contentArea {
+  flex: 1;
+  padding-block: var(--mantine-spacing-xl);
+  overflow-y: auto;
+
+  @mixin smaller-than $mantine-breakpoint-sm {
+    padding: var(--mantine-spacing-md);
+  }
+}
+
+.templatesContainer {
+  animation: fadeSlideUp 300ms ease-out;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .templatesContainer {
+    animation: none;
+  }
+}

@@ -1,4 +1,5 @@
 /* FitAi ActionIcon - Modern, premium icon button */
+/* Primary color: TEAL - NO gradients, NO purple/violet */
 
 .root {
   display: inline-flex;
@@ -17,7 +18,7 @@
 
   /* Focus ring for accessibility */
   &:focus-visible {
-    outline: 2px solid var(--mantine-color-teal-5);
+    outline: 2px solid var(--mantine-color-teal-6);
     outline-offset: 2px;
   }
 
@@ -29,70 +30,38 @@
   }
 
   /* ========================
-     VARIANT: default (primary action)
-     Solid indigo with darker border
+     VARIANT: primary
+     Solid teal with darker border
      ======================== */
-  &[data-variant="default"] {
-    background: var(--mantine-color-indigo-6);
-    border: 1px solid var(--mantine-color-indigo-7);
+  &[data-variant="primary"] {
+    background: var(--mantine-color-teal-6);
+    border: 1px solid var(--mantine-color-teal-7);
     color: var(--mantine-color-white);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    box-shadow: light-dark(
+      0 1px 2px var(--mantine-color-dark-light),
+      0 1px 2px var(--mantine-color-dark-9)
+    );
 
     &:hover:not(:disabled) {
-      background: var(--mantine-color-indigo-7);
-      border-color: var(--mantine-color-indigo-8);
+      background: var(--mantine-color-teal-7);
+      border-color: var(--mantine-color-teal-8);
       transform: translateY(-1px);
       box-shadow:
-        0 4px 12px rgba(99, 102, 241, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.1);
+        0 4px 12px var(--mantine-color-teal-light),
+        light-dark(
+          0 2px 4px var(--mantine-color-dark-light),
+          0 2px 4px var(--mantine-color-dark-9)
+        );
     }
 
     &:active:not(:disabled) {
-      background: var(--mantine-color-indigo-8);
-      border-color: var(--mantine-color-indigo-9);
+      background: var(--mantine-color-teal-8);
+      border-color: var(--mantine-color-teal-9);
       transform: translateY(0) scale(0.97);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
-    }
-  }
-
-  /* ========================
-     VARIANT: outline
-     Transparent bg with indigo border
-     ======================== */
-  &[data-variant="outline"] {
-    background: transparent;
-    border: 1px solid var(--mantine-color-indigo-5);
-    color: var(--mantine-color-indigo-6);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-
-    &:hover:not(:disabled) {
-      background: var(--mantine-color-indigo-0);
-      border-color: var(--mantine-color-indigo-6);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
-    }
-
-    &:active:not(:disabled) {
-      background: var(--mantine-color-indigo-1);
-      border-color: var(--mantine-color-indigo-7);
-      transform: translateY(0) scale(0.97);
-      box-shadow: none;
-    }
-  }
-
-  /* Dark mode outline adjustments */
-  [data-mantine-color-scheme="dark"] &[data-variant="outline"] {
-    border-color: var(--mantine-color-indigo-7);
-    color: var(--mantine-color-indigo-4);
-
-    &:hover:not(:disabled) {
-      background: rgba(99, 102, 241, 0.12);
-      border-color: var(--mantine-color-indigo-5);
-    }
-
-    &:active:not(:disabled) {
-      background: rgba(99, 102, 241, 0.18);
-      border-color: var(--mantine-color-indigo-4);
+      box-shadow: light-dark(
+        0 1px 2px var(--mantine-color-dark-light),
+        0 1px 2px var(--mantine-color-dark-9)
+      );
     }
   }
 
@@ -101,38 +70,46 @@
      Light gray background with subtle border
      ======================== */
   &[data-variant="secondary"] {
-    background: var(--mantine-color-gray-1);
-    border: 1px solid var(--mantine-color-gray-3);
-    color: var(--mantine-color-gray-8);
+    background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+    border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-3));
 
     &:hover:not(:disabled) {
-      background: var(--mantine-color-gray-2);
-      border-color: var(--mantine-color-gray-4);
+      background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+      border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3));
       transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      box-shadow: light-dark(0 2px 8px var(--mantine-color-dark-light), none);
     }
 
     &:active:not(:disabled) {
-      background: var(--mantine-color-gray-3);
-      border-color: var(--mantine-color-gray-5);
+      background: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-3));
+      border-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-2));
       transform: translateY(0) scale(0.97);
     }
   }
 
-  /* Dark mode secondary adjustments */
-  [data-mantine-color-scheme="dark"] &[data-variant="secondary"] {
-    background: var(--mantine-color-dark-5);
-    border-color: var(--mantine-color-dark-4);
-    color: var(--mantine-color-gray-3);
+  /* ========================
+     VARIANT: outline
+     Transparent bg with teal border
+     ======================== */
+  &[data-variant="outline"] {
+    background: transparent;
+    border: 1px solid light-dark(var(--mantine-color-teal-5), var(--mantine-color-teal-7));
+    color: light-dark(var(--mantine-color-teal-6), var(--mantine-color-teal-4));
+    box-shadow: light-dark(0 1px 2px var(--mantine-color-dark-light), none);
 
     &:hover:not(:disabled) {
-      background: var(--mantine-color-dark-4);
-      border-color: var(--mantine-color-dark-3);
+      background: light-dark(var(--mantine-color-teal-0), var(--mantine-color-teal-light));
+      border-color: light-dark(var(--mantine-color-teal-6), var(--mantine-color-teal-5));
+      transform: translateY(-1px);
+      box-shadow: light-dark(0 2px 8px var(--mantine-color-teal-light), none);
     }
 
     &:active:not(:disabled) {
-      background: var(--mantine-color-dark-3);
-      border-color: var(--mantine-color-dark-2);
+      background: light-dark(var(--mantine-color-teal-1), var(--mantine-color-teal-light));
+      border-color: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-4));
+      transform: translateY(0) scale(0.97);
+      box-shadow: none;
     }
   }
 
@@ -142,136 +119,91 @@
      ======================== */
   &[data-variant="ghost"] {
     background: transparent;
-    border: 1px solid var(--mantine-color-gray-3);
+    border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
     color: var(--mantine-color-text);
 
     &:hover:not(:disabled) {
-      background: var(--mantine-color-gray-1);
-      border-color: var(--mantine-color-gray-4);
+      background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+      border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3));
       transform: translateY(-1px);
     }
 
     &:active:not(:disabled) {
-      background: var(--mantine-color-gray-2);
-      border-color: var(--mantine-color-gray-5);
+      background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+      border-color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-2));
       transform: scale(0.97);
     }
   }
 
-  /* Dark mode ghost adjustments */
-  [data-mantine-color-scheme="dark"] &[data-variant="ghost"] {
-    border-color: var(--mantine-color-dark-4);
-
-    &:hover:not(:disabled) {
-      background: var(--mantine-color-dark-5);
-      border-color: var(--mantine-color-dark-3);
-    }
-
-    &:active:not(:disabled) {
-      background: var(--mantine-color-dark-4);
-      border-color: var(--mantine-color-dark-2);
-    }
-  }
-
   /* ========================
-     VARIANT: destructive
+     VARIANT: danger
      Solid red with darker border
      ======================== */
-  &[data-variant="destructive"] {
+  &[data-variant="danger"] {
     background: var(--mantine-color-red-6);
     border: 1px solid var(--mantine-color-red-7);
     color: var(--mantine-color-white);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    box-shadow: light-dark(
+      0 1px 2px var(--mantine-color-dark-light),
+      0 1px 2px var(--mantine-color-dark-9)
+    );
 
     &:hover:not(:disabled) {
       background: var(--mantine-color-red-7);
       border-color: var(--mantine-color-red-8);
       transform: translateY(-1px);
       box-shadow:
-        0 4px 12px rgba(239, 68, 68, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.1);
+        0 4px 12px var(--mantine-color-red-light),
+        light-dark(
+          0 2px 4px var(--mantine-color-dark-light),
+          0 2px 4px var(--mantine-color-dark-9)
+        );
     }
 
     &:active:not(:disabled) {
       background: var(--mantine-color-red-8);
       border-color: var(--mantine-color-red-9);
       transform: translateY(0) scale(0.97);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+      box-shadow: light-dark(
+        0 1px 2px var(--mantine-color-dark-light),
+        0 1px 2px var(--mantine-color-dark-9)
+      );
     }
   }
 
   /* ========================
-     VARIANT: destructive-outline
-     Red border variant
+     VARIANT: success
+     Solid green with darker border
      ======================== */
-  &[data-variant="destructive-outline"] {
-    background: transparent;
-    border: 1px solid var(--mantine-color-red-5);
-    color: var(--mantine-color-red-6);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  &[data-variant="success"] {
+    background: var(--mantine-color-green-6);
+    border: 1px solid var(--mantine-color-green-7);
+    color: var(--mantine-color-white);
+    box-shadow: light-dark(
+      0 1px 2px var(--mantine-color-dark-light),
+      0 1px 2px var(--mantine-color-dark-9)
+    );
 
     &:hover:not(:disabled) {
-      background: var(--mantine-color-red-0);
-      border-color: var(--mantine-color-red-6);
+      background: var(--mantine-color-green-7);
+      border-color: var(--mantine-color-green-8);
       transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+      box-shadow:
+        0 4px 12px var(--mantine-color-green-light),
+        light-dark(
+          0 2px 4px var(--mantine-color-dark-light),
+          0 2px 4px var(--mantine-color-dark-9)
+        );
     }
 
     &:active:not(:disabled) {
-      background: var(--mantine-color-red-1);
-      border-color: var(--mantine-color-red-7);
+      background: var(--mantine-color-green-8);
+      border-color: var(--mantine-color-green-9);
       transform: translateY(0) scale(0.97);
-      box-shadow: none;
-    }
-  }
-
-  /* Dark mode destructive-outline adjustments */
-  [data-mantine-color-scheme="dark"] &[data-variant="destructive-outline"] {
-    border-color: var(--mantine-color-red-7);
-    color: var(--mantine-color-red-5);
-
-    &:hover:not(:disabled) {
-      background: rgba(239, 68, 68, 0.12);
-      border-color: var(--mantine-color-red-6);
-    }
-
-    &:active:not(:disabled) {
-      background: rgba(239, 68, 68, 0.18);
-      border-color: var(--mantine-color-red-5);
-    }
-  }
-
-  /* ========================
-     VARIANT: link
-     Minimal, icon only (no border exception)
-     ======================== */
-  &[data-variant="link"] {
-    background: transparent;
-    border: none;
-    color: var(--mantine-color-indigo-6);
-    box-shadow: none;
-
-    &:hover:not(:disabled) {
-      background: transparent;
-      color: var(--mantine-color-indigo-7);
-    }
-
-    &:active:not(:disabled) {
-      color: var(--mantine-color-indigo-8);
-      transform: scale(0.97);
-    }
-  }
-
-  /* Dark mode link adjustments */
-  [data-mantine-color-scheme="dark"] &[data-variant="link"] {
-    color: var(--mantine-color-indigo-4);
-
-    &:hover:not(:disabled) {
-      color: var(--mantine-color-indigo-3);
-    }
-
-    &:active:not(:disabled) {
-      color: var(--mantine-color-indigo-5);
+      box-shadow: light-dark(
+        0 1px 2px var(--mantine-color-dark-light),
+        0 1px 2px var(--mantine-color-dark-9)
+      );
     }
   }
 
@@ -279,38 +211,38 @@
      SIZES
      ======================== */
   &[data-size="xs"] {
-    width: 26px;
-    height: 26px;
-    min-width: 26px;
-    min-height: 26px;
+    width: rem(26px);
+    height: rem(26px);
+    min-width: rem(26px);
+    min-height: rem(26px);
   }
 
   &[data-size="sm"] {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    min-height: 32px;
+    width: rem(32px);
+    height: rem(32px);
+    min-width: rem(32px);
+    min-height: rem(32px);
   }
 
   &[data-size="md"] {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-    min-height: 38px;
+    width: rem(38px);
+    height: rem(38px);
+    min-width: rem(38px);
+    min-height: rem(38px);
   }
 
   &[data-size="lg"] {
-    width: 46px;
-    height: 46px;
-    min-width: 46px;
-    min-height: 46px;
+    width: rem(46px);
+    height: rem(46px);
+    min-width: rem(46px);
+    min-height: rem(46px);
   }
 
   &[data-size="xl"] {
-    width: 54px;
-    height: 54px;
-    min-width: 54px;
-    min-height: 54px;
+    width: rem(54px);
+    height: rem(54px);
+    min-width: rem(54px);
+    min-height: rem(54px);
   }
 
   /* Loading state */
@@ -324,8 +256,8 @@
     &::after {
       content: "";
       position: absolute;
-      width: 16px;
-      height: 16px;
+      width: rem(16px);
+      height: rem(16px);
       border: 2px solid currentColor;
       border-right-color: transparent;
       border-radius: 50%;
@@ -333,17 +265,19 @@
     }
   }
 
-  &[data-variant="default"][data-loading]::after,
-  &[data-variant="destructive"][data-loading]::after {
-    border-color: rgba(255, 255, 255, 0.3);
-    border-right-color: white;
+  &[data-variant="primary"][data-loading]::after,
+  &[data-variant="danger"][data-loading]::after,
+  &[data-variant="success"][data-loading]::after {
+    border-color: var(--mantine-color-white);
+    border-right-color: transparent;
+    opacity: 0.6;
   }
 
   &[data-variant="outline"][data-loading]::after,
   &[data-variant="ghost"][data-loading]::after,
   &[data-variant="secondary"][data-loading]::after {
     border-color: var(--mantine-color-gray-4);
-    border-right-color: var(--mantine-color-indigo-6);
+    border-right-color: var(--mantine-color-teal-6);
   }
 
   /* Reduced motion */
