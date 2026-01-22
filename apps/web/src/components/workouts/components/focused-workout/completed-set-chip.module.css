@@ -1,18 +1,23 @@
-/* CompletedSetChip - Gym Mode styling with green background */
+/**
+ * CompletedSetChip - Gym Mode styling with green background
+ * Uses Mantine CSS variables with light-dark() for theme support
+ * Green color indicates successful completion
+ */
 
 .chip {
-  min-height: 36px;
-  padding: 8px 14px;
-  border-radius: 20px;
-  background-color: var(--mantine-color-green-6);
+  /* 44px minimum touch target for gym use */
+  min-height: 44px;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-xl);
+  background-color: light-dark(var(--mantine-color-green-6), var(--mantine-color-green-6));
   cursor: default;
   transition: background-color 150ms ease;
-  font-size: 14px;
+  font-size: var(--mantine-font-size-sm);
   font-weight: 500;
 }
 
 .chip:hover {
-  background-color: var(--mantine-color-green-7);
+  background-color: light-dark(var(--mantine-color-green-7), var(--mantine-color-green-7));
 }
 
 .chip[data-no-click] {
@@ -20,5 +25,17 @@
 }
 
 .chip[data-no-click]:hover {
-  background-color: var(--mantine-color-green-6);
+  background-color: light-dark(var(--mantine-color-green-6), var(--mantine-color-green-6));
+}
+
+/* Override FitAiText color for white text on green background */
+.text {
+  color: var(--mantine-color-white);
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
 }

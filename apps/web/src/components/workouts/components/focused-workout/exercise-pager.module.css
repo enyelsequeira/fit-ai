@@ -1,21 +1,59 @@
+/* =============================================================================
+   Exercise Pager - Swipeable carousel container for focused workout exercises
+   ============================================================================= */
+
 .pager {
   width: 100%;
   overflow: hidden;
+  position: relative;
+  /* Smooth container transitions */
+  transition: opacity var(--mantine-transition-timing-function) 200ms;
 }
 
 .viewport {
   overflow: hidden;
+  /* Touch action for swipe gestures */
+  touch-action: pan-y pinch-zoom;
+  /* Visual feedback during drag */
+  cursor: grab;
+}
+
+.viewport:active {
+  cursor: grabbing;
 }
 
 .container {
   display: flex;
   user-select: none;
+  /* Prevent iOS callout on long press */
   -webkit-touch-callout: none;
+  /* Remove tap highlight */
   -webkit-tap-highlight-color: transparent;
+  /* Smooth movement during drag */
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .slide {
   flex: 0 0 100%;
   min-width: 0;
+  /* Consistent padding using Mantine spacing */
   padding: var(--mantine-spacing-sm);
+  /* Smooth transitions for scale/opacity effects if added */
+  transition:
+    transform var(--mantine-transition-timing-function) 300ms,
+    opacity var(--mantine-transition-timing-function) 300ms;
+}
+
+/* Ensure child content doesn't overflow */
+.slide > * {
+  max-width: 100%;
+}
+
+/* Touch target spacing - ensure minimum 44px touch areas */
+@media (pointer: coarse) {
+  .slide {
+    /* Slightly more padding on touch devices for better tap targets */
+    padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
+  }
 }

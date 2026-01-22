@@ -1,12 +1,5 @@
-/**
- * WorkoutsView - Main workouts page component
- * Sidebar layout with time-based filters on left, workout list on right
- * Features an active template card at the top for quick workout starts
- * Following the templates pattern structure
- */
-
 import { useState } from "react";
-import { Box, Text, Group, Button, Tooltip, Flex, Stack, Title } from "@mantine/core";
+import { Box, Group, Button, Flex, Stack, Container } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconBarbell } from "@tabler/icons-react";
 import { WorkoutsSidebar } from "./components/workouts-sidebar/workouts-sidebar.tsx";
@@ -18,9 +11,10 @@ import { ActiveTemplateCard } from "./components/active-template-card/index.ts";
 import type { TimePeriodFilter } from "./types";
 import { TIME_PERIOD_LABELS } from "./types";
 import styles from "./workouts-view.module.css";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text.tsx";
+import { FitAiContentArea } from "@/components/ui/fit-ai-content-area/fit-ai-content-area.tsx";
 
 export function WorkoutsView() {
-  // Local state
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriodFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -41,27 +35,23 @@ export function WorkoutsView() {
   };
 
   return (
-    <Flex className={styles.pageContainer}>
+    <>
       {/* Sidebar */}
       <div className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <Group gap="xs" align="center">
-            <Tooltip label="Workouts">
-              <Flex
-                align="center"
-                justify="center"
-                w={36}
-                h={36}
-                style={{ borderRadius: "var(--mantine-radius-md)" }}
-                c="white"
-                className={styles.logoIcon}
-              >
-                <IconBarbell size={20} />
-              </Flex>
-            </Tooltip>
-            <Text fw={600} size="lg">
-              Workouts
-            </Text>
+            <Flex
+              align="center"
+              justify="center"
+              w={36}
+              h={36}
+              style={{ borderRadius: "var(--mantine-radius-md)" }}
+              c="white"
+              className={styles.logoIcon}
+            >
+              <IconBarbell size={20} />
+            </Flex>
+            <FitAiText variant={"subheading"}>Workouts</FitAiText>
           </Group>
         </div>
 
@@ -70,21 +60,19 @@ export function WorkoutsView() {
         </div>
 
         <Box p="md" className={styles.sidebarFooter}>
-          <Tooltip label="Start a new workout session">
-            <Button
-              fullWidth
-              leftSection={<IconPlus size={16} />}
-              onClick={openCreateModal}
-              className={styles.createButton}
-            >
-              New Workout
-            </Button>
-          </Tooltip>
+          <Button
+            fullWidth
+            leftSection={<IconPlus size={16} />}
+            onClick={openCreateModal}
+            className={styles.createButton}
+          >
+            New Workout
+          </Button>
         </Box>
       </div>
 
       {/* Main Content */}
-      <Flex direction="column" flex={1} miw={0}>
+      <Container fluid flex={1}>
         <WorkoutsHeader
           currentPeriodLabel={currentPeriodLabel}
           searchQuery={searchQuery}
@@ -95,21 +83,17 @@ export function WorkoutsView() {
         />
 
         {/* Content Area */}
-        <div className={styles.contentArea}>
+        <FitAiContentArea>
           <Stack gap="xl" className={styles.workoutsContainer}>
             {/* Active Template Section */}
             <section>
-              <Title order={4} mb="md" c="dimmed" className={styles.sectionTitle}>
-                Current Program
-              </Title>
+              <FitAiText.Heading mb={"md"}>Current Program</FitAiText.Heading>
               <ActiveTemplateCard />
             </section>
 
             {/* Recent Workouts Section */}
             <section>
-              <Title order={4} mb="md" c="dimmed" className={styles.sectionTitle}>
-                Recent Workouts
-              </Title>
+              <FitAiText.Heading my={"sm"}>Recent Workouts</FitAiText.Heading>
               <WorkoutList
                 timePeriod={selectedPeriod}
                 searchQuery={searchQuery}
@@ -118,8 +102,8 @@ export function WorkoutsView() {
               />
             </section>
           </Stack>
-        </div>
-      </Flex>
+        </FitAiContentArea>
+      </Container>
 
       {/* Modals */}
       <CreateWorkoutModal opened={createModalOpened} onClose={closeCreateModal} />
@@ -129,6 +113,6 @@ export function WorkoutsView() {
         onClose={closeDetailModal}
         workoutId={selectedWorkoutId}
       />
-    </Flex>
+    </>
   );
 }

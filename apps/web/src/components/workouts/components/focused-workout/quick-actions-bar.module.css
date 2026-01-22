@@ -1,43 +1,46 @@
 /**
  * QuickActionsBar Styles - Gym Mode
  * Fixed bottom navigation bar for workout quick actions
+ * Uses Mantine CSS variables with light-dark() for theme support
  */
 
 .container {
   display: flex;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-md);
 }
 
 .actionButton {
   flex: 1;
-  padding: 16px;
-  border-radius: 12px;
-  font-size: 16px;
+  /* 44px minimum touch target for gym use */
+  min-height: 44px;
+  padding: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  font-size: var(--mantine-font-size-md);
   font-weight: 600;
   cursor: pointer;
   border: none;
-  transition: all 0.15s ease;
+  transition: all 150ms ease;
 }
 
 .secondaryButton {
   composes: actionButton;
-  background: var(--mantine-color-dark-5);
-  color: var(--mantine-color-white);
+  background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  color: light-dark(var(--mantine-color-dark-7), var(--mantine-color-white));
 }
 
 .secondaryButton:hover {
-  background: var(--mantine-color-dark-4);
+  background: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
 
 .primaryButton {
   composes: actionButton;
-  background: var(--mantine-color-cyan-6);
-  color: var(--mantine-color-dark-9);
+  background: light-dark(var(--mantine-color-teal-6), var(--mantine-color-teal-6));
+  color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-9));
 }
 
 .primaryButton:hover:not(:disabled) {
-  background: var(--mantine-color-cyan-5);
+  background: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-5));
 }
 
 .primaryButton:disabled {
@@ -48,6 +51,7 @@
 /* Legacy styles for backward compatibility */
 .finishButton {
   min-width: 100px;
+  min-height: 44px;
   transition:
     background-color 150ms ease,
     opacity 150ms ease;

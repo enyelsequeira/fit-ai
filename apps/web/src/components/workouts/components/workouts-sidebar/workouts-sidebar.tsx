@@ -1,60 +1,32 @@
-/**
- * WorkoutsSidebar - Time-based filter navigation for workouts
- * Shows time period filters (Today, This Week, Last 30 Days, All) with counts
- */
-
-import { Tooltip } from "@mantine/core";
 import {
   IconBarbell,
   IconCalendar,
   IconCalendarEvent,
   IconCalendarWeek,
-  IconHistory,
 } from "@tabler/icons-react";
-import type { TimePeriodFilter } from "../../types";
-import { useWorkoutsList } from "../../queries/use-queries.ts";
-import { getDateRangeForFilter } from "../../utils";
-import styles from "./workouts-sidebar.module.css";
 
-interface WorkoutsSidebarProps {
+import { FitAiSidebar } from "@/components/ui/fit-ai-sidebar/fit-ai-sidebar";
+
+import { useWorkoutsList } from "../../queries/use-queries";
+import type { TimePeriodFilter } from "../../types";
+import { getDateRangeForFilter } from "../../utils";
+
+type WorkoutsSidebarProps = {
   selectedPeriod: TimePeriodFilter;
   onSelectPeriod: (period: TimePeriodFilter) => void;
-}
+};
 
 const TIME_PERIODS: Array<{
   id: TimePeriodFilter;
   label: string;
-  subtext: string;
   icon: typeof IconCalendar;
 }> = [
-  {
-    id: "today",
-    label: "Today",
-    subtext: "Today's workouts",
-    icon: IconCalendar,
-  },
-  {
-    id: "week",
-    label: "This Week",
-    subtext: "Current week",
-    icon: IconCalendarWeek,
-  },
-  {
-    id: "month",
-    label: "Last 30 Days",
-    subtext: "Recent activity",
-    icon: IconCalendarEvent,
-  },
-  {
-    id: "all",
-    label: "All Workouts",
-    subtext: "Complete history",
-    icon: IconHistory,
-  },
+  { id: "today", label: "Today", icon: IconCalendar },
+  { id: "week", label: "This Week", icon: IconCalendarWeek },
+  { id: "month", label: "Last 30 Days", icon: IconCalendarEvent },
 ];
 
 export function WorkoutsSidebar({ selectedPeriod, onSelectPeriod }: WorkoutsSidebarProps) {
-  // Fetch all workouts to calculate counts per period
   const { data: allWorkoutsData, isLoading } = useWorkoutsList();
   const allWorkouts = allWorkoutsData?.workouts ?? [];
 
@@ -74,108 +46,51 @@ export function WorkoutsSidebar({ selectedPeriod, onSelectPeriod }: WorkoutsSide
     return allWorkouts.filter((workout) => {
       const workoutDate = new Date(workout.startedAt);
       if (startDate && workoutDate < startDate) return false;
-      if (endDate && workoutDate > endDate) return false;
-      return true;
+      return !(endDate && workoutDate > endDate);
     }).length;
   };
 
-  if (isLoading) {
-    return (
-      <div className={styles.sidebar}>
-        <div className={styles.header}>
-          <h3 className={styles.headerTitle}>Time Period</h3>
-        </div>
-        <div className={styles.navSection}>
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className={styles.skeletonItem}>
-              <div className={`${styles.skeleton} ${styles.skeletonIcon}`} />
-              <div className={`${styles.skeleton} ${styles.skeletonText}`} />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  // Stats for footer
+  const stats = [
+    { label: "Total", value: totalWorkouts },
+    { label: "Completed", value: completedWorkouts },
+    { label: "In Progress", value: inProgressWorkouts },
+    { label: "This Week", value: getWorkoutCount("week") },
+  ];
 
   return (
-    <div className={styles.sidebar}>
-      {/* Header */}
-      <div className={styles.header}>
-        <h3 className={styles.headerTitle}>Time Period</h3>
-      </div>
+    <FitAiSidebar
+      selectedId={selectedPeriod === "all" ? null : selectedPeriod}
+      onSelect={(id) => onSelectPeriod(id === null ? "all" : (id as TimePeriodFilter))}
+      isLoading={isLoading}
+    >
+      <FitAiSidebar.Header title="Time Period" />
 
-      {/* Navigation */}
-      <div className={styles.navSection}>
-        {/* All Workouts Item (Primary) */}
-        <div
-          className={styles.allWorkoutsItem}
-          data-active={selectedPeriod === "all"}
-          onClick={() => onSelectPeriod("all")}
-          onKeyDown={(e) => e.key === "Enter" && onSelectPeriod("all")}
-          role="button"
-          tabIndex={0}
-        >
-          <div className={styles.allWorkoutsIcon}>
-            <IconBarbell size={18} />
-          </div>
-          <div className={styles.allWorkoutsContent}>
-            <p className={styles.allWorkoutsLabel}>All Workouts</p>
-            <p className={styles.allWorkoutsSubtext}>View complete history</p>
-          </div>
-          <span className={styles.allWorkoutsCount}>{totalWorkouts}</span>
-        </div>
+      <FitAiSidebar.Navigation>
+        <FitAiSidebar.AllItems
+          label="All Workouts"
+          subtext="View complete history"
+          count={totalWorkouts}
+          icon={<IconBarbell size={18} />}
+        />
 
-        {/* Divider */}
-        <div className={styles.divider} />
-        <span className={styles.sectionLabel}>Quick Filters</span>
+        <FitAiSidebar.Section label="Quick Filters">
+          {TIME_PERIODS.map((period) => {
+            const PeriodIcon = period.icon;
+            return (
+              <FitAiSidebar.Item
+                key={period.id}
+                id={period.id}
+                label={period.label}
+                count={getWorkoutCount(period.id)}
+                icon={<PeriodIcon size={16} />}
+              />
+            );
+          })}
+        </FitAiSidebar.Section>
+      </FitAiSidebar.Navigation>
 
-        {/* Time period items */}
-        {TIME_PERIODS.filter((p) => p.id !== "all").map((period) => {
-          const PeriodIcon = period.icon;
-          const count = getWorkoutCount(period.id);
-
-          return (
-            <Tooltip key={period.id} label={period.subtext} position="right" withArrow>
-              <div
-                className={styles.periodItem}
-                data-active={selectedPeriod === period.id}
-                onClick={() => onSelectPeriod(period.id)}
-                onKeyDown={(e) => e.key === "Enter" && onSelectPeriod(period.id)}
-                role="button"
-                tabIndex={0}
-              >
-                <div className={styles.periodIcon}>
-                  <PeriodIcon size={16} />
-                </div>
-                <div className={styles.periodContent}>
-                  <p className={styles.periodName}>{period.label}</p>
-                </div>
-                <span className={styles.periodCount}>{count}</span>
-              </div>
-            </Tooltip>
-          );
-        })}
-      </div>
-
-      {/* Stats */}
-      <div className={styles.statsSection}>
-        <div className={styles.statCard}>
-          <span className={styles.statValue}>{totalWorkouts}</span>
-          <span className={styles.statLabel}>Total</span>
-        </div>
-        <div className={styles.statCard}>
-          <span className={styles.statValue}>{completedWorkouts}</span>
-          <span className={styles.statLabel}>Completed</span>
-        </div>
-        <div className={styles.statCard}>
-          <span className={styles.statValue}>{inProgressWorkouts}</span>
-          <span className={styles.statLabel}>In Progress</span>
-        </div>
-        <div className={styles.statCard}>
-          <span className={styles.statValue}>{getWorkoutCount("week")}</span>
-          <span className={styles.statLabel}>This Week</span>
-        </div>
-      </div>
-    </div>
+      <FitAiSidebar.Stats stats={stats} />
+    </FitAiSidebar>
   );
 }

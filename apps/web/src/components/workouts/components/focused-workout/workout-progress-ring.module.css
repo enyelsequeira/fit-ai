@@ -1,3 +1,23 @@
 .ring {
   flex-shrink: 0;
+
+  /* Dark mode support for root color */
+  --ring-root-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+/* Label styles for progress ring center text */
+.labelSmall,
+.labelMedium {
+  text-align: center;
+  font-weight: 700;
+}
+
+.labelSmall {
+  font-size: var(--mantine-font-size-xs);
+  /* Scale down slightly for compact display */
+  transform: scale(0.85);
+}
+
+.labelMedium {
+  font-size: var(--mantine-font-size-xs);
 }

@@ -4,9 +4,12 @@
  */
 
 import { useMemo, useCallback, useState } from "react";
-import { Box, Button, Stack, Text } from "@mantine/core";
+import { Box, ScrollArea, Stack } from "@mantine/core";
 import { IconBarbell } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
+
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
 
 import { WorkoutLoadingState } from "../workout-detail-view/workout-loading-state";
 import { WorkoutErrorState } from "../workout-detail-view/workout-error-state";
@@ -103,7 +106,7 @@ export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
   const hasExercises = workoutExercises && workoutExercises.length > 0;
 
   return (
-    <Box className={styles.container}>
+    <Box w={"100%"} className={styles.container}>
       {/* Gym Mode Header with dots */}
       <FocusedWorkoutHeader
         workoutName={state.workout.name ?? "Untitled"}
@@ -115,7 +118,7 @@ export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
       />
 
       {/* Main Content */}
-      <Box className={styles.content}>
+      <ScrollArea className={styles.content} scrollbarSize={6} type="auto">
         {hasExercises ? (
           <>
             {/* Exercise Pager (swipeable) */}
@@ -141,19 +144,15 @@ export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
           <Box className={styles.emptyState}>
             <Stack align="center" gap="md">
               <IconBarbell size={64} style={{ opacity: 0.3 }} />
-              <Text c="dimmed" ta="center">
-                No exercises yet
-              </Text>
-              <Text size="sm" c="dimmed" ta="center">
-                Add exercises to start your workout
-              </Text>
-              <Button variant="light" onClick={state.modals.addExercise.open}>
+              <FitAiText.Muted ta="center">No exercises yet</FitAiText.Muted>
+              <FitAiText.Caption ta="center">Add exercises to start your workout</FitAiText.Caption>
+              <FitAiButton variant="secondary" onClick={state.modals.addExercise.open}>
                 Add Exercise
-              </Button>
+              </FitAiButton>
             </Stack>
           </Box>
         )}
-      </Box>
+      </ScrollArea>
 
       {/* Fixed Bottom Action Bar */}
       <Box className={styles.bottomBar}>

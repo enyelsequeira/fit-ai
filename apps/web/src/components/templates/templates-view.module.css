@@ -1,8 +1,3 @@
-.pageContainer {
-  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
-  animation: pageLoad 400ms ease-out;
-}
-
 .sidebar {
   display: none;
   flex-direction: column;
@@ -51,15 +46,6 @@
 
   &:active {
     transform: translateY(0);
-  }
-}
-
-@keyframes pageLoad {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }
 
@@ -225,37 +211,12 @@
    Content Area
    ============================================ */
 
-.contentArea {
-  flex: 1;
-  padding: var(--mantine-spacing-xl);
-  overflow-y: auto;
-
-  @mixin smaller-than $mantine-breakpoint-sm {
-    padding: var(--mantine-spacing-md);
-  }
-}
-
 .resultsSummary {
   display: flex;
   align-items: center;
   gap: var(--mantine-spacing-sm);
   margin-bottom: var(--mantine-spacing-md);
   flex-wrap: wrap;
-}
-
-.templatesContainer {
-  animation: fadeSlideUp 300ms ease-out;
-}
-
-@keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* ============================================

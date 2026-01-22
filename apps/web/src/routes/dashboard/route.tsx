@@ -1,8 +1,9 @@
-import { AppShell } from "@mantine/core";
+import { AppShell, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { getUser } from "@/lib/get-user.ts";
 import DashboardHeader from "@/components/dashboard/layout/header.tsx";
+import styles from "@/components/dashboard/dashboard.module.css";
 import DashboardNavBar from "@/components/dashboard/layout/nav-bar.tsx";
 
 export const Route = createFileRoute("/dashboard")({
@@ -12,7 +13,6 @@ export const Route = createFileRoute("/dashboard")({
     return { session };
   },
   loader: async ({ context }) => {
-    console.log(context);
     if (!context.session) {
       throw redirect({
         to: "/sign-in",
@@ -71,7 +71,9 @@ function DashboardLayout() {
       <DashboardNavBar closeMobile={closeMobile} />
       {/* Main content */}
       <AppShell.Main>
-        <Outlet />
+        <Flex className={styles.pageContainer}>
+          <Outlet />
+        </Flex>
       </AppShell.Main>
     </AppShell>
   );

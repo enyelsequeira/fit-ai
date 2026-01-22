@@ -7,61 +7,45 @@ import styles from "./fit-ai-button.module.css";
 
 /** Custom variant names for FitAiButton */
 export type FitAiButtonVariant =
-  | "default"
-  | "outline"
+  | "primary"
   | "secondary"
+  | "outline"
   | "ghost"
-  | "destructive"
-  | "link";
+  | "danger"
+  | "success";
 
 /** Custom size names for FitAiButton */
-export type FitAiButtonSize =
-  | "xs"
-  | "sm"
-  | "md"
-  | "default"
-  | "lg"
-  | "xl"
-  | "icon-xs"
-  | "icon-sm"
-  | "icon"
-  | "icon-lg";
+export type FitAiButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
 
-export interface FitAiButtonProps extends Omit<MantineButtonProps, "variant" | "size" | "color"> {
+export type FitAiButtonProps = {
   /** Button variant style */
   variant?: FitAiButtonVariant;
   /** Button size */
   size?: FitAiButtonSize;
-  /** Use outline style for destructive variant */
-  destructiveOutline?: boolean;
-}
-
-/** Normalize size value - "default" maps to "md" */
-function normalizeSize(size: FitAiButtonSize): string {
-  return size === "default" ? "md" : size;
-}
+  /** Show loading spinner */
+  loading?: boolean;
+  /** Disable the button */
+  disabled?: boolean;
+  /** Make button full width */
+  fullWidth?: boolean;
+  /** Additional CSS class */
+  className?: string;
+} & Omit<MantineButtonProps, "variant" | "size" | "color">;
 
 const _FitAiButton = forwardRef<HTMLButtonElement, FitAiButtonProps>(
   (
     {
-      variant = "default",
+      variant = "primary",
       size = "md",
-      destructiveOutline,
       className,
       loading,
+      disabled,
       fullWidth,
       classNames,
       ...props
     },
     ref,
   ) => {
-    // Determine the actual variant for data attribute
-    const dataVariant =
-      variant === "destructive" && destructiveOutline ? "destructive-outline" : variant;
-
-    // Normalize size
-    const dataSize = normalizeSize(size);
-
     // Combine root class with any additional className
     const rootClasses = [styles.root, className].filter(Boolean).join(" ");
 
@@ -71,17 +55,18 @@ const _FitAiButton = forwardRef<HTMLButtonElement, FitAiButtonProps>(
         // Use default variant to get base Mantine structure
         variant="default"
         loading={loading}
+        disabled={disabled}
         fullWidth={fullWidth}
         // Apply data attributes for CSS styling
-        data-variant={dataVariant}
-        data-size={dataSize}
+        data-variant={variant}
+        data-size={size}
         data-loading={loading || undefined}
         data-full-width={fullWidth || undefined}
         classNames={{
           ...classNames,
           root: rootClasses,
         }}
-        radius={"sm"}
+        radius="sm"
         {...props}
       />
     );
@@ -94,30 +79,29 @@ _FitAiButton.displayName = "FitAiButton";
  * FitAiButton - A custom styled button for the FitAi application
  *
  * Variants:
- * - `default` - Primary action button with gradient background
- * - `outline` - Secondary outline style with brand colors
+ * - `primary` - Primary action button with teal background
  * - `secondary` - Light/soft background for secondary actions
+ * - `outline` - Outline style with brand colors
  * - `ghost` - Subtle/transparent for tertiary actions
- * - `destructive` - Red/danger color for destructive actions
- * - `link` - Text link style with underline on hover
+ * - `danger` - Red color for destructive actions
+ * - `success` - Green color for success/confirmation actions
  *
  * Sizes:
- * - Text buttons: `xs`, `sm`, `md` / `default`, `lg`, `xl`
- * - Icon-only buttons: `icon-xs`, `icon-sm`, `icon`, `icon-lg`
- *
- * Additional props:
- * - `destructiveOutline` - Use outline style for destructive variant
+ * - `xs` - Extra small
+ * - `sm` - Small
+ * - `md` - Medium (default)
+ * - `lg` - Large
+ * - `xl` - Extra large
  *
  * Polymorphic - use `component` prop to render as Link, anchor, etc.
  *
  * @example
  * <FitAiButton>Primary Action</FitAiButton>
- * <FitAiButton variant="outline">Secondary</FitAiButton>
+ * <FitAiButton variant="secondary">Secondary</FitAiButton>
+ * <FitAiButton variant="outline">Outline</FitAiButton>
  * <FitAiButton variant="ghost">Subtle</FitAiButton>
- * <FitAiButton variant="destructive">Delete</FitAiButton>
- * <FitAiButton variant="destructive" destructiveOutline>Cancel</FitAiButton>
- * <FitAiButton variant="link">Learn more</FitAiButton>
- * <FitAiButton size="icon-sm"><IconSettings /></FitAiButton>
+ * <FitAiButton variant="danger">Delete</FitAiButton>
+ * <FitAiButton variant="success">Confirm</FitAiButton>
  * <FitAiButton component={Link} to="/path">Link Button</FitAiButton>
  */
 export const FitAiButton = createPolymorphicComponent<"button", FitAiButtonProps>(_FitAiButton);

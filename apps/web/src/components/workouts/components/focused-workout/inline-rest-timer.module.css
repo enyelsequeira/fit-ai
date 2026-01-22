@@ -1,8 +1,13 @@
+/**
+ * InlineRestTimer - Compact rest timer for focused workout view
+ * Uses Mantine CSS variables with light-dark() for theme support
+ */
+
 .container {
   padding: var(--mantine-spacing-lg);
   background: var(--mantine-color-body);
   border-radius: var(--mantine-radius-lg) var(--mantine-radius-lg) 0 0;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: light-dark(0 -4px 20px rgba(0, 0, 0, 0.08), 0 -4px 20px rgba(0, 0, 0, 0.25));
 }
 
 .header {
@@ -17,6 +22,7 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   text-align: center;
+  color: light-dark(var(--mantine-color-dark-8), var(--mantine-color-white));
 }
 
 .ringContainer {
@@ -38,6 +44,7 @@
   gap: var(--mantine-spacing-md);
 }
 
+/* 48px minimum touch target for gym use */
 .actionButton {
   min-width: 48px;
   min-height: 48px;
@@ -55,5 +62,12 @@
   }
   50% {
     opacity: 0.7;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .timeDisplay[data-urgent="true"] {
+    animation: none;
   }
 }

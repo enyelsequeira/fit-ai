@@ -1,6 +1,6 @@
 import type { KeyboardEvent, MouseEvent } from "react";
 import { useMemo, useState } from "react";
-import { Tooltip, Modal, Stack, Text, Button } from "@mantine/core";
+import { Modal, Stack } from "@mantine/core";
 import {
   IconTemplate,
   IconClock,
@@ -31,6 +31,9 @@ import {
 } from "../../queries/use-queries.ts";
 import styles from "./template-card.module.css";
 import { formatDuration } from "@/components/templates/utils.ts";
+import { FitAiToolTip } from "@/components/ui/fit-ai-tooltip/fit-ai-tool-tip.tsx";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text.tsx";
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button.tsx";
 
 interface TemplateCardProps {
   templateId: number;
@@ -161,35 +164,51 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
         {/* ZONE 2: Meta badges - compact inline */}
         <div className={styles.metaSection}>
           {isActive && (
-            <Tooltip label="Active workout template" position="top" withArrow>
+            <FitAiToolTip
+              toolTipProps={{
+                label: "Active workout template",
+              }}
+            >
               <span className={`${styles.metaPill} ${styles.activeBadge}`}>
                 <IconStarFilled size={11} className={styles.metaPillIcon} />
                 Active
               </span>
-            </Tooltip>
+            </FitAiToolTip>
           )}
-          <Tooltip label={isPublic ? "Public" : "Private"} position="top" withArrow>
+          <FitAiToolTip
+            toolTipProps={{
+              label: isPublic ? "Public" : "Private",
+            }}
+          >
             <span
               className={`${styles.metaPill} ${isPublic ? styles.publicBadge : styles.privateBadge}`}
             >
               {isPublic ? <IconWorld size={11} /> : <IconLock size={11} />}
             </span>
-          </Tooltip>
+          </FitAiToolTip>
           {folderName && (
-            <Tooltip label={`Folder: ${folderName}`} position="top" withArrow>
+            <FitAiToolTip
+              toolTipProps={{
+                label: `Folder: ${folderName}`,
+              }}
+            >
               <span className={`${styles.metaPill} ${styles.folderBadge}`}>
                 <IconFolder size={11} className={styles.metaPillIcon} />
                 {folderName}
               </span>
-            </Tooltip>
+            </FitAiToolTip>
           )}
           {(timesUsed ?? 0) > 0 && (
-            <Tooltip label={`Used ${timesUsed} times`} position="top" withArrow>
+            <FitAiToolTip
+              toolTipProps={{
+                label: `Used ${timesUsed} times`,
+              }}
+            >
               <span className={`${styles.metaPill} ${styles.usageBadge}`}>
                 <IconFlame size={11} className={styles.metaPillIcon} />
                 {timesUsed}
               </span>
-            </Tooltip>
+            </FitAiToolTip>
           )}
         </div>
 
@@ -230,7 +249,11 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
             </button>
           </div>
           <div className={styles.actionsRight}>
-            <Tooltip label={isActive ? "Active" : "Set as active"} position="top" withArrow>
+            <FitAiToolTip
+              toolTipProps={{
+                label: isActive ? "Active" : "Set as active",
+              }}
+            >
               <button
                 type="button"
                 className={`${styles.actionButton} ${isActive ? styles.activeAction : styles.secondaryAction} ${styles.iconOnlyAction}`}
@@ -240,8 +263,12 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
               >
                 {isActive ? <IconStarFilled size={12} /> : <IconStar size={12} />}
               </button>
-            </Tooltip>
-            <Tooltip label="Duplicate" position="top" withArrow>
+            </FitAiToolTip>
+            <FitAiToolTip
+              toolTipProps={{
+                label: "Duplicate",
+              }}
+            >
               <button
                 type="button"
                 className={`${styles.actionButton} ${styles.secondaryAction} ${styles.iconOnlyAction}`}
@@ -254,8 +281,12 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
               >
                 <IconCopy size={12} />
               </button>
-            </Tooltip>
-            <Tooltip label="Delete" position="top" withArrow>
+            </FitAiToolTip>
+            <FitAiToolTip
+              toolTipProps={{
+                label: "Delete",
+              }}
+            >
               <button
                 type="button"
                 className={`${styles.actionButton} ${styles.dangerAction} ${styles.iconOnlyAction}`}
@@ -268,7 +299,7 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
               >
                 <IconTrash size={12} />
               </button>
-            </Tooltip>
+            </FitAiToolTip>
           </div>
         </div>
       </article>
@@ -297,29 +328,27 @@ export function TemplateCard({ templateId, onClick, animationDelay = 0 }: Templa
           >
             <IconAlertTriangle size={32} stroke={1.5} />
           </div>
-          <Text size="lg" fw={600}>
-            Delete Template
-          </Text>
-          <Text size="sm" c="dimmed">
+          <FitAiText variant={"body"}>Delete Template</FitAiText>
+          <FitAiText variant={"muted"}>
             Are you sure you want to delete &ldquo;{name}&rdquo;? This action cannot be undone and
             all associated data will be permanently removed.
-          </Text>
+          </FitAiText>
           <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
-            <Button
-              variant="default"
+            <FitAiButton
+              variant="primary"
               onClick={() => setConfirmDeleteOpen(false)}
               disabled={deleteTemplateMutation.isPending}
             >
               Cancel
-            </Button>
-            <Button
-              color="red"
+            </FitAiButton>
+            <FitAiButton
+              variant={"danger"}
               onClick={handleConfirmDelete}
               loading={deleteTemplateMutation.isPending}
               leftSection={<IconTrash size={16} />}
             >
               Delete Template
-            </Button>
+            </FitAiButton>
           </div>
         </Stack>
       </Modal>

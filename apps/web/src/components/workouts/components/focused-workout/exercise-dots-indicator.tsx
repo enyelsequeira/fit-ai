@@ -2,12 +2,12 @@ import { Box, Group } from "@mantine/core";
 
 import classes from "./exercise-dots-indicator.module.css";
 
-interface ExerciseDotsIndicatorProps {
+type ExerciseDotsIndicatorProps = {
   total: number;
   current: number;
   completedIndexes: number[];
   onDotClick: (index: number) => void;
-}
+};
 
 export function ExerciseDotsIndicator({
   total,

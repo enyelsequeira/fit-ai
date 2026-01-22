@@ -63,3 +63,17 @@
   height: 24px;
   flex-shrink: 0;
 }
+
+.pageContainer {
+  background: inherit;
+  animation: pageLoad 400ms ease-out;
+}
+
+@keyframes pageLoad {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

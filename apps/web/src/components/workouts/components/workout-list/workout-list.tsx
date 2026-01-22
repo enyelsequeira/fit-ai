@@ -1,18 +1,17 @@
-/**
- * WorkoutList - Grid of workout cards with filtering and empty states
- * Handles loading, error, and empty states with proper UI feedback
- */
-
 import { useMemo } from "react";
-import { Button, Group, Tooltip } from "@mantine/core";
-import { IconPlus, IconBarbell, IconSearch, IconMoodSad, IconRefresh } from "@tabler/icons-react";
-import { useWorkoutsList } from "../../queries/use-queries.ts";
-import { WorkoutCard, WorkoutCardSkeleton } from "../workout-card/workout-card.tsx";
+
+import { IconBarbell, IconPlus } from "@tabler/icons-react";
+
+import { FitAiEntityList } from "@/components/ui/fit-ai-entity-list/fit-ai-entity-list";
+
+import { useWorkoutsList } from "../../queries/use-queries";
 import type { TimePeriodFilter } from "../../types";
 import { getDateRangeForFilter } from "../../utils";
-import styles from "./workout-list.module.css";
+import { WorkoutCard, WorkoutCardSkeleton } from "../workout-card/workout-card";
+import { FitAiToolTip } from "@/components/ui/fit-ai-tooltip/fit-ai-tool-tip.tsx";
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button.tsx";
 
-interface WorkoutListProps {
+type WorkoutListProps = {
   /** Time period filter */
   timePeriod: TimePeriodFilter;
   /** Search query to filter workouts client-side */
@@ -21,118 +20,7 @@ interface WorkoutListProps {
   onWorkoutClick: (workoutId: number) => void;
   /** Callback to create a new workout */
   onCreateWorkout: () => void;
-}
-
-function LoadingState() {
-  return (
-    <div className={styles.skeletonGrid}>
-      {Array.from({ length: 6 }, (_, i) => (
-        <WorkoutCardSkeleton key={i} animationDelay={i * 60} />
-      ))}
-    </div>
-  );
-}
-
-function SearchEmptyState({
-  searchQuery,
-  onCreateWorkout,
-}: {
-  searchQuery: string;
-  onCreateWorkout: () => void;
-}) {
-  return (
-    <div className={styles.emptyState}>
-      <div className={styles.emptyStateIcon}>
-        <IconSearch size={32} stroke={1.5} />
-      </div>
-      <h3 className={styles.emptyStateTitle}>No workouts found</h3>
-      <p className={styles.emptyStateMessage}>
-        No workouts match your search for &ldquo;{searchQuery}&rdquo;. Try adjusting your search
-        terms or start a new workout.
-      </p>
-      <Group mt="lg">
-        <Tooltip label="Start a new workout session" position="bottom" withArrow>
-          <Button variant="light" leftSection={<IconPlus size={16} />} onClick={onCreateWorkout}>
-            New Workout
-          </Button>
-        </Tooltip>
-      </Group>
-    </div>
-  );
-}
-
-function NoWorkoutsEmptyState({ onCreateWorkout }: { onCreateWorkout: () => void }) {
-  return (
-    <div className={styles.emptyState}>
-      <div className={styles.emptyStateIcon}>
-        <IconBarbell size={40} stroke={1.5} />
-      </div>
-      <h3 className={styles.emptyStateTitle}>Start Your Fitness Journey</h3>
-      <p className={styles.emptyStateMessage}>
-        Track your workouts, monitor your progress, and achieve your fitness goals. Start by
-        creating your first workout session.
-      </p>
-
-      <Tooltip label="Start your first workout" position="bottom" withArrow>
-        <Button size="lg" leftSection={<IconPlus size={18} />} onClick={onCreateWorkout} mt="xl">
-          Start Your First Workout
-        </Button>
-      </Tooltip>
-    </div>
-  );
-}
-
-function PeriodEmptyState({
-  periodLabel,
-  onCreateWorkout,
-}: {
-  periodLabel: string;
-  onCreateWorkout: () => void;
-}) {
-  return (
-    <div className={styles.emptyState}>
-      <div className={styles.emptyStateIcon}>
-        <IconBarbell size={40} stroke={1.5} />
-      </div>
-      <h3 className={styles.emptyStateTitle}>No workouts for {periodLabel}</h3>
-      <p className={styles.emptyStateMessage}>
-        You haven&apos;t logged any workouts for this time period yet. Start a new workout to get
-        going!
-      </p>
-
-      <Tooltip label="Start a new workout" position="bottom" withArrow>
-        <Button size="md" leftSection={<IconPlus size={16} />} onClick={onCreateWorkout} mt="lg">
-          New Workout
-        </Button>
-      </Tooltip>
-    </div>
-  );
-}
-
-function ErrorState({ onRetry }: { onRetry: () => void }) {
-  return (
-    <div className={styles.errorState}>
-      <div className={styles.errorStateIcon}>
-        <IconMoodSad size={32} stroke={1.5} />
-      </div>
-      <h3 className={styles.errorStateTitle}>Something went wrong</h3>
-      <p className={styles.errorStateMessage}>
-        We couldn&apos;t load your workouts. This might be a temporary issue. Please try again.
-      </p>
-      <Tooltip label="Retry loading workouts" position="bottom" withArrow>
-        <Button
-          variant="light"
-          color="red"
-          leftSection={<IconRefresh size={16} />}
-          onClick={onRetry}
-          mt="lg"
-        >
-          Try Again
-        </Button>
-      </Tooltip>
-    </div>
-  );
-}
+};
 
 const PERIOD_LABELS: Record<TimePeriodFilter, string> = {
   today: "today",
@@ -171,42 +59,66 @@ export function WorkoutList({
     return workouts.filter((workout) => workout.name?.toLowerCase().includes(query));
   }, [workoutsData?.workouts, searchQuery]);
 
-  if (isLoading) {
-    return <LoadingState />;
-  }
-
-  if (isError) {
-    return <ErrorState onRetry={() => refetch()} />;
-  }
-
   // Check if there are any workouts at all
   const hasNoWorkouts = (workoutsData?.workouts ?? []).length === 0;
+  const hasResults = filteredWorkouts.length > 0;
+  const isSearchEmpty = filteredWorkouts.length === 0 && !!searchQuery?.trim();
+  const isEmptyState = filteredWorkouts.length === 0 && !searchQuery?.trim() && !isLoading;
 
-  if (hasNoWorkouts && timePeriod === "all") {
-    return <NoWorkoutsEmptyState onCreateWorkout={onCreateWorkout} />;
-  }
+  // Determine empty state title and message based on context
+  const emptyTitle =
+    hasNoWorkouts && timePeriod === "all"
+      ? "Start Your Fitness Journey"
+      : `No workouts for ${PERIOD_LABELS[timePeriod]}`;
 
-  if (filteredWorkouts.length === 0) {
-    if (searchQuery?.trim()) {
-      return <SearchEmptyState searchQuery={searchQuery} onCreateWorkout={onCreateWorkout} />;
-    }
-    return (
-      <PeriodEmptyState periodLabel={PERIOD_LABELS[timePeriod]} onCreateWorkout={onCreateWorkout} />
-    );
-  }
+  const emptyMessage =
+    hasNoWorkouts && timePeriod === "all"
+      ? "Track your workouts, monitor your progress, and achieve your fitness goals. Start by creating your first workout session."
+      : "You haven't logged any workouts for this time period yet. Start a new workout to get going!";
+
+  const emptyButtonText =
+    hasNoWorkouts && timePeriod === "all" ? "Start Your First Workout" : "New Workout";
 
   return (
-    <div className={styles.container}>
-      {searchQuery?.trim() && (
-        <div className={styles.resultsSummary}>
-          <span className={styles.resultsCount}>
-            Showing <span className={styles.resultsCountNumber}>{filteredWorkouts.length}</span>{" "}
-            {filteredWorkouts.length === 1 ? "workout" : "workouts"}
-          </span>
-        </div>
-      )}
+    <FitAiEntityList>
+      <FitAiEntityList.Loading visible={isLoading}>
+        {Array.from({ length: 6 }, (_, i) => (
+          <WorkoutCardSkeleton key={i} animationDelay={i * 60} />
+        ))}
+      </FitAiEntityList.Loading>
 
-      <div className={styles.workoutsGrid}>
+      <FitAiEntityList.Error visible={isError} onRetry={() => refetch()} />
+
+      <FitAiEntityList.Empty
+        visible={isEmptyState}
+        icon={<IconBarbell size={40} stroke={1.5} />}
+        title={emptyTitle}
+        description={emptyMessage}
+        action={
+          <FitAiToolTip
+            toolTipProps={{
+              label: "Start a new workout session",
+            }}
+          >
+            <FitAiButton
+              variant={"outline"}
+              size={hasNoWorkouts && timePeriod === "all" ? "lg" : "md"}
+              leftSection={<IconPlus size={hasNoWorkouts && timePeriod === "all" ? 18 : 16} />}
+              onClick={onCreateWorkout}
+            >
+              {emptyButtonText}
+            </FitAiButton>
+          </FitAiToolTip>
+        }
+      />
+
+      <FitAiEntityList.SearchEmpty visible={isSearchEmpty} searchQuery={searchQuery ?? ""} />
+
+      <FitAiEntityList.Summary visible={hasResults && !!searchQuery?.trim()}>
+        Showing {filteredWorkouts.length} {filteredWorkouts.length === 1 ? "workout" : "workouts"}
+      </FitAiEntityList.Summary>
+
+      <FitAiEntityList.Grid>
         {filteredWorkouts.map((workout, index) => (
           <WorkoutCard
             key={workout.id}
@@ -215,7 +127,7 @@ export function WorkoutList({
             animationDelay={index * 50}
           />
         ))}
-      </div>
-    </div>
+      </FitAiEntityList.Grid>
+    </FitAiEntityList>
   );
 }

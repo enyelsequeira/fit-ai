@@ -1,5 +1,7 @@
-import { Badge, Group, Text } from "@mantine/core";
+import { Badge, Group } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
+
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
 
 import styles from "./completed-set-chip.module.css";
 
@@ -33,9 +35,9 @@ export function CompletedSetChip({
     >
       <Group gap={6} wrap="nowrap">
         <IconCheck size={14} stroke={2.5} />
-        <Text size="sm" fw={500} span>
+        <FitAiText.Label span className={styles.text}>
           {weight}kg × {reps}
-        </Text>
+        </FitAiText.Label>
       </Group>
     </Badge>
   );

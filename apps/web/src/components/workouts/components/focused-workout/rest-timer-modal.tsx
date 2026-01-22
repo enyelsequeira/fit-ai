@@ -7,6 +7,9 @@ import { useEffect } from "react";
 import { RingProgress, Transition } from "@mantine/core";
 import { IconPlayerPause, IconPlayerPlay } from "@tabler/icons-react";
 
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
+
 import { TimerStatus } from "../workout-timer/timer-types";
 import type { InlineRestTimerProps } from "./inline-rest-timer.types";
 
@@ -56,7 +59,7 @@ export function RestTimerModal({ timer, nextSetInfo, onDismiss }: InlineRestTime
       {(transitionStyles) => (
         <div className={styles.overlay} style={transitionStyles} onClick={onDismiss}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.title}>REST TIME</div>
+            <FitAiText.Label className={styles.title}>REST TIME</FitAiText.Label>
 
             <div className={styles.timeDisplay} data-urgent={isUrgent ? "true" : undefined}>
               {formatTime(timer.timeRemaining)}
@@ -74,50 +77,55 @@ export function RestTimerModal({ timer, nextSetInfo, onDismiss }: InlineRestTime
 
             {nextSetInfo && (
               <div className={styles.nextSetInfo}>
-                Next: <strong>Set {nextSetInfo.setNumber}</strong>
+                <FitAiText.Caption>
+                  Next: <strong>Set {nextSetInfo.setNumber}</strong>
+                </FitAiText.Caption>
                 {nextSetInfo.targetWeight && nextSetInfo.targetReps && (
-                  <>
-                    <br />
+                  <FitAiText.Caption className={styles.targetInfo}>
                     Target: {nextSetInfo.targetWeight}kg × {nextSetInfo.targetReps}
-                  </>
+                  </FitAiText.Caption>
                 )}
               </div>
             )}
 
             <div className={styles.controls}>
-              <button
-                type="button"
+              <FitAiButton
+                variant="secondary"
                 className={styles.controlButton}
                 onClick={handleSubtract30}
                 disabled={timer.timeRemaining < 30}
                 aria-label="Subtract 30 seconds"
               >
                 -30
-              </button>
+              </FitAiButton>
 
-              <button
-                type="button"
-                className={styles.controlButton}
-                data-primary="true"
+              <FitAiButton
+                variant="primary"
+                className={styles.controlButtonPrimary}
                 onClick={handlePauseResume}
                 aria-label={timer.isRunning ? "Pause timer" : "Resume timer"}
               >
                 {timer.isRunning ? <IconPlayerPause size={24} /> : <IconPlayerPlay size={24} />}
-              </button>
+              </FitAiButton>
 
-              <button
-                type="button"
+              <FitAiButton
+                variant="secondary"
                 className={styles.controlButton}
                 onClick={handleAdd30}
                 aria-label="Add 30 seconds"
               >
                 +30
-              </button>
+              </FitAiButton>
             </div>
 
-            <button type="button" className={styles.skipButton} onClick={handleSkip}>
-              Skip Rest →
-            </button>
+            <FitAiButton
+              variant="outline"
+              fullWidth
+              className={styles.skipButton}
+              onClick={handleSkip}
+            >
+              Skip Rest
+            </FitAiButton>
           </div>
         </div>
       )}

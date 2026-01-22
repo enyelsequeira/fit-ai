@@ -31,12 +31,12 @@ export function GoalQuickActions({ status, onLogProgress, onPause, onResume }: Q
     <Group gap="xs">
       {isActive && (
         <>
-          <FitAiButton size="xs" variant="light" onClick={onLogProgress}>
+          <FitAiButton size="xs" variant="secondary" onClick={onLogProgress}>
             Log Progress
           </FitAiButton>
           <FitAiButton
             size="xs"
-            variant="subtle"
+            variant="ghost"
             leftSection={<IconPlayerPause size={14} />}
             onClick={onPause}
           >
@@ -47,7 +47,7 @@ export function GoalQuickActions({ status, onLogProgress, onPause, onResume }: Q
       {isPaused && (
         <FitAiButton
           size="xs"
-          variant="light"
+          variant="secondary"
           leftSection={<IconPlayerPlay size={14} />}
           onClick={onResume}
         >
@@ -70,8 +70,7 @@ export function GoalFooterActions({ status, onComplete, onAbandon, onClose }: Go
             <>
               <FitAiButton
                 size="sm"
-                variant="light"
-                color="blue"
+                variant="success"
                 leftSection={<IconCheck size={14} />}
                 onClick={onComplete}
               >
@@ -79,8 +78,7 @@ export function GoalFooterActions({ status, onComplete, onAbandon, onClose }: Go
               </FitAiButton>
               <FitAiButton
                 size="sm"
-                variant="subtle"
-                color="orange"
+                variant="ghost"
                 leftSection={<IconX size={14} />}
                 onClick={onAbandon}
               >
@@ -89,7 +87,7 @@ export function GoalFooterActions({ status, onComplete, onAbandon, onClose }: Go
             </>
           )}
         </Group>
-        <FitAiButton variant="subtle" onClick={onClose}>
+        <FitAiButton variant="ghost" onClick={onClose}>
           Close
         </FitAiButton>
       </Group>
