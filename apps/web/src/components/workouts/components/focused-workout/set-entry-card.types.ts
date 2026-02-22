@@ -5,6 +5,8 @@ export interface SetEntryData {
   rpe: number | null;
   previousWeight?: number | null;
   previousReps?: number | null;
+  historyWeight?: number | null;
+  historyReps?: number | null;
 }
 
 export interface SetEntryActions {

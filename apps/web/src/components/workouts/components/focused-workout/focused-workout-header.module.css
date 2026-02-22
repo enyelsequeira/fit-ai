@@ -1,104 +1,58 @@
-/* FocusedWorkoutHeader - Gym Mode sticky header */
+/* FocusedWorkoutHeader - Gym Mode command center sticky header */
 
 .header {
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-6));
   position: sticky;
   top: 0;
   z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--mantine-spacing-md);
-  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
-  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
-  box-shadow: light-dark(0 2px 8px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.3));
-  /* Ensure header stays visually above content when scrolling */
-  isolation: isolate;
-}
-
-.backButton {
-  background: none;
-  border: none;
-  color: light-dark(var(--mantine-color-teal-6), var(--mantine-color-teal-4));
-  font-size: var(--mantine-font-size-xl);
-  cursor: pointer;
-  padding: var(--mantine-spacing-xs);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--mantine-radius-sm);
-  transition: background 150ms ease;
-  /* Ensure minimum 44px touch target for gym use */
-  min-width: 44px;
-  min-height: 44px;
-}
-
-.backButton:hover {
-  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
-}
-
-.centerContent {
-  text-align: center;
-  flex: 1;
-  min-width: 0;
 }
 
 .workoutName {
-  font-size: var(--mantine-font-size-md);
-  font-weight: 600;
-  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-white));
-  white-space: nowrap;
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: calc(var(--mantine-spacing-xs) / 4);
+  white-space: nowrap;
+  min-width: 0;
+  text-align: center;
+  letter-spacing: -0.01em;
 }
 
-.elapsedTime {
-  font-size: var(--mantine-font-size-xs);
-  color: var(--mantine-color-dimmed);
+/* Timer cluster -- teal with tabular numerals for stable width */
+.timerGroup {
+  flex-shrink: 0;
+}
+
+.timerIcon {
+  color: var(--mantine-color-teal-filled);
+  flex-shrink: 0;
+}
+
+.timerText {
+  font-variant-numeric: tabular-nums;
+  color: var(--mantine-color-teal-filled);
+  letter-spacing: 0.02em;
+}
+
+/* Set count: bold number, dimmed label */
+.setsCount {
+  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-0));
   font-variant-numeric: tabular-nums;
 }
 
-.dots {
-  display: flex;
-  gap: var(--mantine-spacing-xs);
-  align-items: center;
+/* Percentage badge next to progress */
+.percentText {
+  font-variant-numeric: tabular-nums;
+  color: var(--mantine-color-teal-filled);
+  min-width: 2.5em;
+  text-align: right;
 }
 
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  /* Pending state - gray */
-  background: var(--mantine-color-gray-4);
-  transition: all 200ms ease;
-}
+/* Progress bar with smooth transition */
+.progressBar {
+  --progress-track-bg: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
 
-.dot[data-completed="true"] {
-  /* Completed state - green */
-  background: var(--mantine-color-green-6);
-}
-
-.dot[data-current="true"] {
-  /* Current state - teal */
-  background: var(--mantine-color-teal-6);
-  width: 12px;
-  height: 12px;
-}
-
-/* Legacy styles for backward compatibility */
-.nameButton {
-  max-width: 100%;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 var(--mantine-spacing-xs);
-  border-radius: var(--mantine-radius-sm);
-}
-
-.progressWrapper {
-  min-width: 48px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  :global(.mantine-Progress-section) {
+    transition: width 400ms ease;
+  }
 }

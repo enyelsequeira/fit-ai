@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
-import { IconPlus } from "@tabler/icons-react";
-import { Badge, Box, ScrollArea, Stack } from "@mantine/core";
-
 import type { FocusedExerciseCardProps } from "./focused-exercise-card.types";
 
+import { useEffect, useState } from "react";
+import { Badge, Box, Group, ScrollArea, Stack, Text } from "@mantine/core";
+import { IconPlus, IconTrophy } from "@tabler/icons-react";
+
 import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
-import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
 
 import { CompletedSetChip } from "./completed-set-chip";
 import { SetEntryCard } from "./set-entry-card";
@@ -25,7 +24,10 @@ export function FocusedExerciseCard({
     completedSets,
     currentSet,
     previousSet,
+    lastPerformanceSets,
   } = data;
+
+  const historySet = lastPerformanceSets[currentSetIndex] ?? null;
 
   const { onSetComplete, onAddSet } = actions;
 
@@ -35,14 +37,12 @@ export function FocusedExerciseCard({
 
   // useEffect required: Resetting form state when navigating between sets
   // This cannot be derived state because we need local form state that users can edit
-  // The currentSet.id change triggers a reset to pre-fill values from previous workout
+  // The currentSet.id change triggers a reset — inputs clear so placeholders (from last
+  // workout) are visible. We only restore values if the set was already partially saved.
   useEffect(() => {
     if (currentSet) {
-      // Use current set values, or fall back to previous set values
-      const weightValue = currentSet.weight ?? previousSet?.weight ?? null;
-      const repsValue = currentSet.reps ?? previousSet?.reps ?? null;
-      setWeight(weightValue);
-      setReps(repsValue);
+      setWeight(currentSet.weight ?? null);
+      setReps(currentSet.reps ?? null);
       setRpe(currentSet.rpe ?? null);
     } else {
       setWeight(null);
@@ -50,7 +50,6 @@ export function FocusedExerciseCard({
       setRpe(null);
     }
     // Only reset when set ID changes (navigating to different set)
-    // previousSet values are intentionally excluded to avoid re-renders during editing
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSet?.id]);
 
@@ -65,23 +64,34 @@ export function FocusedExerciseCard({
 
   return (
     <Box className={styles.card}>
-      <div className={styles.exerciseHeader}>
-        <FitAiText.Heading className={styles.exerciseName}>{exerciseName}</FitAiText.Heading>
-        <div className={styles.badges}>
-          {exerciseCategory && (
-            <Badge variant="light" color="teal" className={styles.badge}>
-              {exerciseCategory}
-            </Badge>
-          )}
-          {exerciseEquipment && (
-            <Badge variant="outline" color="gray" className={styles.badge}>
-              {exerciseEquipment}
-            </Badge>
-          )}
-        </div>
-      </div>
+      {/* Header — exercise name, badges, set counter */}
+      <Box className={styles.header}>
+        <Text className={styles.exerciseName} fw={800} lh={1.15}>
+          {exerciseName}
+        </Text>
 
-      <div className={styles.setEntry}>
+        <Group justify="space-between" align="center" mt="sm" wrap="wrap" gap="xs">
+          <Group gap={6}>
+            {exerciseCategory && (
+              <Badge variant="light" color="teal" size="xs" radius="sm">
+                {exerciseCategory}
+              </Badge>
+            )}
+            {exerciseEquipment && (
+              <Badge variant="dot" color="gray" size="xs" radius="sm">
+                {exerciseEquipment}
+              </Badge>
+            )}
+          </Group>
+
+          <Text size="sm" fw={700} c="teal" className={styles.setCounter}>
+            {completedSets.length} / {totalSets}
+          </Text>
+        </Group>
+      </Box>
+
+      {/* Active set entry or completion state */}
+      <Box className={styles.entrySection}>
         {currentSet ? (
           <SetEntryCard
             data={{
@@ -91,6 +101,8 @@ export function FocusedExerciseCard({
               rpe,
               previousWeight: previousSet?.weight ?? null,
               previousReps: previousSet?.reps ?? null,
+              historyWeight: historySet?.weight ?? null,
+              historyReps: historySet?.reps ?? null,
             }}
             actions={{
               onWeightChange: setWeight,
@@ -101,22 +113,32 @@ export function FocusedExerciseCard({
             isLoading={isLoading}
           />
         ) : allSetsCompleted ? (
-          <Stack align="center" justify="center" gap="md" py="xl">
-            <FitAiText.Heading className={styles.successText}>
-              All sets completed!
-            </FitAiText.Heading>
-            <FitAiText.Caption>
-              {totalSets} sets finished for {exerciseName}
-            </FitAiText.Caption>
+          <Stack align="center" gap="xs" py="xl" px="md" className={styles.successCard}>
+            <IconTrophy size={36} stroke={1.5} className={styles.successIcon} />
+            <Text fw={700} size="lg" className={styles.successText}>
+              Exercise Complete!
+            </Text>
+            <Text size="sm" c="dimmed">
+              All {totalSets} set{totalSets !== 1 ? "s" : ""} finished
+            </Text>
           </Stack>
         ) : null}
-      </div>
+      </Box>
 
+      {/* Completed sets history */}
       {hasCompletedSets && (
-        <div className={styles.completedSets}>
-          <FitAiText.Label className={styles.completedLabel}>Completed Sets</FitAiText.Label>
-          <ScrollArea scrollbarSize={4} type="scroll">
-            <div className={styles.completedSetsScroll}>
+        <Box className={styles.completedSection}>
+          <Group gap="xs" mb="xs">
+            <Text size="xs" fw={600} tt="uppercase" c="dimmed" className={styles.completedLabel}>
+              Completed
+            </Text>
+            <Badge variant="filled" color="teal" size="xs" circle>
+              {completedSets.length}
+            </Badge>
+          </Group>
+
+          <ScrollArea mah={180} type="auto" offsetScrollbars>
+            <Stack gap={0}>
               {completedSets.map((set, index) => (
                 <CompletedSetChip
                   key={set.id}
@@ -125,20 +147,23 @@ export function FocusedExerciseCard({
                   reps={set.reps}
                 />
               ))}
-            </div>
+            </Stack>
           </ScrollArea>
-        </div>
+        </Box>
       )}
 
-      <FitAiButton
-        className={styles.addSetButton}
-        variant="secondary"
-        leftSection={<IconPlus size={18} />}
-        onClick={onAddSet}
-        disabled={isLoading}
-      >
-        Add Set
-      </FitAiButton>
+      {/* Add Set action */}
+      <Box className={styles.footer}>
+        <FitAiButton
+          variant="secondary"
+          leftSection={<IconPlus size={16} />}
+          onClick={onAddSet}
+          disabled={isLoading}
+          fullWidth
+        >
+          Add Set
+        </FitAiButton>
+      </Box>
     </Box>
   );
 }

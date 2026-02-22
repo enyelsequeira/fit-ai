@@ -1,40 +1,30 @@
 /**
  * Custom hook for goal action handlers
- * Encapsulates all mutation handlers with notification logic
+ * Encapsulates all mutation hooks and notification logic
  */
 
 import { useCallback } from "react";
-import type { UseMutationResult } from "@tanstack/react-query";
 import {
   showErrorNotification,
   showGoalNotification,
   showSuccessNotification,
 } from "@/utils/notifications";
+import {
+  useAbandonGoal,
+  useCompleteGoal,
+  useCreateBodyMeasurementGoal,
+  useCreateCustomGoal,
+  useCreateStrengthGoal,
+  useCreateWeightGoal,
+  useCreateWorkoutFrequencyGoal,
+  useDeleteGoal,
+  usePauseGoal,
+  useResumeGoal,
+  useUpdateGoalProgress,
+} from "./hooks/use-mutations";
 import type { GoalWithExercise } from "./types";
 
-/**
- * Type definitions for the mutations passed to the hook
- */
-export interface GoalMutations {
-  completeMutation: UseMutationResult<unknown, Error, { id: number }>;
-  pauseMutation: UseMutationResult<unknown, Error, { id: number }>;
-  resumeMutation: UseMutationResult<unknown, Error, { id: number }>;
-  abandonMutation: UseMutationResult<unknown, Error, { id: number }>;
-  deleteMutation: UseMutationResult<unknown, Error, { id: number }>;
-  updateProgressMutation: UseMutationResult<
-    unknown,
-    Error,
-    { goalId: number; value: number; note?: string }
-  >;
-  createWeightGoalMutation: UseMutationResult<unknown, Error, unknown>;
-  createStrengthGoalMutation: UseMutationResult<unknown, Error, unknown>;
-  createBodyMeasurementGoalMutation: UseMutationResult<unknown, Error, unknown>;
-  createWorkoutFrequencyGoalMutation: UseMutationResult<unknown, Error, unknown>;
-  createCustomGoalMutation: UseMutationResult<unknown, Error, unknown>;
-}
-
 interface UseGoalActionsOptions {
-  mutations: GoalMutations;
   closeCreateModal: () => void;
   closeLogProgressModal: () => void;
   closeDetailModal: () => void;
@@ -65,15 +55,14 @@ export interface GoalActionHandlers {
   handleDetailResume: () => Promise<void>;
   handleDetailAbandon: () => Promise<void>;
   isCreating: boolean;
+  isUpdatingProgress: boolean;
 }
 
 /**
  * Custom hook that encapsulates all goal action handlers
- * Reduces boilerplate in the main view component by centralizing
- * mutation handling and notification logic
+ * Calls mutation hooks directly and centralizes notification logic
  */
 export function useGoalActions({
-  mutations,
   closeCreateModal,
   closeLogProgressModal,
   closeDetailModal,
@@ -81,19 +70,17 @@ export function useGoalActions({
   setSelectedGoal,
   goalDetail,
 }: UseGoalActionsOptions): GoalActionHandlers {
-  const {
-    completeMutation,
-    pauseMutation,
-    resumeMutation,
-    abandonMutation,
-    deleteMutation,
-    updateProgressMutation,
-    createWeightGoalMutation,
-    createStrengthGoalMutation,
-    createBodyMeasurementGoalMutation,
-    createWorkoutFrequencyGoalMutation,
-    createCustomGoalMutation,
-  } = mutations;
+  const completeMutation = useCompleteGoal();
+  const pauseMutation = usePauseGoal();
+  const resumeMutation = useResumeGoal();
+  const abandonMutation = useAbandonGoal();
+  const deleteMutation = useDeleteGoal();
+  const updateProgressMutation = useUpdateGoalProgress();
+  const createWeightGoalMutation = useCreateWeightGoal();
+  const createStrengthGoalMutation = useCreateStrengthGoal();
+  const createBodyMeasurementGoalMutation = useCreateBodyMeasurementGoal();
+  const createWorkoutFrequencyGoalMutation = useCreateWorkoutFrequencyGoal();
+  const createCustomGoalMutation = useCreateCustomGoal();
 
   // Goal status action handlers
   const handleComplete = useCallback(
@@ -151,7 +138,7 @@ export function useGoalActions({
     async (goal: GoalWithExercise) => {
       try {
         await deleteMutation.mutateAsync({ id: goal.id });
-        showErrorNotification("Goal Deleted", `"${goal.title}" has been deleted`);
+        showSuccessNotification("Goal Deleted", `"${goal.title}" has been deleted`);
       } catch {
         showErrorNotification("Error", "Failed to delete goal");
       }
@@ -301,5 +288,6 @@ export function useGoalActions({
     handleDetailResume,
     handleDetailAbandon,
     isCreating,
+    isUpdatingProgress: updateProgressMutation.isPending,
   };
 }

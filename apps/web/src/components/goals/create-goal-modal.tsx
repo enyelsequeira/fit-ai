@@ -4,16 +4,19 @@
  * Step 2: Enter goal details based on type
  */
 
+import type { CreateGoalModalProps } from "./types";
+
 import { Group, Modal, Stepper } from "@mantine/core";
+
 import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
-import type { CreateGoalModalProps } from "./create-goal-modal-types";
-import { GoalTypeSelector } from "./goal-type-selector";
-import { WeightGoalForm } from "./weight-goal-form";
-import { StrengthGoalForm } from "./strength-goal-form";
+
 import { BodyMeasurementGoalForm } from "./body-measurement-goal-form";
-import { WorkoutFrequencyGoalForm } from "./workout-frequency-goal-form";
 import { CustomGoalForm } from "./custom-goal-form";
+import { GoalTypeSelector } from "./goal-type-selector";
+import { StrengthGoalForm } from "./strength-goal-form";
 import { useCreateGoalForm } from "./use-create-goal-form";
+import { WeightGoalForm } from "./weight-goal-form";
+import { WorkoutFrequencyGoalForm } from "./workout-frequency-goal-form";
 
 export function CreateGoalModal({
   opened,

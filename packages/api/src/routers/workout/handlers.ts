@@ -10,7 +10,7 @@ import { exercise } from "@fit-ai/db/schema/exercise";
 import { exerciseSet, workout, workoutExercise } from "@fit-ai/db/schema/workout";
 import { workoutTemplate, workoutTemplateExercise } from "@fit-ai/db/schema/workout-template";
 import { ORPCError } from "@orpc/server";
-import { and, desc, eq, gte, lte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, isNotNull, lte, ne, sql } from "drizzle-orm";
 
 import {
   APP_ERROR_CODES,
@@ -157,6 +157,77 @@ export const listWorkoutsHandler: ListRouteHandler = async ({ input, context }) 
   };
 };
 
+async function fetchLastPerformanceForExercises(
+  userId: string,
+  currentWorkoutId: number,
+  exerciseIds: number[],
+): Promise<Map<number, { setNumber: number; weight: number | null; reps: number | null }[]>> {
+  if (exerciseIds.length === 0) return new Map();
+
+  // Find the most recent completed workout_exercise for each exerciseId,
+  // excluding the current workout and only from completed workouts
+  const rows = await db
+    .select({
+      exerciseId: workoutExercise.exerciseId,
+      workoutExerciseId: workoutExercise.id,
+    })
+    .from(workout)
+    .innerJoin(workoutExercise, eq(workoutExercise.workoutId, workout.id))
+    .where(
+      and(
+        eq(workout.userId, userId),
+        inArray(workoutExercise.exerciseId, exerciseIds),
+        isNotNull(workout.completedAt),
+        ne(workout.id, currentWorkoutId),
+      ),
+    )
+    .orderBy(desc(workout.startedAt));
+
+  // Keep only the most recent workoutExercise per exerciseId
+  const latestByExercise = new Map<number, number>(); // exerciseId -> workoutExerciseId
+  for (const row of rows) {
+    if (!latestByExercise.has(row.exerciseId)) {
+      latestByExercise.set(row.exerciseId, row.workoutExerciseId);
+    }
+  }
+
+  if (latestByExercise.size === 0) return new Map();
+
+  // Batch-fetch sets for those workoutExerciseIds
+  const weIds = [...latestByExercise.values()];
+  const sets = await db
+    .select({
+      workoutExerciseId: exerciseSet.workoutExerciseId,
+      setNumber: exerciseSet.setNumber,
+      weight: exerciseSet.weight,
+      reps: exerciseSet.reps,
+    })
+    .from(exerciseSet)
+    .where(inArray(exerciseSet.workoutExerciseId, weIds))
+    .orderBy(exerciseSet.setNumber);
+
+  // Group sets by workoutExerciseId
+  const setsByWeId = new Map<
+    number,
+    { setNumber: number; weight: number | null; reps: number | null }[]
+  >();
+  for (const s of sets) {
+    const arr = setsByWeId.get(s.workoutExerciseId) ?? [];
+    arr.push({ setNumber: s.setNumber, weight: s.weight, reps: s.reps });
+    setsByWeId.set(s.workoutExerciseId, arr);
+  }
+
+  // Build final map: exerciseId -> sets from most recent workout
+  const result = new Map<
+    number,
+    { setNumber: number; weight: number | null; reps: number | null }[]
+  >();
+  for (const [exId, weId] of latestByExercise) {
+    result.set(exId, setsByWeId.get(weId) ?? []);
+  }
+  return result;
+}
+
 export const getWorkoutByIdHandler: GetByIdRouteHandler = async ({ input, context }) => {
   const userId = context.session.user.id;
   const w = await getWorkoutWithOwnershipCheck(input.workoutId, userId);
@@ -200,10 +271,18 @@ export const getWorkoutByIdHandler: GetByIdRouteHandler = async ({ input, contex
     setsByExercise.set(set.workoutExerciseId, existing);
   }
 
+  const exerciseIdsForHistory = exercisesWithDetails.map((e) => e.workoutExercise.exerciseId);
+  const lastPerformanceMap = await fetchLastPerformanceForExercises(
+    userId,
+    input.workoutId,
+    exerciseIdsForHistory,
+  );
+
   const workoutExercises = exercisesWithDetails.map((e) => ({
     ...e.workoutExercise,
     exercise: e.exercise,
     sets: setsByExercise.get(e.workoutExercise.id) ?? [],
+    lastPerformance: lastPerformanceMap.get(e.workoutExercise.exerciseId) ?? [],
   }));
 
   return {
@@ -277,6 +356,7 @@ export const createWorkoutHandler: CreateRouteHandler = async ({ input, context 
       equipment: string | null;
     };
     sets: (typeof exerciseSet.$inferSelect)[];
+    lastPerformance: { setNumber: number; weight: number | null; reps: number | null }[];
   }> = [];
 
   if (templateData && templateData.exercises.length > 0) {
@@ -358,6 +438,7 @@ export const createWorkoutHandler: CreateRouteHandler = async ({ input, context 
         ...we,
         exercise: exerciseMap.get(we.exerciseId),
         sets: setsByExercise.get(we.id) ?? [],
+        lastPerformance: [],
       });
     }
 
@@ -508,6 +589,7 @@ export const addExerciseHandler: AddExerciseRouteHandler = async ({ input, conte
       equipment: ex.equipment,
     },
     sets: [],
+    lastPerformance: [],
   };
 };
 
@@ -560,6 +642,7 @@ export const updateWorkoutExerciseHandler: UpdateExerciseRouteHandler = async ({
     ...updated,
     exercise: exerciseResult[0],
     sets,
+    lastPerformance: [],
   };
 };
 

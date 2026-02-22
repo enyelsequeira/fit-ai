@@ -38,6 +38,7 @@ function transformExerciseToCardData(exercise: WorkoutExercise): ExerciseCardDat
     previousSet: previousCompleted
       ? { weight: previousCompleted.weight, reps: previousCompleted.reps }
       : undefined,
+    lastPerformanceSets: exercise.lastPerformance ?? [],
   };
 }
 

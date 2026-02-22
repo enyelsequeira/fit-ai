@@ -5,6 +5,7 @@
 import type { MouseEvent } from "react";
 
 import { Group, Menu, Text } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import {
   IconCalendar,
   IconCheck,
@@ -100,6 +101,7 @@ interface GoalActionsMenuProps {
 }
 
 function GoalActionsMenu({
+  goal,
   isActive,
   isPaused,
   onComplete,
@@ -131,7 +133,21 @@ function GoalActionsMenu({
             <Menu.Item
               leftSection={<IconX size={14} />}
               color="orange"
-              onClick={handleAction(onAbandon)}
+              onClick={(e) => {
+                e.stopPropagation();
+                modals.openConfirmModal({
+                  title: "Abandon Goal",
+                  children: (
+                    <Text size="sm">
+                      Are you sure you want to abandon this goal? You can still view it in the
+                      Abandoned tab.
+                    </Text>
+                  ),
+                  labels: { confirm: "Abandon", cancel: "Cancel" },
+                  confirmProps: { color: "orange" },
+                  onConfirm: () => onAbandon?.(goal),
+                });
+              }}
             >
               Abandon Goal
             </Menu.Item>
@@ -148,7 +164,21 @@ function GoalActionsMenu({
         <Menu.Item
           leftSection={<IconTrash size={14} />}
           color="red"
-          onClick={handleAction(onDelete)}
+          onClick={(e) => {
+            e.stopPropagation();
+            modals.openConfirmModal({
+              title: "Delete Goal",
+              children: (
+                <Text size="sm">
+                  Are you sure you want to permanently delete this goal? This action cannot be
+                  undone.
+                </Text>
+              ),
+              labels: { confirm: "Delete", cancel: "Cancel" },
+              confirmProps: { color: "red" },
+              onConfirm: () => onDelete?.(goal),
+            });
+          }}
         >
           Delete Goal
         </Menu.Item>

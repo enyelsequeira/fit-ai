@@ -45,14 +45,19 @@ export function GoalQuickActions({ status, onLogProgress, onPause, onResume }: Q
         </>
       )}
       {isPaused && (
-        <FitAiButton
-          size="xs"
-          variant="secondary"
-          leftSection={<IconPlayerPlay size={14} />}
-          onClick={onResume}
-        >
-          Resume
-        </FitAiButton>
+        <>
+          <FitAiButton
+            size="xs"
+            variant="secondary"
+            leftSection={<IconPlayerPlay size={14} />}
+            onClick={onResume}
+          >
+            Resume
+          </FitAiButton>
+          <FitAiButton size="xs" variant="ghost" onClick={onLogProgress}>
+            Log Progress
+          </FitAiButton>
+        </>
       )}
     </Group>
   );

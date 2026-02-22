@@ -42,6 +42,13 @@ export function useFocusedWorkout(workoutId: number) {
   // First updates the set with weight/reps, then marks it as complete
   const handleSetComplete = useCallback(
     async (setId: number, weight: number, reps: number, rpe?: number) => {
+      // Determine before mutation if this is the last incomplete set in the exercise
+      const currentExercise = detailState.workout?.workoutExercises?.[pagerIndex];
+      const incompleteSets = (currentExercise?.sets ?? []).filter((s) => s.completedAt === null);
+      const isLastSet = incompleteSets.length === 1 && incompleteSets[0]?.id === setId;
+      const totalExercises = detailState.workout?.workoutExercises?.length ?? 0;
+      const hasNextExercise = pagerIndex + 1 < totalExercises;
+
       // First update the set with weight/reps values
       await updateSetMutation.mutateAsync({
         workoutId,
@@ -58,11 +65,18 @@ export function useFocusedWorkout(workoutId: number) {
           onSuccess: () => {
             setShowRestTimer(true);
             detailState.restTimer.startTimer(detailState.restTimer.settings.defaultRestTime, setId);
+
+            // Auto-advance to next exercise after completing the last set
+            if (isLastSet && hasNextExercise) {
+              setTimeout(() => {
+                handlePagerChange(pagerIndex + 1);
+              }, 1200);
+            }
           },
         },
       );
     },
-    [detailState.completeSetMutation, detailState.restTimer, updateSetMutation, workoutId],
+    [detailState, handlePagerChange, pagerIndex, updateSetMutation, workoutId],
   );
 
   // Dismiss rest timer overlay

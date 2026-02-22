@@ -9,6 +9,7 @@ export interface ExerciseCardData {
   completedSets: WorkoutSet[];
   currentSet: WorkoutSet | null;
   previousSet?: { weight: number | null; reps: number | null };
+  lastPerformanceSets: { setNumber: number; weight: number | null; reps: number | null }[];
 }
 
 export interface ExerciseCardActions {

@@ -5,7 +5,6 @@
 import { useEffect, useState } from "react";
 import {
   Box,
-  Button,
   Group,
   Modal,
   NumberInput,
@@ -17,13 +16,13 @@ import {
 } from "@mantine/core";
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
-import type { GoalType, GoalWithExercise } from "./types";
+import type { GoalWithExercise } from "./types";
 
 /**
  * Get the current value field name based on goal type
  */
 function getCurrentValueLabel(goal: GoalWithExercise): string {
-  const type = goal.goalType as GoalType;
+  const type = goal.goalType;
 
   switch (type) {
     case "weight":
@@ -48,7 +47,7 @@ function getCurrentValueLabel(goal: GoalWithExercise): string {
  * Get the current value from goal based on type
  */
 function getCurrentValue(goal: GoalWithExercise): number | null {
-  const type = goal.goalType as GoalType;
+  const type = goal.goalType;
 
   switch (type) {
     case "weight":
@@ -73,7 +72,7 @@ function getCurrentValue(goal: GoalWithExercise): number | null {
  * Get the target value from goal based on type
  */
 function getTargetValue(goal: GoalWithExercise): number | null {
-  const type = goal.goalType as GoalType;
+  const type = goal.goalType;
 
   switch (type) {
     case "weight":
@@ -98,7 +97,7 @@ function getTargetValue(goal: GoalWithExercise): number | null {
  * Get the unit string for the goal
  */
 function getUnit(goal: GoalWithExercise): string {
-  const type = goal.goalType as GoalType;
+  const type = goal.goalType;
 
   switch (type) {
     case "weight":
@@ -116,6 +115,27 @@ function getUnit(goal: GoalWithExercise): string {
       return goal.customMetricUnit ?? "";
     default:
       return "";
+  }
+}
+
+/**
+ * Get the start value for a goal based on its type
+ */
+function getStartValue(goal: GoalWithExercise): number | null {
+  const type = goal.goalType;
+  switch (type) {
+    case "weight":
+      return goal.startWeight ?? null;
+    case "strength":
+      return goal.targetLiftWeight ? (goal.startLiftWeight ?? null) : (goal.startReps ?? null);
+    case "body_measurement":
+      return goal.startMeasurement ?? null;
+    case "workout_frequency":
+      return 0; // Always starts at 0
+    case "custom":
+      return goal.startCustomValue ?? null;
+    default:
+      return null;
   }
 }
 
@@ -155,13 +175,13 @@ export function LogProgressModal({
   const handleSubmit = () => {
     if (!goal || typeof value !== "number") return;
 
+    // onSubmit (handleLogProgressSubmit) is async and calls closeLogProgressModal on success
+    // Do not call handleClose here — let the async handler own the modal lifecycle
     onSubmit({
       goalId: goal.id,
       value,
       note: note.trim() || undefined,
     });
-
-    handleClose();
   };
 
   if (!goal) return null;
@@ -174,30 +194,22 @@ export function LogProgressModal({
   // Calculate preview progress if a value is entered
   let previewProgress = goal.progressPercentage ?? 0;
   if (typeof value === "number" && targetValue !== null) {
-    const start =
-      goal.direction === "decrease"
-        ? Math.max(
-            goal.startWeight ?? 0,
-            goal.startMeasurement ?? 0,
-            goal.startLiftWeight ?? 0,
-            goal.startCustomValue ?? 0,
-          )
-        : Math.min(
-            goal.startWeight ?? Infinity,
-            goal.startMeasurement ?? Infinity,
-            goal.startLiftWeight ?? Infinity,
-            goal.startReps ?? Infinity,
-            goal.startCustomValue ?? Infinity,
-          );
-
-    if (goal.direction === "decrease") {
-      previewProgress = Math.min(100, Math.max(0, ((start - value) / (start - targetValue)) * 100));
-    } else {
-      previewProgress = Math.min(100, Math.max(0, ((value - start) / (targetValue - start)) * 100));
-    }
-
-    if (!Number.isFinite(previewProgress)) {
-      previewProgress = goal.progressPercentage ?? 0;
+    const startValue = getStartValue(goal);
+    if (startValue !== null && startValue !== targetValue) {
+      if (goal.direction === "decrease") {
+        previewProgress = Math.min(
+          100,
+          Math.max(0, ((startValue - value) / (startValue - targetValue)) * 100),
+        );
+      } else {
+        previewProgress = Math.min(
+          100,
+          Math.max(0, ((value - startValue) / (targetValue - startValue)) * 100),
+        );
+      }
+      if (!Number.isFinite(previewProgress)) {
+        previewProgress = goal.progressPercentage ?? 0;
+      }
     }
   }
 

@@ -1,47 +1,43 @@
 /**
  * GoalsView - Main goals page component
  * Displays goal summary, status tabs, and goal cards
+ * Uses sidebar + header + content area pattern matching workouts/templates
  */
 
-import { useCallback, useState } from "react";
-import { Box, Button, Stack } from "@mantine/core";
+import type { GoalStatus, GoalWithExercise, GoalsFilter } from "./types";
+
+import { useCallback, useMemo, useState } from "react";
+import { Box, Container, Flex, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPlus } from "@tabler/icons-react";
-import { PageHeader } from "@/components/ui/state-views";
-import { GoalsSummary } from "./goals-summary";
-import { GoalsList } from "./goals-list";
+import { IconPlus, IconTarget } from "@tabler/icons-react";
+
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
+import { FitAiContentArea } from "@/components/ui/fit-ai-content-area/fit-ai-content-area";
+import { FitAiPageHeader } from "@/components/ui/fit-ai-page-header/fit-ai-page-header";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
+
 import { CreateGoalModal } from "./create-goal-modal";
-import { LogProgressModal } from "./log-progress-modal";
 import { GoalDetailModal } from "./goal-detail-modal";
-import { useGoalsData, useGoalDetail } from "./use-goals-data";
-import { useGoalActions } from "./use-goal-actions";
-import type { GoalWithExercise } from "./types";
+import { GoalsList } from "./goals-list";
+import { GoalsSummary } from "./goals-summary";
 import styles from "./goals-view.module.css";
+import { LogProgressModal } from "./log-progress-modal";
+import { useGoalById, useGoalsList, useGoalsStats, useStatusTabs } from "./queries/use-queries";
+import { useGoalActions } from "./use-goal-actions";
 
 export function GoalsView() {
-  // Data hooks
-  const {
-    goals,
-    stats,
-    statusTabs,
-    activeTab,
-    setActiveTab,
-    isLoading,
-    isError,
-    refetch,
-    // Mutations
-    completeMutation,
-    pauseMutation,
-    resumeMutation,
-    abandonMutation,
-    deleteMutation,
-    updateProgressMutation,
-    createWeightGoalMutation,
-    createStrengthGoalMutation,
-    createBodyMeasurementGoalMutation,
-    createWorkoutFrequencyGoalMutation,
-    createCustomGoalMutation,
-  } = useGoalsData();
+  // Tab and filter state
+  const [activeTab, setActiveTab] = useState<GoalStatus | "all">("all");
+  const [filters] = useState<GoalsFilter>({});
+  const queryFilters = useMemo(
+    () => ({ ...filters, ...(activeTab !== "all" ? { status: activeTab } : {}) }),
+    [filters, activeTab],
+  );
+
+  // Data queries
+  const goalsQuery = useGoalsList(queryFilters);
+  const stats = useGoalsStats();
+  const statusTabs = useStatusTabs();
 
   // Modal states
   const [createModalOpened, { open: openCreateModal, close: closeCreateModal }] =
@@ -56,7 +52,9 @@ export function GoalsView() {
   const [selectedGoalId, setSelectedGoalId] = useState<number | null>(null);
 
   // Fetch goal detail when opening detail modal
-  const { goal: goalDetail, isLoading: isLoadingDetail } = useGoalDetail(selectedGoalId);
+  const goalDetailQuery = useGoalById(selectedGoalId);
+  const goalDetail = goalDetailQuery.data;
+  const isLoadingDetail = goalDetailQuery.isLoading;
 
   // Consolidated action handlers from custom hook
   const {
@@ -77,20 +75,8 @@ export function GoalsView() {
     handleDetailResume,
     handleDetailAbandon,
     isCreating,
+    isUpdatingProgress,
   } = useGoalActions({
-    mutations: {
-      completeMutation,
-      pauseMutation,
-      resumeMutation,
-      abandonMutation,
-      deleteMutation,
-      updateProgressMutation,
-      createWeightGoalMutation,
-      createStrengthGoalMutation,
-      createBodyMeasurementGoalMutation,
-      createWorkoutFrequencyGoalMutation,
-      createCustomGoalMutation,
-    },
     closeCreateModal,
     closeLogProgressModal,
     closeDetailModal,
@@ -98,6 +84,11 @@ export function GoalsView() {
     setSelectedGoal,
     goalDetail: goalDetail as GoalWithExercise | null,
   });
+
+  const handleCloseDetailModal = useCallback(() => {
+    closeDetailModal();
+    setSelectedGoalId(null);
+  }, [closeDetailModal]);
 
   // Navigation handlers
   const handleGoalClick = useCallback(
@@ -117,41 +108,90 @@ export function GoalsView() {
   );
 
   return (
-    <Box p={{ base: "sm", md: "md" }} className={styles.goalsContainer}>
-      <Stack gap="md">
-        {/* Page header */}
-        <PageHeader
-          title="Goals & Progress"
-          description="Set fitness goals and track your progress over time"
-          actions={
-            <Button leftSection={<IconPlus size={16} />} onClick={openCreateModal}>
+    <>
+      {/* Sidebar */}
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>
+          <Group gap="xs" align="center">
+            <Flex
+              align="center"
+              justify="center"
+              w={36}
+              h={36}
+              c="white"
+              className={styles.logoIcon}
+              style={{ borderRadius: "var(--mantine-radius-md)" }}
+            >
+              <IconTarget size={20} />
+            </Flex>
+            <FitAiText variant="subheading">Goals</FitAiText>
+          </Group>
+        </div>
+
+        <div className={styles.sidebarContent}>
+          {/* Goal type filter or status navigation can go here later */}
+        </div>
+
+        <Box p="md" className={styles.sidebarFooter}>
+          <FitAiButton
+            variant="primary"
+            fullWidth
+            leftSection={<IconPlus size={16} />}
+            onClick={openCreateModal}
+            className={styles.createButton}
+          >
+            New Goal
+          </FitAiButton>
+        </Box>
+      </div>
+
+      {/* Main Content */}
+      <Container fluid flex={1}>
+        <FitAiPageHeader>
+          <FitAiPageHeader.Title>Goals &amp; Progress</FitAiPageHeader.Title>
+          <FitAiPageHeader.Description>
+            Set fitness goals and track your progress over time
+          </FitAiPageHeader.Description>
+          <FitAiPageHeader.Actions>
+            <FitAiPageHeader.Action
+              variant="primary"
+              icon={<IconPlus size={16} />}
+              onClick={openCreateModal}
+            >
               Create Goal
-            </Button>
-          }
-        />
+            </FitAiPageHeader.Action>
+          </FitAiPageHeader.Actions>
+          <FitAiPageHeader.Stats>
+            <GoalsSummary stats={stats} />
+          </FitAiPageHeader.Stats>
+        </FitAiPageHeader>
 
-        {/* Stats overview */}
-        <GoalsSummary stats={stats} />
-
-        {/* Goals list with tabs */}
-        <GoalsList
-          goals={goals}
-          statusTabs={statusTabs}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          isLoading={isLoading}
-          isError={isError}
-          onRetry={refetch}
-          onGoalClick={handleGoalClick}
-          onLogProgress={handleLogProgress}
-          onComplete={handleComplete}
-          onPause={handlePause}
-          onResume={handleResume}
-          onAbandon={handleAbandon}
-          onDelete={handleDelete}
-          onCreateGoal={openCreateModal}
-        />
-      </Stack>
+        <FitAiContentArea>
+          <GoalsList
+            goals={goalsQuery.data ?? []}
+            tabs={{
+              statusTabs,
+              activeTab,
+              onTabChange: setActiveTab,
+            }}
+            loadingState={{
+              isLoading: goalsQuery.isLoading,
+              isError: goalsQuery.isError,
+              onRetry: goalsQuery.refetch,
+            }}
+            actions={{
+              onGoalClick: handleGoalClick,
+              onLogProgress: handleLogProgress,
+              onComplete: handleComplete,
+              onPause: handlePause,
+              onResume: handleResume,
+              onAbandon: handleAbandon,
+              onDelete: handleDelete,
+              onCreateGoal: openCreateModal,
+            }}
+          />
+        </FitAiContentArea>
+      </Container>
 
       {/* Create Goal Modal */}
       <CreateGoalModal
@@ -171,13 +211,13 @@ export function GoalsView() {
         onClose={closeLogProgressModal}
         goal={selectedGoal}
         onSubmit={handleLogProgressSubmit}
-        isLoading={updateProgressMutation.isPending}
+        isLoading={isUpdatingProgress}
       />
 
       {/* Goal Detail Modal */}
       <GoalDetailModal
         opened={detailModalOpened}
-        onClose={closeDetailModal}
+        onClose={handleCloseDetailModal}
         goal={goalDetail ?? null}
         isLoading={isLoadingDetail}
         onLogProgress={handleDetailLogProgress}
@@ -186,6 +226,6 @@ export function GoalsView() {
         onResume={handleDetailResume}
         onAbandon={handleDetailAbandon}
       />
-    </Box>
+    </>
   );
 }

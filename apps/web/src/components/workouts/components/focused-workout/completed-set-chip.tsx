@@ -1,7 +1,9 @@
-import { Badge, Group } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
+/**
+ * CompletedSetChip - Compact table row for completed set display
+ * Redesigned from horizontal badge chip to a clean vertical list row.
+ */
 
-import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
+import { Divider, Group, Text } from "@mantine/core";
 
 import styles from "./completed-set-chip.module.css";
 
@@ -12,33 +14,36 @@ interface CompletedSetChipProps {
   onClick?: () => void;
 }
 
-export function CompletedSetChip({
-  setNumber: _setNumber,
-  weight,
-  reps,
-  onClick,
-}: CompletedSetChipProps) {
-  void _setNumber; // Keep for backward compatibility but not displayed
-  // BUG FIX: Don't render chip if weight or reps are null
-  // This prevents showing "- × -" for incomplete sets
-  if (weight === null || reps === null) {
-    return null;
-  }
-
+export function CompletedSetChip({ setNumber, weight, reps, onClick }: CompletedSetChipProps) {
   return (
-    <Badge
-      className={styles.chip}
-      data-no-click={!onClick ? true : undefined}
-      variant="filled"
-      size="lg"
+    <Group
+      gap="sm"
+      wrap="nowrap"
+      className={styles.row}
       onClick={onClick}
+      data-clickable={onClick ? true : undefined}
     >
-      <Group gap={6} wrap="nowrap">
-        <IconCheck size={14} stroke={2.5} />
-        <FitAiText.Label span className={styles.text}>
-          {weight}kg × {reps}
-        </FitAiText.Label>
-      </Group>
-    </Badge>
+      <Text size="xs" fw={700} c="dimmed" className={styles.setNum}>
+        #{setNumber}
+      </Text>
+
+      <Divider orientation="vertical" className={styles.divider} />
+
+      <Text size="sm" fw={600} className={styles.value}>
+        {weight ?? "—"}
+        <Text span size="xs" c="dimmed" fw={400}>
+          {" "}
+          kg
+        </Text>
+      </Text>
+
+      <Text size="sm" fw={600} className={styles.value}>
+        {reps ?? "—"}
+        <Text span size="xs" c="dimmed" fw={400}>
+          {" "}
+          reps
+        </Text>
+      </Text>
+    </Group>
   );
 }

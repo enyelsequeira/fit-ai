@@ -73,6 +73,8 @@ vi.mock("drizzle-orm", async (importOriginal) => {
 });
 
 // Import after mocks are set up
+import { db } from "@fit-ai/db";
+import { getWorkoutByIdHandler } from "../handlers";
 import { workoutRouter } from "..";
 import {
   setTypeSchema,
@@ -749,6 +751,147 @@ describe("Workout Router", () => {
     it("should correctly identify completed workouts", () => {
       expect(mockWorkout.completedAt).toBeNull();
       expect(mockCompletedWorkout.completedAt).not.toBeNull();
+    });
+  });
+
+  // ===========================================================================
+  // Handler Integration Tests: getWorkoutByIdHandler with lastPerformance
+  // ===========================================================================
+
+  describe("getWorkoutByIdHandler with lastPerformance", () => {
+    it("returns empty lastPerformance when no prior completed workouts exist", async () => {
+      const ctx = createAuthenticatedContext({ id: "test-user-id" });
+
+      // Call 1: ownership check → returns mockWorkout
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockResolvedValue([mockWorkout]),
+          }),
+        }),
+      } as any);
+
+      // Call 2: exercises with details (JOIN)
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockReturnValue({
+              orderBy: vi.fn().mockResolvedValue([
+                {
+                  workoutExercise: mockWorkoutExercise,
+                  exercise: {
+                    id: 1,
+                    name: "Squat",
+                    category: "legs",
+                    exerciseType: "strength",
+                    equipment: null,
+                  },
+                },
+              ]),
+            }),
+          }),
+        }),
+      } as any);
+
+      // Call 3: sets for current workout exercises
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            orderBy: vi.fn().mockResolvedValue([mockExerciseSet]),
+          }),
+        }),
+      } as any);
+
+      // Call 4: lastPerformance — no prior completed workouts found → returns []
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockReturnValue({
+              orderBy: vi.fn().mockResolvedValue([]),
+            }),
+          }),
+        }),
+      } as any);
+
+      const result = await getWorkoutByIdHandler({ input: { workoutId: 1 }, context: ctx as any });
+      expect(result.workoutExercises?.[0]?.lastPerformance).toEqual([]);
+    });
+
+    it("populates lastPerformance from most recent completed workout", async () => {
+      const ctx = createAuthenticatedContext({ id: "test-user-id" });
+
+      // Call 1: ownership check
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: vi.fn().mockResolvedValue([mockWorkout]),
+          }),
+        }),
+      } as any);
+
+      // Call 2: exercises with details (JOIN)
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockReturnValue({
+              orderBy: vi.fn().mockResolvedValue([
+                {
+                  workoutExercise: mockWorkoutExercise,
+                  exercise: {
+                    id: 1,
+                    name: "Squat",
+                    category: "legs",
+                    exerciseType: "strength",
+                    equipment: null,
+                  },
+                },
+              ]),
+            }),
+          }),
+        }),
+      } as any);
+
+      // Call 3: sets for current workout exercises
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            orderBy: vi.fn().mockResolvedValue([mockExerciseSet]),
+          }),
+        }),
+      } as any);
+
+      // Call 4: lastPerformance — prior completed workout exercise found for exerciseId: 1
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          innerJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockReturnValue({
+              orderBy: vi
+                .fn()
+                .mockResolvedValue([
+                  { exerciseId: mockWorkoutExercise.exerciseId, workoutExerciseId: 99 },
+                ]),
+            }),
+          }),
+        }),
+      } as any);
+
+      // Call 5: sets from the prior workout exercise (workoutExerciseId: 99)
+      vi.mocked(db.select).mockReturnValueOnce({
+        from: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            orderBy: vi.fn().mockResolvedValue([
+              { workoutExerciseId: 99, setNumber: 1, weight: 100, reps: 8 },
+              { workoutExerciseId: 99, setNumber: 2, weight: 100, reps: 7 },
+            ]),
+          }),
+        }),
+      } as any);
+
+      const result = await getWorkoutByIdHandler({ input: { workoutId: 1 }, context: ctx as any });
+      expect(result.workoutExercises?.[0]?.lastPerformance).toEqual([
+        { setNumber: 1, weight: 100, reps: 8 },
+        { setNumber: 2, weight: 100, reps: 7 },
+      ]);
     });
   });
 });

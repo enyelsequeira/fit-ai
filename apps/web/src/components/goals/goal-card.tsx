@@ -10,7 +10,7 @@ import { FitAiCard, FitAiCardContent } from "@/components/ui/card";
 import { GoalCardActions } from "./goal-card-actions";
 import { GoalCardHeader } from "./goal-card-header";
 import { GoalCardProgress } from "./goal-card-progress";
-import type { GoalType, GoalWithExercise } from "./types";
+import type { GoalWithExercise } from "./types";
 import styles from "./goals-view.module.css";
 
 interface GoalCardProps {
@@ -36,7 +36,7 @@ export function GoalCard({
   onDelete,
   animationDelay = 0,
 }: GoalCardProps) {
-  const goalType = goal.goalType as GoalType;
+  const goalType = goal.goalType;
   const progress = goal.progressPercentage ?? 0;
 
   return (

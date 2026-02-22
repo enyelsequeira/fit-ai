@@ -55,7 +55,7 @@ export function getGoalTypeLabel(type: GoalType): string {
  * Format target value based on goal type
  */
 export function formatTargetValue(goal: GoalWithExercise): string {
-  const type = goal.goalType as GoalType;
+  const type = goal.goalType;
 
   switch (type) {
     case "weight":

@@ -8,7 +8,7 @@ import { LineChart } from "@mantine/charts";
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 import type { GoalValues } from "./goal-detail-utils";
 import { getStatusColor } from "./goal-detail-utils";
-import type { GoalWithProgress } from "./types";
+import type { GoalProgressOutput, GoalWithProgress } from "./types";
 
 interface GoalProgressSectionProps {
   goal: GoalWithProgress;
@@ -19,12 +19,16 @@ export function GoalProgressSection({ goal, values }: GoalProgressSectionProps) 
   const DirectionIcon = goal.direction === "decrease" ? IconTrendingDown : IconTrendingUp;
 
   const chartData = useMemo(() => {
-    if (!goal.progressHistory?.length) return [];
+    const history = goal.progressHistory;
+    if (!history?.length) return [];
 
-    return goal.progressHistory
+    return history
       .slice()
-      .sort((a, b) => new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime())
-      .map((entry) => ({
+      .sort(
+        (a: GoalProgressOutput, b: GoalProgressOutput) =>
+          new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime(),
+      )
+      .map((entry: GoalProgressOutput) => ({
         date: new Date(entry.recordedAt).toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
