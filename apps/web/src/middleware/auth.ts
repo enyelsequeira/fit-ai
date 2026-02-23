@@ -1,13 +1,11 @@
 import { createMiddleware } from "@tanstack/react-start";
 
-import { authClient } from "@/lib/auth-client";
+import { auth } from "@fit-ai/auth";
 import { redirect } from "@tanstack/react-router";
 
 export const authMiddleware = createMiddleware().server(async ({ next, request }) => {
-  const { data: session } = await authClient.getSession({
-    fetchOptions: {
-      headers: request.headers,
-    },
+  const session = await auth.api.getSession({
+    headers: request.headers,
   });
   if (!session) {
     throw redirect({ to: "/sign-in" });

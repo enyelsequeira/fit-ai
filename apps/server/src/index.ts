@@ -4,27 +4,18 @@ import { auth } from "@fit-ai/auth";
 import { env } from "@fit-ai/env/server";
 import { swaggerUI } from "@hono/swagger-ui";
 import { OpenAPIGenerator } from "@orpc/openapi";
-import { RatelimitHandlerPlugin } from "@orpc/experimental-ratelimit";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
-import { CORSPlugin } from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { pinoLogger } from "./lib/logger";
+import { logger } from "hono/logger";
 
 const app = new Hono();
 
-app.use(async (c, next) => {
-  const start = Date.now();
-  await next();
-  pinoLogger.info(
-    { method: c.req.method, path: c.req.path, status: c.res.status, ms: Date.now() - start },
-    "request",
-  );
-});
+app.use(logger());
 app.use(
   "/api/auth/*",
   cors({
@@ -197,7 +188,7 @@ app.get("/reference", (c) => {
               document.getElementById('auth-status').textContent = '? Unknown';
             }
           }
-          
+
           async function signIn() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -219,7 +210,7 @@ app.get("/reference", (c) => {
               alert('Sign in error: ' + e.message);
             }
           }
-          
+
           async function signUp() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -241,7 +232,7 @@ app.get("/reference", (c) => {
               alert('Sign up error: ' + e.message);
             }
           }
-          
+
           async function signOut() {
             try {
               await fetch('/api/auth/sign-out', {
@@ -254,10 +245,10 @@ app.get("/reference", (c) => {
               alert('Sign out error: ' + e.message);
             }
           }
-          
+
           // Initialize
           checkAuth();
-          
+
           Scalar.createApiReference('#app', {
             url: '/openapi.json',
             theme: 'default',
@@ -277,35 +268,23 @@ app.get("/reference", (c) => {
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- plugins are context-agnostic
-const sharedPlugins: any[] = [
-  new CORSPlugin({
-    origin: () => env.CORS_ORIGIN,
-    allowMethods: ["GET", "HEAD", "PUT", "POST", "DELETE", "PATCH"],
-    credentials: true,
-  }),
-  new RatelimitHandlerPlugin(),
-];
-
 export const apiHandler = new OpenAPIHandler(appRouter, {
   plugins: [
     new OpenAPIReferencePlugin({
       schemaConverters: [new ZodToJsonSchemaConverter()],
     }),
-    ...sharedPlugins,
   ],
   interceptors: [
     onError((error) => {
-      pinoLogger.error(error, "API handler error");
+      console.error("API handler error:", error);
     }),
   ],
 });
 
 export const rpcHandler = new RPCHandler(appRouter, {
-  plugins: [...sharedPlugins],
   interceptors: [
     onError((error) => {
-      pinoLogger.error(error, "RPC handler error");
+      console.error("RPC handler error:", error);
     }),
   ],
 });

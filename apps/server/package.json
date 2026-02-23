@@ -14,14 +14,12 @@
     "@fit-ai/db": "workspace:*",
     "@fit-ai/env": "workspace:*",
     "@hono/swagger-ui": "^0.5.3",
-    "@orpc/experimental-ratelimit": "^1.13.5",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "hono": "^4.8.2",
-    "pino": "^10.3.1",
     "zod": "catalog:"
   },
   "devDependencies": {
