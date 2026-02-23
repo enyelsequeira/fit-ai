@@ -336,7 +336,7 @@ app.use("/*", async (c, next) => {
 });
 
 app.get("/", (c) => {
-  return c.text("OK");
+  return c.text("OK-v3");
 });
 
 export default app;
