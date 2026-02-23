@@ -14,7 +14,9 @@ import {
   getConsistencyRoute,
   getExerciseStatsRoute,
   getFrequencyRoute,
+  getGoalAnalyticsRoute,
   getMonthlySummaryRoute,
+  getRecoveryTrendsRoute,
   getStrengthTrendsRoute,
   getSummaryHistoryRoute,
   getVolumeByMuscleRoute,
@@ -60,6 +62,12 @@ export const analyticsRouter = {
   /** Compare two time periods */
   getComparison: getComparisonRoute,
 
+  /** Get goal analytics */
+  getGoalAnalytics: getGoalAnalyticsRoute,
+
+  /** Get recovery trends */
+  getRecoveryTrends: getRecoveryTrendsRoute,
+
   /** Generate a training summary */
   generateSummary: generateSummaryRoute,
 };
@@ -70,6 +78,8 @@ export const analyticsRouter = {
 
 export * from "./schemas";
 export * from "./handlers";
+export * from "./goal-analytics-handler";
+export * from "./recovery-trends-handler";
 
 export {
   generateSummaryRoute,
@@ -77,7 +87,9 @@ export {
   getConsistencyRoute,
   getExerciseStatsRoute,
   getFrequencyRoute,
+  getGoalAnalyticsRoute,
   getMonthlySummaryRoute,
+  getRecoveryTrendsRoute,
   getStrengthTrendsRoute,
   getSummaryHistoryRoute,
   getVolumeByMuscleRoute,

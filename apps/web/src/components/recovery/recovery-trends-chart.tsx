@@ -3,6 +3,8 @@
  * Uses Mantine LineChart for visualization
  */
 
+import type { TrendPeriod } from "./types";
+
 import {
   Badge,
   Box,
@@ -15,8 +17,6 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-
-type TrendPeriod = "week" | "month" | "quarter" | "year";
 
 interface TrendsData {
   period: string;
@@ -270,4 +270,4 @@ function RecoveryTrendsChart({
 }
 
 export { RecoveryTrendsChart };
-export type { TrendsData, TrendPeriod };
+export type { TrendsData };

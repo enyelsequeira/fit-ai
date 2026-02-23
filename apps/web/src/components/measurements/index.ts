@@ -9,6 +9,23 @@ export { MeasurementsHistory } from "./measurements-history";
 export { LogMeasurementModal } from "./log-measurement-modal";
 export { useMeasurementsData } from "./use-measurements-data";
 
+// Query and mutation hooks
+export {
+  measurementLatestOptions,
+  measurementListOptions,
+  measurementTrendsOptions,
+} from "./queries/query-options";
+export {
+  useMeasurementLatest,
+  useMeasurementList,
+  useMeasurementTrends,
+} from "./queries/use-queries";
+export {
+  useCreateMeasurement,
+  useUpdateMeasurement,
+  useDeleteMeasurement,
+} from "./hooks/use-mutations";
+
 // Sub-components for advanced usage
 export { QuickWeightForm } from "./quick-weight-form";
 export { DetailedMeasurementsForm } from "./detailed-measurements-form";
@@ -27,7 +44,6 @@ export type {
   MeasurementsSummaryData,
   TrendChartDataPoint,
   MeasurementHistoryRow,
-  MeasurementsSummaryProps,
   TrendChartProps,
   MeasurementsHistoryProps,
 } from "./types";

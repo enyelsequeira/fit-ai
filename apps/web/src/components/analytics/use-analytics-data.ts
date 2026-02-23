@@ -6,8 +6,17 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { orpc } from "@/utils/orpc";
 
+import {
+  consistencyOptions,
+  goalAnalyticsOptions,
+  recoveryTrendsOptions,
+  volumeByMuscleOptions,
+  volumeTrendsOptions,
+  weeklySummaryOptions,
+} from "./queries/query-options";
+
 export type DateRangePeriod = "week" | "month" | "3months" | "year";
-export type AnalyticsTab = "volume" | "strength" | "consistency";
+export type AnalyticsTab = "volume" | "strength" | "consistency" | "goals" | "recovery";
 
 interface DateRange {
   startDate: Date;
@@ -88,6 +97,66 @@ export interface ConsistencyData {
   totalWorkouts: number;
 }
 
+export interface GoalAnalyticsData {
+  totalGoals: number;
+  activeGoals: number;
+  completedGoals: number;
+  abandonedGoals: number;
+  pausedGoals: number;
+  overallCompletionRate: number;
+  avgCompletionDays: number | null;
+  goalsByType: Array<{ type: string; count: number; completedCount: number }>;
+  recentlyCompleted: Array<{
+    id: number;
+    title: string;
+    goalType: string;
+    completedAt: string | null;
+    progressPercentage: number;
+  }>;
+  activeProgress: Array<{
+    id: number;
+    title: string;
+    goalType: string;
+    progressPercentage: number;
+    targetDate: string | null;
+    daysRemaining: number | null;
+  }>;
+}
+
+export interface RecoveryDataPoint {
+  date: string;
+  sleepHours: number | null;
+  sleepQuality: number | null;
+  energyLevel: number | null;
+  stressLevel: number | null;
+  sorenessLevel: number | null;
+  motivationLevel: number | null;
+  mood: string | null;
+}
+
+export interface RecoveryAverages {
+  sleepHours: number | null;
+  sleepQuality: number | null;
+  energyLevel: number | null;
+  stressLevel: number | null;
+  sorenessLevel: number | null;
+  motivationLevel: number | null;
+}
+
+export interface RecoveryTrends {
+  sleepTrend: number;
+  energyTrend: number;
+  stressTrend: number;
+  sorenessTrend: number;
+}
+
+export interface RecoveryData {
+  period: { start: string; end: string };
+  dataPoints: RecoveryDataPoint[];
+  averages: RecoveryAverages;
+  trends: RecoveryTrends;
+}
+
 const MUSCLE_COLORS: Record<string, string> = {
   chest: "#ef4444",
   back: "#f97316",
@@ -121,37 +190,26 @@ export function useAnalyticsData() {
 
   const weeks = getWeeksFromPeriod(period);
 
-  // Weekly summary query
-  const weeklySummaryQuery = useQuery(orpc.analytics.getWeeklySummary.queryOptions());
+  // Existing queries using query options
+  const weeklySummaryQuery = useQuery(weeklySummaryOptions());
+  const volumeTrendsQuery = useQuery(volumeTrendsOptions({ period: "week", weeks }));
+  const volumeByMuscleQuery = useQuery(volumeByMuscleOptions({ days: 30 }));
 
-  // Volume trends query
-  const volumeTrendsQuery = useQuery(
-    orpc.analytics.getVolumeTrends.queryOptions({ input: { period: "week", weeks } }),
-  );
-
-  // Volume by muscle query
-  const volumeByMuscleQuery = useQuery(
-    orpc.analytics.getVolumeByMuscle.queryOptions({ input: { days: 30 } }),
-  );
-
-  // Strength trends query (enabled when exercise is selected)
   const strengthTrendsQuery = useQuery({
     ...orpc.analytics.getStrengthTrends.queryOptions({
-      input: {
-        exerciseId: selectedExerciseId ?? 0,
-        weeks: 12,
-      },
+      input: { exerciseId: selectedExerciseId ?? 0, weeks: 12 },
     }),
     enabled: selectedExerciseId !== null,
   });
 
-  // Consistency query
-  const consistencyQuery = useQuery(orpc.analytics.getConsistency.queryOptions());
-
-  // Get exercises for strength trends selector
+  const consistencyQuery = useQuery(consistencyOptions());
   const personalRecordsQuery = useQuery(
     orpc.personalRecord.list.queryOptions({ input: { limit: 100 } }),
   );
+
+  // New queries
+  const goalAnalyticsQuery = useQuery(goalAnalyticsOptions());
+  const recoveryTrendsQuery = useQuery(recoveryTrendsOptions());
 
   // Process volume data
   const volumeData: VolumeDataPoint[] = useMemo(() => {
@@ -222,6 +280,46 @@ export function useAnalyticsData() {
       totalWorkouts: data?.totalWorkouts ?? 0,
     };
   }, [consistencyQuery.data]);
+
+  // Process goal analytics data
+  const goalAnalytics: GoalAnalyticsData = useMemo(() => {
+    const data = goalAnalyticsQuery.data as Partial<GoalAnalyticsData> | undefined;
+    return {
+      totalGoals: data?.totalGoals ?? 0,
+      activeGoals: data?.activeGoals ?? 0,
+      completedGoals: data?.completedGoals ?? 0,
+      abandonedGoals: data?.abandonedGoals ?? 0,
+      pausedGoals: data?.pausedGoals ?? 0,
+      overallCompletionRate: data?.overallCompletionRate ?? 0,
+      avgCompletionDays: data?.avgCompletionDays ?? null,
+      goalsByType: data?.goalsByType ?? [],
+      recentlyCompleted: data?.recentlyCompleted ?? [],
+      activeProgress: data?.activeProgress ?? [],
+    };
+  }, [goalAnalyticsQuery.data]);
+
+  // Process recovery data
+  const recoveryData: RecoveryData = useMemo(() => {
+    const data = recoveryTrendsQuery.data as Partial<RecoveryData> | undefined;
+    return {
+      period: data?.period ?? { start: "", end: "" },
+      dataPoints: data?.dataPoints ?? [],
+      averages: {
+        sleepHours: data?.averages?.sleepHours ?? null,
+        sleepQuality: data?.averages?.sleepQuality ?? null,
+        energyLevel: data?.averages?.energyLevel ?? null,
+        stressLevel: data?.averages?.stressLevel ?? null,
+        sorenessLevel: data?.averages?.sorenessLevel ?? null,
+        motivationLevel: data?.averages?.motivationLevel ?? null,
+      },
+      trends: {
+        sleepTrend: data?.trends?.sleepTrend ?? 0,
+        energyTrend: data?.trends?.energyTrend ?? 0,
+        stressTrend: data?.trends?.stressTrend ?? 0,
+        sorenessTrend: data?.trends?.sorenessTrend ?? 0,
+      },
+    };
+  }, [recoveryTrendsQuery.data]);
 
   // Get unique exercises from personal records for the selector
   const exercises = useMemo(() => {
@@ -296,11 +394,15 @@ export function useAnalyticsData() {
     muscleVolumeData,
     strengthData,
     consistencyData,
+    goalAnalytics,
+    recoveryData,
 
     // Loading states
     isLoading,
     isError,
     isStrengthLoading: strengthTrendsQuery.isLoading,
+    isGoalLoading: goalAnalyticsQuery.isLoading,
+    isRecoveryLoading: recoveryTrendsQuery.isLoading,
 
     // Refetch
     refetch: () => {
@@ -308,6 +410,8 @@ export function useAnalyticsData() {
       volumeTrendsQuery.refetch();
       volumeByMuscleQuery.refetch();
       consistencyQuery.refetch();
+      goalAnalyticsQuery.refetch();
+      recoveryTrendsQuery.refetch();
     },
   };
 }

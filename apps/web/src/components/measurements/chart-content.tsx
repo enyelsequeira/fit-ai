@@ -2,74 +2,47 @@
  * ChartContent - Renders the actual chart (Line or Area) for weight trends
  */
 
+import type { TrendChartDataPoint } from "./types";
+import type { ChartType, ProcessedChartData } from "./weight-trend-chart-utils";
+
 import { Box, Center } from "@mantine/core";
 import { IconChartLine } from "@tabler/icons-react";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
   Area,
   AreaChart,
+  CartesianGrid,
   Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
+
 import { EmptyState } from "@/components/ui/state-views";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { TrendChartDataPoint } from "./types";
-import type { ChartType, ProcessedChartData } from "./weight-trend-chart-utils";
+
 import { ChartTooltip } from "./chart-tooltip";
+import { chartConfig } from "./weight-trend-chart-utils";
 import styles from "./weight-trend-chart.module.css";
 
-interface ChartContentProps {
-  chartType: ChartType;
-  processedData: ProcessedChartData;
-  isLoading: boolean;
-}
-
-function ChartEmptyState() {
-  return (
-    <EmptyState
-      icon={<IconChartLine size={48} stroke={1.5} />}
-      title="No data available"
-      message="Log measurements to see your trends over time."
-    />
-  );
-}
-
-function LoadingChartState() {
-  return (
-    <Center mih={280} p="md">
-      <Skeleton h={200} w="100%" />
-    </Center>
-  );
-}
+const { margin, axisTickStyle, gridStroke, weightColor, bodyFatColor, bodyFatDomain } = chartConfig;
 
 function LegendFormatter(value: string) {
   return <span style={{ color: "var(--mantine-color-text)", fontSize: 12 }}>{value}</span>;
 }
 
-const chartMargin = { top: 10, right: 30, left: 0, bottom: 0 };
-
-const axisTickStyle = { fontSize: 12, fill: "var(--mantine-color-dimmed)" };
-
-const gridStroke = "var(--mantine-color-gray-3)";
-
-const weightColor = "var(--mantine-color-blue-6)";
-const bodyFatColor = "var(--mantine-color-orange-6)";
-
-interface AreaChartViewProps {
+interface SharedChartProps {
   data: TrendChartDataPoint[];
   weightDomain: [number, number];
   hasWeight: boolean;
   hasBodyFat: boolean;
 }
 
-function AreaChartView({ data, weightDomain, hasWeight, hasBodyFat }: AreaChartViewProps) {
+function AreaChartView({ data, weightDomain, hasWeight, hasBodyFat }: SharedChartProps) {
   return (
-    <AreaChart data={data} margin={chartMargin}>
+    <AreaChart data={data} margin={margin}>
       <defs>
         <linearGradient id="weightGradient" x1="0" y1="0" x2="0" y2="1">
           <stop offset="5%" stopColor={weightColor} stopOpacity={0.3} />
@@ -93,17 +66,16 @@ function AreaChartView({ data, weightDomain, hasWeight, hasBodyFat }: AreaChartV
         tick={axisTickStyle}
         tickLine={false}
         axisLine={false}
-        tickFormatter={(value) => `${value}`}
       />
       {hasBodyFat && (
         <YAxis
           yAxisId="bodyFat"
           orientation="right"
-          domain={[0, 50]}
+          domain={bodyFatDomain}
           tick={axisTickStyle}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `${value}%`}
+          tickFormatter={(v) => `${v}%`}
         />
       )}
       <Tooltip content={<ChartTooltip />} />
@@ -140,16 +112,9 @@ function AreaChartView({ data, weightDomain, hasWeight, hasBodyFat }: AreaChartV
   );
 }
 
-interface LineChartViewProps {
-  data: TrendChartDataPoint[];
-  weightDomain: [number, number];
-  hasWeight: boolean;
-  hasBodyFat: boolean;
-}
-
-function LineChartView({ data, weightDomain, hasWeight, hasBodyFat }: LineChartViewProps) {
+function LineChartView({ data, weightDomain, hasWeight, hasBodyFat }: SharedChartProps) {
   return (
-    <LineChart data={data} margin={chartMargin}>
+    <LineChart data={data} margin={margin}>
       <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} vertical={false} />
       <XAxis
         dataKey="date"
@@ -163,17 +128,16 @@ function LineChartView({ data, weightDomain, hasWeight, hasBodyFat }: LineChartV
         tick={axisTickStyle}
         tickLine={false}
         axisLine={false}
-        tickFormatter={(value) => `${value}`}
       />
       {hasBodyFat && (
         <YAxis
           yAxisId="bodyFat"
           orientation="right"
-          domain={[0, 50]}
+          domain={bodyFatDomain}
           tick={axisTickStyle}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `${value}%`}
+          tickFormatter={(v) => `${v}%`}
         />
       )}
       <Tooltip content={<ChartTooltip />} />
@@ -208,38 +172,42 @@ function LineChartView({ data, weightDomain, hasWeight, hasBodyFat }: LineChartV
   );
 }
 
+interface ChartContentProps {
+  chartType: ChartType;
+  processedData: ProcessedChartData;
+  isLoading: boolean;
+}
+
 export function ChartContent({ chartType, processedData, isLoading }: ChartContentProps) {
   const { filteredData, weightDomain, hasData, hasWeight, hasBodyFat } = processedData;
 
   if (isLoading) {
-    return <LoadingChartState />;
+    return (
+      <Center mih={280} p="md">
+        <Skeleton h={200} w="100%" />
+      </Center>
+    );
   }
 
   if (!hasData) {
-    return <ChartEmptyState />;
+    return (
+      <EmptyState
+        icon={<IconChartLine size={48} stroke={1.5} />}
+        title="No data available"
+        message="Log measurements to see your trends over time."
+      />
+    );
   }
 
+  const chartProps: SharedChartProps = { data: filteredData, weightDomain, hasWeight, hasBodyFat };
+
   return (
-    <Box
-      className={styles.chartContainer}
-      data-chart-type={chartType}
-      data-has-data={hasData ? "true" : "false"}
-    >
+    <Box className={styles.chartContainer} data-chart-type={chartType}>
       <ResponsiveContainer width="100%" height={280}>
         {chartType === "area" ? (
-          <AreaChartView
-            data={filteredData}
-            weightDomain={weightDomain}
-            hasWeight={hasWeight}
-            hasBodyFat={hasBodyFat}
-          />
+          <AreaChartView {...chartProps} />
         ) : (
-          <LineChartView
-            data={filteredData}
-            weightDomain={weightDomain}
-            hasWeight={hasWeight}
-            hasBodyFat={hasBodyFat}
-          />
+          <LineChartView {...chartProps} />
         )}
       </ResponsiveContainer>
     </Box>

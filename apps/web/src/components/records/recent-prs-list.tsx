@@ -16,15 +16,9 @@ import {
   Title,
   Transition,
 } from "@mantine/core";
-import {
-  formatRecordValue,
-  formatRelativeDate,
-  isToday,
-  isWithinDays,
-  RECORD_TYPE_COLORS,
-  RECORD_TYPE_LABELS,
-  type RecordTypeFilter,
-} from "./use-records-data";
+import { RECORD_TYPE_COLORS, RECORD_TYPE_LABELS, type RecordTypeFilter } from "./types";
+import { formatRecordValue, isWithinDays } from "./utils";
+import { formatRelativeDate, isToday } from "@/components/ui/utils";
 import styles from "./recent-prs-list.module.css";
 
 interface PersonalRecord {

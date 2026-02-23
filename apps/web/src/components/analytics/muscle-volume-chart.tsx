@@ -1,11 +1,11 @@
 /**
  * MuscleVolumeChart - Displays volume distribution by muscle group
+ * Uses Mantine DonutChart for visualization
  */
 
 import { IconActivity } from "@tabler/icons-react";
 import { Box, Group, Stack, Text } from "@mantine/core";
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
+import { DonutChart } from "@mantine/charts";
 
 import {
   FitAiCard,
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/state-views";
+import { formatVolume } from "@/components/ui/utils";
 import type { MuscleVolumeData } from "./use-analytics-data";
 
 import styles from "./analytics-view.module.css";
@@ -23,20 +24,9 @@ import styles from "./analytics-view.module.css";
 interface MuscleVolumeChartProps {
   data: MuscleVolumeData[];
   isLoading?: boolean;
-  chartType?: "pie" | "radar";
 }
 
-function formatVolume(volume: number): string {
-  if (volume >= 1000000) {
-    return `${(volume / 1000000).toFixed(1)}M`;
-  }
-  if (volume >= 1000) {
-    return `${(volume / 1000).toFixed(1)}k`;
-  }
-  return String(volume);
-}
-
-export function MuscleVolumeChart({ data, isLoading, chartType = "pie" }: MuscleVolumeChartProps) {
+export function MuscleVolumeChart({ data, isLoading }: MuscleVolumeChartProps) {
   const hasData = data.length > 0;
 
   if (isLoading) {
@@ -52,12 +42,7 @@ export function MuscleVolumeChart({ data, isLoading, chartType = "pie" }: Muscle
           <FitAiCardDescription>Distribution of training volume</FitAiCardDescription>
         </FitAiCardHeader>
         <FitAiCardContent>
-          <Box
-            className={styles.chartContainer}
-            data-chart-type={chartType}
-            data-loading="true"
-            data-has-data="false"
-          >
+          <Box className={styles.chartContainer} data-loading="true" data-has-data="false">
             <Skeleton w="100%" h="100%" />
           </Box>
         </FitAiCardContent>
@@ -90,18 +75,8 @@ export function MuscleVolumeChart({ data, isLoading, chartType = "pie" }: Muscle
 
   const totalVolume = data.reduce((sum, d) => sum + d.value, 0);
 
-  // For radar chart, normalize the data
-  const radarData = data.map((item) => ({
-    ...item,
-    fullMark: Math.max(...data.map((d) => d.value)),
-  }));
-
   return (
-    <FitAiCard
-      className={styles.chartCard}
-      data-chart-type={chartType}
-      data-has-data={String(hasData)}
-    >
+    <FitAiCard className={styles.chartCard} data-has-data={String(hasData)}>
       <FitAiCardHeader>
         <FitAiCardTitle>
           <Group gap="xs">
@@ -109,84 +84,18 @@ export function MuscleVolumeChart({ data, isLoading, chartType = "pie" }: Muscle
             Volume by Muscle Group
           </Group>
         </FitAiCardTitle>
-        <FitAiCardDescription>Total: {formatVolume(totalVolume)} kg</FitAiCardDescription>
+        <FitAiCardDescription>Total: {formatVolume(totalVolume)}</FitAiCardDescription>
       </FitAiCardHeader>
       <FitAiCardContent>
         <Group className={styles.muscleChart} gap="md" align="center" wrap="wrap">
-          <Box
-            w={200}
-            h={200}
-            style={{ flexShrink: 0 }}
-            data-chart-type={chartType}
-            data-has-data={String(hasData)}
-            data-loading="false"
-          >
-            {chartType === "radar" ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="80%">
-                  <PolarGrid stroke="var(--mantine-color-default-border)" />
-                  <PolarAngleAxis
-                    dataKey="name"
-                    tick={{ fontSize: 10, fill: "var(--mantine-color-dimmed)" }}
-                  />
-                  <PolarRadiusAxis tick={{ fontSize: 8 }} />
-                  <Radar
-                    name="Volume"
-                    dataKey="value"
-                    stroke="var(--mantine-color-blue-6)"
-                    fill="var(--mantine-color-blue-6)"
-                    fillOpacity={0.3}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--mantine-color-body)",
-                      border: "1px solid var(--mantine-color-default-border)",
-                      borderRadius: "var(--mantine-radius-sm)",
-                      fontSize: "12px",
-                    }}
-                    formatter={(value) => {
-                      if (typeof value === "number") {
-                        return [`${value.toLocaleString()} kg`, "Volume"];
-                      }
-                      return [String(value), "Volume"];
-                    }}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={data}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={40}
-                    outerRadius={70}
-                    paddingAngle={2}
-                  >
-                    {data.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--mantine-color-body)",
-                      border: "1px solid var(--mantine-color-default-border)",
-                      borderRadius: "var(--mantine-radius-sm)",
-                      fontSize: "12px",
-                    }}
-                    formatter={(value) => {
-                      if (typeof value === "number") {
-                        return [`${value.toLocaleString()} kg`, "Volume"];
-                      }
-                      return [String(value), "Volume"];
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
+          <Box style={{ flexShrink: 0 }}>
+            <DonutChart
+              data={data}
+              size={200}
+              thickness={30}
+              tooltipDataSource="segment"
+              chartLabel={formatVolume(totalVolume)}
+            />
           </Box>
 
           {/* Legend */}
@@ -208,7 +117,7 @@ export function MuscleVolumeChart({ data, isLoading, chartType = "pie" }: Muscle
                   </Group>
                   <Group gap="xs" align="center" wrap="nowrap">
                     <Text size="xs" fw={500}>
-                      {formatVolume(item.value)} kg
+                      {formatVolume(item.value)}
                     </Text>
                     <Text size="xs" c="dimmed">
                       ({percentage.toFixed(1)}%)

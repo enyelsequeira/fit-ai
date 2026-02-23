@@ -1,0 +1,42 @@
+.goalsCard {
+  animation: fadeSlideUp 400ms ease-out forwards;
+  animation-delay: 150ms;
+  opacity: 0;
+}
+
+.goalItem {
+  padding: var(--mantine-spacing-xs) 0;
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
+.goalItem:last-child {
+  border-bottom: none;
+}
+
+.viewAllLink {
+  text-decoration: none;
+  font-size: var(--mantine-font-size-sm);
+  color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-4));
+}
+
+.viewAllLink:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goalsCard {
+    animation: none;
+    opacity: 1;
+  }
+}

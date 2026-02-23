@@ -1,67 +1,53 @@
-/**
- * RecoveryView - Main recovery page component
- * Split layout with readiness/check-in on left, trends/history on right
- * Responsive: stacks vertically on mobile
- */
+import type { CheckInFormData, TrendPeriod } from "./types";
 
 import { useCallback, useState } from "react";
-import { ActionIcon, Box, Modal, Stack } from "@mantine/core";
+import { Box, Container, Flex, Group, Modal, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconRefresh } from "@tabler/icons-react";
-import { ErrorState, PageHeader } from "@/components/ui/state-views";
-import { ReadinessScoreCard } from "./readiness-score-card";
+import { IconHeartbeat, IconPlus, IconRefresh } from "@tabler/icons-react";
+
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
+import { FitAiContentArea } from "@/components/ui/fit-ai-content-area/fit-ai-content-area";
+import { FitAiPageHeader } from "@/components/ui/fit-ai-page-header/fit-ai-page-header";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
+
+import { useCreateCheckIn, useRefreshRecovery } from "./hooks/use-mutations";
+import {
+  useCheckInHistory,
+  useReadiness,
+  useRecoveryStats,
+  useRecoveryStatus,
+  useTodayCheckIn,
+  useTrends,
+} from "./queries/use-queries";
+import { CheckInForm } from "./check-in-form";
 import { CheckInSummary } from "./check-in-summary";
-import { CheckInForm, type CheckInData } from "./check-in-form";
-import { MuscleRecoveryMap } from "./muscle-recovery-map";
-import { RecoveryTrendsChart } from "./recovery-trends-chart";
 import { CheckInHistory } from "./check-in-history";
-import { useRecoveryData } from "./use-recovery-data";
+import { MuscleRecoveryMap } from "./muscle-recovery-map";
+import { ReadinessScoreCard } from "./readiness-score-card";
+import { RecoverySummary } from "./recovery-summary";
+import { RecoveryTrendsChart } from "./recovery-trends-chart";
 import styles from "./recovery-view.module.css";
 
 export function RecoveryView() {
-  const {
-    // Today's check-in
-    todayCheckIn,
-    hasTodayCheckIn,
-    isTodayCheckInLoading,
+  // Data queries
+  const todayCheckInQuery = useTodayCheckIn();
+  const readinessQuery = useReadiness();
+  const stats = useRecoveryStats();
+  const recoveryStatusQuery = useRecoveryStatus();
+  const [trendPeriod, setTrendPeriod] = useState<TrendPeriod>("month");
+  const trendsQuery = useTrends(trendPeriod);
+  const [historyOffset, setHistoryOffset] = useState(0);
+  const historyQuery = useCheckInHistory({ limit: 10, offset: historyOffset });
 
-    // Readiness
-    readiness,
-    isReadinessLoading,
+  // Mutations
+  const createCheckInMutation = useCreateCheckIn();
+  const refreshRecoveryMutation = useRefreshRecovery();
 
-    // Recovery status
-    recoveryStatus,
-    isRecoveryStatusLoading,
-
-    // Trends
-    trends,
-    trendPeriod,
-    setTrendPeriod,
-    isTrendsLoading,
-
-    // History
-    checkInHistory,
-    hasMoreHistory,
-    loadMoreHistory,
-    isHistoryLoading,
-
-    // Mutations
-    submitCheckIn,
-    isSubmitting,
-    refreshRecovery,
-    isRefreshing,
-
-    // General state
-    isError,
-    refetch,
-  } = useRecoveryData();
-
-  // Modal state for check-in form
+  // Modal state
   const [checkInModalOpened, { open: openCheckInModal, close: closeCheckInModal }] =
     useDisclosure(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  // Handlers
   const handleStartCheckIn = useCallback(() => {
     setIsEditMode(false);
     openCheckInModal();
@@ -73,93 +59,120 @@ export function RecoveryView() {
   }, [openCheckInModal]);
 
   const handleSubmitCheckIn = useCallback(
-    async (data: CheckInData) => {
-      await submitCheckIn(data);
+    async (data: CheckInFormData) => {
+      await createCheckInMutation.mutateAsync(
+        data as unknown as Parameters<typeof createCheckInMutation.mutateAsync>[0],
+      );
       closeCheckInModal();
     },
-    [submitCheckIn, closeCheckInModal],
+    [createCheckInMutation, closeCheckInModal],
   );
 
   const handleRefreshRecovery = useCallback(async () => {
-    await refreshRecovery();
-  }, [refreshRecovery]);
-
-  // Error state
-  if (isError) {
-    return (
-      <Box p={{ base: "sm", md: "md" }} className={styles.recoveryContainer}>
-        <ErrorState
-          title="Error loading recovery data"
-          message="Failed to load recovery data. Please try again."
-          onRetry={refetch}
-        />
-      </Box>
-    );
-  }
+    await refreshRecoveryMutation.mutateAsync({});
+  }, [refreshRecoveryMutation]);
 
   return (
-    <Box p={{ base: "sm", md: "md" }} className={styles.recoveryContainer}>
-      <Stack gap="md">
-        {/* Page header */}
-        <PageHeader
-          title="Recovery & Check-ins"
-          description="Track your daily wellness and monitor muscle recovery"
-          actions={
-            <ActionIcon
-              variant="subtle"
-              size="lg"
-              onClick={handleRefreshRecovery}
-              loading={isRefreshing}
-              title="Refresh recovery data"
+    <>
+      {/* Sidebar */}
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>
+          <Group gap="xs" align="center">
+            <Flex
+              align="center"
+              justify="center"
+              w={36}
+              h={36}
+              c="white"
+              className={styles.logoIcon}
+              style={{ borderRadius: "var(--mantine-radius-md)" }}
             >
-              <IconRefresh size={20} />
-            </ActionIcon>
-          }
-        />
+              <IconHeartbeat size={20} />
+            </Flex>
+            <FitAiText variant="subheading">Recovery</FitAiText>
+          </Group>
+        </div>
 
-        {/* Main content: Left + Right columns */}
-        <Box className={styles.mainContent}>
-          {/* Left column: Readiness + Check-in + Muscle Recovery */}
-          <Box className={styles.leftColumn}>
-            {/* Readiness Score */}
-            <ReadinessScoreCard readiness={readiness} isLoading={isReadinessLoading} />
+        <div className={styles.sidebarContent} />
 
-            {/* Today's Check-in Summary */}
-            <CheckInSummary
-              checkIn={todayCheckIn}
-              isLoading={isTodayCheckInLoading}
-              onEdit={handleEditCheckIn}
-              onCreateNew={handleStartCheckIn}
-            />
-
-            {/* Muscle Recovery Map */}
-            <MuscleRecoveryMap
-              muscleGroups={recoveryStatus?.muscleGroups ?? []}
-              overallRecovery={recoveryStatus?.overallRecovery}
-              isLoading={isRecoveryStatusLoading}
-            />
-          </Box>
-
-          {/* Right column: Trends + History */}
-          <Box className={styles.rightColumn}>
-            {/* Recovery Trends */}
-            <RecoveryTrendsChart
-              trends={trends}
-              period={trendPeriod}
-              onPeriodChange={setTrendPeriod}
-              isLoading={isTrendsLoading}
-            />
-
-            {/* Check-in History */}
-            <CheckInHistory
-              checkIns={checkInHistory}
-              hasMore={hasMoreHistory}
-              isLoading={isHistoryLoading}
-              onLoadMore={loadMoreHistory}
-            />
-          </Box>
+        <Box p="md" className={styles.sidebarFooter}>
+          <FitAiButton
+            variant="primary"
+            fullWidth
+            leftSection={<IconPlus size={16} />}
+            onClick={handleStartCheckIn}
+            className={styles.createButton}
+          >
+            Log Check-in
+          </FitAiButton>
         </Box>
-      </Stack>
+      </div>
+
+      {/* Main Content */}
+      <Container fluid flex={1}>
+        <FitAiPageHeader>
+          <FitAiPageHeader.Title>Recovery &amp; Check-ins</FitAiPageHeader.Title>
+          <FitAiPageHeader.Description>
+            Track your daily wellness and monitor muscle recovery
+          </FitAiPageHeader.Description>
+          <FitAiPageHeader.Actions>
+            <FitAiPageHeader.Action
+              variant="secondary"
+              icon={<IconRefresh size={16} />}
+              onClick={handleRefreshRecovery}
+            >
+              Refresh
+            </FitAiPageHeader.Action>
+            <FitAiPageHeader.Action
+              variant="primary"
+              icon={<IconPlus size={16} />}
+              onClick={handleStartCheckIn}
+            >
+              Log Check-in
+            </FitAiPageHeader.Action>
+          </FitAiPageHeader.Actions>
+          <FitAiPageHeader.Stats>
+            <RecoverySummary stats={stats} />
+          </FitAiPageHeader.Stats>
+        </FitAiPageHeader>
+
+        <FitAiContentArea>
+          <div className={styles.contentGrid}>
+            <Stack gap="md">
+              <ReadinessScoreCard
+                readiness={readinessQuery.data ?? null}
+                isLoading={readinessQuery.isLoading}
+              />
+              <CheckInSummary
+                checkIn={todayCheckInQuery.data ?? null}
+                isLoading={todayCheckInQuery.isLoading}
+                onEdit={handleEditCheckIn}
+                onCreateNew={handleStartCheckIn}
+              />
+              <MuscleRecoveryMap
+                muscleGroups={recoveryStatusQuery.data?.muscleGroups ?? []}
+                overallRecovery={recoveryStatusQuery.data?.overallRecovery}
+                isLoading={recoveryStatusQuery.isLoading}
+              />
+            </Stack>
+
+            <Stack gap="md">
+              <RecoveryTrendsChart
+                trends={trendsQuery.data ?? null}
+                period={trendPeriod}
+                onPeriodChange={setTrendPeriod}
+                isLoading={trendsQuery.isLoading}
+              />
+              <CheckInHistory
+                checkIns={historyQuery.data?.checkIns ?? []}
+                hasMore={(historyQuery.data?.total ?? 0) > historyOffset + 10}
+                isLoading={historyQuery.isLoading}
+                onLoadMore={() => setHistoryOffset((prev) => prev + 10)}
+              />
+            </Stack>
+          </div>
+        </FitAiContentArea>
+      </Container>
 
       {/* Check-in Form Modal */}
       <Modal
@@ -170,11 +183,11 @@ export function RecoveryView() {
         centered
       >
         <CheckInForm
-          initialData={isEditMode ? todayCheckIn : null}
+          initialData={isEditMode ? (todayCheckInQuery.data as CheckInFormData | undefined) : null}
           onSubmit={handleSubmitCheckIn}
-          isLoading={isSubmitting}
+          isLoading={createCheckInMutation.isPending}
         />
       </Modal>
-    </Box>
+    </>
   );
 }

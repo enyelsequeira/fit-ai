@@ -287,3 +287,108 @@ export const generateSummaryInputSchema = z.object({
 });
 
 export type GenerateSummaryInput = z.infer<typeof generateSummaryInputSchema>;
+
+// ============================================================================
+// Goal Analytics Schemas
+// ============================================================================
+
+/**
+ * Goal analytics input schema
+ */
+export const goalAnalyticsInputSchema = z.object({
+  days: z.coerce.number().int().min(7).max(365).default(90).describe("Days to analyze"),
+});
+
+export type GoalAnalyticsInput = z.infer<typeof goalAnalyticsInputSchema>;
+
+/**
+ * Goal analytics output schema
+ */
+export const goalAnalyticsOutputSchema = z.object({
+  totalGoals: z.number().describe("Total number of goals"),
+  activeGoals: z.number().describe("Number of active goals"),
+  completedGoals: z.number().describe("Number of completed goals"),
+  abandonedGoals: z.number().describe("Number of abandoned goals"),
+  pausedGoals: z.number().describe("Number of paused goals"),
+  overallCompletionRate: z.number().describe("Completion rate (0-100)"),
+  avgCompletionDays: z.number().nullable().describe("Average days to complete a goal"),
+  goalsByType: z.array(
+    z.object({
+      type: z.string().describe("Goal type"),
+      count: z.number().describe("Total goals of this type"),
+      completedCount: z.number().describe("Completed goals of this type"),
+    }),
+  ),
+  recentlyCompleted: z.array(
+    z.object({
+      id: z.number().describe("Goal ID"),
+      title: z.string().describe("Goal title"),
+      goalType: z.string().describe("Goal type"),
+      completedAt: z.string().nullable().describe("Completion date"),
+      progressPercentage: z.number().describe("Final progress percentage"),
+    }),
+  ),
+  activeProgress: z.array(
+    z.object({
+      id: z.number().describe("Goal ID"),
+      title: z.string().describe("Goal title"),
+      goalType: z.string().describe("Goal type"),
+      progressPercentage: z.number().describe("Current progress percentage"),
+      targetDate: z.string().nullable().describe("Target date"),
+      daysRemaining: z.number().nullable().describe("Days until target date"),
+    }),
+  ),
+});
+
+export type GoalAnalyticsOutput = z.infer<typeof goalAnalyticsOutputSchema>;
+
+// ============================================================================
+// Recovery Trends Schemas
+// ============================================================================
+
+/**
+ * Recovery trends input schema
+ */
+export const recoveryTrendsInputSchema = z.object({
+  days: z.coerce.number().int().min(7).max(365).default(30).describe("Days to analyze"),
+});
+
+export type RecoveryTrendsInput = z.infer<typeof recoveryTrendsInputSchema>;
+
+/**
+ * Recovery trends output schema
+ */
+export const recoveryTrendsOutputSchema = z.object({
+  period: z.object({
+    start: z.string().describe("Period start date"),
+    end: z.string().describe("Period end date"),
+  }),
+  dataPoints: z.array(
+    z.object({
+      date: z.string().describe("Check-in date"),
+      sleepHours: z.number().nullable().describe("Hours of sleep"),
+      sleepQuality: z.number().nullable().describe("Sleep quality (1-5)"),
+      energyLevel: z.number().nullable().describe("Energy level (1-10)"),
+      stressLevel: z.number().nullable().describe("Stress level (1-10)"),
+      sorenessLevel: z.number().nullable().describe("Soreness level (1-10)"),
+      motivationLevel: z.number().nullable().describe("Motivation level (1-10)"),
+      mood: z.string().nullable().describe("Mood (great|good|neutral|low|bad)"),
+    }),
+  ),
+  averages: z.object({
+    sleepHours: z.number().nullable().describe("Average sleep hours"),
+    sleepQuality: z.number().nullable().describe("Average sleep quality"),
+    energyLevel: z.number().nullable().describe("Average energy level"),
+    stressLevel: z.number().nullable().describe("Average stress level"),
+    sorenessLevel: z.number().nullable().describe("Average soreness level"),
+    motivationLevel: z.number().nullable().describe("Average motivation level"),
+  }),
+  trends: z.object({
+    sleepTrend: z.number().describe("Sleep trend percentage change"),
+    energyTrend: z.number().describe("Energy trend percentage change"),
+    stressTrend: z.number().describe("Stress trend percentage change"),
+    sorenessTrend: z.number().describe("Soreness trend percentage change"),
+  }),
+});
+
+export type RecoveryTrendsOutput = z.infer<typeof recoveryTrendsOutputSchema>;

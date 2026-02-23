@@ -3,13 +3,16 @@
  * Uses Recharts for visualization (compatible with Mantine styling)
  */
 
-import { useMemo, useState } from "react";
-import { FitAiCard, FitAiCardContent } from "@/components/ui/card";
 import type { TimePeriod, TrendChartDataPoint } from "./types";
 import type { ChartType } from "./weight-trend-chart-utils";
-import { processChartData } from "./weight-trend-chart-utils";
-import { ChartHeader } from "./chart-header";
+
+import { useMemo, useState } from "react";
+
+import { FitAiCard, FitAiCardContent } from "@/components/ui/card";
+
 import { ChartContent } from "./chart-content";
+import { ChartHeader } from "./chart-header";
+import { processChartData } from "./weight-trend-chart-utils";
 import styles from "./weight-trend-chart.module.css";
 
 interface WeightTrendChartProps {

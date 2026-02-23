@@ -46,15 +46,11 @@ export interface MeasurementHistoryRow {
   rightArm: number | null;
   leftThigh: number | null;
   rightThigh: number | null;
+  leftCalf: number | null;
+  rightCalf: number | null;
+  neck: number | null;
+  shoulders: number | null;
   notes: string | null;
-}
-
-/**
- * Props for the summary component
- */
-export interface MeasurementsSummaryProps {
-  summary: MeasurementsSummaryData;
-  onLogMeasurement: () => void;
 }
 
 /**

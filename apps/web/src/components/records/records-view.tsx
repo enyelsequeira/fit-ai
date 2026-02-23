@@ -1,169 +1,219 @@
 /**
  * RecordsView - Main personal records page component
- * Displays summary stats, recent PRs, and all-time bests with filtering
+ * Uses sidebar + FitAiPageHeader + FitAiContentArea layout
  */
 
-import { useCallback, useEffect } from "react";
-import { Box, Center, Loader, Stack, Text } from "@mantine/core";
+import type { RecordTypeFilter } from "./types";
+
+import { useCallback, useState } from "react";
+import { Box, Container, Flex, Group, SegmentedControl, Stack, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { ErrorState, PageHeader } from "@/components/ui/state-views";
-import { useRecordsData } from "./use-records-data";
-import { PRSummary } from "./pr-summary";
-import { RecentPRsList } from "./recent-prs-list";
+import { useDebouncedValue } from "@mantine/hooks";
+import { IconPlus, IconSearch, IconTrophy, IconX } from "@tabler/icons-react";
+
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
+import { FitAiContentArea } from "@/components/ui/fit-ai-content-area/fit-ai-content-area";
+import { FitAiPageHeader } from "@/components/ui/fit-ai-page-header/fit-ai-page-header";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
+
+import {
+  useRecordsByExerciseGrouped,
+  useRecordsList,
+  useRecordsStats,
+  useRecentRecords,
+} from "./queries/use-queries";
 import { AllTimePRsGrid } from "./all-time-prs-grid";
-import { RecordsFilters } from "./records-filters";
 import { PRDetailModal } from "./pr-detail-modal";
+import { RecentPRsList } from "./recent-prs-list";
+import { RecordsSummary } from "./records-summary";
 import styles from "./records-view.module.css";
 
-export function RecordsView() {
-  const {
-    records,
-    recentRecords,
-    recordsByExercise,
-    stats,
-    recordTypeFilter,
-    setRecordTypeFilter,
-    searchQuery,
-    setSearchQuery,
-    debouncedSearchQuery,
-    hasActiveFilters,
-    selectedRecordId,
-    setSelectedRecordId,
-    isLoading,
-    isError,
-    refetch,
-  } = useRecordsData();
+const TYPE_OPTIONS: { value: RecordTypeFilter; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "one_rep_max", label: "1RM" },
+  { value: "max_weight", label: "Weight" },
+  { value: "max_reps", label: "Reps" },
+  { value: "max_volume", label: "Volume" },
+];
 
-  // Modal state management using useDisclosure
+export function RecordsView() {
+  // Filter state
+  const [recordTypeFilter, setRecordTypeFilter] = useState<RecordTypeFilter>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 300);
+
+  // Selected record for modal
+  const [selectedRecordId, setSelectedRecordId] = useState<number | null>(null);
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
 
-  // Sync modal state with selected record
-  useEffect(() => {
-    if (selectedRecordId !== null && !modalOpened) {
-      openModal();
-    }
-  }, [selectedRecordId, modalOpened, openModal]);
+  // Queries
+  const listQuery = useRecordsList({
+    recordType: recordTypeFilter === "all" ? undefined : recordTypeFilter,
+  });
+  const recentQuery = useRecentRecords();
+  const stats = useRecordsStats();
 
-  // Handle opening the detail modal
-  const handleRecordClick = useCallback(
-    (recordId: number) => {
-      setSelectedRecordId(recordId);
-      openModal();
-    },
-    [setSelectedRecordId, openModal],
-  );
+  // Derived data
+  const allRecords = listQuery.data?.records ?? [];
+  const recordsByExercise = useRecordsByExerciseGrouped(allRecords);
 
-  // Handle closing the detail modal
-  const handleCloseModal = useCallback(() => {
-    closeModal();
-    setSelectedRecordId(null);
-  }, [closeModal, setSelectedRecordId]);
-
-  // Handle exercise click (show first record for that exercise)
-  const handleExerciseClick = useCallback(
-    (exerciseId: number) => {
-      const exerciseGroup = recordsByExercise.find((g) => g.exerciseId === exerciseId);
-      if (exerciseGroup && exerciseGroup.records.length > 0) {
-        const firstRecord = exerciseGroup.records[0];
-        if (firstRecord) {
-          handleRecordClick(firstRecord.id);
-        }
-      }
-    },
-    [recordsByExercise, handleRecordClick],
-  );
-
-  // Filter records by exercise based on debounced search
+  // Filter records by exercise name
   const filteredRecordsByExercise = debouncedSearchQuery.trim()
     ? recordsByExercise.filter((g) =>
         g.exerciseName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()),
       )
     : recordsByExercise;
 
-  // Error state
-  if (isError) {
-    return (
-      <Box p={{ base: "sm", md: "md" }} className={styles.recordsContainer}>
-        <Stack gap="md">
-          <PageHeader title="Personal Records" />
-          <ErrorState
-            title="Error loading records"
-            message="Failed to load your personal records. Please try again."
-            onRetry={refetch}
-          />
-        </Stack>
-      </Box>
-    );
-  }
+  const handleRecordClick = useCallback(
+    (recordId: number) => {
+      setSelectedRecordId(recordId);
+      openModal();
+    },
+    [openModal],
+  );
 
-  // Initial loading state
-  if (isLoading && records.length === 0) {
-    return (
-      <Box p={{ base: "sm", md: "md" }} className={styles.recordsContainer}>
-        <Stack gap="md">
-          <PageHeader
-            title="Personal Records"
-            description="Track your personal bests and celebrate your achievements"
-          />
-          <Center py="xl">
-            <Stack align="center" gap="sm">
-              <Loader size="lg" />
-              <Text size="sm" c="dimmed">
-                Loading your records...
-              </Text>
-            </Stack>
-          </Center>
-        </Stack>
-      </Box>
-    );
-  }
+  const handleExerciseClick = useCallback(
+    (exerciseId: number) => {
+      const group = filteredRecordsByExercise.find((g) => g.exerciseId === exerciseId);
+      const firstRecord = group?.records[0];
+      if (firstRecord) {
+        handleRecordClick(firstRecord.id);
+      }
+    },
+    [filteredRecordsByExercise, handleRecordClick],
+  );
+
+  const handleCloseModal = useCallback(() => {
+    closeModal();
+    setSelectedRecordId(null);
+  }, [closeModal]);
+
+  const hasActiveFilters = searchQuery.trim() !== "" || recordTypeFilter !== "all";
 
   return (
-    <Box p={{ base: "sm", md: "md" }} className={styles.recordsContainer}>
-      <Stack gap="md">
-        {/* Page header */}
-        <PageHeader
-          title="Personal Records"
-          description="Track your personal bests and celebrate your achievements"
-        />
+    <>
+      {/* Sidebar */}
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>
+          <Group gap="xs" align="center">
+            <Flex
+              align="center"
+              justify="center"
+              w={36}
+              h={36}
+              c="white"
+              className={styles.logoIcon}
+              style={{ borderRadius: "var(--mantine-radius-md)" }}
+            >
+              <IconTrophy size={20} />
+            </Flex>
+            <FitAiText variant="subheading">Records</FitAiText>
+          </Group>
+        </div>
 
-        {/* Summary stats */}
-        <PRSummary stats={stats} />
-
-        {/* Filters */}
-        <RecordsFilters
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          recordTypeFilter={recordTypeFilter}
-          onRecordTypeChange={setRecordTypeFilter}
-          hasActiveFilters={hasActiveFilters}
-        />
-
-        {/* Main content: Recent PRs + All-Time Grid */}
-        <Box className={styles.mainContent}>
-          {/* Left column: Recent PRs */}
-          <Box className={styles.leftColumn}>
-            <RecentPRsList
-              records={recentRecords}
-              isLoading={isLoading}
-              onRecordClick={handleRecordClick}
+        <div className={styles.sidebarContent}>
+          <Stack gap="md">
+            <TextInput
+              placeholder="Search exercises..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              leftSection={<IconSearch size={16} />}
+              rightSection={
+                searchQuery ? (
+                  <Box
+                    component="button"
+                    onClick={() => setSearchQuery("")}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      display: "flex",
+                    }}
+                  >
+                    <IconX size={14} />
+                  </Box>
+                ) : null
+              }
+              size="sm"
             />
-          </Box>
+            <Box>
+              <FitAiText variant="label" mb="xs">
+                Record Type
+              </FitAiText>
+              <SegmentedControl
+                value={recordTypeFilter}
+                onChange={(value) => setRecordTypeFilter(value as RecordTypeFilter)}
+                data={TYPE_OPTIONS}
+                size="xs"
+                fullWidth
+                orientation="vertical"
+              />
+            </Box>
+            {hasActiveFilters && (
+              <FitAiButton
+                variant="secondary"
+                size="xs"
+                fullWidth
+                leftSection={<IconX size={14} />}
+                onClick={() => {
+                  setSearchQuery("");
+                  setRecordTypeFilter("all");
+                }}
+              >
+                Clear Filters
+              </FitAiButton>
+            )}
+          </Stack>
+        </div>
 
-          {/* Right column: All-time bests grid */}
-          <Box className={styles.rightColumn}>
-            <AllTimePRsGrid
-              recordsByExercise={filteredRecordsByExercise}
-              isLoading={isLoading}
-              onExerciseClick={handleExerciseClick}
-              onRecordClick={handleRecordClick}
-            />
-          </Box>
+        <Box p="md" className={styles.sidebarFooter}>
+          <FitAiButton
+            variant="primary"
+            fullWidth
+            leftSection={<IconPlus size={16} />}
+            className={styles.createButton}
+          >
+            Log Record
+          </FitAiButton>
         </Box>
-      </Stack>
+      </div>
+
+      {/* Main Content */}
+      <Container fluid flex={1}>
+        <FitAiPageHeader>
+          <FitAiPageHeader.Title>Personal Records</FitAiPageHeader.Title>
+          <FitAiPageHeader.Description>
+            Track your personal bests and celebrate your achievements
+          </FitAiPageHeader.Description>
+          <FitAiPageHeader.Stats>
+            <RecordsSummary stats={stats} />
+          </FitAiPageHeader.Stats>
+        </FitAiPageHeader>
+
+        <FitAiContentArea>
+          <div className={styles.contentGrid}>
+            <Stack gap="md">
+              <RecentPRsList
+                records={recentQuery.data ?? []}
+                isLoading={recentQuery.isLoading}
+                onRecordClick={handleRecordClick}
+              />
+            </Stack>
+
+            <Stack gap="md">
+              <AllTimePRsGrid
+                recordsByExercise={filteredRecordsByExercise}
+                isLoading={listQuery.isLoading}
+                onExerciseClick={handleExerciseClick}
+                onRecordClick={handleRecordClick}
+              />
+            </Stack>
+          </div>
+        </FitAiContentArea>
+      </Container>
 
       {/* Detail Modal */}
       <PRDetailModal recordId={selectedRecordId} opened={modalOpened} onClose={handleCloseModal} />
-    </Box>
+    </>
   );
 }

@@ -3,10 +3,11 @@
  * Shows summary of each check-in with key metrics
  */
 
+import type { Mood } from "./types";
+
 import {
   Badge,
   Box,
-  Button,
   Card,
   Group,
   Skeleton,
@@ -22,9 +23,9 @@ import {
   IconFlame,
   IconActivity,
 } from "@tabler/icons-react";
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
 import { EmptyState } from "@/components/ui/state-views";
-
-type Mood = "great" | "good" | "neutral" | "low" | "bad";
+import { formatRelativeDate } from "@/components/ui/utils";
 
 interface CheckInHistoryItem {
   id: number;
@@ -62,28 +63,6 @@ const MOOD_CONFIG: Record<Mood, { label: string; color: string }> = {
   low: { label: "Low", color: "orange" },
   bad: { label: "Bad", color: "red" },
 };
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-  }).format(date);
-}
-
-function formatRelativeDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diffTime = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays} days ago`;
-  if (diffDays < 14) return "Last week";
-  return formatDate(dateStr);
-}
 
 function getScoreColor(value: number | null, max: number, inverse = false): string {
   if (value === null) return "gray";
@@ -278,8 +257,8 @@ function CheckInHistory({
           </Timeline>
 
           {hasMore && (
-            <Button
-              variant="subtle"
+            <FitAiButton
+              variant="secondary"
               size="xs"
               fullWidth
               onClick={onLoadMore}
@@ -287,7 +266,7 @@ function CheckInHistory({
               leftSection={<IconChevronDown size={14} />}
             >
               Load More
-            </Button>
+            </FitAiButton>
           )}
         </Stack>
       </Card.Section>

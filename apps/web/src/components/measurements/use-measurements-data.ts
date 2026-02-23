@@ -2,15 +2,25 @@
  * Custom hook for managing body measurements data and state
  */
 
-import { useMemo, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { orpc } from "@/utils/orpc";
 import type {
-  TimePeriod,
-  MeasurementsSummaryData,
-  TrendChartDataPoint,
   MeasurementHistoryRow,
+  MeasurementsSummaryData,
+  TimePeriod,
+  TrendChartDataPoint,
 } from "./types";
+
+import { useMemo, useState } from "react";
+
+import {
+  useCreateMeasurement,
+  useDeleteMeasurement,
+  useUpdateMeasurement,
+} from "./hooks/use-mutations";
+import {
+  useMeasurementLatest,
+  useMeasurementList,
+  useMeasurementTrends,
+} from "./queries/use-queries";
 
 /**
  * Calculate date range based on period
@@ -53,9 +63,6 @@ function getDateRange(period: TimePeriod): { startDate: Date; endDate: Date } {
   }
 }
 
-/**
- * Format a date for chart display
- */
 function formatDateForChart(date: Date): string {
   return date.toLocaleDateString("en-US", {
     month: "short",
@@ -63,9 +70,6 @@ function formatDateForChart(date: Date): string {
   });
 }
 
-/**
- * Safely convert a value to a Date object
- */
 function toSafeDate(value: unknown): Date | null {
   if (!value) return null;
   const date = value instanceof Date ? value : new Date(value as string | number);
@@ -73,64 +77,19 @@ function toSafeDate(value: unknown): Date | null {
 }
 
 export function useMeasurementsData() {
-  const queryClient = useQueryClient();
   const [period, setPeriod] = useState<TimePeriod>("month");
 
   const { startDate, endDate } = getDateRange(period);
 
-  // Fetch the latest measurement (no input needed - uses authenticated user)
-  const latestQuery = useQuery(orpc.bodyMeasurement.getLatest.queryOptions());
+  // Queries
+  const latestQuery = useMeasurementLatest();
+  const listQuery = useMeasurementList({ startDate, endDate, limit: 100, offset: 0 });
+  const trendsQuery = useMeasurementTrends({ period, startDate, endDate });
 
-  // Fetch measurements list for history
-  const listQuery = useQuery(
-    orpc.bodyMeasurement.list.queryOptions({
-      input: {
-        startDate,
-        endDate,
-        limit: 100,
-        offset: 0,
-      },
-    }),
-  );
-
-  // Fetch trends data
-  const trendsQuery = useQuery(
-    orpc.bodyMeasurement.getTrends.queryOptions({
-      input: {
-        period,
-        startDate,
-        endDate,
-      },
-    }),
-  );
-
-  // Create mutation
-  const createMutation = useMutation(
-    orpc.bodyMeasurement.create.mutationOptions({
-      onSuccess: () => {
-        // Invalidate all related queries
-        queryClient.invalidateQueries({ queryKey: ["bodyMeasurement"] });
-      },
-    }),
-  );
-
-  // Update mutation
-  const updateMutation = useMutation(
-    orpc.bodyMeasurement.update.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["bodyMeasurement"] });
-      },
-    }),
-  );
-
-  // Delete mutation
-  const deleteMutation = useMutation(
-    orpc.bodyMeasurement.delete.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["bodyMeasurement"] });
-      },
-    }),
-  );
+  // Mutations
+  const createMutation = useCreateMeasurement();
+  const updateMutation = useUpdateMeasurement();
+  const deleteMutation = useDeleteMeasurement();
 
   // Calculate summary data
   const summary: MeasurementsSummaryData = useMemo(() => {
@@ -177,34 +136,29 @@ export function useMeasurementsData() {
       rightArm: m.rightArm,
       leftThigh: m.leftThigh,
       rightThigh: m.rightThigh,
+      leftCalf: m.leftCalf,
+      rightCalf: m.rightCalf,
+      neck: m.neck,
+      shoulders: m.shoulders,
       notes: m.notes,
     }));
   }, [listQuery.data?.measurements]);
 
   return {
-    // Data
     summary,
     chartData,
     historyData,
     latestMeasurement: latestQuery.data,
-
-    // Period state
     period,
     setPeriod,
-
-    // Loading states
     isLoading: listQuery.isLoading || trendsQuery.isLoading,
     isLoadingLatest: latestQuery.isLoading,
     isError: listQuery.isError || trendsQuery.isError,
-
-    // Refetch functions
     refetch: () => {
       latestQuery.refetch();
       listQuery.refetch();
       trendsQuery.refetch();
     },
-
-    // Mutations
     createMeasurement: createMutation.mutateAsync,
     updateMeasurement: updateMutation.mutateAsync,
     deleteMeasurement: deleteMutation.mutateAsync,

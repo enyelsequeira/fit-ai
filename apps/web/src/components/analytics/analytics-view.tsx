@@ -1,17 +1,30 @@
 /**
  * AnalyticsView - Main analytics page component
- * Displays training analytics with tabs for Volume, Strength, and Consistency
+ * Displays training analytics with tabs for Volume, Strength, Consistency, Goals, and Recovery
  */
 
 import type { DatesRangeValue } from "@mantine/dates";
-import { IconChartBar, IconTarget, IconTrendingUp } from "@tabler/icons-react";
+import {
+  IconChartBar,
+  IconHeartbeat,
+  IconTarget,
+  IconTargetArrow,
+  IconTrendingUp,
+} from "@tabler/icons-react";
 import { Box, Group, SegmentedControl, Stack, Tabs } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 
 import { ErrorState, PageHeader } from "@/components/ui/state-views";
 
+import type { SummaryStats } from "./summary-stats-grid";
 import { SummaryStatsGrid } from "./summary-stats-grid";
-import { VolumeTabContent, StrengthTabContent, ConsistencyTabContent } from "./tab-contents";
+import {
+  VolumeTabContent,
+  StrengthTabContent,
+  ConsistencyTabContent,
+  GoalTabContent,
+  RecoveryTabContent,
+} from "./tab-contents";
 import { useAnalyticsData, type DateRangePeriod } from "./use-analytics-data";
 
 import styles from "./analytics-view.module.css";
@@ -39,9 +52,13 @@ export function AnalyticsView() {
     muscleVolumeData,
     strengthData,
     consistencyData,
+    goalAnalytics,
+    recoveryData,
     isLoading,
     isError,
     isStrengthLoading,
+    isGoalLoading,
+    isRecoveryLoading,
     refetch,
   } = useAnalyticsData();
 
@@ -56,6 +73,25 @@ export function AnalyticsView() {
       start instanceof Date ? start : start ? new Date(start) : null,
       end instanceof Date ? end : end ? new Date(end) : null,
     ]);
+  };
+
+  // Calculate recovery score from latest averages
+  const recoveryScore = (() => {
+    const { energyLevel, sleepQuality, motivationLevel } = recoveryData.averages;
+    const values = [energyLevel, sleepQuality, motivationLevel].filter(
+      (v): v is number => v !== null,
+    );
+    if (values.length === 0) return null;
+    return Math.round((values.reduce((sum, v) => sum + v, 0) / values.length) * 10) / 10;
+  })();
+
+  const summaryStats: SummaryStats = {
+    workoutsThisWeek: weeklySummary.totalWorkouts,
+    totalVolume: weeklySummary.totalVolume,
+    activeGoals: goalAnalytics.activeGoals,
+    currentStreak: consistencyData.currentStreak,
+    prsAchieved: weeklySummary.personalRecords,
+    recoveryScore,
   };
 
   if (isError) {
@@ -115,7 +151,7 @@ export function AnalyticsView() {
           }
         />
 
-        <SummaryStatsGrid weeklySummary={weeklySummary} isLoading={isLoading} />
+        <SummaryStatsGrid stats={summaryStats} isLoading={isLoading} />
 
         <Tabs value={activeTab} onChange={(value) => setActiveTab(value as typeof activeTab)}>
           <Tabs.List>
@@ -127,6 +163,12 @@ export function AnalyticsView() {
             </Tabs.Tab>
             <Tabs.Tab value="consistency" leftSection={<IconTarget size={16} />}>
               Consistency
+            </Tabs.Tab>
+            <Tabs.Tab value="goals" leftSection={<IconTargetArrow size={16} />}>
+              Goals
+            </Tabs.Tab>
+            <Tabs.Tab value="recovery" leftSection={<IconHeartbeat size={16} />}>
+              Recovery
             </Tabs.Tab>
           </Tabs.List>
 
@@ -151,6 +193,14 @@ export function AnalyticsView() {
 
             <Tabs.Panel value="consistency">
               <ConsistencyTabContent consistencyData={consistencyData} isLoading={isLoading} />
+            </Tabs.Panel>
+
+            <Tabs.Panel value="goals">
+              <GoalTabContent goalAnalytics={goalAnalytics} isLoading={isGoalLoading} />
+            </Tabs.Panel>
+
+            <Tabs.Panel value="recovery">
+              <RecoveryTabContent recoveryData={recoveryData} isLoading={isRecoveryLoading} />
             </Tabs.Panel>
           </Box>
         </Tabs>

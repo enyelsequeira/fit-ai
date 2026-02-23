@@ -12,7 +12,6 @@ import {
 import {
   Badge,
   Box,
-  Button,
   Card,
   Center,
   Divider,
@@ -25,15 +24,13 @@ import {
   ThemeIcon,
   Timeline,
 } from "@mantine/core";
+
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
 import { useQuery } from "@tanstack/react-query";
-import { orpc } from "@/utils/orpc";
-import {
-  formatRecordValue,
-  formatDate,
-  RECORD_TYPE_COLORS,
-  RECORD_TYPE_LABELS,
-  type RecordTypeFilter,
-} from "./use-records-data";
+
+import { RECORD_TYPE_COLORS, RECORD_TYPE_LABELS, type RecordTypeFilter } from "./types";
+import { recordByIdOptions, recordsByExerciseOptions } from "./queries/query-options";
+import { formatRecordValue, formatDate } from "./utils";
 import styles from "./pr-detail-modal.module.css";
 
 interface PersonalRecord {
@@ -106,18 +103,14 @@ function PRHistoryItem({ record, isLatest }: PRHistoryItemProps) {
 export function PRDetailModal({ recordId, opened, onClose }: PRDetailModalProps) {
   // Fetch selected record details
   const recordQuery = useQuery({
-    ...orpc.personalRecord.getById.queryOptions({
-      input: { id: recordId ?? 0 },
-    }),
+    ...recordByIdOptions({ id: recordId ?? 0 }),
     enabled: recordId !== null && opened,
   });
 
   // Fetch all records for this exercise to show history
   const exerciseId = recordQuery.data?.exerciseId;
   const historyQuery = useQuery({
-    ...orpc.personalRecord.getByExercise.queryOptions({
-      input: { exerciseId: exerciseId ?? 0 },
-    }),
+    ...recordsByExerciseOptions({ exerciseId: exerciseId ?? 0 }),
     enabled: exerciseId !== undefined && opened,
   });
 
@@ -159,9 +152,9 @@ export function PRDetailModal({ recordId, opened, onClose }: PRDetailModalProps)
         <Center py="xl">
           <Stack align="center" gap="sm">
             <Text c="dimmed">Could not load record details</Text>
-            <Button variant="light" onClick={onClose}>
+            <FitAiButton variant="secondary" onClick={onClose}>
               Close
-            </Button>
+            </FitAiButton>
           </Stack>
         </Center>
       ) : (
@@ -264,13 +257,17 @@ export function PRDetailModal({ recordId, opened, onClose }: PRDetailModalProps)
           {/* Actions */}
           <Group justify="flex-end" gap="sm">
             {record.workoutId && (
-              <Button variant="light" leftSection={<IconExternalLink size={16} />} size="sm">
+              <FitAiButton
+                variant="secondary"
+                leftSection={<IconExternalLink size={16} />}
+                size="sm"
+              >
                 View Workout
-              </Button>
+              </FitAiButton>
             )}
-            <Button variant="default" onClick={onClose} size="sm">
+            <FitAiButton variant="secondary" onClick={onClose} size="sm">
               Close
-            </Button>
+            </FitAiButton>
           </Group>
         </Stack>
       )}

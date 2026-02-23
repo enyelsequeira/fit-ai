@@ -3,6 +3,8 @@
  * Includes weight, body fat, and all body measurements with unit selection
  */
 
+import type { MeasurementForm } from "./measurement-types";
+
 import {
   Box,
   Divider,
@@ -13,10 +15,9 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { IconScale } from "@tabler/icons-react";
+import { IconRuler, IconScale } from "@tabler/icons-react";
 
 import { DetailedMeasurementsFields } from "./body-measurement-sections";
-import type { MeasurementForm } from "./measurement-types";
 
 interface DetailedMeasurementsFormProps {
   form: MeasurementForm;
@@ -26,7 +27,7 @@ export function DetailedMeasurementsForm({ form }: DetailedMeasurementsFormProps
   return (
     <Stack gap="md">
       <Grid>
-        <Grid.Col span={6}>
+        <Grid.Col span={8}>
           <NumberInput
             label="Weight"
             placeholder="Enter weight"
@@ -35,16 +36,18 @@ export function DetailedMeasurementsForm({ form }: DetailedMeasurementsFormProps
             max={500}
             decimalScale={1}
             step={0.1}
+            size="md"
             {...form.getInputProps("weight")}
           />
         </Grid.Col>
-        <Grid.Col span={6}>
+        <Grid.Col span={4}>
           <Box>
             <Text size="sm" fw={500} mb={6}>
-              Weight Unit
+              Unit
             </Text>
             <SegmentedControl
               fullWidth
+              size="md"
               data={[
                 { label: "kg", value: "kg" },
                 { label: "lb", value: "lb" },
@@ -66,7 +69,15 @@ export function DetailedMeasurementsForm({ form }: DetailedMeasurementsFormProps
         {...form.getInputProps("bodyFatPercentage")}
       />
 
-      <Divider label="Body Measurements" labelPosition="center" />
+      <Divider
+        label={
+          <Group gap="xs">
+            <IconRuler size={14} />
+            <Text size="sm">Body Measurements</Text>
+          </Group>
+        }
+        labelPosition="center"
+      />
 
       <Box>
         <Group justify="space-between" mb="sm">

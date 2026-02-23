@@ -1,8 +1,6 @@
-/**
- * Shared types for CheckInSummary components
- */
+import type { Mood } from "../types";
 
-export type Mood = "great" | "good" | "neutral" | "low" | "bad";
+export type { Mood } from "../types";
 
 export interface CheckInData {
   id: number;

@@ -5,12 +5,8 @@
 
 import type { ReactNode } from "react";
 import { Badge, Box, Flex, Group, Text } from "@mantine/core";
-import {
-  formatRecordValue,
-  RECORD_TYPE_COLORS,
-  RECORD_TYPE_LABELS,
-  type RecordTypeFilter,
-} from "./use-records-data";
+import { RECORD_TYPE_COLORS, RECORD_TYPE_LABELS, type RecordTypeFilter } from "./types";
+import { formatRecordValue } from "./utils";
 import styles from "./pr-card.module.css";
 
 interface PersonalRecord {

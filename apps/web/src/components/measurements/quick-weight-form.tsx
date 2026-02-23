@@ -3,6 +3,8 @@
  * Provides fast weight logging with optional body measurements expansion
  */
 
+import type { MeasurementForm } from "./measurement-types";
+
 import {
   Box,
   Button,
@@ -17,7 +19,6 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconChevronUp, IconScale } from "@tabler/icons-react";
 
 import { DetailedMeasurementsFields } from "./body-measurement-sections";
-import type { MeasurementForm } from "./measurement-types";
 import styles from "./log-measurement-modal.module.css";
 
 interface QuickWeightFormProps {
@@ -30,7 +31,7 @@ export function QuickWeightForm({ form }: QuickWeightFormProps) {
   return (
     <Stack gap="md">
       <Grid>
-        <Grid.Col span={6}>
+        <Grid.Col span={8}>
           <NumberInput
             label="Weight"
             placeholder="Enter weight"
@@ -39,16 +40,18 @@ export function QuickWeightForm({ form }: QuickWeightFormProps) {
             max={500}
             decimalScale={1}
             step={0.1}
+            size="md"
             {...form.getInputProps("weight")}
           />
         </Grid.Col>
-        <Grid.Col span={6}>
+        <Grid.Col span={4}>
           <Box>
             <Text size="sm" fw={500} mb={6}>
               Unit
             </Text>
             <SegmentedControl
               fullWidth
+              size="md"
               data={[
                 { label: "kg", value: "kg" },
                 { label: "lb", value: "lb" },
@@ -60,7 +63,7 @@ export function QuickWeightForm({ form }: QuickWeightFormProps) {
       </Grid>
 
       <NumberInput
-        label="Body Fat Percentage"
+        label="Body Fat Percentage (optional)"
         placeholder="Enter body fat %"
         min={0}
         max={100}
@@ -81,7 +84,7 @@ export function QuickWeightForm({ form }: QuickWeightFormProps) {
         {detailsExpanded ? "Hide" : "Add"} body measurements
       </Button>
 
-      <Collapse in={detailsExpanded}>
+      <Collapse in={detailsExpanded} transitionDuration={200}>
         <DetailedMeasurementsFields form={form} />
       </Collapse>
     </Stack>

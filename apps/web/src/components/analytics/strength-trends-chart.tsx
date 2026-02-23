@@ -1,10 +1,11 @@
 /**
  * StrengthTrendsChart - Displays strength progress for selected exercises
+ * Uses Mantine LineChart for rendering.
  */
 
 import { IconTrendingUp } from "@tabler/icons-react";
 import { Box, Button, Group, Stack, Text } from "@mantine/core";
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from "recharts";
+import { LineChart } from "@mantine/charts";
 
 import {
   FitAiCard,
@@ -42,7 +43,6 @@ export function StrengthTrendsChart({
   const hasData = data.length > 0;
   const hasExerciseSelected = selectedExerciseId !== null;
 
-  // Calculate improvement percentage
   const improvement = (() => {
     if (data.length < 2) return null;
     const firstOneRM = data[0]?.oneRM ?? 0;
@@ -111,12 +111,7 @@ export function StrengthTrendsChart({
 
         {/* Chart */}
         {isLoading ? (
-          <Box
-            className={styles.chartContainer}
-            data-chart-type="line"
-            data-loading="true"
-            data-has-data="false"
-          >
+          <Box className={styles.chartContainer} data-loading="true" data-has-data="false">
             <Skeleton w="100%" h="100%" />
           </Box>
         ) : !hasExerciseSelected ? (
@@ -132,66 +127,21 @@ export function StrengthTrendsChart({
             message="Complete more workouts with this exercise to track progress"
           />
         ) : (
-          <Box
-            className={styles.chartContainer}
-            data-chart-type="line"
-            data-has-data={String(hasData)}
-            data-loading="false"
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data} margin={{ top: 10, right: 30, left: 10, bottom: 10 }}>
-                <XAxis dataKey="date" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
-                <YAxis
-                  tick={{ fontSize: 10 }}
-                  tickLine={false}
-                  axisLine={false}
-                  width={40}
-                  tickFormatter={(value) => `${value}kg`}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "var(--mantine-color-body)",
-                    border: "1px solid var(--mantine-color-default-border)",
-                    borderRadius: "var(--mantine-radius-sm)",
-                    fontSize: "12px",
-                  }}
-                  formatter={(value, name) => {
-                    if (typeof value === "number") {
-                      const label = name === "oneRM" ? "Est. 1RM" : "Max Weight";
-                      return [`${value.toFixed(1)} kg`, label];
-                    }
-                    return [String(value), String(name)];
-                  }}
-                />
-                <Legend
-                  wrapperStyle={{ fontSize: "12px" }}
-                  formatter={(value) => {
-                    if (value === "oneRM") return "Est. 1RM";
-                    if (value === "maxWeight") return "Max Weight";
-                    return value;
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="oneRM"
-                  name="oneRM"
-                  stroke="var(--mantine-color-blue-6)"
-                  strokeWidth={2}
-                  dot={{ r: 3, fill: "var(--mantine-color-blue-6)" }}
-                  activeDot={{ r: 5 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="maxWeight"
-                  name="maxWeight"
-                  stroke="var(--mantine-color-gray-5)"
-                  strokeWidth={1}
-                  strokeDasharray="5 5"
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </Box>
+          <LineChart
+            h={300}
+            data={data}
+            dataKey="date"
+            series={[
+              { name: "oneRM", color: "blue.6", label: "Est. 1RM" },
+              { name: "maxWeight", color: "gray.5", label: "Max Weight" },
+            ]}
+            curveType="monotone"
+            withLegend
+            withDots
+            withTooltip
+            gridAxis="xy"
+            valueFormatter={(value) => `${value.toFixed(1)} kg`}
+          />
         )}
 
         {/* Stats summary */}

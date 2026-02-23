@@ -164,6 +164,10 @@ import {
   exerciseStatsInputSchema,
   comparisonInputSchema,
   generateSummaryInputSchema,
+  goalAnalyticsOutputSchema,
+  goalAnalyticsInputSchema,
+  recoveryTrendsOutputSchema,
+  recoveryTrendsInputSchema,
 } from "..";
 
 // Mock data
@@ -510,6 +514,145 @@ describe("Analytics Router", () => {
         expect(result.success).toBe(true);
       });
     });
+
+    describe("goalAnalyticsOutputSchema", () => {
+      it("should validate valid goal analytics output", () => {
+        const result = goalAnalyticsOutputSchema.safeParse({
+          totalGoals: 10,
+          activeGoals: 4,
+          completedGoals: 3,
+          abandonedGoals: 2,
+          pausedGoals: 1,
+          overallCompletionRate: 30,
+          avgCompletionDays: 45,
+          goalsByType: [
+            { type: "weight", count: 3, completedCount: 1 },
+            { type: "strength", count: 4, completedCount: 2 },
+          ],
+          recentlyCompleted: [
+            {
+              id: 1,
+              title: "Lose 5kg",
+              goalType: "weight",
+              completedAt: "2024-01-15",
+              progressPercentage: 100,
+            },
+          ],
+          activeProgress: [
+            {
+              id: 2,
+              title: "Bench 100kg",
+              goalType: "strength",
+              progressPercentage: 75,
+              targetDate: "2024-06-01",
+              daysRemaining: 120,
+            },
+          ],
+        });
+        expect(result.success).toBe(true);
+      });
+
+      it("should validate with empty arrays and zero values", () => {
+        const result = goalAnalyticsOutputSchema.safeParse({
+          totalGoals: 0,
+          activeGoals: 0,
+          completedGoals: 0,
+          abandonedGoals: 0,
+          pausedGoals: 0,
+          overallCompletionRate: 0,
+          avgCompletionDays: null,
+          goalsByType: [],
+          recentlyCompleted: [],
+          activeProgress: [],
+        });
+        expect(result.success).toBe(true);
+      });
+
+      it("should reject missing required fields", () => {
+        const result = goalAnalyticsOutputSchema.safeParse({});
+        expect(result.success).toBe(false);
+      });
+    });
+
+    describe("recoveryTrendsOutputSchema", () => {
+      it("should validate valid recovery trends output", () => {
+        const result = recoveryTrendsOutputSchema.safeParse({
+          period: { start: "2024-01-01", end: "2024-01-31" },
+          dataPoints: [
+            {
+              date: "2024-01-15",
+              sleepHours: 7.5,
+              sleepQuality: 4,
+              energyLevel: 7,
+              stressLevel: 3,
+              sorenessLevel: 4,
+              motivationLevel: 8,
+              mood: "good",
+            },
+          ],
+          averages: {
+            sleepHours: 7.5,
+            sleepQuality: 4,
+            energyLevel: 7,
+            stressLevel: 3,
+            sorenessLevel: 4,
+            motivationLevel: 8,
+          },
+          trends: {
+            sleepTrend: 5.2,
+            energyTrend: 3.1,
+            stressTrend: -10.5,
+            sorenessTrend: -8.3,
+          },
+        });
+        expect(result.success).toBe(true);
+      });
+
+      it("should validate with null optional fields in data points", () => {
+        const result = recoveryTrendsOutputSchema.safeParse({
+          period: { start: "2024-01-01", end: "2024-01-31" },
+          dataPoints: [
+            {
+              date: "2024-01-15",
+              sleepHours: null,
+              sleepQuality: null,
+              energyLevel: null,
+              stressLevel: null,
+              sorenessLevel: null,
+              motivationLevel: null,
+              mood: null,
+            },
+          ],
+          averages: {
+            sleepHours: null,
+            sleepQuality: null,
+            energyLevel: null,
+            stressLevel: null,
+            sorenessLevel: null,
+            motivationLevel: null,
+          },
+          trends: { sleepTrend: 0, energyTrend: 0, stressTrend: 0, sorenessTrend: 0 },
+        });
+        expect(result.success).toBe(true);
+      });
+
+      it("should validate with empty data points", () => {
+        const result = recoveryTrendsOutputSchema.safeParse({
+          period: { start: "2024-01-01", end: "2024-01-31" },
+          dataPoints: [],
+          averages: {
+            sleepHours: null,
+            sleepQuality: null,
+            energyLevel: null,
+            stressLevel: null,
+            sorenessLevel: null,
+            motivationLevel: null,
+          },
+          trends: { sleepTrend: 0, energyTrend: 0, stressTrend: 0, sorenessTrend: 0 },
+        });
+        expect(result.success).toBe(true);
+      });
+    });
   });
 
   // ===========================================================================
@@ -517,6 +660,56 @@ describe("Analytics Router", () => {
   // ===========================================================================
 
   describe("Input Schemas", () => {
+    describe("goalAnalyticsInputSchema", () => {
+      it("should validate with default days value", () => {
+        const result = goalAnalyticsInputSchema.safeParse({});
+        expect(result.success).toBe(true);
+        if (result.success) {
+          expect(result.data.days).toBe(90);
+        }
+      });
+
+      it("should validate days range", () => {
+        expect(goalAnalyticsInputSchema.safeParse({ days: 7 }).success).toBe(true);
+        expect(goalAnalyticsInputSchema.safeParse({ days: 365 }).success).toBe(true);
+        expect(goalAnalyticsInputSchema.safeParse({ days: 6 }).success).toBe(false);
+        expect(goalAnalyticsInputSchema.safeParse({ days: 366 }).success).toBe(false);
+      });
+
+      it("should coerce string values to numbers", () => {
+        const result = goalAnalyticsInputSchema.safeParse({ days: "30" });
+        expect(result.success).toBe(true);
+        if (result.success) {
+          expect(result.data.days).toBe(30);
+        }
+      });
+    });
+
+    describe("recoveryTrendsInputSchema", () => {
+      it("should validate with default days value", () => {
+        const result = recoveryTrendsInputSchema.safeParse({});
+        expect(result.success).toBe(true);
+        if (result.success) {
+          expect(result.data.days).toBe(30);
+        }
+      });
+
+      it("should validate days range", () => {
+        expect(recoveryTrendsInputSchema.safeParse({ days: 7 }).success).toBe(true);
+        expect(recoveryTrendsInputSchema.safeParse({ days: 365 }).success).toBe(true);
+        expect(recoveryTrendsInputSchema.safeParse({ days: 6 }).success).toBe(false);
+        expect(recoveryTrendsInputSchema.safeParse({ days: 366 }).success).toBe(false);
+      });
+
+      it("should coerce string values to numbers", () => {
+        const result = recoveryTrendsInputSchema.safeParse({ days: "14" });
+        expect(result.success).toBe(true);
+        if (result.success) {
+          expect(result.data.days).toBe(14);
+        }
+      });
+    });
+
     describe("summaryHistoryInputSchema", () => {
       it("should validate with default values", () => {
         const result = summaryHistoryInputSchema.safeParse({});
@@ -775,6 +968,14 @@ describe("Analytics Router", () => {
 
     it("should have comparison endpoint", () => {
       expect(analyticsRouter.getComparison).toBeDefined();
+    });
+
+    it("should have goal analytics endpoint", () => {
+      expect(analyticsRouter.getGoalAnalytics).toBeDefined();
+    });
+
+    it("should have recovery trends endpoint", () => {
+      expect(analyticsRouter.getRecoveryTrends).toBeDefined();
     });
   });
 
@@ -1140,6 +1341,125 @@ describe("Analytics Router", () => {
 
       const outputResult = exerciseStatsOutputSchema.safeParse(statsOutput);
       expect(outputResult.success).toBe(true);
+    });
+
+    it("should validate goal analytics data flow", () => {
+      const input = { days: 90 };
+      const inputResult = goalAnalyticsInputSchema.safeParse(input);
+      expect(inputResult.success).toBe(true);
+
+      const output = {
+        totalGoals: 5,
+        activeGoals: 2,
+        completedGoals: 2,
+        abandonedGoals: 1,
+        pausedGoals: 0,
+        overallCompletionRate: 40,
+        avgCompletionDays: 30,
+        goalsByType: [{ type: "strength", count: 3, completedCount: 1 }],
+        recentlyCompleted: [
+          {
+            id: 1,
+            title: "Test",
+            goalType: "strength",
+            completedAt: "2024-01-15",
+            progressPercentage: 100,
+          },
+        ],
+        activeProgress: [
+          {
+            id: 2,
+            title: "Active",
+            goalType: "weight",
+            progressPercentage: 50,
+            targetDate: "2024-06-01",
+            daysRemaining: 90,
+          },
+        ],
+      };
+      const outputResult = goalAnalyticsOutputSchema.safeParse(output);
+      expect(outputResult.success).toBe(true);
+    });
+
+    it("should validate recovery trends data flow", () => {
+      const input = { days: 30 };
+      const inputResult = recoveryTrendsInputSchema.safeParse(input);
+      expect(inputResult.success).toBe(true);
+
+      const output = {
+        period: { start: "2024-01-01", end: "2024-01-31" },
+        dataPoints: [
+          {
+            date: "2024-01-15",
+            sleepHours: 7.5,
+            sleepQuality: 4,
+            energyLevel: 7,
+            stressLevel: 3,
+            sorenessLevel: 4,
+            motivationLevel: 8,
+            mood: "good",
+          },
+          {
+            date: "2024-01-16",
+            sleepHours: 8.0,
+            sleepQuality: 5,
+            energyLevel: 8,
+            stressLevel: 2,
+            sorenessLevel: 3,
+            motivationLevel: 9,
+            mood: "great",
+          },
+        ],
+        averages: {
+          sleepHours: 7.75,
+          sleepQuality: 4.5,
+          energyLevel: 7.5,
+          stressLevel: 2.5,
+          sorenessLevel: 3.5,
+          motivationLevel: 8.5,
+        },
+        trends: { sleepTrend: 6.7, energyTrend: 14.3, stressTrend: -33.3, sorenessTrend: -25 },
+      };
+      const outputResult = recoveryTrendsOutputSchema.safeParse(output);
+      expect(outputResult.success).toBe(true);
+    });
+  });
+
+  // ===========================================================================
+  // Recovery Trends Calculation Logic Tests
+  // ===========================================================================
+
+  describe("Recovery Trends Calculation Logic", () => {
+    it("should calculate average excluding null values", () => {
+      const values = [7.5, null, 8.0, null, 7.0];
+      const valid = values.filter((v): v is number => v !== null);
+      const avg = valid.reduce((sum, v) => sum + v, 0) / valid.length;
+      expect(avg).toBeCloseTo(7.5, 1);
+    });
+
+    it("should return null average for all-null values", () => {
+      const values: (number | null)[] = [null, null, null];
+      const valid = values.filter((v): v is number => v !== null);
+      const avg = valid.length > 0 ? valid.reduce((sum, v) => sum + v, 0) / valid.length : null;
+      expect(avg).toBeNull();
+    });
+
+    it("should calculate trend as percentage change between halves", () => {
+      const values = [6, 6, 8, 8]; // First half avg: 6, second half avg: 8
+      const mid = Math.floor(values.length / 2);
+      const firstHalf = values.slice(0, mid);
+      const secondHalf = values.slice(mid);
+      const firstAvg = firstHalf.reduce((s, v) => s + v, 0) / firstHalf.length;
+      const secondAvg = secondHalf.reduce((s, v) => s + v, 0) / secondHalf.length;
+      const trend = ((secondAvg - firstAvg) / firstAvg) * 100;
+      expect(trend).toBeCloseTo(33.3, 0);
+    });
+
+    it("should handle empty data for trends", () => {
+      const values: number[] = [];
+      const mid = Math.floor(values.length / 2);
+      // With 0 elements, mid is 0, trend should be 0
+      expect(mid).toBe(0);
     });
   });
 

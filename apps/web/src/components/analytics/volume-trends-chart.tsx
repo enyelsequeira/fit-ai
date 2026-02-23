@@ -1,10 +1,11 @@
 /**
  * VolumeTrendsChart - Displays training volume trends over time
+ * Uses Mantine BarChart for rendering.
  */
 
 import { IconChartBar } from "@tabler/icons-react";
 import { Box, Group, Stack, Text, Tooltip as MantineTooltip } from "@mantine/core";
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { BarChart } from "@mantine/charts";
 
 import {
   FitAiCard,
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/state-views";
+import { formatVolume } from "@/components/ui/utils";
 import type { VolumeDataPoint } from "./use-analytics-data";
 
 import styles from "./analytics-view.module.css";
@@ -22,16 +24,6 @@ import styles from "./analytics-view.module.css";
 interface VolumeTrendsChartProps {
   data: VolumeDataPoint[];
   isLoading?: boolean;
-}
-
-function formatVolume(volume: number): string {
-  if (volume >= 1000000) {
-    return `${(volume / 1000000).toFixed(1)}M`;
-  }
-  if (volume >= 1000) {
-    return `${(volume / 1000).toFixed(1)}k`;
-  }
-  return String(volume);
 }
 
 function formatWeekLabel(periodStart: string): string {
@@ -59,12 +51,7 @@ export function VolumeTrendsChart({ data, isLoading }: VolumeTrendsChartProps) {
           <FitAiCardDescription>Weekly training volume (kg)</FitAiCardDescription>
         </FitAiCardHeader>
         <FitAiCardContent>
-          <Box
-            className={styles.chartContainer}
-            data-chart-type="bar"
-            data-loading="true"
-            data-has-data="false"
-          >
+          <Box className={styles.chartContainer} data-loading="true" data-has-data="false">
             <Skeleton w="100%" h="100%" />
           </Box>
         </FitAiCardContent>
@@ -104,7 +91,6 @@ export function VolumeTrendsChart({ data, isLoading }: VolumeTrendsChartProps) {
   const avgVolume = data.length > 0 ? totalVolume / data.length : 0;
   const lastWeekVolume = data[data.length - 1]?.volume ?? 0;
 
-  // Calculate trend
   const previousWeekVolume = data.length >= 2 ? (data[data.length - 2]?.volume ?? 0) : 0;
   const trend =
     previousWeekVolume > 0 ? ((lastWeekVolume - previousWeekVolume) / previousWeekVolume) * 100 : 0;
@@ -133,40 +119,17 @@ export function VolumeTrendsChart({ data, isLoading }: VolumeTrendsChartProps) {
         </Group>
       </FitAiCardHeader>
       <FitAiCardContent>
-        <Box
-          className={styles.chartContainer}
-          data-chart-type="bar"
-          data-has-data={String(hasData)}
-          data-loading="false"
-        >
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
-              <XAxis dataKey="label" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
-              <YAxis
-                tick={{ fontSize: 10 }}
-                tickLine={false}
-                axisLine={false}
-                width={50}
-                tickFormatter={(value) => `${formatVolume(value)}`}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "var(--mantine-color-body)",
-                  border: "1px solid var(--mantine-color-default-border)",
-                  borderRadius: "var(--mantine-radius-sm)",
-                  fontSize: "12px",
-                }}
-                formatter={(value) => {
-                  if (typeof value === "number") {
-                    return [`${value.toLocaleString()} kg`, "Volume"];
-                  }
-                  return [String(value), "Volume"];
-                }}
-              />
-              <Bar dataKey="volume" fill="var(--mantine-color-blue-6)" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </Box>
+        <BarChart
+          h={300}
+          data={chartData}
+          dataKey="label"
+          series={[{ name: "volume", color: "blue.6" }]}
+          tickLine="y"
+          gridAxis="xy"
+          withTooltip
+          withLegend={false}
+          valueFormatter={(value) => formatVolume(value)}
+        />
 
         {/* Stats summary */}
         <Group justify="space-between" mt="md" pt="md" className={styles.statsSummary}>
@@ -174,13 +137,13 @@ export function VolumeTrendsChart({ data, isLoading }: VolumeTrendsChartProps) {
             <Text size="sm" c="dimmed">
               Avg Volume
             </Text>
-            <Text fw={500}>{formatVolume(Math.round(avgVolume))} kg</Text>
+            <Text fw={500}>{formatVolume(Math.round(avgVolume))}</Text>
           </Stack>
           <Stack gap={0} ta="right">
             <Text size="sm" c="dimmed">
               This Week
             </Text>
-            <Text fw={500}>{formatVolume(lastWeekVolume)} kg</Text>
+            <Text fw={500}>{formatVolume(lastWeekVolume)}</Text>
           </Stack>
         </Group>
       </FitAiCardContent>
