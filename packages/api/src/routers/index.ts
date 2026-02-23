@@ -5,18 +5,17 @@ import z from "zod";
 import { protectedProcedure, publicProcedure } from "../index";
 import { aiRouter } from "./ai";
 import { analyticsRouter } from "./analytics";
-import { authRouter } from "./auth/index";
+import { authRouter } from "./auth";
 import { bodyMeasurementRouter } from "./body-measurement";
-import { exerciseRouter } from "./exercise/index";
-import { goalsRouter } from "./goals/index";
+import { exerciseRouter } from "./exercise";
+import { goalsRouter } from "./goals";
 import { historyRouter } from "./history";
-import { personalRecordRouter } from "./personal-record/index";
-import { progressPhotoRouter } from "./progress-photo/index";
-import { recoveryRouter } from "./recovery/index";
-import { settingsRouter } from "./settings/index";
-import { templateRouter } from "./template/index";
-import { todoRouter } from "./todo/index";
-import { workoutRouter } from "./workout/index";
+import { personalRecordRouter } from "./personal-record";
+import { progressPhotoRouter } from "./progress-photo";
+import { recoveryRouter } from "./recovery";
+import { settingsRouter } from "./settings";
+import { templateRouter } from "./template";
+import { workoutRouter } from "./workout";
 
 export const appRouter = {
   healthCheck: publicProcedure
@@ -57,7 +56,6 @@ export const appRouter = {
         user: context.session?.user,
       };
     }),
-  todo: todoRouter,
   exercise: exerciseRouter,
   template: templateRouter,
   workout: workoutRouter,
