@@ -15,7 +15,18 @@ import { logger } from "hono/logger";
 
 const app = new Hono();
 
+app.use(logger());
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": env.CORS_ORIGIN,
+  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Credentials": "true",
+  "Access-Control-Max-Age": "86400",
+};
+
 app.use(
+  "/api/*",
   cors({
     origin: env.CORS_ORIGIN,
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -23,7 +34,6 @@ app.use(
     credentials: true,
   }),
 );
-app.use(logger());
 
 // OpenAPI Generator for spec generation
 const openAPIGenerator = new OpenAPIGenerator({
@@ -289,6 +299,11 @@ export const rpcHandler = new RPCHandler(appRouter, {
 });
 
 app.use("/*", async (c, next) => {
+  // Handle CORS preflight for RPC routes
+  if (c.req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
+
   const context = await createContext({ context: c });
 
   const rpcResult = await rpcHandler.handle(c.req.raw, {
@@ -297,7 +312,11 @@ app.use("/*", async (c, next) => {
   });
 
   if (rpcResult.matched) {
-    return c.newResponse(rpcResult.response.body, rpcResult.response);
+    const response = new Response(rpcResult.response.body, rpcResult.response);
+    for (const [key, value] of Object.entries(corsHeaders)) {
+      response.headers.set(key, value);
+    }
+    return response;
   }
 
   const apiResult = await apiHandler.handle(c.req.raw, {
@@ -306,7 +325,11 @@ app.use("/*", async (c, next) => {
   });
 
   if (apiResult.matched) {
-    return c.newResponse(apiResult.response.body, apiResult.response);
+    const response = new Response(apiResult.response.body, apiResult.response);
+    for (const [key, value] of Object.entries(corsHeaders)) {
+      response.headers.set(key, value);
+    }
+    return response;
   }
 
   await next();
