@@ -97,7 +97,7 @@ export const getGoalAnalyticsHandler: GetGoalAnalyticsRouteHandler = async ({ co
         title: g.title,
         goalType: g.goalType,
         progressPercentage: g.progressPercentage ?? 0,
-        targetDate: g.targetDate,
+        targetDate: g.targetDate ? formatDate(new Date(g.targetDate)) : null,
         daysRemaining,
       };
     });
