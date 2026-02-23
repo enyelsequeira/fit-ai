@@ -1,15 +1,9 @@
-/**
- * SetEntryCard - Gym Mode style set entry with large touch inputs
- * Features: Large weight/reps inputs, previous hint, green complete button
- * Bug fix: Pre-filled values now enable the Complete button immediately
- */
-
-import { IconCheck } from "@tabler/icons-react";
-
 import type { SetEntryCardProps } from "./set-entry-card.types";
 
+import { Group, NumberInput, Stack, Text } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
+
 import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
-import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
 
 import styles from "./set-entry-card.module.css";
 
@@ -19,89 +13,89 @@ export function SetEntryCard({
   isLoading = false,
   disabled = false,
 }: SetEntryCardProps) {
-  const { setNumber, weight, reps, previousWeight, previousReps } = data;
-
+  const { setNumber, weight, reps, previousWeight, previousReps, historyWeight, historyReps } =
+    data;
   const { onWeightChange, onRepsChange, onComplete } = actions;
 
-  const hasPreviousData = previousWeight != null && previousReps != null;
+  const displayWeight = historyWeight ?? previousWeight;
+  const displayReps = historyReps ?? previousReps;
+  const isFromHistory = historyWeight != null;
+  const hasPreviousData = displayWeight != null || displayReps != null;
 
-  // FIX: Button is enabled when weight and reps have actual values (not null)
-  // This includes pre-filled values from previous sets
   const canComplete =
     weight != null && weight > 0 && reps != null && reps > 0 && !isLoading && !disabled;
 
-  const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === "") {
+  const handleWeightChange = (val: string | number) => {
+    if (val === "" || val === undefined) {
       onWeightChange(null);
-    } else {
-      const numValue = parseFloat(value);
-      if (!isNaN(numValue) && numValue >= 0) {
-        onWeightChange(numValue);
-      }
+      return;
     }
+    const num = typeof val === "string" ? parseFloat(val) : val;
+    if (!isNaN(num) && num >= 0) onWeightChange(num);
   };
 
-  const handleRepsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === "") {
+  const handleRepsChange = (val: string | number) => {
+    if (val === "" || val === undefined) {
       onRepsChange(null);
-    } else {
-      const numValue = parseInt(value, 10);
-      if (!isNaN(numValue) && numValue >= 0) {
-        onRepsChange(numValue);
-      }
+      return;
     }
+    const num = typeof val === "string" ? parseInt(String(val), 10) : val;
+    if (!isNaN(num) && num >= 0) onRepsChange(num);
   };
 
   return (
-    <div className={styles.card}>
-      {/* Header with set number and previous hint */}
-      <div className={styles.header}>
-        <FitAiText.Label className={styles.setNumber}>SET {setNumber}</FitAiText.Label>
+    <Stack gap="md" className={styles.card}>
+      <Group justify="space-between" align="center">
+        <Text fw={700} size="sm" tt="uppercase" c="teal" style={{ letterSpacing: "0.5px" }}>
+          SET {setNumber}
+        </Text>
         {hasPreviousData && (
-          <FitAiText.Caption>
-            Last: {previousWeight}kg x {previousReps}
-          </FitAiText.Caption>
+          <Text size="xs" c="dimmed">
+            {isFromHistory ? "Last session" : "Last"}: {displayWeight}kg × {displayReps}
+          </Text>
         )}
-      </div>
+      </Group>
 
-      {/* Weight and Reps inputs */}
-      <div className={styles.inputsRow}>
-        <div className={styles.inputGroup}>
-          <input
-            type="number"
-            className={styles.inputField}
+      <Group grow gap="md">
+        <Stack gap={4} align="center">
+          <NumberInput
             value={weight ?? ""}
             onChange={handleWeightChange}
-            placeholder={previousWeight?.toString() ?? "0"}
             min={0}
             max={500}
-            step={0.5}
+            step={2.5}
+            clampBehavior="strict"
+            size="lg"
+            placeholder={(historyWeight ?? previousWeight)?.toString() ?? "0"}
             disabled={disabled || isLoading}
             aria-label="Weight in kg"
+            classNames={{ input: styles.numberInput }}
           />
-          <div className={styles.inputLabel}>kg</div>
-        </div>
+          <Text size="xs" c="dimmed" fw={500}>
+            kg
+          </Text>
+        </Stack>
 
-        <div className={styles.inputGroup}>
-          <input
-            type="number"
-            className={styles.inputField}
+        <Stack gap={4} align="center">
+          <NumberInput
             value={reps ?? ""}
             onChange={handleRepsChange}
-            placeholder={previousReps?.toString() ?? "0"}
             min={0}
             max={100}
             step={1}
+            clampBehavior="strict"
+            size="lg"
+            placeholder={(historyReps ?? previousReps)?.toString() ?? "0"}
             disabled={disabled || isLoading}
             aria-label="Reps"
+            classNames={{ input: styles.numberInput }}
           />
-          <div className={styles.inputLabel}>reps</div>
-        </div>
-      </div>
+          <Text size="xs" c="dimmed" fw={500}>
+            reps
+          </Text>
+        </Stack>
+      </Group>
 
-      {/* Complete Set button */}
       <FitAiButton
         variant="success"
         fullWidth
@@ -109,12 +103,11 @@ export function SetEntryCard({
         disabled={!canComplete}
         loading={isLoading}
         onClick={onComplete}
-        aria-label={isLoading ? "Completing set..." : "Complete set"}
         className={styles.completeButton}
         leftSection={!isLoading && <IconCheck size={20} />}
       >
         {isLoading ? "COMPLETING..." : "COMPLETE SET"}
       </FitAiButton>
-    </div>
+    </Stack>
   );
 }

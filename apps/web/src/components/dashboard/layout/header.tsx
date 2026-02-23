@@ -17,7 +17,6 @@ import {
   IconChevronDown,
   IconLogout,
   IconMoon,
-  IconSettings,
   IconSun,
   IconUser,
 } from "@tabler/icons-react";
@@ -133,23 +132,12 @@ const DashboardHeader = ({
 
             <Menu.Item
               component={Link}
-              to="/settings"
+              to="/dashboard"
               leftSection={<IconUser size={16} stroke={1.5} />}
               fz={"sm"}
             >
               Profile
             </Menu.Item>
-
-            <Menu.Item
-              component={Link}
-              to="/settings"
-              leftSection={<IconSettings size={16} stroke={1.5} />}
-              fz={"sm"}
-            >
-              Settings
-            </Menu.Item>
-
-            <Menu.Divider />
 
             <Menu.Item
               fz={"sm"}

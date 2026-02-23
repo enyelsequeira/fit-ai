@@ -23,12 +23,3 @@ export function getValueColor(value: number, max: number, inverse = false): stri
   if (percentage >= 40) return "yellow";
   return "red";
 }
-
-export function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}

@@ -65,6 +65,17 @@ export const exerciseSetOutputSchema = selectExerciseSetSchema;
 export type ExerciseSetOutput = z.infer<typeof exerciseSetOutputSchema>;
 
 /**
+ * Last performance set schema — weight/reps from previous completed workout
+ */
+export const lastPerformanceSetSchema = z.object({
+  setNumber: z.number(),
+  weight: z.number().nullable(),
+  reps: z.number().nullable(),
+});
+
+export type LastPerformanceSet = z.infer<typeof lastPerformanceSetSchema>;
+
+/**
  * Workout exercise base output schema (from drizzle-zod)
  */
 export const workoutExerciseBaseOutputSchema = selectWorkoutExerciseSchema;
@@ -87,6 +98,11 @@ export const workoutExerciseOutputSchema = workoutExerciseBaseOutputSchema.exten
 
   // Nested sets
   sets: z.array(exerciseSetOutputSchema).optional().describe("Sets for this exercise"),
+
+  // Last performance data from previous completed workout containing this exercise
+  lastPerformance: z
+    .array(lastPerformanceSetSchema)
+    .describe("Set data from most recent prior completed workout"),
 });
 
 export type WorkoutExerciseOutput = z.infer<typeof workoutExerciseOutputSchema>;

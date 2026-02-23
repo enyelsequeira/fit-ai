@@ -3,15 +3,20 @@
  * Supports both quick weight entry and full detailed measurements
  */
 
+import type { MeasurementFormValues } from "./measurement-types";
+
 import { useState } from "react";
-import { Box, Button, Group, Modal, Tabs, Textarea } from "@mantine/core";
+import { Box, Group, Modal, Tabs, Textarea } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconCalendar, IconNotes, IconRuler, IconScale } from "@tabler/icons-react";
+
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
 
 import { DetailedMeasurementsForm } from "./detailed-measurements-form";
 import styles from "./log-measurement-modal.module.css";
-import { defaultMeasurementValues, type MeasurementFormValues } from "./measurement-types";
+import { defaultMeasurementValues } from "./measurement-types";
 import { QuickWeightForm } from "./quick-weight-form";
 
 interface LogMeasurementModalProps {
@@ -34,6 +39,7 @@ export function LogMeasurementModal({
   mode = "create",
 }: LogMeasurementModalProps) {
   const [activeTab, setActiveTab] = useState<string | null>("quick");
+  const isMobile = useMediaQuery("(max-width: 48em)");
 
   const form = useForm<MeasurementFormValues>({
     initialValues: { ...defaultMeasurementValues, ...initialValues },
@@ -58,7 +64,7 @@ export function LogMeasurementModal({
       await onSubmit(values);
       form.reset();
       setActiveTab("quick");
-      onClose();
+      // Parent calls closeModal() on success, so we don't call onClose() here
     } catch {
       // Error handling is done by the parent component
     }
@@ -79,6 +85,7 @@ export function LogMeasurementModal({
       onClose={handleClose}
       title={modalTitle}
       size="lg"
+      fullScreen={isMobile}
       className={styles.modal}
       data-mode={mode}
     >
@@ -127,17 +134,12 @@ export function LogMeasurementModal({
         </Tabs>
 
         <Group justify="flex-end" mt="xl">
-          <Button variant="default" onClick={handleClose} disabled={isSubmitting}>
+          <FitAiButton variant="ghost" onClick={handleClose} disabled={isSubmitting}>
             Cancel
-          </Button>
-          <Button
-            type="submit"
-            loading={isSubmitting}
-            className={styles.submitButton}
-            data-submitting={isSubmitting ? "true" : undefined}
-          >
+          </FitAiButton>
+          <FitAiButton variant="primary" type="submit" loading={isSubmitting}>
             {submitLabel}
-          </Button>
+          </FitAiButton>
         </Group>
       </form>
     </Modal>

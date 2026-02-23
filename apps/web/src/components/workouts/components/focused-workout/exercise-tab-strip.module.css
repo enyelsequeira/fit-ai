@@ -1,0 +1,83 @@
+/* ExerciseTabStrip - Horizontal scrollable exercise pill navigation */
+
+.scrollRoot {
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-6));
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+}
+
+/* Tabs.List: flex row, no wrap, gap */
+.list {
+  flex-wrap: nowrap;
+  gap: var(--mantine-spacing-xs);
+  border-bottom: none;
+}
+
+/* Tabs.Tab base: subtle inactive pill */
+.tab {
+  flex-shrink: 0;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+  padding: 6px var(--mantine-spacing-sm);
+  white-space: nowrap;
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+  touch-action: manipulation;
+  border-radius: var(--mantine-radius-xl);
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-2));
+  background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+}
+
+.tab:hover {
+  background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+/* Active (selected) tab: teal filled, white text */
+.tab[data-active="true"] {
+  background: var(--mantine-color-teal-filled);
+  color: var(--mantine-color-white);
+  box-shadow: 0 1px 4px rgba(0, 128, 128, 0.25);
+}
+
+.tab[data-active="true"]:hover {
+  background: var(--mantine-color-teal-7);
+}
+
+/* Completed tab (inactive): green tint */
+.tab[data-completed] {
+  background: light-dark(var(--mantine-color-teal-0), var(--mantine-color-teal-9));
+  color: light-dark(var(--mantine-color-teal-8), var(--mantine-color-teal-3));
+}
+
+.tab[data-completed]:hover {
+  background: light-dark(var(--mantine-color-teal-1), var(--mantine-color-teal-8));
+}
+
+/* Completed AND active: keep teal filled */
+.tab[data-completed][data-active="true"] {
+  background: var(--mantine-color-teal-filled);
+  color: var(--mantine-color-white);
+}
+
+/* Check icon inherits tab text color */
+.checkIcon {
+  color: inherit;
+  flex-shrink: 0;
+}
+
+/* Badge styling per state */
+.badge {
+  font-variant-numeric: tabular-nums;
+}
+
+.badge[data-active="true"] {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--mantine-color-white);
+}
+
+.badge[data-completed]:not([data-active="true"]) {
+  background: light-dark(var(--mantine-color-teal-1), var(--mantine-color-teal-8));
+  color: light-dark(var(--mantine-color-teal-8), var(--mantine-color-teal-2));
+}

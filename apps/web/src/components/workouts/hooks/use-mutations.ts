@@ -153,28 +153,6 @@ export function useRemoveExerciseFromWorkout(workoutId: number) {
   );
 }
 
-/**
- * Hook for reordering exercises in a workout
- */
-export function useReorderWorkoutExercises(workoutId: number) {
-  const queryClient = useQueryClient();
-
-  return useMutation(
-    orpc.workout.reorderExercises.mutationOptions({
-      onMutate: async () => {
-        await queryClient.cancelQueries({
-          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
-        });
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries({
-          queryKey: orpc.workout.getById.key({ input: { workoutId } }),
-        });
-      },
-    }),
-  );
-}
-
 // ============================================================================
 // Set Mutations
 // ============================================================================

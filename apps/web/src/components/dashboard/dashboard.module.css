@@ -512,3 +512,24 @@
 .quickActionBtn:active {
   transform: translateY(0);
 }
+
+/* ============================================
+   Dashboard Home Grid Layout
+   ============================================ */
+
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mantine-spacing-md);
+}
+
+@media (min-width: 48em) {
+  .dashboardGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.pageContainer {
+  flex: 1;
+  width: 100%;
+}

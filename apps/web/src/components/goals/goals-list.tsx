@@ -2,21 +2,26 @@
  * GoalsList - List of goals with tabs for filtering by status
  */
 
+import type { GoalStatus, GoalWithExercise, StatusTab } from "./types";
+
 import { Box, Button, Stack, Tabs, Text } from "@mantine/core";
 import { IconPlus, IconTarget } from "@tabler/icons-react";
 import { EmptyState, ErrorState } from "@/components/ui/state-views";
 import { GoalCard, GoalCardSkeleton } from "./goal-card";
-import type { GoalStatus, GoalWithExercise, StatusTab } from "./types";
-import styles from "./goals-view.module.css";
 
-interface GoalsListProps {
-  goals: GoalWithExercise[];
+export interface GoalTabsState {
   statusTabs: StatusTab[];
   activeTab: GoalStatus | "all";
   onTabChange: (tab: GoalStatus | "all") => void;
+}
+
+export interface GoalLoadingState {
   isLoading: boolean;
   isError: boolean;
   onRetry: () => void;
+}
+
+export interface GoalListActions {
   onGoalClick: (goal: GoalWithExercise) => void;
   onLogProgress: (goal: GoalWithExercise) => void;
   onComplete: (goal: GoalWithExercise) => void;
@@ -25,6 +30,13 @@ interface GoalsListProps {
   onAbandon: (goal: GoalWithExercise) => void;
   onDelete: (goal: GoalWithExercise) => void;
   onCreateGoal: () => void;
+}
+
+interface GoalsListProps {
+  goals: GoalWithExercise[];
+  tabs: GoalTabsState;
+  loadingState: GoalLoadingState;
+  actions: GoalListActions;
 }
 
 function GoalsEmptyState({
@@ -78,29 +90,27 @@ function LoadingState() {
   );
 }
 
-export function GoalsList({
-  goals,
-  statusTabs,
-  activeTab,
-  onTabChange,
-  isLoading,
-  isError,
-  onRetry,
-  onGoalClick,
-  onLogProgress,
-  onComplete,
-  onPause,
-  onResume,
-  onAbandon,
-  onDelete,
-  onCreateGoal,
-}: GoalsListProps) {
+export function GoalsList({ goals, tabs, loadingState, actions }: GoalsListProps) {
+  const { statusTabs, activeTab, onTabChange } = tabs;
+  const { isLoading, isError, onRetry } = loadingState;
+  const {
+    onGoalClick,
+    onLogProgress,
+    onComplete,
+    onPause,
+    onResume,
+    onAbandon,
+    onDelete,
+    onCreateGoal,
+  } = actions;
   return (
     <Box>
       {/* Status Tabs */}
       <Tabs
         value={activeTab}
-        onChange={(value) => onTabChange(value as GoalStatus | "all")}
+        onChange={(value) => {
+          if (value) onTabChange(value as GoalStatus | "all");
+        }}
         mb="md"
       >
         <Tabs.List>

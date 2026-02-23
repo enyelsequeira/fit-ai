@@ -9,72 +9,76 @@
   }
 }
 
-.recoveryContainer {
-  animation: fadeIn 300ms ease-out;
+/* ============================================================
+   Sidebar Layout (matches goals/templates/workouts pattern)
+   ============================================================ */
+
+.sidebar {
+  display: none;
+  flex-direction: column;
+  width: 280px;
+  min-width: 280px;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-right: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  height: calc(100vh - 60px);
+  position: sticky;
+  top: 60px;
+  overflow: hidden;
+
+  @mixin larger-than $mantine-breakpoint-lg {
+    display: flex;
+  }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+.sidebarHeader {
+  padding: var(--mantine-spacing-lg);
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.logoIcon {
+  background: light-dark(var(--mantine-color-red-6), var(--mantine-color-red-7));
+}
+
+.sidebarContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--mantine-spacing-md);
+}
+
+.sidebarFooter {
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.createButton {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+
+  @mixin hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px light-dark(rgba(224, 49, 49, 0.25), rgba(224, 49, 49, 0.4));
   }
-  to {
-    opacity: 1;
+
+  &:active {
+    transform: translateY(0);
   }
 }
 
-.mainContent {
+/* Content grid for 2-column card layout */
+.contentGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--mantine-spacing-md);
 
-  @media (min-width: 992px) {
-    grid-template-columns: 340px 1fr;
+  @mixin larger-than $mantine-breakpoint-md {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-.leftColumn {
-  display: flex;
-  flex-direction: column;
-  gap: var(--mantine-spacing-md);
+/* ============================================================
+   Readiness Card
+   ============================================================ */
 
-  @media (min-width: 992px) {
-    position: sticky;
-    top: var(--mantine-spacing-md);
-    align-self: flex-start;
-    max-height: calc(100vh - 100px);
-    overflow-y: auto;
-
-    /* Scrollbar styling */
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
-      border-radius: 2px;
-    }
-  }
-
-  @media (max-width: 991px) {
-    order: 1;
-  }
-}
-
-.rightColumn {
-  display: flex;
-  flex-direction: column;
-  gap: var(--mantine-spacing-md);
-
-  @media (max-width: 991px) {
-    order: 2;
-  }
-}
-
-/* Readiness Card with data attribute styling */
 .readinessCard {
   text-align: center;
   transition: background-color 200ms ease;
@@ -112,7 +116,10 @@
   transition: color 200ms ease;
 }
 
-/* Recovery Status Card with data attributes */
+/* ============================================================
+   Recovery Status Card
+   ============================================================ */
+
 .recoveryStatusCard {
   transition: background-color 200ms ease;
 
@@ -129,7 +136,10 @@
   }
 }
 
-/* Muscle Recovery Item styling */
+/* ============================================================
+   Muscle Recovery Item
+   ============================================================ */
+
 .muscleItem {
   padding: var(--mantine-spacing-xs);
   border: 1px solid var(--mantine-color-default-border);
@@ -167,7 +177,10 @@
   }
 }
 
-/* Check-in form section styles */
+/* ============================================================
+   Check-in Form Sections
+   ============================================================ */
+
 .formSection {
   border: 1px solid var(--mantine-color-default-border);
   border-radius: var(--mantine-radius-md);
@@ -185,7 +198,6 @@
   padding: var(--mantine-spacing-md);
 }
 
-/* Rating button styles */
 .ratingButton {
   display: flex;
   align-items: center;
@@ -225,7 +237,6 @@
   }
 }
 
-/* Mood button styles */
 .moodButton {
   flex: 1;
   display: flex;
@@ -249,7 +260,6 @@
   }
 }
 
-/* Body part button styles */
 .bodyPartButton {
   padding: var(--mantine-spacing-xs);
   border: 1px solid var(--mantine-color-default-border);
@@ -270,7 +280,6 @@
   }
 }
 
-/* Advanced section toggle */
 .advancedToggle {
   display: flex;
   align-items: center;
@@ -292,7 +301,6 @@
   transition: color 150ms ease;
 }
 
-/* Notes section */
 .notesBox {
   padding: var(--mantine-spacing-xs);
   background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
@@ -300,7 +308,10 @@
   border-radius: 0 var(--mantine-radius-sm) var(--mantine-radius-sm) 0;
 }
 
-/* Factor item in readiness card */
+/* ============================================================
+   Readiness Factor Items
+   ============================================================ */
+
 .factorItem {
   display: flex;
   flex-direction: column;
@@ -341,9 +352,42 @@
   }
 }
 
+/* ============================================================
+   Animations
+   ============================================================ */
+
+@keyframes pageLoad {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   Reduced Motion
+   ============================================================ */
+
 @media (prefers-reduced-motion: reduce) {
-  .recoveryContainer {
-    animation: none;
+  .sidebar,
+  .createButton {
+    transition: none;
+  }
+
+  .createButton:hover {
+    transform: none;
   }
 
   .muscleItem,

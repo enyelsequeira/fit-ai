@@ -142,5 +142,3 @@ export function useWorkoutDetailState(workoutId: number) {
     completeSetMutation,
   };
 }
-
-export type UseWorkoutDetailStateReturn = ReturnType<typeof useWorkoutDetailState>;

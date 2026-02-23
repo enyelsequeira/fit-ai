@@ -1,201 +1,231 @@
-/**
- * FocusedWorkoutView - Gym Mode container for focused workout sessions
- * Features: Modal rest timer, collapsible exercise queue, dot indicators
- */
+import type { ExerciseTabItem } from "./exercise-tab-strip";
 
-import { useMemo, useCallback, useState } from "react";
-import { Box, ScrollArea, Stack } from "@mantine/core";
-import { IconBarbell } from "@tabler/icons-react";
+import { useState, useCallback, useEffect, useMemo } from "react";
+import { Box, Button, Divider, Group, ScrollArea, Stack, Text } from "@mantine/core";
+import {
+  IconBarbell,
+  IconChevronLeft,
+  IconChevronRight,
+  IconFlag,
+  IconPlus,
+} from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
+import { useDisclosure } from "@mantine/hooks";
 
 import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
 import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
 
-import { WorkoutLoadingState } from "../workout-detail-view/workout-loading-state";
-import { WorkoutErrorState } from "../workout-detail-view/workout-error-state";
+import { useWorkoutById } from "../../queries/use-queries";
+import { useRestTimer } from "../workout-timer/use-rest-timer";
+import { useWorkoutSession } from "../../hooks/use-workout-session";
 import { AddExerciseModal } from "../add-exercise-modal/add-exercise-modal";
 import { CompleteWorkoutModal } from "../complete-workout-modal/complete-workout-modal";
 import { FocusedWorkoutHeader } from "./focused-workout-header";
-import { ExercisePager } from "./exercise-pager";
-import { ExerciseQueue } from "./exercise-queue";
-import type { ExerciseQueueItem } from "./exercise-queue";
-import { QuickActionsBar } from "./quick-actions-bar";
+import { ExerciseTabStrip } from "./exercise-tab-strip";
+import { FocusedExerciseCard } from "./focused-exercise-card";
 import { RestTimerModal } from "./rest-timer-modal";
-import { useFocusedWorkout } from "./use-focused-workout";
 
 import styles from "./focused-workout-view.module.css";
 
-interface FocusedWorkoutViewProps {
+type FocusedWorkoutViewProps = {
   workoutId: number;
-}
+};
 
 export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
   const navigate = useNavigate();
-  const state = useFocusedWorkout(workoutId);
-  const [queueExpanded, setQueueExpanded] = useState(false);
+  const { data: workout } = useWorkoutById(workoutId);
 
-  // Calculate which exercises are fully completed
-  const completedExerciseIndexes = useMemo(() => {
-    if (!state.workout?.workoutExercises) return [];
+  // Exercise navigation
+  const [pagerIndex, setPagerIndex] = useState(0);
 
-    return state.workout.workoutExercises
-      .map((exercise, index) => {
-        const sets = exercise.sets ?? [];
-        if (sets.length === 0) return -1;
-        const allCompleted = sets.every((set) => set.completedAt !== null);
-        return allCompleted ? index : -1;
-      })
-      .filter((index) => index !== -1);
-  }, [state.workout?.workoutExercises]);
+  // Modals
+  const [addExerciseOpened, addExerciseHandlers] = useDisclosure(false);
+  const [completeWorkoutOpened, completeWorkoutHandlers] = useDisclosure(false);
 
-  // Map exercises to queue format
-  const exerciseQueueItems: ExerciseQueueItem[] = useMemo(() => {
-    if (!state.workout?.workoutExercises) return [];
+  // Rest timer
+  const restTimer = useRestTimer();
 
-    return state.workout.workoutExercises.map((exercise, index) => {
-      const sets = exercise.sets ?? [];
-      const completedSets = sets.filter((set) => set.completedAt !== null).length;
-      const isCompleted = sets.length > 0 && sets.every((set) => set.completedAt !== null);
-      const isCurrent = index === state.pagerIndex;
+  // Workout session (stats, navigation, nextSetInfo)
+  const workoutSession = useWorkoutSession({
+    workout: workout as Parameters<typeof useWorkoutSession>[0]["workout"],
+    restTimer,
+  });
 
-      return {
-        id: exercise.id,
-        name: exercise.exercise?.name ?? "Unknown Exercise",
-        completedSets,
-        totalSets: sets.length,
-        status: isCompleted ? "completed" : isCurrent ? "current" : "pending",
-      };
-    });
-  }, [state.workout?.workoutExercises, state.pagerIndex]);
+  // Sync pager with session
+  useEffect(() => {
+    setPagerIndex(workoutSession.currentExerciseIndex);
+  }, [workoutSession.currentExerciseIndex]);
 
-  // Handle back navigation
-  const handleBackClick = useCallback(() => {
-    navigate({ to: "/dashboard/workouts" });
-  }, [navigate]);
+  // Auto-dismiss rest timer when completed
+  useEffect(() => {
+    if (restTimer.status === "completed") {
+      restTimer.resetTimer();
+    }
+  }, [restTimer.status, restTimer.resetTimer]);
 
-  // Handle set completion - update with values then complete
-  const handleSetComplete = useCallback(
-    (exerciseId: number, setId: number, weight: number, reps: number, rpe?: number) => {
-      // The exerciseId is workoutExerciseId from the pager, not needed for completion
-      void exerciseId;
-      state.onSetComplete(setId, weight, reps, rpe);
-    },
-    [state],
-  );
-
-  // Handle exercise selection from queue
-  const handleSelectExercise = useCallback(
+  const handlePagerChange = useCallback(
     (index: number) => {
-      state.onPagerChange(index);
-      setQueueExpanded(false);
+      setPagerIndex(index);
+      workoutSession.goToExercise(index);
     },
-    [state],
+    [workoutSession],
   );
 
-  // Loading state
-  if (state.isLoading) {
-    return <WorkoutLoadingState />;
-  }
+  // Cross-cutting: rest timer + auto-advance on set completion
+  const handleSetCompleted = useCallback(
+    ({ isLastSet }: { isLastSet: boolean }) => {
+      restTimer.startTimer(restTimer.settings.defaultRestTime);
+      const totalExercises = workout?.workoutExercises?.length ?? 0;
+      const hasNextExercise = pagerIndex + 1 < totalExercises;
+      if (isLastSet && hasNextExercise) {
+        setTimeout(() => handlePagerChange(pagerIndex + 1), 1200);
+      }
+    },
+    [restTimer, workout?.workoutExercises?.length, pagerIndex, handlePagerChange],
+  );
 
-  // Error state
-  if (state.isError || !state.workout) {
-    return <WorkoutErrorState errorMessage={state.error?.message} />;
-  }
+  // Derive exercise tab items from session data
+  const exerciseTabItems = useMemo(() => {
+    return workoutSession.exercisesForNav.map((ex, index) => ({
+      ...ex,
+      status:
+        ex.completedSets === ex.totalSets && ex.totalSets > 0
+          ? "completed"
+          : index === pagerIndex
+            ? "current"
+            : "pending",
+    })) satisfies ExerciseTabItem[];
+  }, [workoutSession.exercisesForNav, pagerIndex]);
 
-  const { workoutExercises } = state.workout;
-  const hasExercises = workoutExercises && workoutExercises.length > 0;
+  const hasExercises = workout?.workoutExercises && workout?.workoutExercises.length > 0;
+  const currentExercise = workout?.workoutExercises?.[pagerIndex] ?? null;
+  const isFirstExercise = pagerIndex === 0;
+  const isLastExercise = pagerIndex === (workout?.workoutExercises?.length ?? 1) - 1;
+  const canFinish = workoutSession.stats.completedSets > 0 && workout?.completedAt === null;
 
   return (
-    <Box w={"100%"} className={styles.container}>
-      {/* Gym Mode Header with dots */}
+    <Stack gap={0} w="100%" className={styles.container}>
       <FocusedWorkoutHeader
-        workoutName={state.workout.name ?? "Untitled"}
-        elapsedTime={state.workoutSession.stats.elapsedTime}
-        currentExerciseIndex={state.pagerIndex}
-        totalExercises={workoutExercises?.length ?? 0}
-        completedExerciseIndexes={completedExerciseIndexes}
-        onBackClick={handleBackClick}
+        workoutName={workout?.name ?? "Untitled"}
+        elapsedTime={workoutSession.stats.elapsedTime}
+        totalSets={workoutSession.stats.totalSets}
+        completedSets={workoutSession.stats.completedSets}
+        onBackClick={() => navigate({ to: "/dashboard/workouts" })}
       />
 
-      {/* Main Content */}
-      <ScrollArea className={styles.content} scrollbarSize={6} type="auto">
-        {hasExercises ? (
-          <>
-            {/* Exercise Pager (swipeable) */}
-            <ExercisePager
-              exercises={workoutExercises}
-              currentIndex={state.pagerIndex}
-              onIndexChange={state.onPagerChange}
-              onSetComplete={handleSetComplete}
-              onAddSet={state.onAddSet}
-              isLoading={state.isCompletingSet}
-            />
+      {hasExercises && (
+        <ExerciseTabStrip
+          exercises={exerciseTabItems}
+          currentIndex={pagerIndex}
+          onSelectExercise={handlePagerChange}
+        />
+      )}
 
-            {/* Collapsible Exercise Queue */}
-            <ExerciseQueue
-              exercises={exerciseQueueItems}
-              currentIndex={state.pagerIndex}
-              isExpanded={queueExpanded}
-              onToggle={() => setQueueExpanded(!queueExpanded)}
-              onSelectExercise={handleSelectExercise}
-            />
-          </>
-        ) : (
-          <Box className={styles.emptyState}>
-            <Stack align="center" gap="md">
-              <IconBarbell size={64} style={{ opacity: 0.3 }} />
-              <FitAiText.Muted ta="center">No exercises yet</FitAiText.Muted>
-              <FitAiText.Caption ta="center">Add exercises to start your workout</FitAiText.Caption>
-              <FitAiButton variant="secondary" onClick={state.modals.addExercise.open}>
-                Add Exercise
-              </FitAiButton>
-            </Stack>
-          </Box>
-        )}
+      <ScrollArea flex={1} type="auto" className={styles.scrollArea}>
+        <Stack p="md" gap="md" w="100%">
+          {hasExercises && currentExercise ? (
+            <>
+              <FocusedExerciseCard
+                workoutId={workoutId}
+                exercise={currentExercise}
+                onSetCompleted={handleSetCompleted}
+              />
+
+              {/* Exercise navigation */}
+              <Group justify="space-between" align="center">
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  leftSection={<IconChevronLeft size={16} />}
+                  disabled={isFirstExercise}
+                  onClick={() => handlePagerChange(pagerIndex - 1)}
+                >
+                  Prev
+                </Button>
+                <Text size="xs" c="dimmed">
+                  {pagerIndex + 1} / {workout?.workoutExercises?.length}
+                </Text>
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  rightSection={<IconChevronRight size={16} />}
+                  disabled={isLastExercise}
+                  onClick={() => handlePagerChange(pagerIndex + 1)}
+                >
+                  Next
+                </Button>
+              </Group>
+
+              {/* Workout actions */}
+              <Divider />
+              <Group justify="space-between">
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  size="sm"
+                  leftSection={<IconPlus size={14} />}
+                  onClick={addExerciseHandlers.open}
+                >
+                  Add Exercise
+                </Button>
+                <Button
+                  variant="filled"
+                  color="teal"
+                  size="sm"
+                  leftSection={<IconFlag size={14} />}
+                  disabled={!canFinish}
+                  onClick={completeWorkoutHandlers.open}
+                >
+                  Finish Workout
+                </Button>
+              </Group>
+            </>
+          ) : (
+            <Box className={styles.emptyState}>
+              <Stack align="center" gap="md">
+                <IconBarbell size={64} style={{ opacity: 0.3 }} aria-hidden="true" />
+                <FitAiText.Muted ta="center">No exercises yet</FitAiText.Muted>
+                <FitAiText.Caption ta="center">
+                  Add exercises to start your workout
+                </FitAiText.Caption>
+                <FitAiButton variant="secondary" onClick={addExerciseHandlers.open}>
+                  Add Exercise
+                </FitAiButton>
+              </Stack>
+            </Box>
+          )}
+        </Stack>
       </ScrollArea>
 
-      {/* Fixed Bottom Action Bar */}
-      <Box className={styles.bottomBar}>
-        <QuickActionsBar
-          onAddExercise={state.modals.addExercise.open}
-          onFinishWorkout={state.modals.completeWorkout.open}
-          canFinish={
-            state.workoutSession.stats.completedSets > 0 && state.workout.completedAt === null
-          }
-        />
-      </Box>
-
-      {/* Modal Rest Timer (replaces inline timer) */}
       <RestTimerModal
-        timer={state.restTimer}
+        timer={restTimer}
         nextSetInfo={
-          state.workoutSession.nextSetInfo
+          workoutSession.nextSetInfo
             ? {
-                exerciseName: state.workoutSession.nextSetInfo.exerciseName,
-                setNumber: state.workoutSession.nextSetInfo.setNumber,
-                targetWeight: state.workoutSession.nextSetInfo.targetWeight ?? undefined,
-                targetReps: state.workoutSession.nextSetInfo.targetReps ?? undefined,
+                exerciseName: workoutSession.nextSetInfo.exerciseName,
+                setNumber: workoutSession.nextSetInfo.setNumber,
+                targetWeight: workoutSession.nextSetInfo.targetWeight ?? undefined,
+                targetReps: workoutSession.nextSetInfo.targetReps ?? undefined,
               }
             : undefined
         }
-        onDismiss={state.onDismissRestTimer}
+        onDismiss={() => restTimer.resetTimer()}
       />
 
-      {/* Modals */}
       <AddExerciseModal
-        opened={state.modals.addExercise.opened}
-        onClose={state.modals.addExercise.close}
+        opened={addExerciseOpened}
+        onClose={addExerciseHandlers.close}
         workoutId={workoutId}
-        existingExerciseIds={workoutExercises?.map((we) => we.exerciseId) ?? []}
+        existingExerciseIds={workout?.workoutExercises?.map((we) => we.exerciseId) ?? []}
       />
 
       <CompleteWorkoutModal
-        opened={state.modals.completeWorkout.opened}
-        onClose={state.modals.completeWorkout.close}
+        opened={completeWorkoutOpened}
+        onClose={completeWorkoutHandlers.close}
         workoutId={workoutId}
-        isAlreadyCompleted={state.workout.completedAt !== null}
-        onSuccess={handleBackClick}
+        isAlreadyCompleted={workout?.completedAt !== null}
+        onSuccess={() => navigate({ to: "/dashboard/workouts" })}
       />
-    </Box>
+    </Stack>
   );
 }

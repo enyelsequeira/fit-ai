@@ -2,13 +2,13 @@
  * GoalDetailModal - Full goal details with progress chart
  */
 
-import { Badge, Box, Center, Group, Modal, Stack, Text } from "@mantine/core";
+import { Badge, Box, Center, Group, Loader, Modal, Stack, Text } from "@mantine/core";
 import { getGoalTypeIcon, getGoalValues, getStatusColor } from "./goal-detail-utils";
 import { GoalFooterActions, GoalQuickActions } from "./goal-actions";
 import { GoalHistoryTimeline } from "./goal-history-timeline";
 import { GoalProgressSection } from "./goal-progress-section";
 import { GoalTimelineSection } from "./goal-timeline-section";
-import type { GoalType, GoalWithProgress } from "./types";
+import type { GoalWithProgress } from "./types";
 import styles from "./goals-view.module.css";
 
 interface GoalDetailModalProps {
@@ -27,7 +27,7 @@ export function GoalDetailModal({
   opened,
   onClose,
   goal,
-  isLoading: _isLoading,
+  isLoading,
   onLogProgress,
   onComplete,
   onPause,
@@ -36,7 +36,17 @@ export function GoalDetailModal({
 }: GoalDetailModalProps) {
   if (!goal) return null;
 
-  const goalType = goal.goalType as GoalType;
+  if (isLoading) {
+    return (
+      <Modal opened={opened} onClose={onClose} title="Goal Details" size="lg">
+        <Center py="xl">
+          <Loader size="lg" />
+        </Center>
+      </Modal>
+    );
+  }
+
+  const goalType = goal.goalType;
   const GoalIcon = getGoalTypeIcon(goalType);
   const values = getGoalValues(goal);
 

@@ -19,6 +19,7 @@
     "@fit-ai/db": "workspace:*",
     "@fit-ai/env": "workspace:*",
     "@orpc/client": "catalog:",
+    "@orpc/experimental-ratelimit": "^1.13.5",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",

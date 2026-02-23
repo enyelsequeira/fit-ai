@@ -126,6 +126,20 @@ export interface CreateCustomGoalForm extends CreateGoalFormBase {
 }
 
 /**
+ * Props for the CreateGoalModal component
+ */
+export interface CreateGoalModalProps {
+  opened: boolean;
+  onClose: () => void;
+  onCreateWeightGoal: (data: CreateWeightGoalForm) => void;
+  onCreateStrengthGoal: (data: CreateStrengthGoalForm) => void;
+  onCreateBodyMeasurementGoal: (data: CreateBodyMeasurementGoalForm) => void;
+  onCreateWorkoutFrequencyGoal: (data: CreateWorkoutFrequencyGoalForm) => void;
+  onCreateCustomGoal: (data: CreateCustomGoalForm) => void;
+  isLoading?: boolean;
+}
+
+/**
  * Log progress form data
  */
 export interface LogProgressForm {

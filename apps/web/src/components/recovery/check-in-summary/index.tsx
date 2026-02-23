@@ -3,11 +3,12 @@
  * Shows key metrics at a glance with visual indicators
  */
 
-import { Box, Button, Card, Group, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
+import { Box, Card, Group, SimpleGrid, Skeleton, Stack, Text } from "@mantine/core";
 import { IconActivity, IconEdit, IconFlame, IconMoon } from "@tabler/icons-react";
 
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
 import type { CheckInData, CheckInSummaryProps } from "./types";
-import { formatDate } from "./utils";
+import { formatLongDate } from "@/components/ui/utils";
 import { AdvancedMetrics } from "./advanced-metrics";
 import { MetricCard } from "./metric-card";
 import { MoodDisplay } from "./mood-display";
@@ -47,9 +48,9 @@ function EmptyState({ onCreateNew }: { onCreateNew?: () => void }) {
           <Text c="dimmed" fz="sm" ta="center">
             You haven't logged your check-in today. How are you feeling?
           </Text>
-          <Button onClick={onCreateNew} variant="light">
+          <FitAiButton onClick={onCreateNew} variant="primary">
             Start Check-in
-          </Button>
+          </FitAiButton>
         </Stack>
       </Card.Section>
     </Card>
@@ -62,17 +63,17 @@ function CheckInContent({ checkIn, onEdit }: { checkIn: CheckInData; onEdit?: ()
       <Card.Section withBorder inheritPadding py="sm">
         <Group justify="space-between">
           <Text fz="sm" fw={500}>
-            {formatDate(checkIn.date)}
+            {formatLongDate(checkIn.date)}
           </Text>
           {onEdit && (
-            <Button
+            <FitAiButton
               size="xs"
-              variant="subtle"
+              variant="secondary"
               leftSection={<IconEdit size={14} />}
               onClick={onEdit}
             >
               Edit
-            </Button>
+            </FitAiButton>
           )}
         </Group>
       </Card.Section>

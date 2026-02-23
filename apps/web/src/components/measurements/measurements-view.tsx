@@ -1,20 +1,27 @@
 /**
  * MeasurementsView - Main body measurements page component
- * Displays summary stats, trend charts, and measurement history
+ * Uses sidebar + FitAiPageHeader + FitAiContentArea layout matching goals/workouts
  */
 
+import type { MeasurementFormValues } from "./log-measurement-modal";
+
 import { useCallback, useState } from "react";
-import { Box, Stack } from "@mantine/core";
+import { Box, Container, Flex, Group, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { ErrorState, PageHeader } from "@/components/ui/state-views";
-import { MeasurementsSummary } from "./measurements-summary";
-import { WeightTrendChart } from "./weight-trend-chart";
-import { MeasurementsHistory } from "./measurements-history";
+import { IconPlus, IconRuler2 } from "@tabler/icons-react";
+
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
+import { FitAiContentArea } from "@/components/ui/fit-ai-content-area/fit-ai-content-area";
+import { FitAiPageHeader } from "@/components/ui/fit-ai-page-header/fit-ai-page-header";
+import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
+
 import { LogMeasurementModal } from "./log-measurement-modal";
-import type { MeasurementFormValues } from "./log-measurement-modal";
-import { useMeasurementsData } from "./use-measurements-data";
+import { MeasurementsHistory } from "./measurements-history";
+import { MeasurementsSummary } from "./measurements-summary";
 import styles from "./measurements-view.module.css";
+import { useMeasurementsData } from "./use-measurements-data";
+import { WeightTrendChart } from "./weight-trend-chart";
 
 export function MeasurementsView() {
   const {
@@ -24,8 +31,6 @@ export function MeasurementsView() {
     period,
     setPeriod,
     isLoading,
-    isError,
-    refetch,
     createMeasurement,
     updateMeasurement,
     deleteMeasurement,
@@ -33,21 +38,18 @@ export function MeasurementsView() {
     isUpdating,
   } = useMeasurementsData();
 
-  // Modal state using useDisclosure
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editInitialValues, setEditInitialValues] = useState<
     Partial<MeasurementFormValues> | undefined
   >(undefined);
 
-  // Handle log measurement
   const handleLogMeasurement = useCallback(() => {
     setEditingId(null);
     setEditInitialValues(undefined);
     openModal();
   }, [openModal]);
 
-  // Handle edit measurement
   const handleEdit = useCallback(
     (id: number) => {
       const measurement = historyData.find((m) => m.id === id);
@@ -65,6 +67,10 @@ export function MeasurementsView() {
           rightArm: measurement.rightArm,
           leftThigh: measurement.leftThigh,
           rightThigh: measurement.rightThigh,
+          leftCalf: measurement.leftCalf,
+          rightCalf: measurement.rightCalf,
+          neck: measurement.neck,
+          shoulders: measurement.shoulders,
           notes: measurement.notes ?? "",
         });
         openModal();
@@ -73,7 +79,6 @@ export function MeasurementsView() {
     [historyData, openModal],
   );
 
-  // Handle delete measurement
   const handleDelete = useCallback(
     async (id: number) => {
       try {
@@ -94,18 +99,15 @@ export function MeasurementsView() {
     [deleteMeasurement],
   );
 
-  // Handle form submit
   const handleSubmit = useCallback(
     async (values: MeasurementFormValues) => {
       try {
-        // Build the measurement data, filtering out null values
         const measurementData: Record<string, unknown> = {
           measuredAt: values.measuredAt,
           weightUnit: values.weightUnit,
           lengthUnit: values.lengthUnit,
         };
 
-        // Only include non-null values
         if (values.weight !== null) measurementData.weight = values.weight;
         if (values.bodyFatPercentage !== null)
           measurementData.bodyFatPercentage = values.bodyFatPercentage;
@@ -155,60 +157,83 @@ export function MeasurementsView() {
     [editingId, createMeasurement, updateMeasurement, closeModal],
   );
 
-  // Error state
-  if (isError) {
-    return (
-      <Box p={{ base: "sm", md: "md" }} className={styles.measurementsContainer} data-error="true">
-        <Stack gap="md">
-          <PageHeader
-            title="Body Measurements"
-            description="Track your body measurements and progress"
-          />
-          <ErrorState
-            title="Failed to load measurements"
-            message="There was an error loading your measurements. Please try again."
-            onRetry={refetch}
-          />
-        </Stack>
-      </Box>
-    );
-  }
-
   return (
-    <Box
-      p={{ base: "sm", md: "md" }}
-      className={styles.measurementsContainer}
-      data-loading={isLoading ? "true" : undefined}
-    >
-      <Stack gap="md">
-        {/* Page header */}
-        <PageHeader
-          title="Body Measurements"
-          description="Track your body measurements and progress over time"
-        />
+    <>
+      {/* Sidebar */}
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>
+          <Group gap="xs" align="center">
+            <Flex
+              align="center"
+              justify="center"
+              w={36}
+              h={36}
+              c="white"
+              className={styles.logoIcon}
+              style={{ borderRadius: "var(--mantine-radius-md)" }}
+            >
+              <IconRuler2 size={20} />
+            </Flex>
+            <FitAiText variant="subheading">Measurements</FitAiText>
+          </Group>
+        </div>
 
-        {/* Summary statistics */}
-        <MeasurementsSummary summary={summary} onLogMeasurement={handleLogMeasurement} />
+        <div className={styles.sidebarContent} />
 
-        {/* Trend chart */}
-        <WeightTrendChart
-          data={chartData}
-          isLoading={isLoading}
-          period={period}
-          onPeriodChange={setPeriod}
-        />
+        <Box p="md" className={styles.sidebarFooter}>
+          <FitAiButton
+            variant="primary"
+            fullWidth
+            leftSection={<IconPlus size={16} />}
+            onClick={handleLogMeasurement}
+            className={styles.createButton}
+          >
+            Log Measurement
+          </FitAiButton>
+        </Box>
+      </div>
 
-        {/* Measurement history */}
-        <MeasurementsHistory
-          measurements={historyData}
-          isLoading={isLoading}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      </Stack>
+      {/* Main Content */}
+      <Container fluid flex={1}>
+        <FitAiPageHeader>
+          <FitAiPageHeader.Title>Body Measurements</FitAiPageHeader.Title>
+          <FitAiPageHeader.Description>
+            Track your body measurements and progress over time
+          </FitAiPageHeader.Description>
+          <FitAiPageHeader.Actions>
+            <FitAiPageHeader.Action
+              variant="primary"
+              icon={<IconPlus size={16} />}
+              onClick={handleLogMeasurement}
+            >
+              Log Measurement
+            </FitAiPageHeader.Action>
+          </FitAiPageHeader.Actions>
+          <FitAiPageHeader.Stats>
+            <MeasurementsSummary summary={summary} />
+          </FitAiPageHeader.Stats>
+        </FitAiPageHeader>
 
-      {/* Log/Edit Measurement Modal */}
+        <FitAiContentArea>
+          <Stack gap="lg">
+            <WeightTrendChart
+              data={chartData}
+              isLoading={isLoading}
+              period={period}
+              onPeriodChange={setPeriod}
+            />
+            <MeasurementsHistory
+              measurements={historyData}
+              isLoading={isLoading}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </Stack>
+        </FitAiContentArea>
+      </Container>
+
       <LogMeasurementModal
+        key={editingId ?? "create"}
         opened={modalOpened}
         onClose={closeModal}
         onSubmit={handleSubmit}
@@ -216,6 +241,6 @@ export function MeasurementsView() {
         initialValues={editInitialValues}
         mode={editingId ? "edit" : "create"}
       />
-    </Box>
+    </>
   );
 }

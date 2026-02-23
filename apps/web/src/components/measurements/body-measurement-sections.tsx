@@ -3,20 +3,25 @@
  * Each section groups related body measurements together
  */
 
-import { Grid, Stack, Text } from "@mantine/core";
+import type { MeasurementForm } from "./measurement-types";
+
+import { Divider, Grid, Group, Stack, Text } from "@mantine/core";
+import { IconBone, IconStretching, IconUserScan, IconWalk } from "@tabler/icons-react";
 
 import { MeasurementField } from "./measurement-field";
-import type { MeasurementForm } from "./measurement-types";
 
 interface SectionProps {
   form: MeasurementForm;
 }
 
-function SectionHeader({ children }: { children: React.ReactNode }) {
+function SectionHeader({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <Text size="sm" fw={500} c="dimmed">
-      {children}
-    </Text>
+    <Group gap="xs" align="center">
+      {icon}
+      <Text size="sm" fw={500} c="dimmed">
+        {children}
+      </Text>
+    </Group>
   );
 }
 
@@ -25,7 +30,9 @@ export function TorsoMeasurements({ form }: SectionProps) {
 
   return (
     <Stack gap="sm">
-      <SectionHeader>Torso</SectionHeader>
+      <SectionHeader icon={<IconUserScan size={14} color="var(--mantine-color-dimmed)" />}>
+        Torso
+      </SectionHeader>
       <Grid>
         <Grid.Col span={{ base: 12, sm: 4 }}>
           <MeasurementField
@@ -64,9 +71,12 @@ export function UpperBodyMeasurements({ form }: SectionProps) {
 
   return (
     <Stack gap="sm">
-      <SectionHeader>Upper Body</SectionHeader>
+      <Divider />
+      <SectionHeader icon={<IconBone size={14} color="var(--mantine-color-dimmed)" />}>
+        Upper Body
+      </SectionHeader>
       <Grid>
-        <Grid.Col span={{ base: 12, sm: 4 }}>
+        <Grid.Col span={{ base: 12, sm: 6 }}>
           <MeasurementField
             form={form}
             name="neck"
@@ -75,7 +85,7 @@ export function UpperBodyMeasurements({ form }: SectionProps) {
             max={100}
           />
         </Grid.Col>
-        <Grid.Col span={{ base: 12, sm: 4 }}>
+        <Grid.Col span={{ base: 12, sm: 6 }}>
           <MeasurementField
             form={form}
             name="shoulders"
@@ -94,9 +104,12 @@ export function ArmsMeasurements({ form }: SectionProps) {
 
   return (
     <Stack gap="sm">
-      <SectionHeader>Arms</SectionHeader>
+      <Divider />
+      <SectionHeader icon={<IconStretching size={14} color="var(--mantine-color-dimmed)" />}>
+        Arms
+      </SectionHeader>
       <Grid>
-        <Grid.Col span={{ base: 6, sm: 6 }}>
+        <Grid.Col span={6}>
           <MeasurementField
             form={form}
             name="leftArm"
@@ -105,7 +118,7 @@ export function ArmsMeasurements({ form }: SectionProps) {
             max={100}
           />
         </Grid.Col>
-        <Grid.Col span={{ base: 6, sm: 6 }}>
+        <Grid.Col span={6}>
           <MeasurementField
             form={form}
             name="rightArm"
@@ -124,7 +137,10 @@ export function LegsMeasurements({ form }: SectionProps) {
 
   return (
     <Stack gap="sm">
-      <SectionHeader>Legs</SectionHeader>
+      <Divider />
+      <SectionHeader icon={<IconWalk size={14} color="var(--mantine-color-dimmed)" />}>
+        Legs
+      </SectionHeader>
       <Grid>
         <Grid.Col span={{ base: 6, sm: 3 }}>
           <MeasurementField

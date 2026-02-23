@@ -1,4 +1,4 @@
-/* SetEntryCard - Gym-friendly styling with large touch-friendly inputs */
+/* SetEntryCard - Gym-friendly Mantine NumberInput styling */
 
 .card {
   padding: var(--mantine-spacing-lg);
@@ -7,116 +7,26 @@
   border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--mantine-spacing-lg);
-}
-
-.setNumber {
-  /* High contrast teal for gym visibility */
-  color: light-dark(var(--mantine-color-teal-7), var(--mantine-color-teal-4));
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.inputsRow {
-  display: flex;
-  gap: var(--mantine-spacing-md);
-  margin-bottom: var(--mantine-spacing-lg);
-}
-
-.inputGroup {
-  flex: 1;
-  text-align: center;
-}
-
-.inputField {
-  width: 100%;
-  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-9));
-  border: 2px solid light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
-  border-radius: var(--mantine-radius-lg);
-  padding: var(--mantine-spacing-lg);
-  /* Large input for gym use */
-  min-height: 56px;
+/* NumberInput inner input element - large, centered, gym-friendly */
+.numberInput {
   font-size: var(--mantine-font-size-xl);
   font-weight: 700;
-  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-white));
   text-align: center;
-  margin-bottom: var(--mantine-spacing-xs);
-  transition:
-    border-color 0.15s ease,
-    outline 0.15s ease;
-  -moz-appearance: textfield;
-  /* Better touch experience */
+  min-height: 56px;
   touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
 }
 
-.inputField::-webkit-outer-spin-button,
-.inputField::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.inputField:focus {
+.numberInput:focus {
   border-color: var(--mantine-color-teal-6);
   outline: 2px solid var(--mantine-color-teal-3);
-  outline-offset: 0;
 }
 
-.inputField::placeholder {
-  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
-}
-
-.inputLabel {
-  font-size: var(--mantine-font-size-sm);
-  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dimmed));
-}
-
-.rpeGroup {
-  max-width: 100px;
-}
-
-.rpeField {
-  composes: inputField;
-  font-size: var(--mantine-font-size-lg);
-  padding: var(--mantine-spacing-md);
-}
-
+/* Complete Set button */
 .completeButton {
-  /* Gym-friendly complete button */
   min-height: 52px;
   border-radius: var(--mantine-radius-lg);
   font-size: var(--mantine-font-size-lg);
   font-weight: 600;
   letter-spacing: 0.5px;
   touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Legacy styles for backward compatibility */
-.inputRow {
-  display: flex;
-  align-items: center;
-  gap: var(--mantine-spacing-sm);
-  min-height: 56px;
-}
-
-.input {
-  flex: 1;
-}
-
-.input input {
-  font-size: var(--mantine-font-size-xl);
-  font-weight: 600;
-  min-height: 56px;
-  text-align: center;
-}
-
-.input input:focus {
-  border-color: var(--mantine-color-teal-6);
-  outline: 2px solid var(--mantine-color-teal-3);
 }

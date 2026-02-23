@@ -1,0 +1,156 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - button "Toggle navigation" [ref=e6] [cursor=pointer]
+          - link "FitAI" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e10]
+            - generic [ref=e168]: FitAI
+        - generic [ref=e12]:
+          - button [ref=e13] [cursor=pointer]:
+            - img [ref=e15]
+          - button "E enyel" [ref=e17] [cursor=pointer]:
+            - generic "enyel" [ref=e19]: E
+            - paragraph [ref=e20]: enyel
+            - img [ref=e21]
+      - navigation [ref=e23]:
+        - generic [ref=e24]:
+          - paragraph [ref=e25]: Menu
+          - link "Dashboard" [ref=e26] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e28]
+            - generic [ref=e169]: Dashboard
+          - link "Workouts" [ref=e33] [cursor=pointer]:
+            - /url: /dashboard/workouts
+            - img [ref=e35]
+            - generic [ref=e170]: Workouts
+          - link "Templates" [ref=e38] [cursor=pointer]:
+            - /url: /dashboard/templates
+            - img [ref=e40]
+            - generic [ref=e171]: Templates
+          - link "Exercises" [ref=e43] [cursor=pointer]:
+            - /url: /dashboard/exercises
+            - img [ref=e45]
+            - generic [ref=e172]: Exercises
+          - link "Goals" [ref=e49] [cursor=pointer]:
+            - /url: /dashboard/goals
+            - img [ref=e51]
+            - generic [ref=e173]: Goals
+          - link "Records" [ref=e55] [cursor=pointer]:
+            - /url: /dashboard/records
+            - img [ref=e57]
+            - generic [ref=e174]: Records
+          - link "Measurements" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/measurements
+            - img [ref=e63]
+            - generic [ref=e175]: Measurements
+          - link "Analytics" [ref=e65] [cursor=pointer]:
+            - /url: /dashboard/analytics
+            - img [ref=e67]
+            - generic [ref=e176]: Analytics
+          - link "Recovery" [ref=e69] [cursor=pointer]:
+            - /url: /dashboard/recovery
+            - img [ref=e71]
+            - generic [ref=e177]: Recovery
+          - link "AI Coach" [ref=e74] [cursor=pointer]:
+            - /url: /ai
+            - img [ref=e76]
+            - generic [ref=e178]: AI Coach
+        - separator [ref=e78]
+        - link "Settings" [ref=e80] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e82]
+          - generic [ref=e179]: Settings
+      - main [ref=e85]:
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - generic [ref=e89]:
+              - img [ref=e91]
+              - paragraph [ref=e95]: Goals
+            - button "New Goal" [ref=e97] [cursor=pointer]:
+              - generic [ref=e98]:
+                - img [ref=e100]
+                - generic [ref=e101]: New Goal
+          - generic [ref=e102]:
+            - generic [ref=e103]:
+              - generic [ref=e104]:
+                - generic [ref=e105]:
+                  - heading "Goals & Progress" [level=2] [ref=e106]
+                  - paragraph [ref=e107]: Set fitness goals and track your progress over time
+                - button "Create Goal" [ref=e109] [cursor=pointer]:
+                  - generic [ref=e110]:
+                    - img [ref=e112]
+                    - generic [ref=e113]: Create Goal
+              - generic [ref=e114]:
+                - generic [ref=e181]:
+                  - img [ref=e183]
+                  - generic [ref=e187]:
+                    - paragraph [ref=e188]: "1"
+                    - paragraph [ref=e189]: Active Goals
+                - generic [ref=e190]:
+                  - img [ref=e192]
+                  - generic [ref=e194]:
+                    - paragraph [ref=e195]: "0"
+                    - paragraph [ref=e196]: Completed
+                - generic [ref=e197]:
+                  - img [ref=e199]
+                  - generic [ref=e201]:
+                    - paragraph [ref=e202]: 100%
+                    - paragraph [ref=e203]: Avg Progress
+                - generic [ref=e204]:
+                  - img [ref=e206]
+                  - generic [ref=e209]:
+                    - paragraph [ref=e210]: "0"
+                    - paragraph [ref=e211]: Near Deadline
+            - generic [ref=e121]:
+              - tablist [ref=e123]:
+                - tab "All Goals (1)" [selected] [ref=e212] [cursor=pointer]:
+                  - generic [ref=e125]: All Goals
+                  - generic [ref=e214]: (1)
+                - tab "Active (1)" [ref=e215] [cursor=pointer]:
+                  - generic [ref=e127]: Active
+                  - generic [ref=e217]: (1)
+                - tab "Paused (0)" [ref=e218] [cursor=pointer]:
+                  - generic [ref=e129]: Paused
+                  - generic [ref=e220]: (0)
+                - tab "Completed (0)" [ref=e221] [cursor=pointer]:
+                  - generic [ref=e131]: Completed
+                  - generic [ref=e223]: (0)
+                - tab "Abandoned (0)" [ref=e224] [cursor=pointer]:
+                  - generic [ref=e133]: Abandoned
+                  - generic [ref=e226]: (0)
+              - generic [ref=e229] [cursor=pointer]:
+                - generic [ref=e230]:
+                  - generic [ref=e231]:
+                    - img [ref=e233]
+                    - generic [ref=e237]:
+                      - paragraph [ref=e238]: demo
+                      - paragraph [ref=e240]: Weight
+                  - generic [ref=e241]:
+                    - img [ref=e242]
+                    - text: active
+                - generic [ref=e246]:
+                  - generic [ref=e247]:
+                    - paragraph [ref=e248]:
+                      - img [ref=e249]
+                      - text: 11 / 11 kg
+                    - paragraph [ref=e252]: 100%
+                  - progressbar [ref=e254]
+                - generic [ref=e255]:
+                  - paragraph [ref=e256]:
+                    - img [ref=e257]
+                    - text: Apr 26
+                  - generic [ref=e259]:
+                    - button "Log Progress" [ref=e260]:
+                      - generic [ref=e262]: Log Progress
+                    - button [ref=e263]:
+                      - img [ref=e266]
+  - generic:
+    - generic:
+      - button "Open TanStack Devtools" [ref=e270] [cursor=pointer]:
+        - img "TanStack Devtools" [ref=e271]
+      - option "Sort by status" [selected]
+      - option "Sort by query hash"
+      - option "Sort by last updated"

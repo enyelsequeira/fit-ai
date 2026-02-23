@@ -74,7 +74,7 @@ export interface GoalValues {
  * Get current, target, start values and unit for a goal based on its type
  */
 export function getGoalValues(goal: GoalWithProgress): GoalValues {
-  const type = goal.goalType as GoalType;
+  const type = goal.goalType;
 
   switch (type) {
     case "weight":

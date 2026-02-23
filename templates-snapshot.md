@@ -1,0 +1,462 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - button "Toggle navigation" [ref=e6] [cursor=pointer]
+          - link "FitAI" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e10]
+            - generic [ref=e136]: FitAI
+        - generic [ref=e12]:
+          - button [ref=e13] [cursor=pointer]:
+            - img [ref=e15]
+          - button "E enyel" [ref=e17] [cursor=pointer]:
+            - generic "enyel" [ref=e19]: E
+            - paragraph [ref=e20]: enyel
+            - img [ref=e21]
+      - navigation [ref=e23]:
+        - generic [ref=e24]:
+          - paragraph [ref=e25]: Menu
+          - link "Dashboard" [ref=e26] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e28]
+            - generic [ref=e137]: Dashboard
+          - link "Workouts" [ref=e33] [cursor=pointer]:
+            - /url: /dashboard/workouts
+            - img [ref=e35]
+            - generic [ref=e138]: Workouts
+          - link "Templates" [ref=e38] [cursor=pointer]:
+            - /url: /dashboard/templates
+            - img [ref=e40]
+            - generic [ref=e139]: Templates
+          - link "Exercises" [ref=e43] [cursor=pointer]:
+            - /url: /dashboard/exercises
+            - img [ref=e45]
+            - generic [ref=e140]: Exercises
+          - link "Goals" [ref=e49] [cursor=pointer]:
+            - /url: /dashboard/goals
+            - img [ref=e51]
+            - generic [ref=e141]: Goals
+          - link "Records" [ref=e55] [cursor=pointer]:
+            - /url: /dashboard/records
+            - img [ref=e57]
+            - generic [ref=e142]: Records
+          - link "Measurements" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/measurements
+            - img [ref=e63]
+            - generic [ref=e143]: Measurements
+          - link "Analytics" [ref=e65] [cursor=pointer]:
+            - /url: /dashboard/analytics
+            - img [ref=e67]
+            - generic [ref=e144]: Analytics
+          - link "Recovery" [ref=e69] [cursor=pointer]:
+            - /url: /dashboard/recovery
+            - img [ref=e71]
+            - generic [ref=e145]: Recovery
+          - link "AI Coach" [ref=e74] [cursor=pointer]:
+            - /url: /ai
+            - img [ref=e76]
+            - generic [ref=e146]: AI Coach
+        - separator [ref=e78]
+        - link "Settings" [ref=e80] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e82]
+          - generic [ref=e147]: Settings
+      - main [ref=e85]:
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - generic [ref=e89]:
+              - img [ref=e91]
+              - paragraph [ref=e94]: Templates
+            - generic [ref=e148]:
+              - generic [ref=e149]:
+                - paragraph [ref=e150]: Folders
+                - button [ref=e151] [cursor=pointer]:
+                  - img [ref=e153]
+              - generic [ref=e155]:
+                - button "All Templates View all templates 10" [ref=e156] [cursor=pointer]:
+                  - img [ref=e158]
+                  - generic [ref=e161]:
+                    - paragraph [ref=e162]: All Templates
+                    - paragraph [ref=e163]: View all templates
+                  - generic [ref=e164]: "10"
+                - paragraph [ref=e166]: My Folders
+                - button "demo1 5 Action for demo1" [ref=e167] [cursor=pointer]:
+                  - img [ref=e169]
+                  - paragraph [ref=e172]: demo1
+                  - generic [ref=e173]: "5"
+                  - button "Action for demo1" [ref=e175]:
+                    - button [ref=e176]:
+                      - img [ref=e178]
+                - button "demo 0 Action for demo" [ref=e181] [cursor=pointer]:
+                  - img [ref=e183]
+                  - paragraph [ref=e186]: demo
+                  - generic [ref=e187]: "0"
+                  - button "Action for demo" [ref=e189]:
+                    - button [ref=e190]:
+                      - img [ref=e192]
+              - generic [ref=e195]:
+                - generic [ref=e196]:
+                  - paragraph [ref=e197]: "10"
+                  - paragraph [ref=e198]: Templates
+                - generic [ref=e199]:
+                  - paragraph [ref=e200]: "2"
+                  - paragraph [ref=e201]: Folders
+                - generic [ref=e202]:
+                  - paragraph [ref=e203]: "2"
+                  - paragraph [ref=e204]: Public
+                - generic [ref=e205]:
+                  - paragraph [ref=e206]: "39"
+                  - paragraph [ref=e207]: Uses
+            - button "New Template" [ref=e100] [cursor=pointer]:
+              - generic [ref=e101]:
+                - img [ref=e103]
+                - generic [ref=e104]: New Template
+          - generic [ref=e105]:
+            - generic [ref=e106]:
+              - generic [ref=e107]:
+                - generic [ref=e108]:
+                  - heading "All Templates" [level=2] [ref=e109]
+                  - paragraph [ref=e110]: Create and manage workout templates for quick session starts
+                - generic [ref=e111]:
+                  - button "New Folder" [ref=e112] [cursor=pointer]:
+                    - generic [ref=e113]:
+                      - img [ref=e115]
+                      - generic [ref=e117]: New Folder
+                  - button "New Template" [ref=e118] [cursor=pointer]:
+                    - generic [ref=e119]:
+                      - img [ref=e121]
+                      - generic [ref=e122]: New Template
+              - generic [ref=e123]:
+                - generic [ref=e208]:
+                  - img [ref=e210]
+                  - generic [ref=e213]:
+                    - paragraph [ref=e214]: "10"
+                    - paragraph [ref=e215]: Templates
+                - generic [ref=e216]:
+                  - img [ref=e218]
+                  - generic [ref=e220]:
+                    - paragraph [ref=e221]: "2"
+                    - paragraph [ref=e222]: Folders
+                - generic [ref=e223]:
+                  - img [ref=e225]
+                  - generic [ref=e228]:
+                    - paragraph [ref=e229]: "39"
+                    - paragraph [ref=e230]: Total Uses
+                - generic [ref=e231]:
+                  - img [ref=e233]
+                  - generic [ref=e235]:
+                    - paragraph [ref=e236]: "2"
+                    - paragraph [ref=e237]: Public
+              - generic [ref=e130]:
+                - img [ref=e132]
+                - textbox "Search templates..." [ref=e135]
+            - generic [ref=e241]:
+              - 'button "Template: demo-day (Active)" [ref=e242] [cursor=pointer]':
+                - generic [ref=e243]:
+                  - img [ref=e245]
+                  - generic [ref=e248]:
+                    - heading "demo-day" [level=3] [ref=e249]
+                    - paragraph [ref=e250]: dem-data
+                - generic [ref=e251]:
+                  - generic [ref=e252]:
+                    - img [ref=e253]
+                    - text: Active
+                  - img [ref=e256]
+                  - generic [ref=e260]:
+                    - img [ref=e261]
+                    - text: "37"
+                - generic [ref=e263]:
+                  - generic [ref=e264]:
+                    - img [ref=e265]
+                    - generic [ref=e267]: "3"
+                    - generic [ref=e268]: days
+                  - generic [ref=e269]:
+                    - img [ref=e270]
+                    - generic [ref=e275]: "0"
+                    - generic [ref=e276]: exercises
+                  - generic [ref=e277]:
+                    - img [ref=e278]
+                    - generic [ref=e281]: 45 min
+                - generic [ref=e282]:
+                  - button "Start workout" [ref=e284]:
+                    - img [ref=e285]
+                    - text: Start
+                  - generic [ref=e287]:
+                    - button "Active template" [disabled] [ref=e288]:
+                      - img [ref=e289]
+                    - button "Duplicate template" [ref=e291]:
+                      - img [ref=e292]
+                    - button "Delete template" [ref=e295]:
+                      - img [ref=e296]
+              - 'button "Template: test" [ref=e299] [cursor=pointer]':
+                - generic [ref=e300]:
+                  - img [ref=e302]
+                  - generic [ref=e305]:
+                    - heading "test" [level=3] [ref=e306]
+                    - paragraph [ref=e307]: sfsdfa
+                - img [ref=e310]
+                - generic [ref=e314]:
+                  - generic [ref=e315]:
+                    - img [ref=e316]
+                    - generic [ref=e318]: "4"
+                    - generic [ref=e319]: days
+                  - generic [ref=e320]:
+                    - img [ref=e321]
+                    - generic [ref=e326]: "0"
+                    - generic [ref=e327]: exercises
+                  - generic [ref=e328]:
+                    - img [ref=e329]
+                    - generic [ref=e332]: 45 min
+                - generic [ref=e333]:
+                  - button "Start workout" [ref=e335]:
+                    - img [ref=e336]
+                    - text: Start
+                  - generic [ref=e338]:
+                    - button "Set as active" [ref=e339]:
+                      - img [ref=e340]
+                    - button "Duplicate template" [ref=e342]:
+                      - img [ref=e343]
+                    - button "Delete template" [ref=e346]:
+                      - img [ref=e347]
+              - 'button "Template: asd" [ref=e350] [cursor=pointer]':
+                - generic [ref=e351]:
+                  - img [ref=e353]
+                  - heading "asd" [level=3] [ref=e357]
+                - generic [ref=e358]:
+                  - img [ref=e360]
+                  - generic [ref=e364]:
+                    - img [ref=e365]
+                    - text: demo1
+                - generic [ref=e367]:
+                  - generic [ref=e368]:
+                    - img [ref=e369]
+                    - generic [ref=e374]: "0"
+                    - generic [ref=e375]: exercises
+                  - generic [ref=e376]:
+                    - img [ref=e377]
+                    - generic [ref=e380]: 45 min
+                - generic [ref=e381]:
+                  - button "Start workout" [ref=e383]:
+                    - img [ref=e384]
+                    - text: Start
+                  - generic [ref=e386]:
+                    - button "Set as active" [ref=e387]:
+                      - img [ref=e388]
+                    - button "Duplicate template" [ref=e390]:
+                      - img [ref=e391]
+                    - button "Delete template" [ref=e394]:
+                      - img [ref=e395]
+              - 'button "Template: asd" [ref=e398] [cursor=pointer]':
+                - generic [ref=e399]:
+                  - img [ref=e401]
+                  - generic [ref=e404]:
+                    - heading "asd" [level=3] [ref=e405]
+                    - paragraph [ref=e406]: dasdf
+                - generic [ref=e407]:
+                  - img [ref=e409]
+                  - generic [ref=e413]:
+                    - img [ref=e414]
+                    - text: demo1
+                - generic [ref=e416]:
+                  - generic [ref=e417]:
+                    - img [ref=e418]
+                    - generic [ref=e423]: "0"
+                    - generic [ref=e424]: exercises
+                  - generic [ref=e425]:
+                    - img [ref=e426]
+                    - generic [ref=e429]: 45 min
+                - generic [ref=e430]:
+                  - button "Start workout" [ref=e432]:
+                    - img [ref=e433]
+                    - text: Start
+                  - generic [ref=e435]:
+                    - button "Set as active" [ref=e436]:
+                      - img [ref=e437]
+                    - button "Duplicate template" [ref=e439]:
+                      - img [ref=e440]
+                    - button "Delete template" [ref=e443]:
+                      - img [ref=e444]
+              - 'button "Template: asdf" [ref=e447] [cursor=pointer]':
+                - generic [ref=e448]:
+                  - img [ref=e450]
+                  - generic [ref=e453]:
+                    - heading "asdf" [level=3] [ref=e454]
+                    - paragraph [ref=e455]: asdf
+                - generic [ref=e456]:
+                  - img [ref=e458]
+                  - generic [ref=e462]:
+                    - img [ref=e463]
+                    - text: demo1
+                  - generic [ref=e465]:
+                    - img [ref=e466]
+                    - text: "1"
+                - generic [ref=e468]:
+                  - generic [ref=e469]:
+                    - img [ref=e470]
+                    - generic [ref=e475]: "1"
+                    - generic [ref=e476]: exercises
+                  - generic [ref=e477]:
+                    - img [ref=e478]
+                    - generic [ref=e481]: 45 min
+                - generic [ref=e482]:
+                  - button "Start workout" [ref=e484]:
+                    - img [ref=e485]
+                    - text: Start
+                  - generic [ref=e487]:
+                    - button "Set as active" [ref=e488]:
+                      - img [ref=e489]
+                    - button "Duplicate template" [ref=e491]:
+                      - img [ref=e492]
+                    - button "Delete template" [ref=e495]:
+                      - img [ref=e496]
+              - 'button "Template: dafsd (Copy)" [ref=e499] [cursor=pointer]':
+                - generic [ref=e500]:
+                  - img [ref=e502]
+                  - generic [ref=e505]:
+                    - heading "dafsd (Copy)" [level=3] [ref=e506]
+                    - paragraph [ref=e507]: fasdf
+                - img [ref=e510]
+                - generic [ref=e514]:
+                  - generic [ref=e515]:
+                    - img [ref=e516]
+                    - generic [ref=e521]: "3"
+                    - generic [ref=e522]: exercises
+                  - generic [ref=e523]:
+                    - img [ref=e524]
+                    - generic [ref=e527]: 45 min
+                - generic [ref=e528]:
+                  - button "Start workout" [ref=e530]:
+                    - img [ref=e531]
+                    - text: Start
+                  - generic [ref=e533]:
+                    - button "Set as active" [ref=e534]:
+                      - img [ref=e535]
+                    - button "Duplicate template" [ref=e537]:
+                      - img [ref=e538]
+                    - button "Delete template" [ref=e541]:
+                      - img [ref=e542]
+              - 'button "Template: dafsd" [ref=e545] [cursor=pointer]':
+                - generic [ref=e546]:
+                  - img [ref=e548]
+                  - generic [ref=e551]:
+                    - heading "dafsd" [level=3] [ref=e552]
+                    - paragraph [ref=e553]: fasdf
+                - img [ref=e556]
+                - generic [ref=e560]:
+                  - generic [ref=e561]:
+                    - img [ref=e562]
+                    - generic [ref=e567]: "3"
+                    - generic [ref=e568]: exercises
+                  - generic [ref=e569]:
+                    - img [ref=e570]
+                    - generic [ref=e573]: 45 min
+                - generic [ref=e574]:
+                  - button "Start workout" [ref=e576]:
+                    - img [ref=e577]
+                    - text: Start
+                  - generic [ref=e579]:
+                    - button "Set as active" [ref=e580]:
+                      - img [ref=e581]
+                    - button "Duplicate template" [ref=e583]:
+                      - img [ref=e584]
+                    - button "Delete template" [ref=e587]:
+                      - img [ref=e588]
+              - 'button "Template: asdf (Copy)" [ref=e591] [cursor=pointer]':
+                - generic [ref=e592]:
+                  - img [ref=e594]
+                  - generic [ref=e597]:
+                    - heading "asdf (Copy)" [level=3] [ref=e598]
+                    - paragraph [ref=e599]: asdf
+                - generic [ref=e600]:
+                  - img [ref=e602]
+                  - generic [ref=e606]:
+                    - img [ref=e607]
+                    - text: demo1
+                - generic [ref=e609]:
+                  - generic [ref=e610]:
+                    - img [ref=e611]
+                    - generic [ref=e616]: "1"
+                    - generic [ref=e617]: exercises
+                  - generic [ref=e618]:
+                    - img [ref=e619]
+                    - generic [ref=e622]: 45 min
+                - generic [ref=e623]:
+                  - button "Start workout" [ref=e625]:
+                    - img [ref=e626]
+                    - text: Start
+                  - generic [ref=e628]:
+                    - button "Set as active" [ref=e629]:
+                      - img [ref=e630]
+                    - button "Duplicate template" [ref=e632]:
+                      - img [ref=e633]
+                    - button "Delete template" [ref=e636]:
+                      - img [ref=e637]
+              - 'button "Template: demo" [ref=e640] [cursor=pointer]':
+                - generic [ref=e641]:
+                  - img [ref=e643]
+                  - generic [ref=e646]:
+                    - heading "demo" [level=3] [ref=e647]
+                    - paragraph [ref=e648]: demo
+                - generic [ref=e649]:
+                  - img [ref=e651]
+                  - generic [ref=e655]:
+                    - img [ref=e656]
+                    - text: demo1
+                - generic [ref=e658]:
+                  - generic [ref=e659]:
+                    - img [ref=e660]
+                    - generic [ref=e665]: "8"
+                    - generic [ref=e666]: exercises
+                  - generic [ref=e667]:
+                    - img [ref=e668]
+                    - generic [ref=e671]: 45 min
+                - generic [ref=e672]:
+                  - button "Start workout" [ref=e674]:
+                    - img [ref=e675]
+                    - text: Start
+                  - generic [ref=e677]:
+                    - button "Set as active" [ref=e678]:
+                      - img [ref=e679]
+                    - button "Duplicate template" [ref=e681]:
+                      - img [ref=e682]
+                    - button "Delete template" [ref=e685]:
+                      - img [ref=e686]
+              - 'button "Template: demo" [ref=e689] [cursor=pointer]':
+                - generic [ref=e690]:
+                  - img [ref=e692]
+                  - generic [ref=e695]:
+                    - heading "demo" [level=3] [ref=e696]
+                    - paragraph [ref=e697]: demo
+                - generic [ref=e698]:
+                  - img [ref=e700]
+                  - generic [ref=e704]:
+                    - img [ref=e705]
+                    - text: "1"
+                - generic [ref=e707]:
+                  - generic [ref=e708]:
+                    - img [ref=e709]
+                    - generic [ref=e714]: "4"
+                    - generic [ref=e715]: exercises
+                  - generic [ref=e716]:
+                    - img [ref=e717]
+                    - generic [ref=e720]: 45 min
+                - generic [ref=e721]:
+                  - button "Start workout" [ref=e723]:
+                    - img [ref=e724]
+                    - text: Start
+                  - generic [ref=e726]:
+                    - button "Set as active" [ref=e727]:
+                      - img [ref=e728]
+                    - button "Duplicate template" [ref=e730]:
+                      - img [ref=e731]
+                    - button "Delete template" [ref=e734]:
+                      - img [ref=e735]
+  - generic:
+    - generic:
+      - button "Open TanStack Devtools" [ref=e738] [cursor=pointer]:
+        - img "TanStack Devtools" [ref=e739]
+      - option "Sort by status" [selected]
+      - option "Sort by query hash"
+      - option "Sort by last updated"

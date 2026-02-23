@@ -18,7 +18,7 @@ export const periodOptions = [
   { label: "3 Months", value: "quarter" },
   { label: "Year", value: "year" },
   { label: "All", value: "all" },
-] as const;
+];
 
 /**
  * Filter out data points with no weight or body fat values
@@ -65,6 +65,18 @@ export interface ProcessedChartData {
   hasWeight: boolean;
   hasBodyFat: boolean;
 }
+
+/**
+ * Shared chart configuration constants
+ */
+export const chartConfig = {
+  margin: { top: 10, right: 30, left: 0, bottom: 0 },
+  axisTickStyle: { fontSize: 12, fill: "var(--mantine-color-dimmed)" },
+  gridStroke: "var(--mantine-color-gray-3)",
+  weightColor: "var(--mantine-color-blue-6)",
+  bodyFatColor: "var(--mantine-color-orange-6)",
+  bodyFatDomain: [0, 50] as [number, number],
+} as const;
 
 export function processChartData(data: TrendChartDataPoint[]): ProcessedChartData {
   const filteredData = filterDataWithValues(data);

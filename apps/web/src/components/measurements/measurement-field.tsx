@@ -3,9 +3,9 @@
  * Provides consistent styling and configuration for measurement inputs
  */
 
-import { NumberInput } from "@mantine/core";
-
 import type { MeasurementFieldName, MeasurementForm } from "./measurement-types";
+
+import { NumberInput } from "@mantine/core";
 
 interface MeasurementFieldProps {
   form: MeasurementForm;

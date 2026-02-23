@@ -56,6 +56,7 @@ export function AddExerciseModal({
       input: {
         search: debouncedSearch || undefined,
         category: categoryFilter ?? undefined,
+        exerciseType: undefined,
         limit: 50,
         offset: 0,
       },

@@ -3,8 +3,11 @@
  * Displays history with edit and delete actions
  */
 
+import type { MeasurementsHistoryProps, MeasurementHistoryRow } from "./types";
+
 import { ActionIcon, Badge, Box, Group, Menu, ScrollArea, Stack, Table, Text } from "@mantine/core";
-import { IconDotsVertical, IconEdit, IconTrash, IconInbox } from "@tabler/icons-react";
+import { IconDotsVertical, IconEdit, IconInbox, IconTrash } from "@tabler/icons-react";
+
 import {
   FitAiCard,
   FitAiCardContent,
@@ -12,9 +15,10 @@ import {
   FitAiCardHeader,
   FitAiCardTitle,
 } from "@/components/ui/card";
-import { EmptyState } from "@/components/ui/state-views";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { MeasurementsHistoryProps, MeasurementHistoryRow } from "./types";
+import { EmptyState } from "@/components/ui/state-views";
+import { formatShortDate } from "@/components/ui/utils";
+
 import styles from "./measurements-history.module.css";
 
 interface RowMenuProps {
@@ -46,14 +50,6 @@ function RowMenu({ measurementId, onEdit, onDelete }: RowMenuProps) {
       </Menu.Dropdown>
     </Menu>
   );
-}
-
-function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
 }
 
 function formatValue(value: number | null, unit: string = ""): string {
@@ -114,7 +110,7 @@ function MeasurementRow({ measurement, onEdit, onDelete, index }: MeasurementRow
     >
       <Table.Td>
         <Text size="sm" fw={500}>
-          {formatDate(measurement.date)}
+          {formatShortDate(measurement.date)}
         </Text>
       </Table.Td>
       <Table.Td>

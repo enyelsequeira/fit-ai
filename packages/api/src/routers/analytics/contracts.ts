@@ -8,6 +8,10 @@ import {
   frequencyInputSchema,
   frequencyOutputSchema,
   generateSummaryInputSchema,
+  goalAnalyticsInputSchema,
+  goalAnalyticsOutputSchema,
+  recoveryTrendsInputSchema,
+  recoveryTrendsOutputSchema,
   strengthTrendsInputSchema,
   strengthTrendsOutputSchema,
   summaryHistoryInputSchema,
@@ -176,6 +180,34 @@ export const generateSummaryRouteContract = protectedProcedure
   .input(generateSummaryInputSchema)
   .output(trainingSummaryOutputSchema);
 
+/**
+ * Get goal analytics
+ */
+export const getGoalAnalyticsRouteContract = protectedProcedure
+  .route({
+    method: "GET",
+    path: "/analytics/goals",
+    summary: "Get goal analytics",
+    description: "Retrieves goal completion rates, progress stats, and breakdowns",
+    tags: ["Analytics"],
+  })
+  .input(goalAnalyticsInputSchema)
+  .output(goalAnalyticsOutputSchema);
+
+/**
+ * Get recovery trends
+ */
+export const getRecoveryTrendsRouteContract = protectedProcedure
+  .route({
+    method: "GET",
+    path: "/analytics/recovery/trends",
+    summary: "Get recovery trends",
+    description: "Retrieves recovery and wellness trends over time from daily check-ins",
+    tags: ["Analytics"],
+  })
+  .input(recoveryTrendsInputSchema)
+  .output(recoveryTrendsOutputSchema);
+
 // ============================================================================
 // Handler Types (inferred from contracts)
 // ============================================================================
@@ -207,4 +239,10 @@ export type GetExerciseStatsRouteHandler = Parameters<
 export type GetComparisonRouteHandler = Parameters<typeof getComparisonRouteContract.handler>[0];
 export type GenerateSummaryRouteHandler = Parameters<
   typeof generateSummaryRouteContract.handler
+>[0];
+export type GetGoalAnalyticsRouteHandler = Parameters<
+  typeof getGoalAnalyticsRouteContract.handler
+>[0];
+export type GetRecoveryTrendsRouteHandler = Parameters<
+  typeof getRecoveryTrendsRouteContract.handler
 >[0];

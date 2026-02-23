@@ -2,26 +2,28 @@
  * Custom hook for managing create goal form state
  */
 
-import { useCallback, useState } from "react";
-import type { GoalType } from "./types";
-import type { WeightGoalFormValues } from "./weight-goal-form";
-import { isWeightFormValid } from "./weight-goal-form";
-import type { StrengthGoalFormValues } from "./strength-goal-form";
-import { isStrengthFormValid } from "./strength-goal-form";
 import type { BodyMeasurementGoalFormValues } from "./body-measurement-goal-form";
-import { isBodyMeasurementFormValid } from "./body-measurement-goal-form";
-import type { WorkoutFrequencyGoalFormValues } from "./workout-frequency-goal-form";
-import { isWorkoutFrequencyFormValid } from "./workout-frequency-goal-form";
 import type { CustomGoalFormValues } from "./custom-goal-form";
-import { isCustomFormValid } from "./custom-goal-form";
+import type { StrengthGoalFormValues } from "./strength-goal-form";
 import type {
-  BodyMeasurementGoalData,
+  CreateBodyMeasurementGoalForm,
+  CreateCustomGoalForm,
   CreateGoalModalProps,
-  CustomGoalData,
-  StrengthGoalData,
-  WeightGoalData,
-  WorkoutFrequencyGoalData,
-} from "./create-goal-modal-types";
+  CreateStrengthGoalForm,
+  CreateWeightGoalForm,
+  CreateWorkoutFrequencyGoalForm,
+  GoalType,
+} from "./types";
+import type { WeightGoalFormValues } from "./weight-goal-form";
+import type { WorkoutFrequencyGoalFormValues } from "./workout-frequency-goal-form";
+
+import { useCallback, useState } from "react";
+
+import { isBodyMeasurementFormValid } from "./body-measurement-goal-form";
+import { isCustomFormValid } from "./custom-goal-form";
+import { isStrengthFormValid } from "./strength-goal-form";
+import { isWeightFormValid } from "./weight-goal-form";
+import { isWorkoutFrequencyFormValid } from "./workout-frequency-goal-form";
 
 const INITIAL_WEIGHT_FORM: WeightGoalFormValues = {
   title: "",
@@ -126,7 +128,7 @@ export function useCreateGoalForm(callbacks: SubmitCallbacks, onClose: () => voi
     }
   }, [activeStep]);
 
-  const buildWeightGoalData = (): WeightGoalData | null => {
+  const buildCreateWeightGoalForm = (): CreateWeightGoalForm | null => {
     if (!isWeightFormValid(weightForm)) return null;
     return {
       title: weightForm.title.trim(),
@@ -139,7 +141,7 @@ export function useCreateGoalForm(callbacks: SubmitCallbacks, onClose: () => voi
     };
   };
 
-  const buildStrengthGoalData = (): StrengthGoalData | null => {
+  const buildCreateStrengthGoalForm = (): CreateStrengthGoalForm | null => {
     if (!isStrengthFormValid(strengthForm)) return null;
     return {
       title: strengthForm.title.trim(),
@@ -159,7 +161,7 @@ export function useCreateGoalForm(callbacks: SubmitCallbacks, onClose: () => voi
     };
   };
 
-  const buildBodyMeasurementGoalData = (): BodyMeasurementGoalData | null => {
+  const buildCreateBodyMeasurementGoalForm = (): CreateBodyMeasurementGoalForm | null => {
     if (!isBodyMeasurementFormValid(bodyMeasurementForm)) return null;
     return {
       title: bodyMeasurementForm.title.trim(),
@@ -173,7 +175,7 @@ export function useCreateGoalForm(callbacks: SubmitCallbacks, onClose: () => voi
     };
   };
 
-  const buildWorkoutFrequencyGoalData = (): WorkoutFrequencyGoalData | null => {
+  const buildCreateWorkoutFrequencyGoalForm = (): CreateWorkoutFrequencyGoalForm | null => {
     if (!isWorkoutFrequencyFormValid(workoutFrequencyForm)) return null;
     return {
       title: workoutFrequencyForm.title.trim(),
@@ -183,7 +185,7 @@ export function useCreateGoalForm(callbacks: SubmitCallbacks, onClose: () => voi
     };
   };
 
-  const buildCustomGoalData = (): CustomGoalData | null => {
+  const buildCreateCustomGoalForm = (): CreateCustomGoalForm | null => {
     if (!isCustomFormValid(customForm)) return null;
     return {
       title: customForm.title.trim(),
@@ -202,23 +204,23 @@ export function useCreateGoalForm(callbacks: SubmitCallbacks, onClose: () => voi
 
     const submitMap = {
       weight: () => {
-        const data = buildWeightGoalData();
+        const data = buildCreateWeightGoalForm();
         if (data) callbacks.onCreateWeightGoal(data);
       },
       strength: () => {
-        const data = buildStrengthGoalData();
+        const data = buildCreateStrengthGoalForm();
         if (data) callbacks.onCreateStrengthGoal(data);
       },
       body_measurement: () => {
-        const data = buildBodyMeasurementGoalData();
+        const data = buildCreateBodyMeasurementGoalForm();
         if (data) callbacks.onCreateBodyMeasurementGoal(data);
       },
       workout_frequency: () => {
-        const data = buildWorkoutFrequencyGoalData();
+        const data = buildCreateWorkoutFrequencyGoalForm();
         if (data) callbacks.onCreateWorkoutFrequencyGoal(data);
       },
       custom: () => {
-        const data = buildCustomGoalData();
+        const data = buildCreateCustomGoalForm();
         if (data) callbacks.onCreateCustomGoal(data);
       },
     };

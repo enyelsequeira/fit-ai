@@ -7,12 +7,12 @@ import { WorkoutList } from "./components/workout-list/workout-list.tsx";
 import { WorkoutsHeader } from "./components/workouts-header/workouts-header.tsx";
 import { CreateWorkoutModal } from "./components/create-workout-modal/create-workout-modal.tsx";
 import { WorkoutDetailModal } from "./components/workout-detail-modal/workout-detail-modal.tsx";
-import { ActiveTemplateCard } from "./components/active-template-card/index.ts";
 import type { TimePeriodFilter } from "./types";
 import { TIME_PERIOD_LABELS } from "./types";
 import styles from "./workouts-view.module.css";
 import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text.tsx";
 import { FitAiContentArea } from "@/components/ui/fit-ai-content-area/fit-ai-content-area.tsx";
+import { ActiveTemplateCard } from "@/components/workouts/components/active-template-card/active-template-card.tsx";
 
 export function WorkoutsView() {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriodFilter>("all");

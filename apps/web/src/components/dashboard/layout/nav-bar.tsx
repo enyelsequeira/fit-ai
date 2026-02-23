@@ -1,16 +1,12 @@
-import { AppShell, Divider, Flex, Text } from "@mantine/core";
-import { mainNavLinks, type NavLinkItem } from "@/components/dashboard/layout/constants.tsx";
+import { AppShell, Flex, Text } from "@mantine/core";
+import { mainNavLinks } from "@/components/dashboard/layout/constants.tsx";
 import DashboardNavLink from "@/components/dashboard/layout/nav-link.tsx";
 import { useLocation } from "@tanstack/react-router";
-import { IconSettings } from "@tabler/icons-react";
 
 type Props = {
   closeMobile: () => void;
 };
 
-const bottomNavLinks: NavLinkItem[] = [
-  { label: "Settings", icon: IconSettings, href: "/settings" },
-];
 const DashboardNavBar = ({ closeMobile }: Props) => {
   const location = useLocation();
 
@@ -28,19 +24,6 @@ const DashboardNavBar = ({ closeMobile }: Props) => {
           Menu
         </Text>
         {mainNavLinks.map((item) => (
-          <DashboardNavLink
-            key={item.href}
-            item={item}
-            isActive={isActiveRoute(item.href)}
-            onClick={closeMobile}
-          />
-        ))}
-      </Flex>
-
-      <Divider my={"xs"} />
-      {/* Bottom navigation links */}
-      <Flex mt={"auto"} pt={"md"}>
-        {bottomNavLinks.map((item) => (
           <DashboardNavLink
             key={item.href}
             item={item}

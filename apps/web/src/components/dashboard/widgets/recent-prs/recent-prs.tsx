@@ -171,7 +171,3 @@ export function RecentPRs({ records, isLoading, onRecordClick }: RecentPRsProps)
     </FitAiCard>
   );
 }
-
-export function RecentPRsSkeleton() {
-  return <RecentPRs records={[]} isLoading={true} />;
-}

@@ -3,6 +3,8 @@
  * Shows large countdown with progress ring, next set info, and controls
  */
 
+import type { UseRestTimerReturn } from "../workout-timer/use-rest-timer";
+
 import { useEffect } from "react";
 import { RingProgress, Transition } from "@mantine/core";
 import { IconPlayerPause, IconPlayerPlay } from "@tabler/icons-react";
@@ -11,9 +13,20 @@ import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
 import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
 
 import { TimerStatus } from "../workout-timer/timer-types";
-import type { InlineRestTimerProps } from "./inline-rest-timer.types";
-
 import styles from "./rest-timer-modal.module.css";
+
+interface NextSetPreview {
+  exerciseName: string;
+  setNumber: number;
+  targetWeight?: number;
+  targetReps?: number;
+}
+
+interface RestTimerModalProps {
+  timer: UseRestTimerReturn;
+  nextSetInfo?: NextSetPreview;
+  onDismiss: () => void;
+}
 
 function formatTime(seconds: number): string {
   const mins = Math.floor(seconds / 60);
@@ -21,7 +34,7 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
-export function RestTimerModal({ timer, nextSetInfo, onDismiss }: InlineRestTimerProps) {
+export function RestTimerModal({ timer, nextSetInfo, onDismiss }: RestTimerModalProps) {
   const isVisible = timer.status === TimerStatus.RUNNING || timer.status === TimerStatus.PAUSED;
   const progress = timer.totalTime > 0 ? (timer.timeRemaining / timer.totalTime) * 100 : 0;
   const isUrgent = timer.timeRemaining <= 10 && timer.timeRemaining > 0;

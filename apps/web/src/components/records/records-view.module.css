@@ -1,80 +1,90 @@
-/* Records View Styles */
+/* Records View Styles - PostCSS with light-dark(), CSS nesting, and @mixin hover */
 
-.recordsContainer {
-  animation: fadeIn 300ms ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+@define-mixin hover {
+  @media (hover: hover) {
+    &:hover {
+      @mixin-content;
+    }
   }
 }
 
-.mainContent {
+/* ============================================================
+   Sidebar Layout (matches goals/templates/workouts/recovery)
+   ============================================================ */
+
+.sidebar {
+  display: none;
+  flex-direction: column;
+  width: 280px;
+  min-width: 280px;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-right: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  height: calc(100vh - 60px);
+  position: sticky;
+  top: 60px;
+  overflow: hidden;
+
+  @mixin larger-than $mantine-breakpoint-lg {
+    display: flex;
+  }
+}
+
+.sidebarHeader {
+  padding: var(--mantine-spacing-lg);
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.logoIcon {
+  background: light-dark(var(--mantine-color-yellow-6), var(--mantine-color-yellow-7));
+}
+
+.sidebarContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--mantine-spacing-md);
+}
+
+.sidebarFooter {
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.createButton {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+
+  @mixin hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px light-dark(rgba(250, 176, 5, 0.25), rgba(250, 176, 5, 0.4));
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Content grid for 2-column card layout */
+.contentGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--mantine-spacing-lg);
-}
-
-@media (min-width: 992px) {
-  .mainContent {
-    grid-template-columns: 380px 1fr;
-  }
-}
-
-.leftColumn {
-  display: flex;
-  flex-direction: column;
   gap: var(--mantine-spacing-md);
-}
 
-.rightColumn {
-  display: flex;
-  flex-direction: column;
-  gap: var(--mantine-spacing-md);
-}
-
-/* Sticky sidebar on larger screens */
-@media (min-width: 992px) {
-  .leftColumn {
-    position: sticky;
-    top: var(--mantine-spacing-md);
-    align-self: flex-start;
-    max-height: calc(100vh - 140px);
-    overflow-y: auto;
-  }
-
-  /* Hide scrollbar but keep functionality */
-  .leftColumn::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  .leftColumn::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .leftColumn::-webkit-scrollbar-thumb {
-    background: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
-    border-radius: 2px;
+  @mixin larger-than $mantine-breakpoint-md {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-/* Mobile-first: Stack layout with recent PRs on top */
-@media (max-width: 991px) {
-  .leftColumn {
-    order: 1;
-  }
-
-  .rightColumn {
-    order: 2;
-  }
-}
+/* ============================================================
+   Reduced Motion
+   ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {
-  .recordsContainer {
-    animation: none;
+  .sidebar,
+  .createButton {
+    transition: none;
+  }
+
+  .createButton:hover {
+    transform: none;
   }
 }

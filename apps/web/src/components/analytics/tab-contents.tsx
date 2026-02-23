@@ -1,6 +1,7 @@
 /**
  * Tab content components for Analytics view
- * Contains VolumeTabContent, StrengthTabContent, and ConsistencyTabContent
+ * Contains VolumeTabContent, StrengthTabContent, ConsistencyTabContent,
+ * GoalTabContent, and RecoveryTabContent
  */
 
 import type { useAnalyticsData } from "./use-analytics-data";
@@ -11,6 +12,8 @@ import { VolumeTrendsChart } from "./volume-trends-chart";
 import { MuscleVolumeChart } from "./muscle-volume-chart";
 import { StrengthTrendsChart } from "./strength-trends-chart";
 import { ConsistencyMetrics } from "./consistency-metrics";
+import { GoalProgressTab } from "./goal-progress-tab";
+import { RecoveryTrendsTab } from "./recovery-trends-tab";
 
 import styles from "./analytics-view.module.css";
 
@@ -20,6 +23,8 @@ type MuscleVolumeData = ReturnType<typeof useAnalyticsData>["muscleVolumeData"];
 type StrengthData = ReturnType<typeof useAnalyticsData>["strengthData"];
 type Exercises = ReturnType<typeof useAnalyticsData>["exercises"];
 type ConsistencyData = ReturnType<typeof useAnalyticsData>["consistencyData"];
+type GoalAnalyticsData = ReturnType<typeof useAnalyticsData>["goalAnalytics"];
+type RecoveryData = ReturnType<typeof useAnalyticsData>["recoveryData"];
 
 interface VolumeTabContentProps {
   volumeData: VolumeData;
@@ -41,16 +46,10 @@ export function VolumeTabContent({
         <Box className={styles.chartWrapper} data-chart-type="bar">
           <VolumeTrendsChart data={volumeData} isLoading={isLoading} />
         </Box>
-        <Box className={styles.chartWrapper} data-chart-type="pie">
-          <MuscleVolumeChart data={muscleVolumeData} isLoading={isLoading} chartType="pie" />
+        <Box className={styles.chartWrapper} data-chart-type="donut">
+          <MuscleVolumeChart data={muscleVolumeData} isLoading={isLoading} />
         </Box>
       </Box>
-
-      {hasMuscleData && (
-        <Box className={styles.fullWidthChart} data-chart-type="radar">
-          <MuscleVolumeChart data={muscleVolumeData} isLoading={isLoading} chartType="radar" />
-        </Box>
-      )}
     </Stack>
   );
 }
@@ -98,4 +97,22 @@ export function ConsistencyTabContent({ consistencyData, isLoading }: Consistenc
       <ConsistencyMetrics data={consistencyData} isLoading={isLoading} />
     </Stack>
   );
+}
+
+interface GoalTabContentProps {
+  goalAnalytics: GoalAnalyticsData;
+  isLoading: boolean;
+}
+
+export function GoalTabContent({ goalAnalytics, isLoading }: GoalTabContentProps) {
+  return <GoalProgressTab goalAnalytics={goalAnalytics} isLoading={isLoading} />;
+}
+
+interface RecoveryTabContentProps {
+  recoveryData: RecoveryData;
+  isLoading: boolean;
+}
+
+export function RecoveryTabContent({ recoveryData, isLoading }: RecoveryTabContentProps) {
+  return <RecoveryTrendsTab recoveryData={recoveryData} isLoading={isLoading} />;
 }

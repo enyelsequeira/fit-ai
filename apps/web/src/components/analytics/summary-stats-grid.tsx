@@ -1,31 +1,42 @@
 /**
- * SummaryStatsGrid - Displays a grid of summary stat cards for weekly analytics
+ * SummaryStatsGrid - Displays a grid of summary stat cards for analytics overview
  */
 
-import { IconActivity, IconBarbell, IconFlame, IconWeight } from "@tabler/icons-react";
+import {
+  IconBarbell,
+  IconFlame,
+  IconHeart,
+  IconTarget,
+  IconTrophy,
+  IconWeight,
+} from "@tabler/icons-react";
 import { Box } from "@mantine/core";
 
 import { SummaryCard, SummaryCardSkeleton } from "./summary-card";
-import { formatVolume } from "./utils";
+import { formatVolume } from "@/components/ui/utils";
 
 import styles from "./analytics-view.module.css";
 
-export interface WeeklySummary {
-  totalWorkouts: number;
+export interface SummaryStats {
+  workoutsThisWeek: number;
   totalVolume: number;
-  totalExercises: number;
-  personalRecords: number;
+  activeGoals: number;
+  currentStreak: number;
+  prsAchieved: number;
+  recoveryScore: number | null;
 }
 
 interface SummaryStatsGridProps {
-  weeklySummary: WeeklySummary;
+  stats: SummaryStats;
   isLoading: boolean;
 }
 
-export function SummaryStatsGrid({ weeklySummary, isLoading }: SummaryStatsGridProps) {
+export function SummaryStatsGrid({ stats, isLoading }: SummaryStatsGridProps) {
   if (isLoading) {
     return (
       <Box className={styles.summaryGrid} data-section="summary">
+        <SummaryCardSkeleton />
+        <SummaryCardSkeleton />
         <SummaryCardSkeleton />
         <SummaryCardSkeleton />
         <SummaryCardSkeleton />
@@ -40,29 +51,43 @@ export function SummaryStatsGrid({ weeklySummary, isLoading }: SummaryStatsGridP
         icon={<IconBarbell size={20} />}
         iconBg="var(--mantine-color-blue-1)"
         iconColor="var(--mantine-color-blue-6)"
-        value={weeklySummary.totalWorkouts}
+        value={stats.workoutsThisWeek}
         label="Workouts This Week"
       />
       <SummaryCard
         icon={<IconWeight size={20} />}
         iconBg="var(--mantine-color-teal-1)"
         iconColor="var(--mantine-color-teal-6)"
-        value={formatVolume(weeklySummary.totalVolume)}
+        value={formatVolume(stats.totalVolume)}
         label="Total Volume"
       />
       <SummaryCard
-        icon={<IconActivity size={20} />}
+        icon={<IconTarget size={20} />}
         iconBg="var(--mantine-color-violet-1)"
         iconColor="var(--mantine-color-violet-6)"
-        value={weeklySummary.totalExercises}
-        label="Exercises"
+        value={stats.activeGoals}
+        label="Active Goals"
       />
       <SummaryCard
         icon={<IconFlame size={20} />}
         iconBg="var(--mantine-color-orange-1)"
         iconColor="var(--mantine-color-orange-6)"
-        value={weeklySummary.personalRecords}
-        label="Personal Records"
+        value={stats.currentStreak}
+        label="Current Streak"
+      />
+      <SummaryCard
+        icon={<IconTrophy size={20} />}
+        iconBg="var(--mantine-color-pink-1)"
+        iconColor="var(--mantine-color-pink-6)"
+        value={stats.prsAchieved}
+        label="PRs Achieved"
+      />
+      <SummaryCard
+        icon={<IconHeart size={20} />}
+        iconBg="var(--mantine-color-green-1)"
+        iconColor="var(--mantine-color-green-6)"
+        value={stats.recoveryScore !== null ? `${stats.recoveryScore}/10` : "—"}
+        label="Recovery Score"
       />
     </Box>
   );

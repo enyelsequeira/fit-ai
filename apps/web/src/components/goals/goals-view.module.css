@@ -11,75 +11,59 @@
 }
 
 .goalsContainer {
-  animation: fadeIn 300ms ease-out;
+  animation: pageLoad 400ms ease-out;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+/* Sidebar */
+.sidebar {
+  display: none;
+  flex-direction: column;
+  width: 280px;
+  min-width: 280px;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-right: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  height: calc(100vh - 60px);
+  position: sticky;
+  top: 60px;
+  overflow: hidden;
+
+  @mixin larger-than $mantine-breakpoint-lg {
+    display: flex;
   }
 }
 
-@keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.sidebarHeader {
+  padding: var(--mantine-spacing-lg);
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
 }
 
-/* Summary Stats Styles */
-.statCard {
-  animation: fadeSlideUp 400ms ease-out backwards;
+.logoIcon {
+  background: light-dark(var(--mantine-color-teal-6), var(--mantine-color-teal-7));
+}
+
+.sidebarContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--mantine-spacing-md);
+}
+
+.sidebarFooter {
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}
+
+.createButton {
   transition:
-    transform 200ms ease,
-    box-shadow 200ms ease;
-  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+    transform 150ms ease,
+    box-shadow 150ms ease;
 
   @mixin hover {
-    transform: translateY(-2px);
-    box-shadow: light-dark(0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.3));
-  }
-}
-
-.iconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--mantine-radius-md);
-  transition: transform 200ms ease;
-
-  &[data-variant="green"] {
-    background: light-dark(var(--mantine-color-green-1), var(--mantine-color-green-9));
-    color: light-dark(var(--mantine-color-green-6), var(--mantine-color-green-4));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px light-dark(rgba(20, 184, 166, 0.25), rgba(20, 184, 166, 0.4));
   }
 
-  &[data-variant="blue"] {
-    background: light-dark(var(--mantine-color-blue-1), var(--mantine-color-blue-9));
-    color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-4));
+  &:active {
+    transform: translateY(0);
   }
-
-  &[data-variant="orange"] {
-    background: light-dark(var(--mantine-color-orange-1), var(--mantine-color-orange-9));
-    color: light-dark(var(--mantine-color-orange-6), var(--mantine-color-orange-4));
-  }
-
-  &[data-variant="violet"] {
-    background: light-dark(var(--mantine-color-violet-1), var(--mantine-color-violet-9));
-    color: light-dark(var(--mantine-color-violet-6), var(--mantine-color-violet-4));
-  }
-}
-
-.statCard:hover .iconWrapper {
-  transform: scale(1.1);
 }
 
 /* Goal Card Styles */
@@ -243,22 +227,45 @@
   }
 }
 
+/* Animations */
+@keyframes pageLoad {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   .goalsContainer,
-  .statCard,
   .goalCard {
     animation: none;
   }
 
-  .statCard,
   .goalCard {
     &:hover {
       transform: none;
     }
   }
 
-  .statCard:hover .iconWrapper {
-    transform: none;
+  .createButton {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
   }
 }

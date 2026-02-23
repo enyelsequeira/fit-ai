@@ -18,40 +18,14 @@ import {
   Title,
   UnstyledButton,
 } from "@mantine/core";
-import {
-  formatRecordValue,
-  formatDate,
-  RECORD_TYPE_COLORS,
-  RECORD_TYPE_LABELS,
-  type RecordTypeFilter,
-} from "./use-records-data";
+import type { PersonalRecordItem, RecordsByExerciseGroup } from "./types";
+
+import { RECORD_TYPE_COLORS, RECORD_TYPE_LABELS, type RecordTypeFilter } from "./types";
+import { formatRecordValue, formatDate } from "./utils";
 import styles from "./all-time-prs-grid.module.css";
 
-interface PersonalRecord {
-  id: number;
-  exerciseId: number;
-  recordType: string;
-  value: number;
-  displayUnit: string | null;
-  achievedAt: Date;
-  exercise?: {
-    id: number;
-    name: string;
-    category: string;
-    exerciseType: string;
-  };
-}
-
-interface ExerciseGroup {
-  exerciseId: number;
-  exerciseName: string;
-  exerciseCategory: string;
-  records: PersonalRecord[];
-  hasRecentPR?: boolean;
-}
-
 interface AllTimePRsGridProps {
-  recordsByExercise: ExerciseGroup[];
+  recordsByExercise: RecordsByExerciseGroup[];
   isLoading?: boolean;
   onExerciseClick?: (exerciseId: number) => void;
   onRecordClick?: (recordId: number) => void;
@@ -76,7 +50,7 @@ function ExerciseCardSkeleton() {
 }
 
 interface RecordBadgeProps {
-  record: PersonalRecord;
+  record: PersonalRecordItem;
   onClick?: () => void;
 }
 
@@ -104,7 +78,7 @@ function RecordBadge({ record, onClick }: RecordBadgeProps) {
 }
 
 interface ExerciseCardProps {
-  group: ExerciseGroup;
+  group: RecordsByExerciseGroup;
   onExerciseClick?: () => void;
   onRecordClick?: (recordId: number) => void;
   index: number;

@@ -43,69 +43,12 @@ export type WorkoutSet = ExerciseSet;
 export type TimePeriodFilter = "today" | "week" | "month" | "all";
 
 /**
- * Legacy date range type (for compatibility)
- */
-export type DateRange = "week" | "month" | "all";
-
-/**
  * Filter state for workouts list
  */
 export interface WorkoutFilters {
   timePeriod: TimePeriodFilter;
   completed?: boolean;
   searchQuery?: string;
-}
-
-// ============================================================================
-// Stats and Summary Types
-// ============================================================================
-
-export interface WorkoutSummary {
-  id: number;
-  name: string | null;
-  date: Date;
-  duration: number | null;
-  exerciseCount: number;
-  setCount: number;
-  totalVolume: number;
-  isCompleted: boolean;
-  mood: string | null;
-  rating: number | null;
-}
-
-export interface WorkoutStats {
-  totalWorkouts: number;
-  workoutsThisWeek: number;
-  currentStreak: number;
-  totalVolume: number;
-  averageDuration: number;
-  isLoading: boolean;
-}
-
-export interface CalendarWorkoutDay {
-  date: Date;
-  workoutCount: number;
-  isCompleted: boolean;
-}
-
-// ============================================================================
-// Component Props Types
-// ============================================================================
-
-/**
- * Props for workout card click handler
- */
-export interface WorkoutCardClickHandler {
-  (workoutId: number): void;
-}
-
-/**
- * Workout completion data
- */
-export interface WorkoutCompletionData {
-  rating?: number;
-  mood?: WorkoutMood;
-  notes?: string;
 }
 
 // ============================================================================

@@ -40,12 +40,6 @@
   }
 }
 
-.submitButton {
-  &[data-submitting="true"] {
-    pointer-events: none;
-  }
-}
-
 @media (max-width: $mantine-breakpoint-sm) {
   .modal {
     & :global(.mantine-Modal-content) {

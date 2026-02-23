@@ -15,12 +15,8 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { useDeleteWorkout } from "../../hooks/use-mutations.ts";
 import { useWorkoutById } from "../../queries/use-queries.ts";
-import {
-  formatRelativeDate,
-  formatDuration,
-  calculateWorkoutDuration,
-  countSets,
-} from "../../utils";
+import { formatDuration, formatRelativeDate } from "@/components/ui/utils";
+import { calculateWorkoutDuration, countSets } from "../../utils";
 import { MOOD_LABELS, MOOD_COLORS } from "../../types";
 import type { WorkoutMood } from "../../types";
 import styles from "./workout-card.module.css";

@@ -1,0 +1,885 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - button "Toggle navigation" [ref=e6] [cursor=pointer]
+          - link "FitAI" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e10]
+            - generic [ref=e154]: FitAI
+        - generic [ref=e12]:
+          - button [ref=e13] [cursor=pointer]:
+            - img [ref=e15]
+          - button "E enyel" [ref=e17] [cursor=pointer]:
+            - generic "enyel" [ref=e19]: E
+            - paragraph [ref=e20]: enyel
+            - img [ref=e21]
+      - navigation [ref=e23]:
+        - generic [ref=e24]:
+          - paragraph [ref=e25]: Menu
+          - link "Dashboard" [ref=e26] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e28]
+            - generic [ref=e155]: Dashboard
+          - link "Workouts" [ref=e33] [cursor=pointer]:
+            - /url: /dashboard/workouts
+            - img [ref=e35]
+            - generic [ref=e156]: Workouts
+          - link "Templates" [ref=e38] [cursor=pointer]:
+            - /url: /dashboard/templates
+            - img [ref=e40]
+            - generic [ref=e157]: Templates
+          - link "Exercises" [ref=e43] [cursor=pointer]:
+            - /url: /dashboard/exercises
+            - img [ref=e45]
+            - generic [ref=e158]: Exercises
+          - link "Goals" [ref=e49] [cursor=pointer]:
+            - /url: /dashboard/goals
+            - img [ref=e51]
+            - generic [ref=e159]: Goals
+          - link "Records" [ref=e55] [cursor=pointer]:
+            - /url: /dashboard/records
+            - img [ref=e57]
+            - generic [ref=e160]: Records
+          - link "Measurements" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/measurements
+            - img [ref=e63]
+            - generic [ref=e161]: Measurements
+          - link "Analytics" [ref=e65] [cursor=pointer]:
+            - /url: /dashboard/analytics
+            - img [ref=e67]
+            - generic [ref=e162]: Analytics
+          - link "Recovery" [ref=e69] [cursor=pointer]:
+            - /url: /dashboard/recovery
+            - img [ref=e71]
+            - generic [ref=e163]: Recovery
+          - link "AI Coach" [ref=e74] [cursor=pointer]:
+            - /url: /ai
+            - img [ref=e76]
+            - generic [ref=e164]: AI Coach
+        - separator [ref=e78]
+        - link "Settings" [ref=e80] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e82]
+          - generic [ref=e165]: Settings
+      - main [ref=e85]:
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - generic [ref=e89]:
+              - img [ref=e91]
+              - paragraph [ref=e96]: Workouts
+            - generic [ref=e166]:
+              - paragraph [ref=e168]: Time Period
+              - generic [ref=e169]:
+                - button "All Workouts View complete history 25" [ref=e170] [cursor=pointer]:
+                  - img [ref=e172]
+                  - generic [ref=e177]:
+                    - paragraph [ref=e178]: All Workouts
+                    - paragraph [ref=e179]: View complete history
+                  - generic [ref=e180]: "25"
+                - paragraph [ref=e182]: Quick Filters
+                - button "Today 7" [ref=e183] [cursor=pointer]:
+                  - img [ref=e185]
+                  - paragraph [ref=e188]: Today
+                  - generic [ref=e189]: "7"
+                - button "This Week 9" [ref=e190] [cursor=pointer]:
+                  - img [ref=e192]
+                  - paragraph [ref=e195]: This Week
+                  - generic [ref=e196]: "9"
+                - button "Last 30 Days 9" [ref=e197] [cursor=pointer]:
+                  - img [ref=e199]
+                  - paragraph [ref=e203]: Last 30 Days
+                  - generic [ref=e204]: "9"
+              - generic [ref=e205]:
+                - generic [ref=e206]:
+                  - paragraph [ref=e207]: "25"
+                  - paragraph [ref=e208]: Total
+                - generic [ref=e209]:
+                  - paragraph [ref=e210]: "25"
+                  - paragraph [ref=e211]: Completed
+                - generic [ref=e212]:
+                  - paragraph [ref=e213]: "0"
+                  - paragraph [ref=e214]: In Progress
+                - generic [ref=e215]:
+                  - paragraph [ref=e216]: "9"
+                  - paragraph [ref=e217]: This Week
+            - button "New Workout" [ref=e102] [cursor=pointer]:
+              - generic [ref=e103]:
+                - img [ref=e105]
+                - generic [ref=e106]: New Workout
+          - generic [ref=e107]:
+            - generic [ref=e108]:
+              - generic [ref=e109]:
+                - generic [ref=e110]:
+                  - heading "All Workouts" [level=2] [ref=e111]
+                  - paragraph [ref=e112]: Track your training sessions and monitor your progress
+                - button "New Workout" [ref=e114] [cursor=pointer]:
+                  - generic [ref=e115]:
+                    - img [ref=e117]
+                    - generic [ref=e118]: New Workout
+              - generic [ref=e119]:
+                - generic [ref=e218]:
+                  - img [ref=e220]
+                  - generic [ref=e225]:
+                    - paragraph [ref=e226]: "25"
+                    - paragraph [ref=e227]: Total Workouts
+                - generic [ref=e228]:
+                  - img [ref=e230]
+                  - generic [ref=e232]:
+                    - paragraph [ref=e233]: "25"
+                    - paragraph [ref=e234]: Completed
+                - generic [ref=e235]:
+                  - img [ref=e237]
+                  - generic [ref=e239]:
+                    - paragraph [ref=e240]: "0"
+                    - paragraph [ref=e241]: In Progress
+                - generic [ref=e242]:
+                  - img [ref=e244]
+                  - generic [ref=e246]:
+                    - paragraph [ref=e247]: "9"
+                    - paragraph [ref=e248]: This Week
+              - generic [ref=e126]:
+                - img [ref=e128]
+                - textbox "Search workouts..." [ref=e131]
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - paragraph [ref=e136]: Current Program
+                - generic [ref=e251]:
+                  - generic [ref=e253]:
+                    - img [ref=e255]
+                    - generic [ref=e258]:
+                      - generic [ref=e261]: Active Program
+                      - paragraph [ref=e262]: demo-day
+                      - paragraph [ref=e263]: dem-data
+                  - generic [ref=e264]:
+                    - generic [ref=e265]:
+                      - img [ref=e266]
+                      - paragraph [ref=e268]: 3 days
+                    - generic [ref=e269]:
+                      - img [ref=e270]
+                      - paragraph [ref=e275]: 6 exercises
+                    - generic [ref=e276]:
+                      - img [ref=e277]
+                      - paragraph [ref=e280]: ~45 min
+                  - generic [ref=e281]:
+                    - button "Start Workout" [ref=e282] [cursor=pointer]:
+                      - generic [ref=e283]:
+                        - img [ref=e285]
+                        - generic [ref=e287]: Start Workout
+                    - link "Change Program" [ref=e288] [cursor=pointer]:
+                      - /url: /dashboard/templates
+                      - generic [ref=e290]: Change Program
+              - generic [ref=e152]:
+                - paragraph [ref=e153]: Recent Workouts
+                - generic [ref=e292]:
+                  - 'button "Workout: demo-day - Day 1" [ref=e293] [cursor=pointer]':
+                    - generic [ref=e294]:
+                      - img [ref=e296]
+                      - generic [ref=e301]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e302]
+                        - generic [ref=e304]:
+                          - img [ref=e305]
+                          - text: Today
+                    - generic [ref=e308]:
+                      - img [ref=e309]
+                      - text: Done
+                    - generic [ref=e311]:
+                      - generic [ref=e312]:
+                        - img [ref=e313]
+                        - generic [ref=e318]: "3"
+                        - generic [ref=e319]: exercises
+                      - generic [ref=e320]:
+                        - img [ref=e321]
+                        - generic [ref=e323]: 1/10
+                        - generic [ref=e324]: sets
+                      - generic [ref=e325]:
+                        - img [ref=e326]
+                        - generic [ref=e329]: 17 min
+                    - generic [ref=e330]:
+                      - button "View details" [ref=e332]: View
+                      - button "Delete workout" [ref=e334]:
+                        - img [ref=e335]
+                  - 'button "Workout: demo-day - Day 1" [ref=e338] [cursor=pointer]':
+                    - generic [ref=e339]:
+                      - img [ref=e341]
+                      - generic [ref=e346]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e347]
+                        - generic [ref=e349]:
+                          - img [ref=e350]
+                          - text: Today
+                    - generic [ref=e352]:
+                      - generic [ref=e353]:
+                        - img [ref=e354]
+                        - text: Done
+                      - generic [ref=e356]:
+                        - img [ref=e357]
+                        - text: 5/5
+                      - img [ref=e360]
+                    - generic [ref=e363]:
+                      - generic [ref=e364]:
+                        - img [ref=e365]
+                        - generic [ref=e370]: "3"
+                        - generic [ref=e371]: exercises
+                      - generic [ref=e372]:
+                        - img [ref=e373]
+                        - generic [ref=e375]: 3/9
+                        - generic [ref=e376]: sets
+                      - generic [ref=e377]:
+                        - img [ref=e378]
+                        - generic [ref=e381]: 1 min
+                    - generic [ref=e382]:
+                      - button "View details" [ref=e384]: View
+                      - button "Delete workout" [ref=e386]:
+                        - img [ref=e387]
+                  - 'button "Workout: demo-day - Day 1" [ref=e390] [cursor=pointer]':
+                    - generic [ref=e391]:
+                      - img [ref=e393]
+                      - generic [ref=e398]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e399]
+                        - generic [ref=e401]:
+                          - img [ref=e402]
+                          - text: Today
+                    - generic [ref=e405]:
+                      - img [ref=e406]
+                      - text: Done
+                    - generic [ref=e408]:
+                      - generic [ref=e409]:
+                        - img [ref=e410]
+                        - generic [ref=e415]: "3"
+                        - generic [ref=e416]: exercises
+                      - generic [ref=e417]:
+                        - img [ref=e418]
+                        - generic [ref=e420]: 1/9
+                        - generic [ref=e421]: sets
+                      - generic [ref=e422]:
+                        - img [ref=e423]
+                        - generic [ref=e426]: 17 min
+                    - generic [ref=e427]:
+                      - button "View details" [ref=e429]: View
+                      - button "Delete workout" [ref=e431]:
+                        - img [ref=e432]
+                  - 'button "Workout: demo-day - Day 1" [ref=e435] [cursor=pointer]':
+                    - generic [ref=e436]:
+                      - img [ref=e438]
+                      - generic [ref=e443]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e444]
+                        - generic [ref=e446]:
+                          - img [ref=e447]
+                          - text: Today
+                    - generic [ref=e450]:
+                      - img [ref=e451]
+                      - text: Done
+                    - generic [ref=e453]:
+                      - generic [ref=e454]:
+                        - img [ref=e455]
+                        - generic [ref=e460]: "3"
+                        - generic [ref=e461]: exercises
+                      - generic [ref=e462]:
+                        - img [ref=e463]
+                        - generic [ref=e465]: 3/9
+                        - generic [ref=e466]: sets
+                      - text: "0"
+                    - generic [ref=e467]:
+                      - button "View details" [ref=e469]: View
+                      - button "Delete workout" [ref=e471]:
+                        - img [ref=e472]
+                  - 'button "Workout: demo-day - Day 1" [ref=e475] [cursor=pointer]':
+                    - generic [ref=e476]:
+                      - img [ref=e478]
+                      - generic [ref=e483]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e484]
+                        - generic [ref=e486]:
+                          - img [ref=e487]
+                          - text: Today
+                    - generic [ref=e490]:
+                      - img [ref=e491]
+                      - text: Done
+                    - generic [ref=e493]:
+                      - generic [ref=e494]:
+                        - img [ref=e495]
+                        - generic [ref=e500]: "3"
+                        - generic [ref=e501]: exercises
+                      - generic [ref=e502]:
+                        - img [ref=e503]
+                        - generic [ref=e505]: 1/9
+                        - generic [ref=e506]: sets
+                      - text: "0"
+                    - generic [ref=e507]:
+                      - button "View details" [ref=e509]: View
+                      - button "Delete workout" [ref=e511]:
+                        - img [ref=e512]
+                  - 'button "Workout: demo-day - Day 1" [ref=e515] [cursor=pointer]':
+                    - generic [ref=e516]:
+                      - img [ref=e518]
+                      - generic [ref=e523]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e524]
+                        - generic [ref=e526]:
+                          - img [ref=e527]
+                          - text: Today
+                    - generic [ref=e530]:
+                      - img [ref=e531]
+                      - text: Done
+                    - generic [ref=e533]:
+                      - generic [ref=e534]:
+                        - img [ref=e535]
+                        - generic [ref=e540]: "3"
+                        - generic [ref=e541]: exercises
+                      - generic [ref=e542]:
+                        - img [ref=e543]
+                        - generic [ref=e545]: 3/9
+                        - generic [ref=e546]: sets
+                      - text: "0"
+                    - generic [ref=e547]:
+                      - button "View details" [ref=e549]: View
+                      - button "Delete workout" [ref=e551]:
+                        - img [ref=e552]
+                  - 'button "Workout: demo-day - Day 1" [ref=e555] [cursor=pointer]':
+                    - generic [ref=e556]:
+                      - img [ref=e558]
+                      - generic [ref=e563]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e564]
+                        - generic [ref=e566]:
+                          - img [ref=e567]
+                          - text: Today
+                    - generic [ref=e570]:
+                      - img [ref=e571]
+                      - text: Done
+                    - generic [ref=e573]:
+                      - generic [ref=e574]:
+                        - img [ref=e575]
+                        - generic [ref=e580]: "3"
+                        - generic [ref=e581]: exercises
+                      - generic [ref=e582]:
+                        - img [ref=e583]
+                        - generic [ref=e585]: 3/9
+                        - generic [ref=e586]: sets
+                      - text: "0"
+                    - generic [ref=e587]:
+                      - button "View details" [ref=e589]: View
+                      - button "Delete workout" [ref=e591]:
+                        - img [ref=e592]
+                  - 'button "Workout: demo-day - Day 1" [ref=e595] [cursor=pointer]':
+                    - generic [ref=e596]:
+                      - img [ref=e598]
+                      - generic [ref=e603]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e604]
+                        - generic [ref=e606]:
+                          - img [ref=e607]
+                          - text: Yesterday
+                    - generic [ref=e610]:
+                      - img [ref=e611]
+                      - text: Done
+                    - generic [ref=e613]:
+                      - generic [ref=e614]:
+                        - img [ref=e615]
+                        - generic [ref=e620]: "3"
+                        - generic [ref=e621]: exercises
+                      - generic [ref=e622]:
+                        - img [ref=e623]
+                        - generic [ref=e625]: 9/9
+                        - generic [ref=e626]: sets
+                      - generic [ref=e627]:
+                        - img [ref=e628]
+                        - generic [ref=e631]: 1 min
+                    - generic [ref=e632]:
+                      - button "View details" [ref=e634]: View
+                      - button "Delete workout" [ref=e636]:
+                        - img [ref=e637]
+                  - 'button "Workout: demo-day - Day 2" [ref=e640] [cursor=pointer]':
+                    - generic [ref=e641]:
+                      - img [ref=e643]
+                      - generic [ref=e648]:
+                        - heading "demo-day - Day 2" [level=3] [ref=e649]
+                        - generic [ref=e651]:
+                          - img [ref=e652]
+                          - text: Yesterday
+                    - generic [ref=e655]:
+                      - img [ref=e656]
+                      - text: Done
+                    - generic [ref=e658]:
+                      - generic [ref=e659]:
+                        - img [ref=e660]
+                        - generic [ref=e665]: "4"
+                        - generic [ref=e666]: exercises
+                      - generic [ref=e667]:
+                        - img [ref=e668]
+                        - generic [ref=e670]: 7/10
+                        - generic [ref=e671]: sets
+                      - generic [ref=e672]:
+                        - img [ref=e673]
+                        - generic [ref=e676]: 4 min
+                    - generic [ref=e677]:
+                      - button "View details" [ref=e679]: View
+                      - button "Delete workout" [ref=e681]:
+                        - img [ref=e682]
+                  - 'button "Workout: demo-day - Day 2" [ref=e685] [cursor=pointer]':
+                    - generic [ref=e686]:
+                      - img [ref=e688]
+                      - generic [ref=e693]:
+                        - heading "demo-day - Day 2" [level=3] [ref=e694]
+                        - generic [ref=e696]:
+                          - img [ref=e697]
+                          - text: Jan 22
+                    - generic [ref=e700]:
+                      - img [ref=e701]
+                      - text: Done
+                    - generic [ref=e703]:
+                      - generic [ref=e704]:
+                        - img [ref=e705]
+                        - generic [ref=e710]: "3"
+                        - generic [ref=e711]: exercises
+                      - generic [ref=e712]:
+                        - img [ref=e713]
+                        - generic [ref=e715]: 1/10
+                        - generic [ref=e716]: sets
+                      - text: "0"
+                    - generic [ref=e717]:
+                      - button "View details" [ref=e719]: View
+                      - button "Delete workout" [ref=e721]:
+                        - img [ref=e722]
+                  - 'button "Workout: demo-day - Day 2" [ref=e725] [cursor=pointer]':
+                    - generic [ref=e726]:
+                      - img [ref=e728]
+                      - generic [ref=e733]:
+                        - heading "demo-day - Day 2" [level=3] [ref=e734]
+                        - generic [ref=e736]:
+                          - img [ref=e737]
+                          - text: Jan 21
+                    - generic [ref=e740]:
+                      - img [ref=e741]
+                      - text: Done
+                    - generic [ref=e743]:
+                      - generic [ref=e744]:
+                        - img [ref=e745]
+                        - generic [ref=e750]: "3"
+                        - generic [ref=e751]: exercises
+                      - generic [ref=e752]:
+                        - img [ref=e753]
+                        - generic [ref=e755]: 1/9
+                        - generic [ref=e756]: sets
+                      - text: "0"
+                    - generic [ref=e757]:
+                      - button "View details" [ref=e759]: View
+                      - button "Delete workout" [ref=e761]:
+                        - img [ref=e762]
+                  - 'button "Workout: demo-day - Day 1" [ref=e765] [cursor=pointer]':
+                    - generic [ref=e766]:
+                      - img [ref=e768]
+                      - generic [ref=e773]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e774]
+                        - generic [ref=e776]:
+                          - img [ref=e777]
+                          - text: Jan 21
+                    - generic [ref=e779]:
+                      - generic [ref=e780]:
+                        - img [ref=e781]
+                        - text: Done
+                      - generic [ref=e783]:
+                        - img [ref=e784]
+                        - text: 1/5
+                      - img [ref=e787]
+                    - generic [ref=e790]:
+                      - generic [ref=e791]:
+                        - img [ref=e792]
+                        - generic [ref=e797]: "3"
+                        - generic [ref=e798]: exercises
+                      - generic [ref=e799]:
+                        - img [ref=e800]
+                        - generic [ref=e802]: 1/9
+                        - generic [ref=e803]: sets
+                      - generic [ref=e804]:
+                        - img [ref=e805]
+                        - generic [ref=e808]: 1 min
+                    - generic [ref=e809]:
+                      - button "View details" [ref=e811]: View
+                      - button "Delete workout" [ref=e813]:
+                        - img [ref=e814]
+                  - 'button "Workout: demo-day - Day 1" [ref=e817] [cursor=pointer]':
+                    - generic [ref=e818]:
+                      - img [ref=e820]
+                      - generic [ref=e825]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e826]
+                        - generic [ref=e828]:
+                          - img [ref=e829]
+                          - text: Jan 21
+                    - generic [ref=e831]:
+                      - generic [ref=e832]:
+                        - img [ref=e833]
+                        - text: Done
+                      - generic [ref=e835]:
+                        - img [ref=e836]
+                        - text: 5/5
+                    - generic [ref=e838]:
+                      - generic [ref=e839]:
+                        - img [ref=e840]
+                        - generic [ref=e845]: "3"
+                        - generic [ref=e846]: exercises
+                      - generic [ref=e847]:
+                        - img [ref=e848]
+                        - generic [ref=e850]: 1/9
+                        - generic [ref=e851]: sets
+                      - generic [ref=e852]:
+                        - img [ref=e853]
+                        - generic [ref=e856]: 1 min
+                    - generic [ref=e857]:
+                      - button "View details" [ref=e859]: View
+                      - button "Delete workout" [ref=e861]:
+                        - img [ref=e862]
+                  - 'button "Workout: demo-day - Day 1" [ref=e865] [cursor=pointer]':
+                    - generic [ref=e866]:
+                      - img [ref=e868]
+                      - generic [ref=e873]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e874]
+                        - generic [ref=e876]:
+                          - img [ref=e877]
+                          - text: Jan 21
+                    - generic [ref=e880]:
+                      - img [ref=e881]
+                      - text: Done
+                    - generic [ref=e883]:
+                      - generic [ref=e884]:
+                        - img [ref=e885]
+                        - generic [ref=e890]: "3"
+                        - generic [ref=e891]: exercises
+                      - generic [ref=e892]:
+                        - img [ref=e893]
+                        - generic [ref=e895]: 2/9
+                        - generic [ref=e896]: sets
+                      - generic [ref=e897]:
+                        - img [ref=e898]
+                        - generic [ref=e901]: 1 min
+                    - generic [ref=e902]:
+                      - button "View details" [ref=e904]: View
+                      - button "Delete workout" [ref=e906]:
+                        - img [ref=e907]
+                  - 'button "Workout: demo-day - Day 1" [ref=e910] [cursor=pointer]':
+                    - generic [ref=e911]:
+                      - img [ref=e913]
+                      - generic [ref=e918]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e919]
+                        - generic [ref=e921]:
+                          - img [ref=e922]
+                          - text: Jan 21
+                    - generic [ref=e924]:
+                      - generic [ref=e925]:
+                        - img [ref=e926]
+                        - text: Done
+                      - generic [ref=e928]:
+                        - img [ref=e929]
+                        - text: 5/5
+                      - img [ref=e932]
+                    - generic [ref=e935]:
+                      - generic [ref=e936]:
+                        - img [ref=e937]
+                        - generic [ref=e942]: "3"
+                        - generic [ref=e943]: exercises
+                      - generic [ref=e944]:
+                        - img [ref=e945]
+                        - generic [ref=e947]: 4/9
+                        - generic [ref=e948]: sets
+                      - generic [ref=e949]:
+                        - img [ref=e950]
+                        - generic [ref=e953]: 1 min
+                    - generic [ref=e954]:
+                      - button "View details" [ref=e956]: View
+                      - button "Delete workout" [ref=e958]:
+                        - img [ref=e959]
+                  - 'button "Workout: demo-day - Day 1" [ref=e962] [cursor=pointer]':
+                    - generic [ref=e963]:
+                      - img [ref=e965]
+                      - generic [ref=e970]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e971]
+                        - generic [ref=e973]:
+                          - img [ref=e974]
+                          - text: Jan 21
+                    - generic [ref=e977]:
+                      - img [ref=e978]
+                      - text: Done
+                    - generic [ref=e980]:
+                      - generic [ref=e981]:
+                        - img [ref=e982]
+                        - generic [ref=e987]: "3"
+                        - generic [ref=e988]: exercises
+                      - generic [ref=e989]:
+                        - img [ref=e990]
+                        - generic [ref=e992]: 0/9
+                        - generic [ref=e993]: sets
+                      - text: "0"
+                    - generic [ref=e994]:
+                      - button "View details" [ref=e996]: View
+                      - button "Delete workout" [ref=e998]:
+                        - img [ref=e999]
+                  - 'button "Workout: demo-day - Day 1" [ref=e1002] [cursor=pointer]':
+                    - generic [ref=e1003]:
+                      - img [ref=e1005]
+                      - generic [ref=e1010]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e1011]
+                        - generic [ref=e1013]:
+                          - img [ref=e1014]
+                          - text: Jan 21
+                    - generic [ref=e1017]:
+                      - img [ref=e1018]
+                      - text: Done
+                    - generic [ref=e1020]:
+                      - generic [ref=e1021]:
+                        - img [ref=e1022]
+                        - generic [ref=e1027]: "3"
+                        - generic [ref=e1028]: exercises
+                      - generic [ref=e1029]:
+                        - img [ref=e1030]
+                        - generic [ref=e1032]: 1/9
+                        - generic [ref=e1033]: sets
+                      - text: "0"
+                    - generic [ref=e1034]:
+                      - button "View details" [ref=e1036]: View
+                      - button "Delete workout" [ref=e1038]:
+                        - img [ref=e1039]
+                  - 'button "Workout: demo-day - Day 1" [ref=e1042] [cursor=pointer]':
+                    - generic [ref=e1043]:
+                      - img [ref=e1045]
+                      - generic [ref=e1050]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e1051]
+                        - generic [ref=e1053]:
+                          - img [ref=e1054]
+                          - text: Jan 21
+                    - generic [ref=e1056]:
+                      - generic [ref=e1057]:
+                        - img [ref=e1058]
+                        - text: Done
+                      - generic [ref=e1060]:
+                        - img [ref=e1061]
+                        - text: 5/5
+                      - img [ref=e1064]
+                    - generic [ref=e1067]:
+                      - generic [ref=e1068]:
+                        - img [ref=e1069]
+                        - generic [ref=e1074]: "3"
+                        - generic [ref=e1075]: exercises
+                      - generic [ref=e1076]:
+                        - img [ref=e1077]
+                        - generic [ref=e1079]: 9/9
+                        - generic [ref=e1080]: sets
+                      - generic [ref=e1081]:
+                        - img [ref=e1082]
+                        - generic [ref=e1085]: 1 min
+                    - generic [ref=e1086]:
+                      - button "View details" [ref=e1088]: View
+                      - button "Delete workout" [ref=e1090]:
+                        - img [ref=e1091]
+                  - 'button "Workout: demo-day - Day 2" [ref=e1094] [cursor=pointer]':
+                    - generic [ref=e1095]:
+                      - img [ref=e1097]
+                      - generic [ref=e1102]:
+                        - heading "demo-day - Day 2" [level=3] [ref=e1103]
+                        - generic [ref=e1105]:
+                          - img [ref=e1106]
+                          - text: Jan 21
+                    - generic [ref=e1109]:
+                      - img [ref=e1110]
+                      - text: Done
+                    - generic [ref=e1112]:
+                      - generic [ref=e1113]:
+                        - img [ref=e1114]
+                        - generic [ref=e1119]: "3"
+                        - generic [ref=e1120]: exercises
+                      - generic [ref=e1121]:
+                        - img [ref=e1122]
+                        - generic [ref=e1124]: 0/9
+                        - generic [ref=e1125]: sets
+                      - generic [ref=e1126]:
+                        - img [ref=e1127]
+                        - generic [ref=e1130]: 11 min
+                    - generic [ref=e1131]:
+                      - button "View details" [ref=e1133]: View
+                      - button "Delete workout" [ref=e1135]:
+                        - img [ref=e1136]
+                  - 'button "Workout: demo-day - Day 1" [ref=e1139] [cursor=pointer]':
+                    - generic [ref=e1140]:
+                      - img [ref=e1142]
+                      - generic [ref=e1147]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e1148]
+                        - generic [ref=e1150]:
+                          - img [ref=e1151]
+                          - text: Jan 17
+                    - generic [ref=e1153]:
+                      - generic [ref=e1154]:
+                        - img [ref=e1155]
+                        - text: Done
+                      - generic [ref=e1157]:
+                        - img [ref=e1158]
+                        - text: 5/5
+                      - img [ref=e1161]
+                    - generic [ref=e1164]:
+                      - generic [ref=e1165]:
+                        - img [ref=e1166]
+                        - generic [ref=e1171]: "3"
+                        - generic [ref=e1172]: exercises
+                      - generic [ref=e1173]:
+                        - img [ref=e1174]
+                        - generic [ref=e1176]: 0/9
+                        - generic [ref=e1177]: sets
+                      - text: "0"
+                    - generic [ref=e1178]:
+                      - button "View details" [ref=e1180]: View
+                      - button "Delete workout" [ref=e1182]:
+                        - img [ref=e1183]
+                  - 'button "Workout: demo-day - Day 1" [ref=e1186] [cursor=pointer]':
+                    - generic [ref=e1187]:
+                      - img [ref=e1189]
+                      - generic [ref=e1194]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e1195]
+                        - generic [ref=e1197]:
+                          - img [ref=e1198]
+                          - text: Jan 17
+                    - generic [ref=e1200]:
+                      - generic [ref=e1201]:
+                        - img [ref=e1202]
+                        - text: Done
+                      - generic [ref=e1204]:
+                        - img [ref=e1205]
+                        - text: 5/5
+                      - img [ref=e1208]
+                    - generic [ref=e1211]:
+                      - generic [ref=e1212]:
+                        - img [ref=e1213]
+                        - generic [ref=e1218]: "2"
+                        - generic [ref=e1219]: exercises
+                      - generic [ref=e1220]:
+                        - img [ref=e1221]
+                        - generic [ref=e1223]: 0/6
+                        - generic [ref=e1224]: sets
+                      - text: "0"
+                    - generic [ref=e1225]:
+                      - button "View details" [ref=e1227]: View
+                      - button "Delete workout" [ref=e1229]:
+                        - img [ref=e1230]
+                  - 'button "Workout: demo-day - Day 1" [ref=e1233] [cursor=pointer]':
+                    - generic [ref=e1234]:
+                      - img [ref=e1236]
+                      - generic [ref=e1241]:
+                        - heading "demo-day - Day 1" [level=3] [ref=e1242]
+                        - generic [ref=e1244]:
+                          - img [ref=e1245]
+                          - text: Jan 17
+                    - generic [ref=e1247]:
+                      - generic [ref=e1248]:
+                        - img [ref=e1249]
+                        - text: Done
+                      - generic [ref=e1251]:
+                        - img [ref=e1252]
+                        - text: 5/5
+                    - generic [ref=e1254]:
+                      - generic [ref=e1255]:
+                        - img [ref=e1256]
+                        - generic [ref=e1261]: "2"
+                        - generic [ref=e1262]: exercises
+                      - generic [ref=e1263]:
+                        - img [ref=e1264]
+                        - generic [ref=e1266]: 0/6
+                        - generic [ref=e1267]: sets
+                      - text: "0"
+                    - generic [ref=e1268]:
+                      - button "View details" [ref=e1270]: View
+                      - button "Delete workout" [ref=e1272]:
+                        - img [ref=e1273]
+                  - 'button "Workout: demo setup" [ref=e1276] [cursor=pointer]':
+                    - generic [ref=e1277]:
+                      - img [ref=e1279]
+                      - generic [ref=e1284]:
+                        - heading "demo setup" [level=3] [ref=e1285]
+                        - generic [ref=e1287]:
+                          - img [ref=e1288]
+                          - text: Jan 17
+                    - generic [ref=e1290]:
+                      - generic [ref=e1291]:
+                        - img [ref=e1292]
+                        - text: Done
+                      - img [ref=e1295]
+                    - generic [ref=e1298]:
+                      - generic [ref=e1299]:
+                        - img [ref=e1300]
+                        - generic [ref=e1305]: "7"
+                        - generic [ref=e1306]: exercises
+                      - generic [ref=e1307]:
+                        - img [ref=e1308]
+                        - generic [ref=e1310]: 3/3
+                        - generic [ref=e1311]: sets
+                      - generic [ref=e1312]:
+                        - img [ref=e1313]
+                        - generic [ref=e1316]: 1 min
+                    - generic [ref=e1317]:
+                      - button "View details" [ref=e1319]: View
+                      - button "Delete workout" [ref=e1321]:
+                        - img [ref=e1322]
+                  - 'button "Workout: asdf" [ref=e1325] [cursor=pointer]':
+                    - generic [ref=e1326]:
+                      - img [ref=e1328]
+                      - generic [ref=e1333]:
+                        - heading "asdf" [level=3] [ref=e1334]
+                        - generic [ref=e1336]:
+                          - img [ref=e1337]
+                          - text: Jan 16
+                    - generic [ref=e1339]:
+                      - generic [ref=e1340]:
+                        - img [ref=e1341]
+                        - text: Done
+                      - generic [ref=e1343]:
+                        - img [ref=e1344]
+                        - text: 5/5
+                      - img [ref=e1347]
+                    - generic [ref=e1350]:
+                      - generic [ref=e1351]:
+                        - img [ref=e1352]
+                        - generic [ref=e1357]: "1"
+                        - generic [ref=e1358]: exercises
+                      - generic [ref=e1359]:
+                        - img [ref=e1360]
+                        - generic [ref=e1362]: 3/3
+                        - generic [ref=e1363]: sets
+                      - generic [ref=e1364]:
+                        - img [ref=e1365]
+                        - generic [ref=e1368]: 17h 36m
+                    - generic [ref=e1369]:
+                      - button "View details" [ref=e1371]: View
+                      - button "Delete workout" [ref=e1373]:
+                        - img [ref=e1374]
+                  - 'button "Workout: demo" [ref=e1377] [cursor=pointer]':
+                    - generic [ref=e1378]:
+                      - img [ref=e1380]
+                      - generic [ref=e1385]:
+                        - heading "demo" [level=3] [ref=e1386]
+                        - generic [ref=e1388]:
+                          - img [ref=e1389]
+                          - text: Jan 16
+                    - generic [ref=e1391]:
+                      - generic [ref=e1392]:
+                        - img [ref=e1393]
+                        - text: Done
+                      - generic [ref=e1395]:
+                        - img [ref=e1396]
+                        - text: 1/5
+                      - img [ref=e1399]
+                    - generic [ref=e1402]:
+                      - generic [ref=e1403]:
+                        - img [ref=e1404]
+                        - generic [ref=e1409]: "2"
+                        - generic [ref=e1410]: exercises
+                      - generic [ref=e1411]:
+                        - img [ref=e1412]
+                        - generic [ref=e1414]: 0/6
+                        - generic [ref=e1415]: sets
+                      - generic [ref=e1416]:
+                        - img [ref=e1417]
+                        - generic [ref=e1420]: 27h 44m
+                    - generic [ref=e1421]:
+                      - button "View details" [ref=e1423]: View
+                      - button "Delete workout" [ref=e1425]:
+                        - img [ref=e1426]
+  - generic:
+    - generic:
+      - button "Open TanStack Devtools" [ref=e1429] [cursor=pointer]:
+        - img "TanStack Devtools" [ref=e1430]
+      - option "Sort by status" [selected]
+      - option "Sort by query hash"
+      - option "Sort by last updated"

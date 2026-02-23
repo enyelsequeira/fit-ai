@@ -2,11 +2,14 @@
  * ChartHeader - Header component with title and controls for the weight trend chart
  */
 
-import { Box, Group, SegmentedControl } from "@mantine/core";
-import { IconChartLine, IconChartArea } from "@tabler/icons-react";
-import { FitAiCardDescription, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
 import type { TimePeriod } from "./types";
 import type { ChartType } from "./weight-trend-chart-utils";
+
+import { Box, Group, SegmentedControl } from "@mantine/core";
+import { IconChartArea, IconChartLine } from "@tabler/icons-react";
+
+import { FitAiCardDescription, FitAiCardHeader, FitAiCardTitle } from "@/components/ui/card";
+
 import { periodOptions } from "./weight-trend-chart-utils";
 import styles from "./weight-trend-chart.module.css";
 

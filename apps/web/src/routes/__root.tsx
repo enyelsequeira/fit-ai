@@ -2,6 +2,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { orpc } from "@/utils/orpc";
 
 import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
@@ -61,25 +62,27 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column", margin: 0 }}>
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          <Notifications position="top-right" />
-          <main style={{ flex: 1 }}>{children}</main>
-          <TanStackDevtools
-            // eventBusConfig={{
-            //   debug: true,
-            // }}
-            plugins={[
-              {
-                name: "TanStack Query",
-                render: <ReactQueryDevtoolsPanel />,
-                defaultOpen: true,
-              },
-              {
-                name: "TanStack Router",
-                render: <TanStackRouterDevtoolsPanel />,
-                defaultOpen: false,
-              },
-            ]}
-          />
+          <ModalsProvider>
+            <Notifications position="top-right" />
+            <main style={{ flex: 1 }}>{children}</main>
+            <TanStackDevtools
+              // eventBusConfig={{
+              //   debug: true,
+              // }}
+              plugins={[
+                {
+                  name: "TanStack Query",
+                  render: <ReactQueryDevtoolsPanel />,
+                  defaultOpen: true,
+                },
+                {
+                  name: "TanStack Router",
+                  render: <TanStackRouterDevtoolsPanel />,
+                  defaultOpen: false,
+                },
+              ]}
+            />
+          </ModalsProvider>
         </MantineProvider>
         <Scripts />
       </body>

@@ -1,0 +1,237 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - button "Toggle navigation" [ref=e6] [cursor=pointer]
+          - link "FitAI" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e10]
+            - generic [ref=e148]: FitAI
+        - generic [ref=e12]:
+          - button [ref=e13] [cursor=pointer]:
+            - img [ref=e15]
+          - button "E enyel" [ref=e17] [cursor=pointer]:
+            - generic "enyel" [ref=e19]: E
+            - paragraph [ref=e20]: enyel
+            - img [ref=e21]
+      - navigation [ref=e23]:
+        - generic [ref=e24]:
+          - paragraph [ref=e25]: Menu
+          - link "Dashboard" [ref=e26] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e28]
+            - generic [ref=e149]: Dashboard
+          - link "Workouts" [ref=e33] [cursor=pointer]:
+            - /url: /dashboard/workouts
+            - img [ref=e35]
+            - generic [ref=e150]: Workouts
+          - link "Templates" [ref=e38] [cursor=pointer]:
+            - /url: /dashboard/templates
+            - img [ref=e40]
+            - generic [ref=e151]: Templates
+          - link "Exercises" [ref=e43] [cursor=pointer]:
+            - /url: /dashboard/exercises
+            - img [ref=e45]
+            - generic [ref=e152]: Exercises
+          - link "Goals" [ref=e49] [cursor=pointer]:
+            - /url: /dashboard/goals
+            - img [ref=e51]
+            - generic [ref=e153]: Goals
+          - link "Records" [ref=e55] [cursor=pointer]:
+            - /url: /dashboard/records
+            - img [ref=e57]
+            - generic [ref=e154]: Records
+          - link "Measurements" [ref=e61] [cursor=pointer]:
+            - /url: /dashboard/measurements
+            - img [ref=e63]
+            - generic [ref=e155]: Measurements
+          - link "Analytics" [ref=e65] [cursor=pointer]:
+            - /url: /dashboard/analytics
+            - img [ref=e67]
+            - generic [ref=e156]: Analytics
+          - link "Recovery" [ref=e69] [cursor=pointer]:
+            - /url: /dashboard/recovery
+            - img [ref=e71]
+            - generic [ref=e157]: Recovery
+          - link "AI Coach" [ref=e74] [cursor=pointer]:
+            - /url: /ai
+            - img [ref=e76]
+            - generic [ref=e158]: AI Coach
+        - separator [ref=e78]
+        - link "Settings" [ref=e80] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e82]
+          - generic [ref=e159]: Settings
+      - main [ref=e85]:
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e90]:
+              - heading "Recovery & Check-ins" [level=2] [ref=e91]
+              - paragraph [ref=e92]: Track your daily wellness and monitor muscle recovery
+            - button "Refresh recovery data" [ref=e94] [cursor=pointer]:
+              - img [ref=e96]
+          - generic [ref=e99]:
+            - generic [ref=e100]:
+              - generic [ref=e101]:
+                - generic [ref=e160]:
+                  - paragraph [ref=e161]: Training Readiness
+                  - generic [ref=e163]: No check-in today
+                - generic [ref=e105]:
+                  - generic [ref=e164]:
+                    - img [ref=e165]
+                    - generic [ref=e169]:
+                      - paragraph [ref=e170]: "100"
+                      - paragraph [ref=e171]: / 100
+                  - generic [ref=e172]:
+                    - img [ref=e174]
+                    - generic [ref=e176]: ready to train hard
+                  - generic [ref=e178]:
+                    - generic [ref=e179]:
+                      - generic [ref=e180]: "-"
+                      - paragraph [ref=e181]: Sleep
+                    - generic [ref=e182]:
+                      - generic [ref=e183]: "-"
+                      - paragraph [ref=e184]: Energy
+                    - generic [ref=e185]:
+                      - generic [ref=e186]: "-"
+                      - paragraph [ref=e187]: Soreness
+                    - generic [ref=e188]:
+                      - generic [ref=e189]: "-"
+                      - paragraph [ref=e190]: Stress
+                    - generic [ref=e191]:
+                      - generic [ref=e192]: "100"
+                      - paragraph [ref=e193]: Recovery
+              - generic [ref=e194]:
+                - paragraph [ref=e196]: Today's Check-in
+                - generic [ref=e198]:
+                  - paragraph [ref=e199]: You haven't logged your check-in today. How are you feeling?
+                  - button "Start Check-in" [ref=e200] [cursor=pointer]:
+                    - generic [ref=e202]: Start Check-in
+              - generic [ref=e117]:
+                - generic [ref=e203]:
+                  - paragraph [ref=e204]: Muscle Recovery Status
+                  - generic [ref=e206]: 100% Overall
+                - generic [ref=e121]:
+                  - generic [ref=e208]:
+                    - generic [ref=e209]:
+                      - paragraph [ref=e210]: Chest
+                      - generic [ref=e212]: 100%
+                    - progressbar [ref=e214]
+                    - generic [ref=e215]:
+                      - paragraph [ref=e216]: "Last: Never"
+                      - paragraph [ref=e217]: 0 sets / 7d
+                  - generic [ref=e219]:
+                    - generic [ref=e220]:
+                      - paragraph [ref=e221]: Back
+                      - generic [ref=e223]: 100%
+                    - progressbar [ref=e225]
+                    - generic [ref=e226]:
+                      - paragraph [ref=e227]: "Last: Never"
+                      - paragraph [ref=e228]: 0 sets / 7d
+                  - generic [ref=e230]:
+                    - generic [ref=e231]:
+                      - paragraph [ref=e232]: Shoulders
+                      - generic [ref=e234]: 100%
+                    - progressbar [ref=e236]
+                    - generic [ref=e237]:
+                      - paragraph [ref=e238]: "Last: Never"
+                      - paragraph [ref=e239]: 0 sets / 7d
+                  - generic [ref=e241]:
+                    - generic [ref=e242]:
+                      - paragraph [ref=e243]: Biceps
+                      - generic [ref=e245]: 100%
+                    - progressbar [ref=e247]
+                    - generic [ref=e248]:
+                      - paragraph [ref=e249]: "Last: Never"
+                      - paragraph [ref=e250]: 0 sets / 7d
+                  - generic [ref=e252]:
+                    - generic [ref=e253]:
+                      - paragraph [ref=e254]: Triceps
+                      - generic [ref=e256]: 100%
+                    - progressbar [ref=e258]
+                    - generic [ref=e259]:
+                      - paragraph [ref=e260]: "Last: Never"
+                      - paragraph [ref=e261]: 0 sets / 7d
+                  - generic [ref=e263]:
+                    - generic [ref=e264]:
+                      - paragraph [ref=e265]: Forearms
+                      - generic [ref=e267]: 100%
+                    - progressbar [ref=e269]
+                    - generic [ref=e270]:
+                      - paragraph [ref=e271]: "Last: Never"
+                      - paragraph [ref=e272]: 0 sets / 7d
+                  - generic [ref=e274]:
+                    - generic [ref=e275]:
+                      - paragraph [ref=e276]: Abs
+                      - generic [ref=e278]: 100%
+                    - progressbar [ref=e280]
+                    - generic [ref=e281]:
+                      - paragraph [ref=e282]: "Last: Never"
+                      - paragraph [ref=e283]: 0 sets / 7d
+                  - generic [ref=e285]:
+                    - generic [ref=e286]:
+                      - paragraph [ref=e287]: Quadriceps
+                      - generic [ref=e289]: 100%
+                    - progressbar [ref=e291]
+                    - generic [ref=e292]:
+                      - paragraph [ref=e293]: "Last: Never"
+                      - paragraph [ref=e294]: 0 sets / 7d
+                  - generic [ref=e296]:
+                    - generic [ref=e297]:
+                      - paragraph [ref=e298]: Hamstrings
+                      - generic [ref=e300]: 100%
+                    - progressbar [ref=e302]
+                    - generic [ref=e303]:
+                      - paragraph [ref=e304]: "Last: Never"
+                      - paragraph [ref=e305]: 0 sets / 7d
+                  - generic [ref=e307]:
+                    - generic [ref=e308]:
+                      - paragraph [ref=e309]: Glutes
+                      - generic [ref=e311]: 100%
+                    - progressbar [ref=e313]
+                    - generic [ref=e314]:
+                      - paragraph [ref=e315]: "Last: Never"
+                      - paragraph [ref=e316]: 0 sets / 7d
+                  - generic [ref=e318]:
+                    - generic [ref=e319]:
+                      - paragraph [ref=e320]: Calves
+                      - generic [ref=e322]: 100%
+                    - progressbar [ref=e324]
+                    - generic [ref=e325]:
+                      - paragraph [ref=e326]: "Last: Never"
+                      - paragraph [ref=e327]: 0 sets / 7d
+            - generic [ref=e126]:
+              - generic [ref=e127]:
+                - generic [ref=e129]:
+                  - generic [ref=e328]:
+                    - paragraph [ref=e329]: Trends
+                    - generic [ref=e331]: 0 check-ins
+                  - radiogroup [ref=e332]:
+                    - generic [ref=e334]:
+                      - radio "Week"
+                      - generic [ref=e335] [cursor=pointer]: Week
+                    - generic [ref=e336]:
+                      - radio "Month" [checked]
+                      - generic [ref=e337] [cursor=pointer]: Month
+                    - generic [ref=e338]:
+                      - radio "Quarter"
+                      - generic [ref=e339] [cursor=pointer]: Quarter
+                    - generic [ref=e340]:
+                      - radio "Year"
+                      - generic [ref=e341] [cursor=pointer]: Year
+                - paragraph [ref=e342]: No check-in data available for this period.
+              - generic [ref=e140]:
+                - paragraph [ref=e142]: Check-in History
+                - generic [ref=e344]:
+                  - img [ref=e346]
+                  - generic [ref=e348]:
+                    - heading "No check-ins yet" [level=4] [ref=e349]
+                    - paragraph [ref=e350]: No check-ins recorded yet. Start tracking your recovery today!
+  - generic:
+    - generic:
+      - button "Open TanStack Devtools" [ref=e351] [cursor=pointer]:
+        - img "TanStack Devtools" [ref=e352]
+      - option "Sort by status" [selected]
+      - option "Sort by query hash"
+      - option "Sort by last updated"
