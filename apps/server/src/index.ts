@@ -15,25 +15,15 @@ import { logger } from "hono/logger";
 
 const app = new Hono();
 
+app.use(
+  cors({
+    origin: env.CORS_ORIGIN,
+    allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  }),
+);
 app.use(logger());
-app.use(
-  "/api/*",
-  cors({
-    origin: env.CORS_ORIGIN,
-    allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  }),
-);
-app.use(
-  "/rpc/*",
-  cors({
-    origin: env.CORS_ORIGIN,
-    allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  }),
-);
 
 // OpenAPI Generator for spec generation
 const openAPIGenerator = new OpenAPIGenerator({
