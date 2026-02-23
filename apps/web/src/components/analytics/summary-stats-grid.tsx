@@ -6,7 +6,7 @@ import { IconActivity, IconBarbell, IconFlame, IconWeight } from "@tabler/icons-
 import { Box } from "@mantine/core";
 
 import { SummaryCard, SummaryCardSkeleton } from "./summary-card";
-import { formatVolume } from "./utils";
+import { formatVolume } from "@/components/ui/utils";
 
 import styles from "./analytics-view.module.css";
 

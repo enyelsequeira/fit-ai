@@ -1,44 +1,48 @@
 import type { FocusedExerciseCardProps } from "./focused-exercise-card.types";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Badge, Box, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconPlus, IconTrophy } from "@tabler/icons-react";
 
 import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
 
+import { useUpdateSet, useCompleteSet, useAddSet } from "../../hooks/use-mutations";
 import { CompletedSetChip } from "./completed-set-chip";
 import { SetEntryCard } from "./set-entry-card";
 import styles from "./focused-exercise-card.module.css";
 
 export function FocusedExerciseCard({
-  data,
-  actions,
-  isLoading = false,
+  workoutId,
+  exercise,
+  onSetCompleted,
 }: FocusedExerciseCardProps) {
-  const {
-    exerciseName,
-    exerciseCategory,
-    exerciseEquipment,
-    currentSetIndex,
-    totalSets,
-    completedSets,
-    currentSet,
-    previousSet,
-    lastPerformanceSets,
-  } = data;
+  const updateSetMutation = useUpdateSet(workoutId);
+  const completeSetMutation = useCompleteSet(workoutId);
+  const addSetMutation = useAddSet(workoutId);
 
+  // Derive display data from raw exercise
+  const exerciseName = exercise.exercise?.name ?? "Unknown";
+  const exerciseCategory = exercise.exercise?.category ?? undefined;
+  const exerciseEquipment = exercise.exercise?.equipment ?? undefined;
+  const sets = exercise.sets ?? [];
+  const completedSets = sets.filter((s) => s.completedAt !== null);
+  const incompleteSets = sets.filter((s) => s.completedAt === null);
+  const currentSet = incompleteSets[0] ?? null;
+  const currentSetIndex = completedSets.length;
+  const totalSets = sets.length;
+  const previousCompleted = completedSets[completedSets.length - 1];
+  const previousSet = previousCompleted
+    ? { weight: previousCompleted.weight, reps: previousCompleted.reps }
+    : undefined;
+  const lastPerformanceSets = exercise.lastPerformance ?? [];
   const historySet = lastPerformanceSets[currentSetIndex] ?? null;
 
-  const { onSetComplete, onAddSet } = actions;
-
+  // Local form state
   const [weight, setWeight] = useState<number | null>(null);
   const [reps, setReps] = useState<number | null>(null);
   const [rpe, setRpe] = useState<number | null>(null);
 
-  // useEffect required: Resetting form state when navigating between sets
-  // This cannot be derived state because we need local form state that users can edit
-  // The currentSet.id change triggers a reset — inputs clear so placeholders (from last
-  // workout) are visible. We only restore values if the set was already partially saved.
+  // Reset form state when navigating between sets
   useEffect(() => {
     if (currentSet) {
       setWeight(currentSet.weight ?? null);
@@ -49,16 +53,61 @@ export function FocusedExerciseCard({
       setReps(null);
       setRpe(null);
     }
-    // Only reset when set ID changes (navigating to different set)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSet?.id]);
 
-  const handleComplete = () => {
-    if (weight !== null && reps !== null) {
-      onSetComplete(weight, reps, rpe ?? undefined);
-    }
-  };
+  const handleComplete = useCallback(async () => {
+    if (!currentSet || weight === null || reps === null) return;
+    const isLastSet = incompleteSets.length === 1;
 
+    await updateSetMutation.mutateAsync({
+      workoutId,
+      setId: currentSet.id,
+      weight,
+      reps,
+      ...(rpe !== null ? { rpe } : {}),
+    });
+
+    completeSetMutation.mutate(
+      { workoutId, setId: currentSet.id },
+      { onSuccess: () => onSetCompleted({ isLastSet }) },
+    );
+  }, [
+    currentSet,
+    weight,
+    reps,
+    rpe,
+    incompleteSets.length,
+    workoutId,
+    updateSetMutation,
+    completeSetMutation,
+    onSetCompleted,
+  ]);
+
+  const handleAddSet = useCallback(() => {
+    addSetMutation.mutate({
+      workoutId,
+      workoutExerciseId: exercise.id,
+      setNumber: totalSets + 1,
+      reps: null,
+      weight: null,
+      durationSeconds: null,
+      distance: null,
+      holdTimeSeconds: null,
+      rpe: null,
+      rir: null,
+      targetReps: null,
+      targetWeight: null,
+      restTimeSeconds: null,
+      notes: null,
+      isCompleted: false,
+      setType: "normal",
+      weightUnit: "kg",
+      distanceUnit: "km",
+    });
+  }, [addSetMutation, workoutId, exercise.id, totalSets]);
+
+  const isLoading = completeSetMutation.isPending || updateSetMutation.isPending;
   const allSetsCompleted = !currentSet && completedSets.length === totalSets;
   const hasCompletedSets = completedSets.length > 0;
 
@@ -157,7 +206,7 @@ export function FocusedExerciseCard({
         <FitAiButton
           variant="secondary"
           leftSection={<IconPlus size={16} />}
-          onClick={onAddSet}
+          onClick={handleAddSet}
           disabled={isLoading}
           fullWidth
         >

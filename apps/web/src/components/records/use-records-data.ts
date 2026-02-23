@@ -5,6 +5,9 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@mantine/hooks";
+
+import dayjs from "dayjs";
+
 import { orpc } from "@/utils/orpc";
 
 /**
@@ -81,12 +84,11 @@ export function formatRecordValue(
 }
 
 /**
- * Format a date relative to now
+ * Format a date relative to now (e.g., "Today", "3 days ago", "2 weeks ago")
  */
 export function formatRelativeDate(date: Date): string {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const d = dayjs(date);
+  const diffDays = dayjs().startOf("day").diff(d.startOf("day"), "day");
 
   if (diffDays === 0) return "Today";
   if (diffDays === 1) return "Yesterday";
@@ -96,39 +98,21 @@ export function formatRelativeDate(date: Date): string {
     return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
   }
 
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
-  });
+  return d.year() !== dayjs().year() ? d.format("MMM D, YYYY") : d.format("MMM D");
 }
 
 /**
- * Format a date for display
+ * Format a date for display (e.g., "Jan 15, 2024")
  */
 export function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  return dayjs(date).format("MMM D, YYYY");
 }
 
 /**
  * Check if a date is within the last N days
  */
 export function isWithinDays(date: Date, days: number): boolean {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  return diffDays < days;
-}
-
-/**
- * Check if a date is today
- */
-export function isToday(date: Date): boolean {
-  return new Date().toDateString() === date.toDateString();
+  return dayjs().startOf("day").diff(dayjs(date).startOf("day"), "day") < days;
 }
 
 interface UseRecordsDataOptions {

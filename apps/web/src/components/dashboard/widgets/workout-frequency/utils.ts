@@ -15,30 +15,6 @@ export function getIntensityLevel(workoutCount: number, totalVolume: number): 0 
   return 4;
 }
 
-export function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-  });
-}
-
-export function formatVolume(volume: number): string {
-  if (volume >= 1000) {
-    return `${(volume / 1000).toFixed(1)}k kg`;
-  }
-  return `${volume} kg`;
-}
-
-export function isToday(date: Date): boolean {
-  const today = new Date();
-  return (
-    date.getDate() === today.getDate() &&
-    date.getMonth() === today.getMonth() &&
-    date.getFullYear() === today.getFullYear()
-  );
-}
-
 export function generateLast30Days(): DayData[] {
   const days: DayData[] = [];
   const today = new Date();

@@ -1,7 +1,7 @@
 import { Badge, Box, Divider, Group, Paper, Stack, Text } from "@mantine/core";
 import { IconBarbell, IconCalendar, IconCheck } from "@tabler/icons-react";
 
-import { formatDuration, formatRelativeDate, formatTime } from "../../utils";
+import { formatDuration, formatRelativeDate, formatTime } from "@/components/ui/utils";
 import styles from "./workout-detail-view.module.css";
 
 export interface WorkoutSummary {

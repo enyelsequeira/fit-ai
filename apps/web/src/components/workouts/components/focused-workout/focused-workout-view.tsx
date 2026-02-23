@@ -1,13 +1,6 @@
-/**
- * FocusedWorkoutView - Gym Mode orchestrator
- * Uses ExerciseTabStrip for navigation instead of carousel/queue.
- */
-
 import type { ExerciseTabItem } from "./exercise-tab-strip";
-import type { ExerciseCardData } from "./focused-exercise-card.types";
-import type { WorkoutExercise } from "../../types";
 
-import { useMemo, useCallback } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { Box, Button, Divider, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import {
   IconBarbell,
@@ -17,43 +10,22 @@ import {
   IconPlus,
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
+import { useDisclosure } from "@mantine/hooks";
 
 import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
 import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text";
 
-import { WorkoutLoadingState } from "../workout-detail-view/workout-loading-state";
-import { WorkoutErrorState } from "../workout-detail-view/workout-error-state";
+import { useWorkoutById } from "../../queries/use-queries";
+import { useRestTimer } from "../workout-timer/use-rest-timer";
+import { useWorkoutSession } from "../../hooks/use-workout-session";
 import { AddExerciseModal } from "../add-exercise-modal/add-exercise-modal";
 import { CompleteWorkoutModal } from "../complete-workout-modal/complete-workout-modal";
 import { FocusedWorkoutHeader } from "./focused-workout-header";
 import { ExerciseTabStrip } from "./exercise-tab-strip";
 import { FocusedExerciseCard } from "./focused-exercise-card";
 import { RestTimerModal } from "./rest-timer-modal";
-import { useFocusedWorkout } from "./use-focused-workout";
 
 import styles from "./focused-workout-view.module.css";
-
-function transformExerciseToCardData(exercise: WorkoutExercise): ExerciseCardData {
-  const sets = exercise.sets ?? [];
-  const completedSets = sets.filter((s) => s.completedAt !== null);
-  const incompleteSets = sets.filter((s) => s.completedAt === null);
-  const currentSet = incompleteSets[0] ?? null;
-  const previousCompleted = completedSets[completedSets.length - 1];
-
-  return {
-    exerciseName: exercise.exercise?.name ?? "Unknown",
-    exerciseCategory: exercise.exercise?.category ?? undefined,
-    exerciseEquipment: exercise.exercise?.equipment ?? undefined,
-    currentSetIndex: completedSets.length,
-    totalSets: sets.length,
-    completedSets,
-    currentSet,
-    previousSet: previousCompleted
-      ? { weight: previousCompleted.weight, reps: previousCompleted.reps }
-      : undefined,
-    lastPerformanceSets: exercise.lastPerformance ?? [],
-  };
-}
 
 type FocusedWorkoutViewProps = {
   workoutId: number;
@@ -61,91 +33,102 @@ type FocusedWorkoutViewProps = {
 
 export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
   const navigate = useNavigate();
-  const state = useFocusedWorkout(workoutId);
+  const { data: workout } = useWorkoutById(workoutId);
 
-  const handleBackClick = useCallback(() => {
-    navigate({ to: "/dashboard/workouts" });
-  }, [navigate]);
+  // Exercise navigation
+  const [pagerIndex, setPagerIndex] = useState(0);
 
-  const handleSetComplete = useCallback(
-    (exerciseId: number, setId: number, weight: number, reps: number, rpe?: number) => {
-      void exerciseId;
-      state.onSetComplete(setId, weight, reps, rpe);
+  // Modals
+  const [addExerciseOpened, addExerciseHandlers] = useDisclosure(false);
+  const [completeWorkoutOpened, completeWorkoutHandlers] = useDisclosure(false);
+
+  // Rest timer
+  const restTimer = useRestTimer();
+
+  // Workout session (stats, navigation, nextSetInfo)
+  const workoutSession = useWorkoutSession({
+    workout: workout as Parameters<typeof useWorkoutSession>[0]["workout"],
+    restTimer,
+  });
+
+  // Sync pager with session
+  useEffect(() => {
+    setPagerIndex(workoutSession.currentExerciseIndex);
+  }, [workoutSession.currentExerciseIndex]);
+
+  // Auto-dismiss rest timer when completed
+  useEffect(() => {
+    if (restTimer.status === "completed") {
+      restTimer.resetTimer();
+    }
+  }, [restTimer.status, restTimer.resetTimer]);
+
+  const handlePagerChange = useCallback(
+    (index: number) => {
+      setPagerIndex(index);
+      workoutSession.goToExercise(index);
     },
-    [state],
+    [workoutSession],
   );
 
+  // Cross-cutting: rest timer + auto-advance on set completion
+  const handleSetCompleted = useCallback(
+    ({ isLastSet }: { isLastSet: boolean }) => {
+      restTimer.startTimer(restTimer.settings.defaultRestTime);
+      const totalExercises = workout?.workoutExercises?.length ?? 0;
+      const hasNextExercise = pagerIndex + 1 < totalExercises;
+      if (isLastSet && hasNextExercise) {
+        setTimeout(() => handlePagerChange(pagerIndex + 1), 1200);
+      }
+    },
+    [restTimer, workout?.workoutExercises?.length, pagerIndex, handlePagerChange],
+  );
+
+  // Derive exercise tab items from session data
   const exerciseTabItems = useMemo(() => {
-    if (!state.workout?.workoutExercises) return [];
-    return state.workout.workoutExercises.map((ex, index) => {
-      const sets = ex.sets ?? [];
-      const completedCount = sets.filter((s) => s.completedAt !== null).length;
-      const isCompleted = sets.length > 0 && sets.every((s) => s.completedAt !== null);
-      return {
-        id: ex.id,
-        name: ex.exercise?.name ?? "Unknown",
-        completedSets: completedCount,
-        totalSets: sets.length,
-        status: isCompleted ? "completed" : index === state.pagerIndex ? "current" : "pending",
-      } satisfies ExerciseTabItem;
-    });
-  }, [state.workout?.workoutExercises, state.pagerIndex]);
+    return workoutSession.exercisesForNav.map((ex, index) => ({
+      ...ex,
+      status:
+        ex.completedSets === ex.totalSets && ex.totalSets > 0
+          ? "completed"
+          : index === pagerIndex
+            ? "current"
+            : "pending",
+    })) satisfies ExerciseTabItem[];
+  }, [workoutSession.exercisesForNav, pagerIndex]);
 
-  const totalSets = useMemo(
-    () =>
-      state.workout?.workoutExercises?.reduce((acc, ex) => acc + (ex.sets?.length ?? 0), 0) ?? 0,
-    [state.workout?.workoutExercises],
-  );
-
-  if (state.isLoading) {
-    return <WorkoutLoadingState />;
-  }
-
-  if (state.isError || !state.workout) {
-    return <WorkoutErrorState errorMessage={state.error?.message} />;
-  }
-
-  const { workoutExercises } = state.workout;
-  const hasExercises = workoutExercises && workoutExercises.length > 0;
-  const currentExercise = workoutExercises?.[state.pagerIndex] ?? null;
-  const isFirstExercise = state.pagerIndex === 0;
-  const isLastExercise = state.pagerIndex === (workoutExercises?.length ?? 1) - 1;
-  const cardData = currentExercise ? transformExerciseToCardData(currentExercise) : null;
-  const currentSetId = cardData?.currentSet?.id ?? 0;
-  const canFinish =
-    state.workoutSession.stats.completedSets > 0 && state.workout.completedAt === null;
+  const hasExercises = workout?.workoutExercises && workout?.workoutExercises.length > 0;
+  const currentExercise = workout?.workoutExercises?.[pagerIndex] ?? null;
+  const isFirstExercise = pagerIndex === 0;
+  const isLastExercise = pagerIndex === (workout?.workoutExercises?.length ?? 1) - 1;
+  const canFinish = workoutSession.stats.completedSets > 0 && workout?.completedAt === null;
 
   return (
     <Stack gap={0} w="100%" className={styles.container}>
       <FocusedWorkoutHeader
-        workoutName={state.workout.name ?? "Untitled"}
-        elapsedTime={state.workoutSession.stats.elapsedTime}
-        totalSets={totalSets}
-        completedSets={state.workoutSession.stats.completedSets}
-        onBackClick={handleBackClick}
+        workoutName={workout?.name ?? "Untitled"}
+        elapsedTime={workoutSession.stats.elapsedTime}
+        totalSets={workoutSession.stats.totalSets}
+        completedSets={workoutSession.stats.completedSets}
+        onBackClick={() => navigate({ to: "/dashboard/workouts" })}
       />
 
       {hasExercises && (
         <ExerciseTabStrip
           exercises={exerciseTabItems}
-          currentIndex={state.pagerIndex}
-          onSelectExercise={state.onPagerChange}
+          currentIndex={pagerIndex}
+          onSelectExercise={handlePagerChange}
         />
       )}
 
       <ScrollArea flex={1} type="auto" className={styles.scrollArea}>
-        {/* w="100%" fixes ScrollArea's internal table-cell rendering */}
         <Stack p="md" gap="md" w="100%">
-          {hasExercises && cardData && currentExercise ? (
+          {hasExercises && currentExercise ? (
             <>
               <FocusedExerciseCard
-                data={cardData}
-                actions={{
-                  onSetComplete: (weight: number, reps: number, rpe?: number) =>
-                    handleSetComplete(currentExercise.id, currentSetId, weight, reps, rpe),
-                  onAddSet: () => state.onAddSet(currentExercise.id, cardData.totalSets),
-                }}
-                isLoading={state.isCompletingSet}
+                workoutId={workoutId}
+                exercise={currentExercise}
+                onSetCompleted={handleSetCompleted}
               />
 
               {/* Exercise navigation */}
@@ -155,25 +138,25 @@ export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
                   color="gray"
                   leftSection={<IconChevronLeft size={16} />}
                   disabled={isFirstExercise}
-                  onClick={() => state.onPagerChange(state.pagerIndex - 1)}
+                  onClick={() => handlePagerChange(pagerIndex - 1)}
                 >
                   Prev
                 </Button>
                 <Text size="xs" c="dimmed">
-                  {state.pagerIndex + 1} / {workoutExercises.length}
+                  {pagerIndex + 1} / {workout?.workoutExercises?.length}
                 </Text>
                 <Button
                   variant="subtle"
                   color="gray"
                   rightSection={<IconChevronRight size={16} />}
                   disabled={isLastExercise}
-                  onClick={() => state.onPagerChange(state.pagerIndex + 1)}
+                  onClick={() => handlePagerChange(pagerIndex + 1)}
                 >
                   Next
                 </Button>
               </Group>
 
-              {/* Workout actions — inline, no fixed overlay */}
+              {/* Workout actions */}
               <Divider />
               <Group justify="space-between">
                 <Button
@@ -181,7 +164,7 @@ export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
                   color="gray"
                   size="sm"
                   leftSection={<IconPlus size={14} />}
-                  onClick={state.modals.addExercise.open}
+                  onClick={addExerciseHandlers.open}
                 >
                   Add Exercise
                 </Button>
@@ -191,7 +174,7 @@ export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
                   size="sm"
                   leftSection={<IconFlag size={14} />}
                   disabled={!canFinish}
-                  onClick={state.modals.completeWorkout.open}
+                  onClick={completeWorkoutHandlers.open}
                 >
                   Finish Workout
                 </Button>
@@ -205,7 +188,7 @@ export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
                 <FitAiText.Caption ta="center">
                   Add exercises to start your workout
                 </FitAiText.Caption>
-                <FitAiButton variant="secondary" onClick={state.modals.addExercise.open}>
+                <FitAiButton variant="secondary" onClick={addExerciseHandlers.open}>
                   Add Exercise
                 </FitAiButton>
               </Stack>
@@ -215,33 +198,33 @@ export function FocusedWorkoutView({ workoutId }: FocusedWorkoutViewProps) {
       </ScrollArea>
 
       <RestTimerModal
-        timer={state.restTimer}
+        timer={restTimer}
         nextSetInfo={
-          state.workoutSession.nextSetInfo
+          workoutSession.nextSetInfo
             ? {
-                exerciseName: state.workoutSession.nextSetInfo.exerciseName,
-                setNumber: state.workoutSession.nextSetInfo.setNumber,
-                targetWeight: state.workoutSession.nextSetInfo.targetWeight ?? undefined,
-                targetReps: state.workoutSession.nextSetInfo.targetReps ?? undefined,
+                exerciseName: workoutSession.nextSetInfo.exerciseName,
+                setNumber: workoutSession.nextSetInfo.setNumber,
+                targetWeight: workoutSession.nextSetInfo.targetWeight ?? undefined,
+                targetReps: workoutSession.nextSetInfo.targetReps ?? undefined,
               }
             : undefined
         }
-        onDismiss={state.onDismissRestTimer}
+        onDismiss={() => restTimer.resetTimer()}
       />
 
       <AddExerciseModal
-        opened={state.modals.addExercise.opened}
-        onClose={state.modals.addExercise.close}
+        opened={addExerciseOpened}
+        onClose={addExerciseHandlers.close}
         workoutId={workoutId}
-        existingExerciseIds={workoutExercises?.map((we) => we.exerciseId) ?? []}
+        existingExerciseIds={workout?.workoutExercises?.map((we) => we.exerciseId) ?? []}
       />
 
       <CompleteWorkoutModal
-        opened={state.modals.completeWorkout.opened}
-        onClose={state.modals.completeWorkout.close}
+        opened={completeWorkoutOpened}
+        onClose={completeWorkoutHandlers.close}
         workoutId={workoutId}
-        isAlreadyCompleted={state.workout.completedAt !== null}
-        onSuccess={handleBackClick}
+        isAlreadyCompleted={workout?.completedAt !== null}
+        onSuccess={() => navigate({ to: "/dashboard/workouts" })}
       />
     </Stack>
   );

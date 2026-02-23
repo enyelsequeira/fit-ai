@@ -26,14 +26,9 @@ import {
   IconMoodSmile,
   IconListDetails,
 } from "@tabler/icons-react";
-import { useNavigate } from "@tanstack/react-router";
 import { useWorkoutById } from "../../queries/use-queries.ts";
-import {
-  formatRelativeDate,
-  formatDuration,
-  calculateWorkoutDuration,
-  countSets,
-} from "../../utils";
+import { formatDuration, formatRelativeDate } from "@/components/ui/utils";
+import { calculateWorkoutDuration, countSets } from "../../utils";
 import { MOOD_LABELS, MOOD_COLORS } from "../../types";
 import type { WorkoutMood } from "../../types";
 import styles from "./workout-detail-modal.module.css";
@@ -45,15 +40,7 @@ interface WorkoutDetailModalProps {
 }
 
 export function WorkoutDetailModal({ opened, onClose, workoutId }: WorkoutDetailModalProps) {
-  const navigate = useNavigate();
   const { data: workout, isLoading, isError } = useWorkoutById(workoutId);
-
-  const handleContinueWorkout = () => {
-    if (workoutId) {
-      onClose();
-      navigate({ to: `/dashboard/workouts/${workoutId}` as string });
-    }
-  };
 
   // Loading state
   if (isLoading) {
@@ -241,20 +228,6 @@ export function WorkoutDetailModal({ opened, onClose, workoutId }: WorkoutDetail
             </Box>
           </>
         )}
-
-        {/* Actions */}
-        <Divider />
-        <Group justify="flex-end" gap="sm">
-          <Button variant="subtle" onClick={onClose}>
-            Close
-          </Button>
-          <Button
-            leftSection={isCompleted ? <IconListDetails size={16} /> : <IconPlayerPlay size={16} />}
-            onClick={handleContinueWorkout}
-          >
-            {isCompleted ? "View Full Details" : "Continue Workout"}
-          </Button>
-        </Group>
       </Stack>
     </Modal>
   );

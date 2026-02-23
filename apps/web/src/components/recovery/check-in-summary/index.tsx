@@ -7,7 +7,7 @@ import { Box, Button, Card, Group, SimpleGrid, Skeleton, Stack, Text } from "@ma
 import { IconActivity, IconEdit, IconFlame, IconMoon } from "@tabler/icons-react";
 
 import type { CheckInData, CheckInSummaryProps } from "./types";
-import { formatDate } from "./utils";
+import { formatLongDate } from "@/components/ui/utils";
 import { AdvancedMetrics } from "./advanced-metrics";
 import { MetricCard } from "./metric-card";
 import { MoodDisplay } from "./mood-display";
@@ -62,7 +62,7 @@ function CheckInContent({ checkIn, onEdit }: { checkIn: CheckInData; onEdit?: ()
       <Card.Section withBorder inheritPadding py="sm">
         <Group justify="space-between">
           <Text fz="sm" fw={500}>
-            {formatDate(checkIn.date)}
+            {formatLongDate(checkIn.date)}
           </Text>
           {onEdit && (
             <Button

@@ -1,45 +1,8 @@
 /**
- * Utility functions for the Workouts module
+ * Workout-specific utility functions
  */
 
 import type { TimePeriodFilter } from "./types";
-
-/**
- * Formats a date to a human-readable relative string
- * @param date - Date to format
- * @returns Formatted string like "Today", "Yesterday", "Monday", or "Jan 15"
- */
-export function formatRelativeDate(date: Date | string | null): string {
-  if (!date) return "-";
-
-  const d = typeof date === "string" ? new Date(date) : date;
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const targetDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-
-  const diffDays = Math.floor((today.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) {
-    return d.toLocaleDateString("en-US", { weekday: "long" });
-  }
-
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-}
-
-/**
- * Formats workout duration in minutes to a human-readable string
- * @param minutes - Duration in minutes (or null)
- * @returns Formatted string like "45 min", "1h 30m", or "-" if null
- */
-export function formatDuration(minutes: number | null | undefined): string {
-  if (!minutes) return "-";
-  if (minutes < 60) return `${minutes} min`;
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
-}
 
 /**
  * Calculates workout duration from start and end times
@@ -105,33 +68,6 @@ export function getDateRangeForFilter(filter: TimePeriodFilter): {
 }
 
 /**
- * Formats time as HH:MM AM/PM
- * @param date - Date to format
- * @returns Formatted time string
- */
-export function formatTime(date: Date | string | null): string {
-  if (!date) return "-";
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-}
-
-/**
- * Gets a summary of exercises in a workout
- * @param exerciseCount - Number of exercises
- * @param setCount - Number of sets
- * @returns Formatted summary string
- */
-export function getExerciseSummary(exerciseCount: number, setCount: number): string {
-  const exercises = exerciseCount === 1 ? "exercise" : "exercises";
-  const sets = setCount === 1 ? "set" : "sets";
-  return `${exerciseCount} ${exercises}, ${setCount} ${sets}`;
-}
-
-/**
  * Counts completed sets in workout exercises
  * @param workoutExercises - Array of workout exercises with sets
  * @returns Object with total sets and completed sets
@@ -152,24 +88,4 @@ export function countSets(
   }
 
   return { total, completed };
-}
-
-/**
- * Gets time period label for display
- * @param filter - Time period filter
- * @returns Human-readable label
- */
-export function getTimePeriodLabel(filter: TimePeriodFilter): string {
-  switch (filter) {
-    case "today":
-      return "Today";
-    case "week":
-      return "This Week";
-    case "month":
-      return "Last 30 Days";
-    case "all":
-      return "All Workouts";
-    default:
-      return "Workouts";
-  }
 }

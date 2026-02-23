@@ -1,7 +1,9 @@
 import { Box, Stack, Text, Tooltip } from "@mantine/core";
 
+import { formatShortDate, formatVolume, isToday } from "@/components/ui/utils";
+
 import type { DayData } from "./utils";
-import { formatDate, formatVolume, getIntensityLevel, isToday } from "./utils";
+import { getIntensityLevel } from "./utils";
 
 import styles from "./workout-frequency.module.css";
 
@@ -14,7 +16,7 @@ function TooltipContent({ day }: { day: DayData }) {
   return (
     <Stack gap={4}>
       <Text size="xs" fw={600}>
-        {formatDate(day.date)}
+        {formatShortDate(day.date)}
       </Text>
       {day.workoutCount > 0 ? (
         <>
@@ -50,7 +52,7 @@ export function HeatmapCell({ day, index }: HeatmapCellProps) {
       <Box
         className={`${styles.cell} ${levelClass} ${isTodayCell ? styles.today : ""}`}
         style={{ animationDelay: `${index * 15}ms` }}
-        aria-label={`${formatDate(day.date)}: ${day.workoutCount} workouts`}
+        aria-label={`${formatShortDate(day.date)}: ${day.workoutCount} workouts`}
       />
     </Tooltip>
   );

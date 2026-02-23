@@ -30,7 +30,7 @@ import {
   useActiveTemplate,
 } from "../../queries/use-queries.ts";
 import styles from "./template-card.module.css";
-import { formatDuration } from "@/components/templates/utils.ts";
+import { formatDuration } from "@/components/ui/utils.ts";
 import { FitAiToolTip } from "@/components/ui/fit-ai-tooltip/fit-ai-tool-tip.tsx";
 import { FitAiText } from "@/components/ui/fit-ai-text/fit-ai-text.tsx";
 import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button.tsx";

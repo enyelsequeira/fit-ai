@@ -19,5 +19,5 @@ export {
   formatRelativeDate,
   formatDate,
   isWithinDays,
-  isToday,
 } from "./use-records-data";
+export { isToday } from "@/components/ui/utils";

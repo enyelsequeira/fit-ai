@@ -3,9 +3,6 @@
 .header {
   background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
   border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-6));
-  position: sticky;
-  top: 0;
-  z-index: 200;
 }
 
 .workoutName {
