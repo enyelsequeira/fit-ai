@@ -11,8 +11,14 @@ export async function createContext({ context }: CreateContextOptions) {
     headers: context.req.raw.headers,
   });
 
+  const clientIp =
+    context.req.header("cf-connecting-ip") ||
+    context.req.header("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown";
+
   return {
     session,
+    clientIp,
   };
 }
 

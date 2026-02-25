@@ -6,18 +6,20 @@ import { swaggerUI } from "@hono/swagger-ui";
 import { OpenAPIGenerator } from "@orpc/openapi";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
+import { RatelimitHandlerPlugin } from "@orpc/experimental-ratelimit";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { aiChatApp } from "./ai-chat-route";
+import { aiSuggestedPromptsApp } from "./ai-suggested-prompts-route";
 
 const app = new Hono();
 
 app.use(logger());
 app.use(
-  "/api/auth/*",
   cors({
     origin: env.CORS_ORIGIN,
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -268,11 +270,18 @@ app.get("/reference", (c) => {
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
+// AI Chat SSE streaming endpoint (before oRPC catch-all)
+app.route("", aiChatApp);
+
+// AI Suggested Prompts endpoint
+app.route("", aiSuggestedPromptsApp);
+
 export const apiHandler = new OpenAPIHandler(appRouter, {
   plugins: [
     new OpenAPIReferencePlugin({
       schemaConverters: [new ZodToJsonSchemaConverter()],
     }),
+    new RatelimitHandlerPlugin(),
   ],
   interceptors: [
     onError((error) => {
@@ -282,6 +291,7 @@ export const apiHandler = new OpenAPIHandler(appRouter, {
 });
 
 export const rpcHandler = new RPCHandler(appRouter, {
+  plugins: [new RatelimitHandlerPlugin()],
   interceptors: [
     onError((error) => {
       console.error("RPC handler error:", error);

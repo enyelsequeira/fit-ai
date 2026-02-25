@@ -11,3 +11,4 @@ export * from "./analytics";
 export * from "./ai";
 export * from "./user-settings";
 export * from "./goals";
+export * from "./chat";

@@ -22,6 +22,7 @@ import { Route as DashboardMeasurementsIndexRouteImport } from './routes/dashboa
 import { Route as DashboardGoalsIndexRouteImport } from './routes/dashboard/goals/index'
 import { Route as DashboardExercisesIndexRouteImport } from './routes/dashboard/exercises/index'
 import { Route as DashboardAnalyticsIndexRouteImport } from './routes/dashboard/analytics/index'
+import { Route as DashboardAiIndexRouteImport } from './routes/dashboard/ai/index'
 import { Route as DashboardWorkoutsWorkoutIdRouteImport } from './routes/dashboard/workouts/$workout-id'
 
 const SignupRoute = SignupRouteImport.update({
@@ -90,6 +91,11 @@ const DashboardAnalyticsIndexRoute = DashboardAnalyticsIndexRouteImport.update({
   path: '/analytics/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardAiIndexRoute = DashboardAiIndexRouteImport.update({
+  id: '/ai/',
+  path: '/ai/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardWorkoutsWorkoutIdRoute =
   DashboardWorkoutsWorkoutIdRouteImport.update({
     id: '/workouts/$workout-id',
@@ -104,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/workouts/$workout-id': typeof DashboardWorkoutsWorkoutIdRoute
+  '/dashboard/ai': typeof DashboardAiIndexRoute
   '/dashboard/analytics': typeof DashboardAnalyticsIndexRoute
   '/dashboard/exercises': typeof DashboardExercisesIndexRoute
   '/dashboard/goals': typeof DashboardGoalsIndexRoute
@@ -119,6 +126,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/workouts/$workout-id': typeof DashboardWorkoutsWorkoutIdRoute
+  '/dashboard/ai': typeof DashboardAiIndexRoute
   '/dashboard/analytics': typeof DashboardAnalyticsIndexRoute
   '/dashboard/exercises': typeof DashboardExercisesIndexRoute
   '/dashboard/goals': typeof DashboardGoalsIndexRoute
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/workouts/$workout-id': typeof DashboardWorkoutsWorkoutIdRoute
+  '/dashboard/ai/': typeof DashboardAiIndexRoute
   '/dashboard/analytics/': typeof DashboardAnalyticsIndexRoute
   '/dashboard/exercises/': typeof DashboardExercisesIndexRoute
   '/dashboard/goals/': typeof DashboardGoalsIndexRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard/'
     | '/dashboard/workouts/$workout-id'
+    | '/dashboard/ai'
     | '/dashboard/analytics'
     | '/dashboard/exercises'
     | '/dashboard/goals'
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard'
     | '/dashboard/workouts/$workout-id'
+    | '/dashboard/ai'
     | '/dashboard/analytics'
     | '/dashboard/exercises'
     | '/dashboard/goals'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard/'
     | '/dashboard/workouts/$workout-id'
+    | '/dashboard/ai/'
     | '/dashboard/analytics/'
     | '/dashboard/exercises/'
     | '/dashboard/goals/'
@@ -295,6 +307,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAnalyticsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/ai/': {
+      id: '/dashboard/ai/'
+      path: '/ai'
+      fullPath: '/dashboard/ai'
+      preLoaderRoute: typeof DashboardAiIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/workouts/$workout-id': {
       id: '/dashboard/workouts/$workout-id'
       path: '/workouts/$workout-id'
@@ -308,6 +327,7 @@ declare module '@tanstack/react-router' {
 interface DashboardRouteRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardWorkoutsWorkoutIdRoute: typeof DashboardWorkoutsWorkoutIdRoute
+  DashboardAiIndexRoute: typeof DashboardAiIndexRoute
   DashboardAnalyticsIndexRoute: typeof DashboardAnalyticsIndexRoute
   DashboardExercisesIndexRoute: typeof DashboardExercisesIndexRoute
   DashboardGoalsIndexRoute: typeof DashboardGoalsIndexRoute
@@ -321,6 +341,7 @@ interface DashboardRouteRouteChildren {
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardWorkoutsWorkoutIdRoute: DashboardWorkoutsWorkoutIdRoute,
+  DashboardAiIndexRoute: DashboardAiIndexRoute,
   DashboardAnalyticsIndexRoute: DashboardAnalyticsIndexRoute,
   DashboardExercisesIndexRoute: DashboardExercisesIndexRoute,
   DashboardGoalsIndexRoute: DashboardGoalsIndexRoute,

@@ -33,7 +33,6 @@ function SignUpPage() {
       <BrandPanel />
 
       <div className={styles.formPanel}>
-        <div className={styles.gridPattern} />
         <MobileLogo />
         <SignupForm />
       </div>

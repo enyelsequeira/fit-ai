@@ -27,6 +27,7 @@ type TestSession = {
 export function createMockContext(overrides?: Partial<Context>): Context {
   return {
     session: null,
+    clientIp: "127.0.0.1",
     ...overrides,
   };
 }
@@ -67,6 +68,7 @@ export function createAuthenticatedContext(
       user: testUser,
       session: testSession,
     },
+    clientIp: "127.0.0.1",
   };
 }
 

@@ -1,0 +1,123 @@
+@keyframes brandingFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: var(--mantine-spacing-xl);
+  gap: var(--mantine-spacing-xl);
+}
+
+.branding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  text-align: center;
+  animation: brandingFadeIn 500ms ease-out;
+}
+
+.card {
+  cursor: pointer;
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  border-left: 3px solid transparent;
+  animation: cardEntrance 400ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    border-color 200ms ease;
+
+  @mixin hover {
+    transform: translateY(-2px);
+    border-color: light-dark(var(--mantine-color-teal-3), var(--mantine-color-teal-8));
+    border-left-color: light-dark(var(--mantine-color-teal-4), var(--mantine-color-teal-6));
+    box-shadow: 0 4px 12px -4px light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.3));
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-color-teal-6);
+    outline-offset: 2px;
+  }
+}
+
+/* Stagger card entrance animations */
+.card:nth-child(1) {
+  animation-delay: 0ms;
+}
+.card:nth-child(2) {
+  animation-delay: 80ms;
+}
+.card:nth-child(3) {
+  animation-delay: 160ms;
+}
+.card:nth-child(4) {
+  animation-delay: 240ms;
+}
+.card:nth-child(5) {
+  animation-delay: 320ms;
+}
+.card:nth-child(6) {
+  animation-delay: 400ms;
+}
+
+.cardContent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mantine-spacing-sm);
+}
+
+.cardIcon {
+  color: light-dark(var(--mantine-color-teal-6), var(--mantine-color-teal-4));
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.promptText {
+  font-size: var(--mantine-font-size-sm);
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-3));
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .branding {
+    animation: none;
+    transition: none;
+  }
+
+  .card {
+    @mixin hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: none;
+    }
+  }
+}

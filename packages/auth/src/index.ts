@@ -4,6 +4,7 @@ import { env } from "@fit-ai/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
+const isLocalDev = env.BETTER_AUTH_URL.startsWith("http://localhost");
 const isWorkersDev = env.BETTER_AUTH_URL.includes(".workers.dev");
 const workersDomain = isWorkersDev
   ? new URL(env.BETTER_AUTH_URL).hostname.split(".").slice(1).join(".")
@@ -12,7 +13,6 @@ const workersDomain = isWorkersDev
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "sqlite",
-
     schema: schema,
   }),
   trustedOrigins: [env.CORS_ORIGIN],
@@ -28,11 +28,17 @@ export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
   advanced: {
-    defaultCookieAttributes: {
-      sameSite: "none",
-      secure: true,
-      httpOnly: true,
-    },
+    defaultCookieAttributes: isLocalDev
+      ? {
+          sameSite: "lax",
+          secure: false,
+          httpOnly: true,
+        }
+      : {
+          sameSite: "none",
+          secure: true,
+          httpOnly: true,
+        },
     ...(isWorkersDev && workersDomain
       ? {
           crossSubDomainCookies: {

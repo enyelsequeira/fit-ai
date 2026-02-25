@@ -7,6 +7,7 @@ import { aiRouter } from "./ai";
 import { analyticsRouter } from "./analytics";
 import { authRouter } from "./auth";
 import { bodyMeasurementRouter } from "./body-measurement";
+import { chatSessionRouter } from "./chat-session";
 import { exerciseRouter } from "./exercise";
 import { goalsRouter } from "./goals";
 import { historyRouter } from "./history";
@@ -69,6 +70,7 @@ export const appRouter = {
   ai: aiRouter,
   settings: settingsRouter,
   goals: goalsRouter,
+  chatSession: chatSessionRouter,
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;

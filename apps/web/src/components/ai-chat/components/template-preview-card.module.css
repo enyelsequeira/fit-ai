@@ -1,0 +1,31 @@
+.card {
+  border-top: 3px solid var(--mantine-color-teal-6);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+
+  @mixin hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px -4px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+
+    @mixin hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: none;
+    }
+  }
+}

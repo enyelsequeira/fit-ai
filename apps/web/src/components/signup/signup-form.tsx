@@ -1,11 +1,12 @@
 import { IconLock, IconMail, IconUser } from "@tabler/icons-react";
 import { Anchor, Flex, PasswordInput, Stack, Text, TextInput, Title } from "@mantine/core";
 import { Link, useNavigate } from "@tanstack/react-router";
-
-import styles from "./signup.module.css";
 import { isEmail, isNotEmpty, useForm } from "@mantine/form";
+
 import { authClient } from "@/lib/auth-client.ts";
 import { toast } from "@/components/ui/sonner.tsx";
+import { FitAiButton } from "@/components/ui/fit-ai-button/fit-ai-button";
+import styles from "./signup.module.css";
 
 export function SignupForm() {
   const navigate = useNavigate({ from: "/signup" });
@@ -24,14 +25,17 @@ export function SignupForm() {
 
   return (
     <div className={styles.formCard}>
-      <Flex align="center" justify="center" direction="column" gap="md" ta="center" mb="lg">
-        <Title order={2} fw={600} fz="1.75rem">
+      <div className={styles.formCardAccent} />
+      <Flex align="center" justify="center" direction="column" gap={4} ta="center" mb="md">
+        <Title order={2} fw={700} fz="1.5rem">
           Create your account
         </Title>
         <Text fz="sm" c="dimmed">
           Start your fitness transformation today
         </Text>
       </Flex>
+
+      <div className={styles.formDivider} />
 
       <form
         className={styles.form}
@@ -77,17 +81,15 @@ export function SignupForm() {
             size="md"
             {...mantineForm.getInputProps("password")}
           />
-          <button type="submit" className={styles.submitButton}>
-            {mantineForm.submitting ? (
-              <span className={styles.loadingPulse}>
-                <span className={styles.loadingDot} />
-                <span className={styles.loadingDot} />
-                <span className={styles.loadingDot} />
-              </span>
-            ) : (
-              "Start Your Journey"
-            )}
-          </button>
+          <FitAiButton
+            type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
+            loading={mantineForm.submitting}
+          >
+            Start Your Journey
+          </FitAiButton>
         </Stack>
       </form>
 
@@ -97,7 +99,7 @@ export function SignupForm() {
           fw={600}
           td="none"
           ml="xs"
-          c="blue.5"
+          c="teal.5"
           renderRoot={(props) => <Link to="/sign-in" {...props} />}
         >
           Sign in

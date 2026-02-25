@@ -1,10 +1,17 @@
+import { createRatelimitMiddleware } from "@orpc/experimental-ratelimit";
 import { ORPCError, os } from "@orpc/server";
 
 import type { Context } from "./context";
+import { globalRateLimiter } from "./ratelimit";
 
 export const o = os.$context<Context>();
 
-export const publicProcedure = o;
+const rateLimit = createRatelimitMiddleware({
+  limiter: () => globalRateLimiter,
+  key: ({ context }) => `ip:${context.clientIp}`,
+});
+
+export const publicProcedure = o.use(rateLimit);
 
 const requireAuth = o.middleware(async ({ context, next }) => {
   if (!context.session?.user) {

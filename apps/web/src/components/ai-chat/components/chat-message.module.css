@@ -1,0 +1,67 @@
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.message {
+  animation: messageSlideIn 300ms ease-out backwards;
+}
+
+.userMessage {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.assistantMessage {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.userBubble {
+  max-width: 75%;
+  background-color: light-dark(var(--mantine-color-teal-0), rgba(20, 184, 166, 0.12));
+  border: none;
+  border-radius: var(--mantine-radius-lg);
+  border-top-right-radius: var(--mantine-radius-xs);
+}
+
+.assistantBubble {
+  max-width: 85%;
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  border-radius: var(--mantine-radius-lg);
+  border-top-left-radius: var(--mantine-radius-xs);
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background-color: var(--mantine-color-teal-6);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .message {
+    animation: none;
+  }
+
+  .cursor {
+    animation: none;
+    opacity: 1;
+  }
+}

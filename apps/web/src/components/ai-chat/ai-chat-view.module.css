@@ -1,0 +1,56 @@
+.container {
+  /*
+   * Fill the available space inside AppShell.Main.
+   * The header is 60px (base) / 70px (md+), and AppShell adds padding (md = 16px)
+   * on all sides of Main. We use dvh with fallback for full viewport coverage.
+   */
+  height: calc(100vh - var(--app-shell-header-height, 70px) - var(--mantine-spacing-md) * 2);
+  display: flex;
+  overflow: hidden;
+  border-radius: var(--mantine-radius-md);
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  position: relative;
+}
+
+.chatArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
+}
+
+.mobileBar {
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  flex-shrink: 0;
+}
+
+.messagesArea {
+  flex: 1;
+  min-height: 0;
+}
+
+.inputArea {
+  padding: var(--mantine-spacing-md);
+  border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  flex-shrink: 0;
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+}
+
+/* Mobile sidebar overlay */
+.sidebarOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+}
+
+/* Backdrop behind the mobile sidebar */
+.backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

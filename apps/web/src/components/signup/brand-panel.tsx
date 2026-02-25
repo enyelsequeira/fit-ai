@@ -39,7 +39,7 @@ function BenefitItem({
       <div className={styles.benefitIcon}>
         <Icon size={18} color="white" stroke={2} />
       </div>
-      <Flex flex={1}>
+      <Flex flex={1} direction="column">
         <Text fw={600} c="white" mb={2} fz="sm">
           {title}
         </Text>
@@ -68,34 +68,34 @@ function SocialProof() {
 export function BrandPanel() {
   return (
     <div className={styles.brandPanel}>
-      <div className={styles.decorativeOrb} />
+      <div className={styles.brandOverlay}>
+        <div className={styles.brandContent}>
+          <Flex justify="center" align="center" mb="xl" gap="sm">
+            <div className={styles.logoIcon}>
+              <IconActivity size={32} color="white" stroke={2} />
+            </div>
+            <Text fz="xl" fw={700} c="white">
+              FitAI
+            </Text>
+          </Flex>
 
-      <div className={styles.brandContent}>
-        <Flex justify="center" align="center" mb="xl" gap="sm">
-          <div className={styles.logoIcon}>
-            <IconActivity size={32} color="white" stroke={2} />
-          </div>
-          <Text fz="xl" fw={700} c="white">
-            FitAI
+          <Title order={2} fw={600} fz="1.75rem">
+            Transform Your <span className={styles.taglineHighlight}>Fitness Journey</span>
+          </Title>
+
+          <Text fz="md" c="gray.3" mb="xl" mt="sm">
+            Join thousands of athletes achieving their goals with intelligent workout tracking
           </Text>
-        </Flex>
 
-        <Title order={2} fw={600} fz="1.75rem">
-          Transform Your <span className={styles.taglineHighlight}>Fitness Journey</span>
-        </Title>
+          <Flex direction="column" gap="sm" ta="left" mt="xl">
+            {benefits.map((benefit) => (
+              <BenefitItem key={benefit.title} {...benefit} />
+            ))}
+          </Flex>
+        </div>
 
-        <Text fz="xl" c="white" mb="xl">
-          Join thousands of athletes achieving their goals with intelligent workout tracking
-        </Text>
-
-        <Flex direction="column" gap="md" ta="left" mt="xl">
-          {benefits.map((benefit) => (
-            <BenefitItem key={benefit.title} {...benefit} />
-          ))}
-        </Flex>
+        <SocialProof />
       </div>
-
-      <SocialProof />
     </div>
   );
 }

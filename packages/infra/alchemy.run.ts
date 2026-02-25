@@ -24,6 +24,7 @@ export const server = await Worker("server", {
     CORS_ORIGIN: isLocal ? alchemy.env.CORS_ORIGIN! : "https://placeholder.workers.dev",
     BETTER_AUTH_SECRET: alchemy.secret.env.BETTER_AUTH_SECRET!,
     BETTER_AUTH_URL: Worker.DevUrl,
+    OPENROUTER_API_KEY: alchemy.secret.env.OPENROUTER_API_KEY!,
   },
   dev: {
     port: 3000,
@@ -56,6 +57,7 @@ if (!isLocal) {
       CORS_ORIGIN: web.url!,
       BETTER_AUTH_SECRET: alchemy.secret.env.BETTER_AUTH_SECRET!,
       BETTER_AUTH_URL: server.url!,
+      OPENROUTER_API_KEY: alchemy.secret.env.OPENROUTER_API_KEY!,
     },
   });
 }

@@ -27,5 +27,5 @@ export const mainNavLinks: NavLinkItem[] = [
   { label: "Measurements", icon: IconRuler, href: "/dashboard/measurements" },
   { label: "Analytics", icon: IconChartLine, href: "/dashboard/analytics" },
   { label: "Recovery", icon: IconHeartbeat, href: "/dashboard/recovery" },
-  { label: "AI Coach", icon: IconSparkles, href: "/ai" },
+  { label: "AI Coach", icon: IconSparkles, href: "/dashboard/ai" },
 ];

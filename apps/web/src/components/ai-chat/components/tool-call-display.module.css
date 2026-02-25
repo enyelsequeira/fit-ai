@@ -1,0 +1,6 @@
+.toolCall {
+  border-left: 3px solid light-dark(var(--mantine-color-teal-4), var(--mantine-color-teal-6));
+  background: light-dark(var(--mantine-color-teal-0), rgba(20, 184, 166, 0.06));
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border-radius: 0 var(--mantine-radius-sm) var(--mantine-radius-sm) 0;
+}
