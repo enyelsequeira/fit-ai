@@ -1,68 +1,111 @@
 # Fit AI - Comprehensive Fitness Tracking Application
 
-A full-featured fitness tracking application with workout logging, exercise library, goal setting, progress tracking, and AI-powered recommendations.
+A full-featured fitness tracking application with workout logging, exercise library, goal setting, progress tracking, recovery monitoring, and an AI-powered coach.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
 ![React](https://img.shields.io/badge/React-19-61dafb)
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020)
 ![License](https://img.shields.io/badge/License-MIT-green)
+
+## Screenshots
+
+### Sign In & Sign Up
+
+<p align="center">
+  <img src="docs/images/sign-in-desktop-final.png" width="48%" alt="Sign In" />
+  <img src="docs/images/signup-light-mode.png" width="48%" alt="Sign Up" />
+</p>
+
+### Dashboard
+
+<p align="center">
+  <img src="docs/images/dashboard-main-current.png" width="100%" alt="Dashboard Overview" />
+</p>
+
+### Workouts
+
+<p align="center">
+  <img src="docs/images/workouts-reference.png" width="48%" alt="Workouts List" />
+  <img src="docs/images/workout-redesign-result.png" width="48%" alt="Active Workout" />
+</p>
+
+### Templates
+
+<p align="center">
+  <img src="docs/images/templates-reference.png" width="100%" alt="Workout Templates" />
+</p>
+
+### Goals & Records
+
+<p align="center">
+  <img src="docs/images/goals-reference.png" width="48%" alt="Goals & Progress" />
+  <img src="docs/images/records-refactored.png" width="48%" alt="Personal Records" />
+</p>
+
+### Recovery
+
+<p align="center">
+  <img src="docs/images/recovery-refactored.png" width="100%" alt="Recovery & Check-ins" />
+</p>
+
+### AI Coach
+
+<p align="center">
+  <img src="docs/images/ai-chat-redesign.png" width="48%" alt="AI Coach" />
+  <img src="docs/images/ai-chat-dark-mode.png" width="48%" alt="AI Coach Dark Mode" />
+</p>
 
 ## Features
 
 ### Exercise Library
-
-- **873+ Exercises** from [Free Exercise DB](https://github.com/yuhonas/free-exercise-db) with images
+- **873+ exercises** from [Free Exercise DB](https://github.com/yuhonas/free-exercise-db) with images
 - Categorized by muscle group (chest, back, shoulders, arms, legs, core)
 - Detailed instructions, difficulty levels, and equipment requirements
 - Create custom exercises
 - Paginated browsing with search and filters
 
 ### Workout Tracking
-
 - Log workouts with multiple exercises and sets
 - Set types: normal, warmup, dropset, failure, rest-pause
 - RPE (Rate of Perceived Exertion) and RIR (Reps in Reserve) tracking
 - Superset support
-- Workout templates for quick starts
-- Rest timer
+- Workout templates for quick session starts
+- Rest timer with progress tracking
 
 ### Goals System
-
 - 5 goal types: weight, strength, body measurement, workout frequency, custom
-- Progress tracking with history
-- Visual progress indicators
+- Progress tracking with history and visual indicators
 - Goal status management (active, paused, completed, abandoned)
 
 ### Progress Tracking
-
 - Body measurements tracking
 - Progress photos with before/after comparison
 - Personal records (PRs) detection and history
-- Training analytics and summaries
-- Volume and strength charts
+- Training analytics and volume/strength charts
 
 ### Recovery System
+- Daily recovery check-ins (sleep, stress, soreness, energy, nutrition, hydration)
+- Training readiness score calculation
+- Trend analysis across week, month, quarter, and year
+- Check-in history and streak tracking
 
-- Daily recovery check-ins (sleep, stress, soreness, energy)
-- Recovery score calculation
-- Trend analysis
-- Muscle recovery mapping
-
-### AI Features
-
-- AI-powered workout generator
-- Training recommendations based on history
-- Workout analysis and suggestions
+### AI Coach
+- Conversational AI fitness assistant powered by OpenRouter
+- Context-aware suggested prompts based on your data
+- Chat session history with persistence
+- Workout plan generation, template reviews, and training recommendations
 
 ## Tech Stack
 
 | Layer              | Technology                                           |
 | ------------------ | ---------------------------------------------------- |
-| **Frontend**       | React 19, TanStack Start/Router/Query, TailwindCSS 4 |
+| **Frontend**       | React 19, TanStack Start/Router/Query, Mantine UI    |
 | **Backend**        | Hono, oRPC (type-safe RPC)                           |
 | **Database**       | Drizzle ORM, Cloudflare D1 (SQLite)                  |
 | **Auth**           | better-auth with cookie sessions                     |
+| **AI**             | TanStack AI, OpenRouter                              |
 | **Infrastructure** | Cloudflare Workers, pnpm workspaces, Turborepo       |
-| **Testing**        | Vitest (712 tests)                                   |
+| **Testing**        | Vitest (800+ tests)                                  |
 
 ## Project Structure
 
@@ -70,13 +113,15 @@ A full-featured fitness tracking application with workout logging, exercise libr
 fit-ai/
 ├── apps/
 │   ├── web/              # React frontend (TanStack Start + Vite)
-│   └── server/           # Hono + oRPC API server
+│   └── server/           # Hono + oRPC API server (Cloudflare Workers)
 ├── packages/
 │   ├── api/              # oRPC routers and business logic
 │   ├── auth/             # Authentication (better-auth)
 │   ├── db/               # Drizzle ORM schema and migrations
 │   ├── env/              # Environment validation (@t3-oss/env)
 │   └── infra/            # Cloudflare infrastructure (Alchemy)
+├── docs/
+│   └── images/           # Application screenshots
 ```
 
 ## Getting Started
@@ -148,6 +193,21 @@ pnpm check
 | `pnpm db:generate` | Generate migrations                |
 | `pnpm deploy`      | Deploy to Cloudflare               |
 
+## API
+
+The API uses oRPC for type-safe endpoints with automatic OpenAPI spec generation.
+
+**Documentation**: Available at `/docs` (Swagger UI) and `/reference` (Scalar) when running the server.
+
+Key routers:
+- `/rpc/exercise/*` - Exercise CRUD and listing
+- `/rpc/workout/*` - Workout logging and management
+- `/rpc/template/*` - Workout template management
+- `/rpc/goals/*` - Goal setting and tracking
+- `/rpc/recovery/*` - Recovery check-ins
+- `/rpc/analytics/*` - Training analytics
+- `/rpc/chatSession/*` - AI chat session management
+
 ## Deployment
 
 This project deploys to Cloudflare Workers using Alchemy:
@@ -163,21 +223,6 @@ pnpm deploy
 pnpm -F @fit-ai/db db:seed:free-exercise-db:remote
 ```
 
-## API Endpoints
-
-The API uses oRPC for type-safe endpoints. Key routers:
-
-- `/rpc/exercise/*` - Exercise CRUD and listing
-- `/rpc/workout/*` - Workout logging and management
-- `/rpc/goals/*` - Goal setting and tracking
-- `/rpc/recovery/*` - Recovery check-ins
-- `/rpc/analytics/*` - Training analytics
-- `/rpc/ai/*` - AI workout generation
-
-## Screenshots
-
-_Coming soon_
-
 ## Contributing
 
 Contributions are welcome! Please read the [AGENTS.md](./AGENTS.md) file for coding guidelines.
@@ -190,4 +235,4 @@ MIT License - see [LICENSE](./LICENSE) for details.
 
 - [Free Exercise DB](https://github.com/yuhonas/free-exercise-db) for the exercise library (Public Domain)
 - [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack) for the project scaffold
-- [shadcn/ui](https://ui.shadcn.com/) for UI components
+- [Mantine](https://mantine.dev/) for the UI component library
